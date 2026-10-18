@@ -28,24 +28,43 @@ extension OrderStatusLabel on OrderStatus {
   };
 }
 
-/// Motif de clôture lisible (refus, annulation) ; les motifs saisis par le restaurant s'affichent tels quels.
-String closeReasonLabel(AppLocalizations l10n, String reason) =>
-    switch (reason) {
-      'no_response' => l10n.orderNoResponse,
-      'cancelled_by_customer' => l10n.orderCancelledByCustomer,
-      'no_courier' => l10n.orderNoCourier,
-      _ => reason,
-    };
+/// Motif lisible (refus, annulation, problème « motif · commentaire ») ; les motifs saisis s'affichent tels quels.
+String closeReasonLabel(AppLocalizations l10n, String reason) {
+  final [code, ...rest] = reason.split(' · ');
+  final label = switch (code) {
+    'no_response' => l10n.orderNoResponse,
+    'cancelled_by_customer' => l10n.orderCancelledByCustomer,
+    'no_courier' => l10n.orderNoCourier,
+    'customer_unreachable' ||
+    'address_not_found' ||
+    'recipient_absent' ||
+    'other' => problemLabel(l10n, code),
+    _ => code,
+  };
+  return [label, ...rest].join(' · ');
+}
 
-/// Libellé d'une étape de la chronologie ; l'alerte « sans livreur » n'est montrée qu'à l'admin.
+/// Problème signalé par le livreur (MIS-08).
+String problemLabel(AppLocalizations l10n, String kind) => switch (kind) {
+  'customer_unreachable' => l10n.problemCustomerUnreachable,
+  'address_not_found' => l10n.problemAddressNotFound,
+  'recipient_absent' => l10n.problemRecipientAbsent,
+  _ => l10n.problemOther,
+};
+
+/// Libellé d'une étape de la chronologie ; alertes, codes faux et problèmes ne sont montrés qu'à l'admin.
 String? eventLabel(
   AppLocalizations l10n,
   OrderEvent event, {
   bool detailed = false,
 }) => switch (event.kind) {
   'courier_assigned' => l10n.eventCourierAssigned,
-  'courier_released' => l10n.eventCourierReleased,
+  'courier_released' =>
+    detailed ? l10n.eventCourierReleased : l10n.eventCourierChanged,
   'dispatch_alert' => detailed ? l10n.eventDispatchAlert : null,
+  'code_failed' => detailed ? l10n.eventCodeFailed : null,
+  'code_locked' => detailed ? l10n.eventCodeLocked : null,
+  'problem_reported' => detailed ? l10n.eventProblemReported : null,
   _ => event.status?.label(l10n),
 };
 

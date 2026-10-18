@@ -4,6 +4,7 @@ import 'package:core/core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart' show Locale;
 import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../profile/courier_providers.dart';
@@ -29,6 +30,35 @@ Stream<Order?> currentMission(Ref ref) {
   return userId == null
       ? Stream.value(null)
       : ref.watch(missionRepositoryProvider).watchMission(userId);
+}
+
+@riverpod
+Stream<Order?> mission(Ref ref, String orderId) =>
+    ref.watch(missionRepositoryProvider).watchOrder(orderId);
+
+/// Gains, livraisons du jour et espèces à reverser, recalculés à chaque changement de mission.
+@riverpod
+Future<CourierSummary> courierSummary(Ref ref) {
+  ref.watch(currentMissionProvider);
+  return ref.watch(missionRepositoryProvider).summary();
+}
+
+@riverpod
+Future<List<MissionRecord>> missionHistory(Ref ref) =>
+    ref.watch(missionRepositoryProvider).history();
+
+@riverpod
+Future<String?> supportPhone(Ref ref) =>
+    ref.watch(missionRepositoryProvider).supportPhone();
+
+/// Dernière position connue du téléphone en ligne, pour la carte de la mission (MIS-03).
+@Riverpod(keepAlive: true)
+class CourierPosition extends _$CourierPosition {
+  @override
+  LatLng? build() => null;
+
+  void set(Position position) =>
+      state = LatLng(position.latitude, position.longitude);
 }
 
 enum PresenceProblem { serviceOff, denied, deniedForever }
@@ -134,10 +164,12 @@ class CourierPresence extends _$CourierPresence {
   Future<void> _startTracking(Position initial) async {
     _stopTracking();
     _last = initial;
+    ref.read(courierPositionProvider.notifier).set(initial);
     await _send();
     _positions = Geolocator.getPositionStream(locationSettings: _settings())
         .listen((position) {
           _last = position;
+          ref.read(courierPositionProvider.notifier).set(position);
           if (DateTime.now().difference(_sentAt) >= _minGap) _send();
         }, onError: (Object _) {});
     _heartbeat = Timer.periodic(_heartbeatEvery, (_) => _send());

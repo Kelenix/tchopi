@@ -1,7 +1,8 @@
 import 'package:core/core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-/// Disponibilité, position, offres et mission en cours du livreur connecté (COU-05, DIS-02).
+/// Disponibilité, position, offres et missions du livreur connecté (COU-05, DIS-02, MIS-01 à MIS-10).
+/// Chaque étape est validée par le serveur ; le code de livraison n'est jamais lisible ici.
 class MissionRepository {
   MissionRepository(this._client);
 
@@ -55,4 +56,73 @@ class MissionRepository {
             .firstOrNull,
       )
       .handleError((Object error) => throw toFailure(error));
+
+  /// Une mission précise, en temps réel (lisible jusqu'à une heure après sa fin).
+  Stream<Order?> watchOrder(String orderId) => _client
+      .from('orders')
+      .stream(primaryKey: ['id'])
+      .eq('id', orderId)
+      .map(
+        (rows) => rows.isEmpty
+            ? null
+            : Order.fromJson({...rows.first, 'order_items': <Object>[]}),
+      )
+      .handleError((Object error) => throw toFailure(error));
+
+  Future<void> _rpc(String name, Map<String, Object?> params) =>
+      guardCall(() => _client.rpc<void>(name, params: params));
+
+  /// Colis en espèces : [cashReceived] confirme le paiement de l'expéditeur (MIS-04).
+  Future<void> confirmPickup(String orderId, {bool cashReceived = false}) =>
+      _rpc('confirm_pickup', {
+        'p_order_id': orderId,
+        'p_cash_received': cashReceived,
+      });
+
+  Future<void> startDelivery(String orderId) =>
+      _rpc('start_delivery', {'p_order_id': orderId});
+
+  Future<CodeResult> confirmDelivery(String orderId, String code) =>
+      guardCall(() async {
+        final json = await _client.rpc<Map<String, dynamic>>(
+          'confirm_delivery',
+          params: {'p_order_id': orderId, 'p_code': code},
+        );
+        return CodeResult.fromJson(json);
+      });
+
+  Future<void> confirmCash(String orderId) =>
+      _rpc('confirm_cash_collected', {'p_order_id': orderId});
+
+  Future<void> reportProblem(String orderId, String kind, String? comment) =>
+      _rpc('report_problem', {
+        'p_order_id': orderId,
+        'p_kind': kind,
+        'p_comment': comment,
+      });
+
+  Future<void> declareFailure(String orderId, String reason) =>
+      _rpc('declare_failure', {'p_order_id': orderId, 'p_reason': reason});
+
+  Future<void> release(String orderId, String reason) =>
+      _rpc('release_mission', {'p_order_id': orderId, 'p_reason': reason});
+
+  Future<CourierSummary> summary() => guardCall(() async {
+    final json = await _client.rpc<Map<String, dynamic>>('courier_summary');
+    return CourierSummary.fromJson(json);
+  });
+
+  Future<List<MissionRecord>> history() => guardCall(() async {
+    final rows = await _client.rpc<List<dynamic>>('courier_missions');
+    return rows
+        .cast<Map<String, dynamic>>()
+        .map(MissionRecord.fromJson)
+        .toList();
+  });
+
+  /// Numéro du support (paramètres de la plateforme), s'il est renseigné.
+  Future<String?> supportPhone() => guardCall(() async {
+    final row = await _client.from('settings').select('support_phone').single();
+    return row['support_phone'] as String?;
+  });
 }

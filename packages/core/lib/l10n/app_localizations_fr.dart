@@ -1776,4 +1776,237 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get accountSignInAgain => 'Se reconnecter';
+
+  @override
+  String get failureNotReady =>
+      'Le restaurant n\'a pas encore indiqué que la commande est prête.';
+
+  @override
+  String get failureCashConfirmation =>
+      'Confirmez d\'abord l\'encaissement auprès de l\'expéditeur.';
+
+  @override
+  String get failureNoCourierAssigned =>
+      'Aucun livreur n\'est encore attribué à cette commande.';
+
+  @override
+  String get missionStepPickup => 'Aller au retrait';
+
+  @override
+  String get missionStepDeliver => 'Livrer';
+
+  @override
+  String get missionPickupTitle => 'Retrait';
+
+  @override
+  String get missionDropoffTitle => 'Livraison';
+
+  @override
+  String get missionCall => 'Appeler';
+
+  @override
+  String get missionRoute => 'Itinéraire';
+
+  @override
+  String get missionGoogleMaps => 'Google Maps';
+
+  @override
+  String get missionWaze => 'Waze';
+
+  @override
+  String get missionContents => 'Contenu';
+
+  @override
+  String missionCashToCollect(String amount) {
+    return 'À encaisser : $amount';
+  }
+
+  @override
+  String get missionPickedUp => 'Commande récupérée';
+
+  @override
+  String missionCashFromSenderTitle(String amount) {
+    return 'Encaisser $amount';
+  }
+
+  @override
+  String get missionCashFromSenderBody =>
+      'L\'expéditeur paie la livraison maintenant, en espèces.';
+
+  @override
+  String missionCashFromSender(String amount) {
+    return 'J\'ai reçu $amount';
+  }
+
+  @override
+  String get missionStart => 'Je pars livrer';
+
+  @override
+  String get missionEnterCode => 'Arrivé — saisir le code';
+
+  @override
+  String get missionRelease => 'Abandonner la mission';
+
+  @override
+  String get missionReleaseReason => 'Motif de l\'abandon';
+
+  @override
+  String get missionCancelledTitle => 'Mission annulée';
+
+  @override
+  String get missionCancelledBody =>
+      'La commande a été annulée. Vous êtes de nouveau disponible pour d\'autres missions.';
+
+  @override
+  String get missionOpen => 'Ouvrir la mission';
+
+  @override
+  String get codeTitle => 'Demandez le code au destinataire';
+
+  @override
+  String codeAttemptsLeft(int count) {
+    return 'Code incorrect : encore $count essai(s).';
+  }
+
+  @override
+  String get codeLocked =>
+      'Saisie bloquée après trop d\'erreurs. Contactez le support.';
+
+  @override
+  String get codeValidate => 'Valider';
+
+  @override
+  String get codeNoCode =>
+      'Le destinataire n\'a pas de code ? Appeler le support';
+
+  @override
+  String cashCollectTitle(String amount) {
+    return 'Encaissez $amount';
+  }
+
+  @override
+  String get cashCollectBody => 'Le client paie maintenant, en espèces.';
+
+  @override
+  String cashCollectButton(String amount) {
+    return 'J\'ai reçu $amount';
+  }
+
+  @override
+  String get deliveryDoneTitle => 'Livraison terminée';
+
+  @override
+  String deliveryDoneBody(String amount) {
+    return '+$amount pour cette mission.';
+  }
+
+  @override
+  String get problemTitle => 'Un problème ?';
+
+  @override
+  String get problemCustomerUnreachable => 'Client injoignable';
+
+  @override
+  String get problemAddressNotFound => 'Adresse introuvable';
+
+  @override
+  String get problemRecipientAbsent => 'Destinataire absent';
+
+  @override
+  String get problemOther => 'Autre';
+
+  @override
+  String get problemComment => 'Précisez le problème';
+
+  @override
+  String get problemReport => 'Signaler à l\'équipe';
+
+  @override
+  String get problemReported => 'Problème signalé à l\'équipe.';
+
+  @override
+  String get problemCallCustomer => 'Appeler le client';
+
+  @override
+  String get problemCallSupport => 'Appeler le support';
+
+  @override
+  String get problemDeclareFailure => 'Déclarer l\'échec de livraison';
+
+  @override
+  String get problemFailureReason => 'Motif de l\'échec';
+
+  @override
+  String get kpiEarnings => 'Gains du jour';
+
+  @override
+  String get kpiDeliveries => 'Missions livrées';
+
+  @override
+  String get kpiCash => 'Espèces à reverser';
+
+  @override
+  String get courierHistory => 'Historique';
+
+  @override
+  String get historyTitle => 'Historique et gains';
+
+  @override
+  String get historyToday => 'Aujourd\'hui';
+
+  @override
+  String get historyWeek => '7 derniers jours';
+
+  @override
+  String get historyEmpty => 'Vos missions apparaîtront ici';
+
+  @override
+  String get restaurantHandover => 'Remise au livreur';
+
+  @override
+  String restaurantCourier(String name) {
+    return 'Livreur : $name';
+  }
+
+  @override
+  String get adminConfirmWithoutCode => 'Confirmer la livraison sans code';
+
+  @override
+  String get adminConfirmReason => 'Motif de la confirmation';
+
+  @override
+  String get adminDelivered => 'Livraison confirmée.';
+
+  @override
+  String get adminPaymentPaid => 'Payée';
+
+  @override
+  String get adminPaymentUnpaid => 'Non encaissée';
+
+  @override
+  String supervisionAlertCodeLocked(int count) {
+    return 'Code bloqué : $count';
+  }
+
+  @override
+  String supervisionAlertProblem(int count) {
+    return 'Problème signalé : $count';
+  }
+
+  @override
+  String get eventCodeFailed => 'Code incorrect';
+
+  @override
+  String get eventCodeLocked => 'Code bloqué';
+
+  @override
+  String get eventProblemReported => 'Problème signalé';
+
+  @override
+  String get eventCourierChanged =>
+      'Votre livreur a dû annuler, nous en cherchons un autre';
+
+  @override
+  String get missionFailedBody =>
+      'L\'équipe est prévenue et décide de la suite avec le client.';
 }

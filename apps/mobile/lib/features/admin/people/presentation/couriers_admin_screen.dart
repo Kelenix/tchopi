@@ -2,6 +2,7 @@ import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../shared/dialogs.dart';
 import '../../../orders/presentation/order_widgets.dart';
 import '../../admin_scaffold.dart';
 import '../data/admin_people_repository.dart';

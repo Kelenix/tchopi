@@ -72,7 +72,7 @@ courier_assigned, picked_up, in_transit, delivered, cancelled, failed`. Pour un 
 |-------|----------------------|-------|
 | `zones` | `id`, `name`, `city`, `country_code` (`CI`), `currency` (`XOF`), `timezone` (`Africa/Abidjan`), `center`, `radius_m`, `is_active` | Une adresse appartient à la zone active qui la contient (la plus proche si chevauchement) |
 | `pricing_rules` | PK (`zone_id`, `service`) ; `base_fee`, `per_km_fee`, `min_fee`, `max_fee`, `detour_factor` (1,30), `rounding_step` (25), `courier_base`, `courier_per_km` | Frais = arrondi supérieur au pas de (base + prix/km × km × détour), borné [plancher, plafond] |
-| `settings` | ligne unique : `offer_timeout_s` (45), `restaurant_timeout_s` (600), `payment_timeout_s` (900), `dispatch_alert_s` (600), `dispatch_cancel_s` (1800), `location_fresh_s` (120), `support_phone` ; `delivery_code_max_attempts` (5) ajouté à l'Inc-8 | Modifiables par l'admin (ADM-05), chaque modification tracée dans `audit_log` |
+| `settings` | ligne unique : `offer_timeout_s` (45), `restaurant_timeout_s` (600), `payment_timeout_s` (900), `dispatch_alert_s` (600), `dispatch_cancel_s` (1800), `location_fresh_s` (120), `delivery_code_max_attempts` (5), `support_phone` | Modifiables par l'admin (ADM-05), chaque modification tracée dans `audit_log` |
 | `payment_options` | `country_code`, `method`, `operator` (`orange`, `mtn`, `wave`, `moov`…), `provider` (`stripe`, `paystack`, `cinetpay`, `cash`), `label`, `is_enabled`, `position` | Seules les lignes activées sont proposées (PAY-01) |
 | `parcel_types` | `id`, `code`, `label`, `max_weight_kg`, `allowed_vehicles vehicle_type[]`, `position`, `is_active` | Données initiales : Documents · Petit colis ≤ 5 kg · Colis moyen ≤ 15 kg |
 
@@ -117,7 +117,7 @@ courier_assigned, picked_up, in_transit, delivered, cancelled, failed`. Pour un 
 | Table | Colonnes principales | Notes |
 |-------|----------------------|-------|
 | `transactions` | `id`, `order_id`, `amount`, `currency`, `method`, `operator`, `provider`, `provider_reference` (unique), `status`, `failure_reason`, `refund_reference`, `created_at`, `succeeded_at`, `updated_at` | Index unique partiel : au plus **une** transaction `pending`, `succeeded` ou `refunded` par commande (PAY-05) ; `check` : `amount` = total de la commande (vérifié par la fonction) |
-| `cash_ledger` | `id`, `courier_id`, `order_id`, `type` (`collected` / `remitted`), `amount`, `reference`, `recorded_by`, `created_at` | Solde dû par livreur = Σ encaissé − Σ versé (vue `courier_cash_balances`) |
+| `cash_ledger` | `id`, `courier_id`, `order_id`, `type` (`collected` / `remitted`), `amount`, `reference`, `recorded_by`, `created_at` | Une seule écriture « encaissé » par commande ; solde dû = Σ encaissé − Σ versé (`courier_summary()`) |
 | `audit_log` | `id`, `actor_id`, `action`, `target_type`, `target_id`, `details` (jsonb), `created_at` | Actions admin hors commandes (suspension, identifiant, paramètres) |
 
 ## 5. Machine à états — qui peut faire quoi (fonction `transition_order`)
@@ -193,7 +193,9 @@ les apps et le web traduisent ces codes en messages (plan §3.4).
 | `respond_to_offer(offer_id, accept)` | livreur | Accepte (verrouillage, une mission à la fois) ou refuse |
 | `release_mission(order_id, reason)` | livreur | Abandon avant récupération → nouvelle recherche |
 | `confirm_delivery(order_id, code)` | livreur | Vérifie le code (essais limités) → `delivered` |
-| `confirm_cash_collected(order_id)` | livreur | Transaction espèces réussie + écriture `cash_ledger` |
+| `confirm_cash_collected(order_id)` | livreur | Écriture `cash_ledger`, commande payée (transaction espèces à l'Inc-10) |
+| `confirm_pickup(order_id, cash_received)` · `start_delivery(order_id)` · `declare_failure(order_id, reason)` | livreur | Étapes de la mission (§5) ; colis en espèces : encaissement confirmé à la récupération |
+| `courier_summary()` · `courier_missions()` | livreur | Gains et livraisons du jour, espèces dues ; historique sans téléphones |
 | `report_problem(order_id, kind, comment)` | livreur | Événement + alerte admin |
 | `admin_set_courier_status(user_id, status, reason)` | admin | Valider, refuser, suspendre |
 | `admin_assign_courier(order_id, courier_id, reason)` | admin | Attribution / réattribution manuelle |

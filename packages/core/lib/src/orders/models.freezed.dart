@@ -15,8 +15,9 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Order {
 
- String get id; String get number; OrderType get type; OrderStatus get status; String? get zoneId; String? get restaurantId; String? get parcelTypeId; String? get parcelDescription; String get pickupName; String? get pickupPhone; String get pickupDistrict; String get pickupLandmark; String get recipientName; String? get recipientPhone; String get dropoffDistrict; String get dropoffLandmark; String? get dropoffInstructions; int get subtotal; int get deliveryFee; int get total; int get commissionAmount; int get courierEarning; int get platformAmount; String get currency; PaymentMethod get paymentMethod; DateTime get createdAt; String? get closeReason; String? get courierId; CourierInfo? get courierInfo;/// Toujours sans livreur après le délai d'alerte (DIS-03).
- DateTime? get dispatchAlertedAt;@JsonKey(name: 'order_items') List<OrderItem> get items;
+ String get id; String get number; OrderType get type; OrderStatus get status; String? get zoneId; String? get restaurantId; String? get parcelTypeId; String? get parcelDescription; String get pickupName; String? get pickupPhone; String get pickupDistrict; String get pickupLandmark; String? get pickupInstructions; double get pickupLat; double get pickupLng; double get dropoffLat; double get dropoffLng; String get recipientName; String? get recipientPhone; String get dropoffDistrict; String get dropoffLandmark; String? get dropoffInstructions; int get subtotal; int get deliveryFee; int get total; int get commissionAmount; int get courierEarning; int get platformAmount; String get currency; PaymentMethod get paymentMethod; OrderPaymentStatus get paymentStatus; DateTime get createdAt; String? get closeReason; String? get courierId; CourierInfo? get courierInfo;/// Toujours sans livreur après le délai d'alerte (DIS-03).
+ DateTime? get dispatchAlertedAt;/// Alertes de supervision (ADM-03) : code de livraison bloqué, problème signalé par le livreur.
+ DateTime? get codeLockedAt; DateTime? get problemReportedAt;@JsonKey(name: 'order_items') List<OrderItem> get items;
 /// Create a copy of Order
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +30,16 @@ $OrderCopyWith<Order> get copyWith => _$OrderCopyWithImpl<Order>(this as Order, 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Order&&(identical(other.id, id) || other.id == id)&&(identical(other.number, number) || other.number == number)&&(identical(other.type, type) || other.type == type)&&(identical(other.status, status) || other.status == status)&&(identical(other.zoneId, zoneId) || other.zoneId == zoneId)&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.parcelTypeId, parcelTypeId) || other.parcelTypeId == parcelTypeId)&&(identical(other.parcelDescription, parcelDescription) || other.parcelDescription == parcelDescription)&&(identical(other.pickupName, pickupName) || other.pickupName == pickupName)&&(identical(other.pickupPhone, pickupPhone) || other.pickupPhone == pickupPhone)&&(identical(other.pickupDistrict, pickupDistrict) || other.pickupDistrict == pickupDistrict)&&(identical(other.pickupLandmark, pickupLandmark) || other.pickupLandmark == pickupLandmark)&&(identical(other.recipientName, recipientName) || other.recipientName == recipientName)&&(identical(other.recipientPhone, recipientPhone) || other.recipientPhone == recipientPhone)&&(identical(other.dropoffDistrict, dropoffDistrict) || other.dropoffDistrict == dropoffDistrict)&&(identical(other.dropoffLandmark, dropoffLandmark) || other.dropoffLandmark == dropoffLandmark)&&(identical(other.dropoffInstructions, dropoffInstructions) || other.dropoffInstructions == dropoffInstructions)&&(identical(other.subtotal, subtotal) || other.subtotal == subtotal)&&(identical(other.deliveryFee, deliveryFee) || other.deliveryFee == deliveryFee)&&(identical(other.total, total) || other.total == total)&&(identical(other.commissionAmount, commissionAmount) || other.commissionAmount == commissionAmount)&&(identical(other.courierEarning, courierEarning) || other.courierEarning == courierEarning)&&(identical(other.platformAmount, platformAmount) || other.platformAmount == platformAmount)&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.closeReason, closeReason) || other.closeReason == closeReason)&&(identical(other.courierId, courierId) || other.courierId == courierId)&&(identical(other.courierInfo, courierInfo) || other.courierInfo == courierInfo)&&(identical(other.dispatchAlertedAt, dispatchAlertedAt) || other.dispatchAlertedAt == dispatchAlertedAt)&&const DeepCollectionEquality().equals(other.items, items));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Order&&(identical(other.id, id) || other.id == id)&&(identical(other.number, number) || other.number == number)&&(identical(other.type, type) || other.type == type)&&(identical(other.status, status) || other.status == status)&&(identical(other.zoneId, zoneId) || other.zoneId == zoneId)&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.parcelTypeId, parcelTypeId) || other.parcelTypeId == parcelTypeId)&&(identical(other.parcelDescription, parcelDescription) || other.parcelDescription == parcelDescription)&&(identical(other.pickupName, pickupName) || other.pickupName == pickupName)&&(identical(other.pickupPhone, pickupPhone) || other.pickupPhone == pickupPhone)&&(identical(other.pickupDistrict, pickupDistrict) || other.pickupDistrict == pickupDistrict)&&(identical(other.pickupLandmark, pickupLandmark) || other.pickupLandmark == pickupLandmark)&&(identical(other.pickupInstructions, pickupInstructions) || other.pickupInstructions == pickupInstructions)&&(identical(other.pickupLat, pickupLat) || other.pickupLat == pickupLat)&&(identical(other.pickupLng, pickupLng) || other.pickupLng == pickupLng)&&(identical(other.dropoffLat, dropoffLat) || other.dropoffLat == dropoffLat)&&(identical(other.dropoffLng, dropoffLng) || other.dropoffLng == dropoffLng)&&(identical(other.recipientName, recipientName) || other.recipientName == recipientName)&&(identical(other.recipientPhone, recipientPhone) || other.recipientPhone == recipientPhone)&&(identical(other.dropoffDistrict, dropoffDistrict) || other.dropoffDistrict == dropoffDistrict)&&(identical(other.dropoffLandmark, dropoffLandmark) || other.dropoffLandmark == dropoffLandmark)&&(identical(other.dropoffInstructions, dropoffInstructions) || other.dropoffInstructions == dropoffInstructions)&&(identical(other.subtotal, subtotal) || other.subtotal == subtotal)&&(identical(other.deliveryFee, deliveryFee) || other.deliveryFee == deliveryFee)&&(identical(other.total, total) || other.total == total)&&(identical(other.commissionAmount, commissionAmount) || other.commissionAmount == commissionAmount)&&(identical(other.courierEarning, courierEarning) || other.courierEarning == courierEarning)&&(identical(other.platformAmount, platformAmount) || other.platformAmount == platformAmount)&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.paymentStatus, paymentStatus) || other.paymentStatus == paymentStatus)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.closeReason, closeReason) || other.closeReason == closeReason)&&(identical(other.courierId, courierId) || other.courierId == courierId)&&(identical(other.courierInfo, courierInfo) || other.courierInfo == courierInfo)&&(identical(other.dispatchAlertedAt, dispatchAlertedAt) || other.dispatchAlertedAt == dispatchAlertedAt)&&(identical(other.codeLockedAt, codeLockedAt) || other.codeLockedAt == codeLockedAt)&&(identical(other.problemReportedAt, problemReportedAt) || other.problemReportedAt == problemReportedAt)&&const DeepCollectionEquality().equals(other.items, items));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,number,type,status,zoneId,restaurantId,parcelTypeId,parcelDescription,pickupName,pickupPhone,pickupDistrict,pickupLandmark,recipientName,recipientPhone,dropoffDistrict,dropoffLandmark,dropoffInstructions,subtotal,deliveryFee,total,commissionAmount,courierEarning,platformAmount,currency,paymentMethod,createdAt,closeReason,courierId,courierInfo,dispatchAlertedAt,const DeepCollectionEquality().hash(items)]);
+int get hashCode => Object.hashAll([runtimeType,id,number,type,status,zoneId,restaurantId,parcelTypeId,parcelDescription,pickupName,pickupPhone,pickupDistrict,pickupLandmark,pickupInstructions,pickupLat,pickupLng,dropoffLat,dropoffLng,recipientName,recipientPhone,dropoffDistrict,dropoffLandmark,dropoffInstructions,subtotal,deliveryFee,total,commissionAmount,courierEarning,platformAmount,currency,paymentMethod,paymentStatus,createdAt,closeReason,courierId,courierInfo,dispatchAlertedAt,codeLockedAt,problemReportedAt,const DeepCollectionEquality().hash(items)]);
 
 @override
 String toString() {
-  return 'Order(id: $id, number: $number, type: $type, status: $status, zoneId: $zoneId, restaurantId: $restaurantId, parcelTypeId: $parcelTypeId, parcelDescription: $parcelDescription, pickupName: $pickupName, pickupPhone: $pickupPhone, pickupDistrict: $pickupDistrict, pickupLandmark: $pickupLandmark, recipientName: $recipientName, recipientPhone: $recipientPhone, dropoffDistrict: $dropoffDistrict, dropoffLandmark: $dropoffLandmark, dropoffInstructions: $dropoffInstructions, subtotal: $subtotal, deliveryFee: $deliveryFee, total: $total, commissionAmount: $commissionAmount, courierEarning: $courierEarning, platformAmount: $platformAmount, currency: $currency, paymentMethod: $paymentMethod, createdAt: $createdAt, closeReason: $closeReason, courierId: $courierId, courierInfo: $courierInfo, dispatchAlertedAt: $dispatchAlertedAt, items: $items)';
+  return 'Order(id: $id, number: $number, type: $type, status: $status, zoneId: $zoneId, restaurantId: $restaurantId, parcelTypeId: $parcelTypeId, parcelDescription: $parcelDescription, pickupName: $pickupName, pickupPhone: $pickupPhone, pickupDistrict: $pickupDistrict, pickupLandmark: $pickupLandmark, pickupInstructions: $pickupInstructions, pickupLat: $pickupLat, pickupLng: $pickupLng, dropoffLat: $dropoffLat, dropoffLng: $dropoffLng, recipientName: $recipientName, recipientPhone: $recipientPhone, dropoffDistrict: $dropoffDistrict, dropoffLandmark: $dropoffLandmark, dropoffInstructions: $dropoffInstructions, subtotal: $subtotal, deliveryFee: $deliveryFee, total: $total, commissionAmount: $commissionAmount, courierEarning: $courierEarning, platformAmount: $platformAmount, currency: $currency, paymentMethod: $paymentMethod, paymentStatus: $paymentStatus, createdAt: $createdAt, closeReason: $closeReason, courierId: $courierId, courierInfo: $courierInfo, dispatchAlertedAt: $dispatchAlertedAt, codeLockedAt: $codeLockedAt, problemReportedAt: $problemReportedAt, items: $items)';
 }
 
 
@@ -49,7 +50,7 @@ abstract mixin class $OrderCopyWith<$Res>  {
   factory $OrderCopyWith(Order value, $Res Function(Order) _then) = _$OrderCopyWithImpl;
 @useResult
 $Res call({
- String id, String number, OrderType type, OrderStatus status, String? zoneId, String? restaurantId, String? parcelTypeId, String? parcelDescription, String pickupName, String? pickupPhone, String pickupDistrict, String pickupLandmark, String recipientName, String? recipientPhone, String dropoffDistrict, String dropoffLandmark, String? dropoffInstructions, int subtotal, int deliveryFee, int total, int commissionAmount, int courierEarning, int platformAmount, String currency, PaymentMethod paymentMethod, DateTime createdAt, String? closeReason, String? courierId, CourierInfo? courierInfo, DateTime? dispatchAlertedAt,@JsonKey(name: 'order_items') List<OrderItem> items
+ String id, String number, OrderType type, OrderStatus status, String? zoneId, String? restaurantId, String? parcelTypeId, String? parcelDescription, String pickupName, String? pickupPhone, String pickupDistrict, String pickupLandmark, String? pickupInstructions, double pickupLat, double pickupLng, double dropoffLat, double dropoffLng, String recipientName, String? recipientPhone, String dropoffDistrict, String dropoffLandmark, String? dropoffInstructions, int subtotal, int deliveryFee, int total, int commissionAmount, int courierEarning, int platformAmount, String currency, PaymentMethod paymentMethod, OrderPaymentStatus paymentStatus, DateTime createdAt, String? closeReason, String? courierId, CourierInfo? courierInfo, DateTime? dispatchAlertedAt, DateTime? codeLockedAt, DateTime? problemReportedAt,@JsonKey(name: 'order_items') List<OrderItem> items
 });
 
 
@@ -66,7 +67,7 @@ class _$OrderCopyWithImpl<$Res>
 
 /// Create a copy of Order
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? number = null,Object? type = null,Object? status = null,Object? zoneId = freezed,Object? restaurantId = freezed,Object? parcelTypeId = freezed,Object? parcelDescription = freezed,Object? pickupName = null,Object? pickupPhone = freezed,Object? pickupDistrict = null,Object? pickupLandmark = null,Object? recipientName = null,Object? recipientPhone = freezed,Object? dropoffDistrict = null,Object? dropoffLandmark = null,Object? dropoffInstructions = freezed,Object? subtotal = null,Object? deliveryFee = null,Object? total = null,Object? commissionAmount = null,Object? courierEarning = null,Object? platformAmount = null,Object? currency = null,Object? paymentMethod = null,Object? createdAt = null,Object? closeReason = freezed,Object? courierId = freezed,Object? courierInfo = freezed,Object? dispatchAlertedAt = freezed,Object? items = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? number = null,Object? type = null,Object? status = null,Object? zoneId = freezed,Object? restaurantId = freezed,Object? parcelTypeId = freezed,Object? parcelDescription = freezed,Object? pickupName = null,Object? pickupPhone = freezed,Object? pickupDistrict = null,Object? pickupLandmark = null,Object? pickupInstructions = freezed,Object? pickupLat = null,Object? pickupLng = null,Object? dropoffLat = null,Object? dropoffLng = null,Object? recipientName = null,Object? recipientPhone = freezed,Object? dropoffDistrict = null,Object? dropoffLandmark = null,Object? dropoffInstructions = freezed,Object? subtotal = null,Object? deliveryFee = null,Object? total = null,Object? commissionAmount = null,Object? courierEarning = null,Object? platformAmount = null,Object? currency = null,Object? paymentMethod = null,Object? paymentStatus = null,Object? createdAt = null,Object? closeReason = freezed,Object? courierId = freezed,Object? courierInfo = freezed,Object? dispatchAlertedAt = freezed,Object? codeLockedAt = freezed,Object? problemReportedAt = freezed,Object? items = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,number: null == number ? _self.number : number // ignore: cast_nullable_to_non_nullable
@@ -80,7 +81,12 @@ as String?,pickupName: null == pickupName ? _self.pickupName : pickupName // ign
 as String,pickupPhone: freezed == pickupPhone ? _self.pickupPhone : pickupPhone // ignore: cast_nullable_to_non_nullable
 as String?,pickupDistrict: null == pickupDistrict ? _self.pickupDistrict : pickupDistrict // ignore: cast_nullable_to_non_nullable
 as String,pickupLandmark: null == pickupLandmark ? _self.pickupLandmark : pickupLandmark // ignore: cast_nullable_to_non_nullable
-as String,recipientName: null == recipientName ? _self.recipientName : recipientName // ignore: cast_nullable_to_non_nullable
+as String,pickupInstructions: freezed == pickupInstructions ? _self.pickupInstructions : pickupInstructions // ignore: cast_nullable_to_non_nullable
+as String?,pickupLat: null == pickupLat ? _self.pickupLat : pickupLat // ignore: cast_nullable_to_non_nullable
+as double,pickupLng: null == pickupLng ? _self.pickupLng : pickupLng // ignore: cast_nullable_to_non_nullable
+as double,dropoffLat: null == dropoffLat ? _self.dropoffLat : dropoffLat // ignore: cast_nullable_to_non_nullable
+as double,dropoffLng: null == dropoffLng ? _self.dropoffLng : dropoffLng // ignore: cast_nullable_to_non_nullable
+as double,recipientName: null == recipientName ? _self.recipientName : recipientName // ignore: cast_nullable_to_non_nullable
 as String,recipientPhone: freezed == recipientPhone ? _self.recipientPhone : recipientPhone // ignore: cast_nullable_to_non_nullable
 as String?,dropoffDistrict: null == dropoffDistrict ? _self.dropoffDistrict : dropoffDistrict // ignore: cast_nullable_to_non_nullable
 as String,dropoffLandmark: null == dropoffLandmark ? _self.dropoffLandmark : dropoffLandmark // ignore: cast_nullable_to_non_nullable
@@ -93,11 +99,14 @@ as int,courierEarning: null == courierEarning ? _self.courierEarning : courierEa
 as int,platformAmount: null == platformAmount ? _self.platformAmount : platformAmount // ignore: cast_nullable_to_non_nullable
 as int,currency: null == currency ? _self.currency : currency // ignore: cast_nullable_to_non_nullable
 as String,paymentMethod: null == paymentMethod ? _self.paymentMethod : paymentMethod // ignore: cast_nullable_to_non_nullable
-as PaymentMethod,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as PaymentMethod,paymentStatus: null == paymentStatus ? _self.paymentStatus : paymentStatus // ignore: cast_nullable_to_non_nullable
+as OrderPaymentStatus,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,closeReason: freezed == closeReason ? _self.closeReason : closeReason // ignore: cast_nullable_to_non_nullable
 as String?,courierId: freezed == courierId ? _self.courierId : courierId // ignore: cast_nullable_to_non_nullable
 as String?,courierInfo: freezed == courierInfo ? _self.courierInfo : courierInfo // ignore: cast_nullable_to_non_nullable
 as CourierInfo?,dispatchAlertedAt: freezed == dispatchAlertedAt ? _self.dispatchAlertedAt : dispatchAlertedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,codeLockedAt: freezed == codeLockedAt ? _self.codeLockedAt : codeLockedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,problemReportedAt: freezed == problemReportedAt ? _self.problemReportedAt : problemReportedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
 as List<OrderItem>,
   ));
@@ -196,10 +205,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String number,  OrderType type,  OrderStatus status,  String? zoneId,  String? restaurantId,  String? parcelTypeId,  String? parcelDescription,  String pickupName,  String? pickupPhone,  String pickupDistrict,  String pickupLandmark,  String recipientName,  String? recipientPhone,  String dropoffDistrict,  String dropoffLandmark,  String? dropoffInstructions,  int subtotal,  int deliveryFee,  int total,  int commissionAmount,  int courierEarning,  int platformAmount,  String currency,  PaymentMethod paymentMethod,  DateTime createdAt,  String? closeReason,  String? courierId,  CourierInfo? courierInfo,  DateTime? dispatchAlertedAt, @JsonKey(name: 'order_items')  List<OrderItem> items)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String number,  OrderType type,  OrderStatus status,  String? zoneId,  String? restaurantId,  String? parcelTypeId,  String? parcelDescription,  String pickupName,  String? pickupPhone,  String pickupDistrict,  String pickupLandmark,  String? pickupInstructions,  double pickupLat,  double pickupLng,  double dropoffLat,  double dropoffLng,  String recipientName,  String? recipientPhone,  String dropoffDistrict,  String dropoffLandmark,  String? dropoffInstructions,  int subtotal,  int deliveryFee,  int total,  int commissionAmount,  int courierEarning,  int platformAmount,  String currency,  PaymentMethod paymentMethod,  OrderPaymentStatus paymentStatus,  DateTime createdAt,  String? closeReason,  String? courierId,  CourierInfo? courierInfo,  DateTime? dispatchAlertedAt,  DateTime? codeLockedAt,  DateTime? problemReportedAt, @JsonKey(name: 'order_items')  List<OrderItem> items)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Order() when $default != null:
-return $default(_that.id,_that.number,_that.type,_that.status,_that.zoneId,_that.restaurantId,_that.parcelTypeId,_that.parcelDescription,_that.pickupName,_that.pickupPhone,_that.pickupDistrict,_that.pickupLandmark,_that.recipientName,_that.recipientPhone,_that.dropoffDistrict,_that.dropoffLandmark,_that.dropoffInstructions,_that.subtotal,_that.deliveryFee,_that.total,_that.commissionAmount,_that.courierEarning,_that.platformAmount,_that.currency,_that.paymentMethod,_that.createdAt,_that.closeReason,_that.courierId,_that.courierInfo,_that.dispatchAlertedAt,_that.items);case _:
+return $default(_that.id,_that.number,_that.type,_that.status,_that.zoneId,_that.restaurantId,_that.parcelTypeId,_that.parcelDescription,_that.pickupName,_that.pickupPhone,_that.pickupDistrict,_that.pickupLandmark,_that.pickupInstructions,_that.pickupLat,_that.pickupLng,_that.dropoffLat,_that.dropoffLng,_that.recipientName,_that.recipientPhone,_that.dropoffDistrict,_that.dropoffLandmark,_that.dropoffInstructions,_that.subtotal,_that.deliveryFee,_that.total,_that.commissionAmount,_that.courierEarning,_that.platformAmount,_that.currency,_that.paymentMethod,_that.paymentStatus,_that.createdAt,_that.closeReason,_that.courierId,_that.courierInfo,_that.dispatchAlertedAt,_that.codeLockedAt,_that.problemReportedAt,_that.items);case _:
   return orElse();
 
 }
@@ -217,10 +226,10 @@ return $default(_that.id,_that.number,_that.type,_that.status,_that.zoneId,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String number,  OrderType type,  OrderStatus status,  String? zoneId,  String? restaurantId,  String? parcelTypeId,  String? parcelDescription,  String pickupName,  String? pickupPhone,  String pickupDistrict,  String pickupLandmark,  String recipientName,  String? recipientPhone,  String dropoffDistrict,  String dropoffLandmark,  String? dropoffInstructions,  int subtotal,  int deliveryFee,  int total,  int commissionAmount,  int courierEarning,  int platformAmount,  String currency,  PaymentMethod paymentMethod,  DateTime createdAt,  String? closeReason,  String? courierId,  CourierInfo? courierInfo,  DateTime? dispatchAlertedAt, @JsonKey(name: 'order_items')  List<OrderItem> items)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String number,  OrderType type,  OrderStatus status,  String? zoneId,  String? restaurantId,  String? parcelTypeId,  String? parcelDescription,  String pickupName,  String? pickupPhone,  String pickupDistrict,  String pickupLandmark,  String? pickupInstructions,  double pickupLat,  double pickupLng,  double dropoffLat,  double dropoffLng,  String recipientName,  String? recipientPhone,  String dropoffDistrict,  String dropoffLandmark,  String? dropoffInstructions,  int subtotal,  int deliveryFee,  int total,  int commissionAmount,  int courierEarning,  int platformAmount,  String currency,  PaymentMethod paymentMethod,  OrderPaymentStatus paymentStatus,  DateTime createdAt,  String? closeReason,  String? courierId,  CourierInfo? courierInfo,  DateTime? dispatchAlertedAt,  DateTime? codeLockedAt,  DateTime? problemReportedAt, @JsonKey(name: 'order_items')  List<OrderItem> items)  $default,) {final _that = this;
 switch (_that) {
 case _Order():
-return $default(_that.id,_that.number,_that.type,_that.status,_that.zoneId,_that.restaurantId,_that.parcelTypeId,_that.parcelDescription,_that.pickupName,_that.pickupPhone,_that.pickupDistrict,_that.pickupLandmark,_that.recipientName,_that.recipientPhone,_that.dropoffDistrict,_that.dropoffLandmark,_that.dropoffInstructions,_that.subtotal,_that.deliveryFee,_that.total,_that.commissionAmount,_that.courierEarning,_that.platformAmount,_that.currency,_that.paymentMethod,_that.createdAt,_that.closeReason,_that.courierId,_that.courierInfo,_that.dispatchAlertedAt,_that.items);case _:
+return $default(_that.id,_that.number,_that.type,_that.status,_that.zoneId,_that.restaurantId,_that.parcelTypeId,_that.parcelDescription,_that.pickupName,_that.pickupPhone,_that.pickupDistrict,_that.pickupLandmark,_that.pickupInstructions,_that.pickupLat,_that.pickupLng,_that.dropoffLat,_that.dropoffLng,_that.recipientName,_that.recipientPhone,_that.dropoffDistrict,_that.dropoffLandmark,_that.dropoffInstructions,_that.subtotal,_that.deliveryFee,_that.total,_that.commissionAmount,_that.courierEarning,_that.platformAmount,_that.currency,_that.paymentMethod,_that.paymentStatus,_that.createdAt,_that.closeReason,_that.courierId,_that.courierInfo,_that.dispatchAlertedAt,_that.codeLockedAt,_that.problemReportedAt,_that.items);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -237,10 +246,10 @@ return $default(_that.id,_that.number,_that.type,_that.status,_that.zoneId,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String number,  OrderType type,  OrderStatus status,  String? zoneId,  String? restaurantId,  String? parcelTypeId,  String? parcelDescription,  String pickupName,  String? pickupPhone,  String pickupDistrict,  String pickupLandmark,  String recipientName,  String? recipientPhone,  String dropoffDistrict,  String dropoffLandmark,  String? dropoffInstructions,  int subtotal,  int deliveryFee,  int total,  int commissionAmount,  int courierEarning,  int platformAmount,  String currency,  PaymentMethod paymentMethod,  DateTime createdAt,  String? closeReason,  String? courierId,  CourierInfo? courierInfo,  DateTime? dispatchAlertedAt, @JsonKey(name: 'order_items')  List<OrderItem> items)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String number,  OrderType type,  OrderStatus status,  String? zoneId,  String? restaurantId,  String? parcelTypeId,  String? parcelDescription,  String pickupName,  String? pickupPhone,  String pickupDistrict,  String pickupLandmark,  String? pickupInstructions,  double pickupLat,  double pickupLng,  double dropoffLat,  double dropoffLng,  String recipientName,  String? recipientPhone,  String dropoffDistrict,  String dropoffLandmark,  String? dropoffInstructions,  int subtotal,  int deliveryFee,  int total,  int commissionAmount,  int courierEarning,  int platformAmount,  String currency,  PaymentMethod paymentMethod,  OrderPaymentStatus paymentStatus,  DateTime createdAt,  String? closeReason,  String? courierId,  CourierInfo? courierInfo,  DateTime? dispatchAlertedAt,  DateTime? codeLockedAt,  DateTime? problemReportedAt, @JsonKey(name: 'order_items')  List<OrderItem> items)?  $default,) {final _that = this;
 switch (_that) {
 case _Order() when $default != null:
-return $default(_that.id,_that.number,_that.type,_that.status,_that.zoneId,_that.restaurantId,_that.parcelTypeId,_that.parcelDescription,_that.pickupName,_that.pickupPhone,_that.pickupDistrict,_that.pickupLandmark,_that.recipientName,_that.recipientPhone,_that.dropoffDistrict,_that.dropoffLandmark,_that.dropoffInstructions,_that.subtotal,_that.deliveryFee,_that.total,_that.commissionAmount,_that.courierEarning,_that.platformAmount,_that.currency,_that.paymentMethod,_that.createdAt,_that.closeReason,_that.courierId,_that.courierInfo,_that.dispatchAlertedAt,_that.items);case _:
+return $default(_that.id,_that.number,_that.type,_that.status,_that.zoneId,_that.restaurantId,_that.parcelTypeId,_that.parcelDescription,_that.pickupName,_that.pickupPhone,_that.pickupDistrict,_that.pickupLandmark,_that.pickupInstructions,_that.pickupLat,_that.pickupLng,_that.dropoffLat,_that.dropoffLng,_that.recipientName,_that.recipientPhone,_that.dropoffDistrict,_that.dropoffLandmark,_that.dropoffInstructions,_that.subtotal,_that.deliveryFee,_that.total,_that.commissionAmount,_that.courierEarning,_that.platformAmount,_that.currency,_that.paymentMethod,_that.paymentStatus,_that.createdAt,_that.closeReason,_that.courierId,_that.courierInfo,_that.dispatchAlertedAt,_that.codeLockedAt,_that.problemReportedAt,_that.items);case _:
   return null;
 
 }
@@ -252,7 +261,7 @@ return $default(_that.id,_that.number,_that.type,_that.status,_that.zoneId,_that
 @JsonSerializable()
 
 class _Order implements Order {
-  const _Order({required this.id, required this.number, this.type = OrderType.food, required this.status, this.zoneId, this.restaurantId, this.parcelTypeId, this.parcelDescription, required this.pickupName, this.pickupPhone, this.pickupDistrict = '', this.pickupLandmark = '', required this.recipientName, this.recipientPhone, required this.dropoffDistrict, required this.dropoffLandmark, this.dropoffInstructions, required this.subtotal, required this.deliveryFee, required this.total, this.commissionAmount = 0, this.courierEarning = 0, this.platformAmount = 0, this.currency = 'XOF', required this.paymentMethod, required this.createdAt, this.closeReason, this.courierId, this.courierInfo, this.dispatchAlertedAt, @JsonKey(name: 'order_items') final  List<OrderItem> items = const []}): _items = items;
+  const _Order({required this.id, required this.number, this.type = OrderType.food, required this.status, this.zoneId, this.restaurantId, this.parcelTypeId, this.parcelDescription, required this.pickupName, this.pickupPhone, this.pickupDistrict = '', this.pickupLandmark = '', this.pickupInstructions, this.pickupLat = 0, this.pickupLng = 0, this.dropoffLat = 0, this.dropoffLng = 0, required this.recipientName, this.recipientPhone, required this.dropoffDistrict, required this.dropoffLandmark, this.dropoffInstructions, required this.subtotal, required this.deliveryFee, required this.total, this.commissionAmount = 0, this.courierEarning = 0, this.platformAmount = 0, this.currency = 'XOF', required this.paymentMethod, this.paymentStatus = OrderPaymentStatus.unpaid, required this.createdAt, this.closeReason, this.courierId, this.courierInfo, this.dispatchAlertedAt, this.codeLockedAt, this.problemReportedAt, @JsonKey(name: 'order_items') final  List<OrderItem> items = const []}): _items = items;
   factory _Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);
 
 @override final  String id;
@@ -267,6 +276,11 @@ class _Order implements Order {
 @override final  String? pickupPhone;
 @override@JsonKey() final  String pickupDistrict;
 @override@JsonKey() final  String pickupLandmark;
+@override final  String? pickupInstructions;
+@override@JsonKey() final  double pickupLat;
+@override@JsonKey() final  double pickupLng;
+@override@JsonKey() final  double dropoffLat;
+@override@JsonKey() final  double dropoffLng;
 @override final  String recipientName;
 @override final  String? recipientPhone;
 @override final  String dropoffDistrict;
@@ -280,12 +294,16 @@ class _Order implements Order {
 @override@JsonKey() final  int platformAmount;
 @override@JsonKey() final  String currency;
 @override final  PaymentMethod paymentMethod;
+@override@JsonKey() final  OrderPaymentStatus paymentStatus;
 @override final  DateTime createdAt;
 @override final  String? closeReason;
 @override final  String? courierId;
 @override final  CourierInfo? courierInfo;
 /// Toujours sans livreur après le délai d'alerte (DIS-03).
 @override final  DateTime? dispatchAlertedAt;
+/// Alertes de supervision (ADM-03) : code de livraison bloqué, problème signalé par le livreur.
+@override final  DateTime? codeLockedAt;
+@override final  DateTime? problemReportedAt;
  final  List<OrderItem> _items;
 @override@JsonKey(name: 'order_items') List<OrderItem> get items {
   if (_items is EqualUnmodifiableListView) return _items;
@@ -307,16 +325,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Order&&(identical(other.id, id) || other.id == id)&&(identical(other.number, number) || other.number == number)&&(identical(other.type, type) || other.type == type)&&(identical(other.status, status) || other.status == status)&&(identical(other.zoneId, zoneId) || other.zoneId == zoneId)&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.parcelTypeId, parcelTypeId) || other.parcelTypeId == parcelTypeId)&&(identical(other.parcelDescription, parcelDescription) || other.parcelDescription == parcelDescription)&&(identical(other.pickupName, pickupName) || other.pickupName == pickupName)&&(identical(other.pickupPhone, pickupPhone) || other.pickupPhone == pickupPhone)&&(identical(other.pickupDistrict, pickupDistrict) || other.pickupDistrict == pickupDistrict)&&(identical(other.pickupLandmark, pickupLandmark) || other.pickupLandmark == pickupLandmark)&&(identical(other.recipientName, recipientName) || other.recipientName == recipientName)&&(identical(other.recipientPhone, recipientPhone) || other.recipientPhone == recipientPhone)&&(identical(other.dropoffDistrict, dropoffDistrict) || other.dropoffDistrict == dropoffDistrict)&&(identical(other.dropoffLandmark, dropoffLandmark) || other.dropoffLandmark == dropoffLandmark)&&(identical(other.dropoffInstructions, dropoffInstructions) || other.dropoffInstructions == dropoffInstructions)&&(identical(other.subtotal, subtotal) || other.subtotal == subtotal)&&(identical(other.deliveryFee, deliveryFee) || other.deliveryFee == deliveryFee)&&(identical(other.total, total) || other.total == total)&&(identical(other.commissionAmount, commissionAmount) || other.commissionAmount == commissionAmount)&&(identical(other.courierEarning, courierEarning) || other.courierEarning == courierEarning)&&(identical(other.platformAmount, platformAmount) || other.platformAmount == platformAmount)&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.closeReason, closeReason) || other.closeReason == closeReason)&&(identical(other.courierId, courierId) || other.courierId == courierId)&&(identical(other.courierInfo, courierInfo) || other.courierInfo == courierInfo)&&(identical(other.dispatchAlertedAt, dispatchAlertedAt) || other.dispatchAlertedAt == dispatchAlertedAt)&&const DeepCollectionEquality().equals(other._items, _items));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Order&&(identical(other.id, id) || other.id == id)&&(identical(other.number, number) || other.number == number)&&(identical(other.type, type) || other.type == type)&&(identical(other.status, status) || other.status == status)&&(identical(other.zoneId, zoneId) || other.zoneId == zoneId)&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.parcelTypeId, parcelTypeId) || other.parcelTypeId == parcelTypeId)&&(identical(other.parcelDescription, parcelDescription) || other.parcelDescription == parcelDescription)&&(identical(other.pickupName, pickupName) || other.pickupName == pickupName)&&(identical(other.pickupPhone, pickupPhone) || other.pickupPhone == pickupPhone)&&(identical(other.pickupDistrict, pickupDistrict) || other.pickupDistrict == pickupDistrict)&&(identical(other.pickupLandmark, pickupLandmark) || other.pickupLandmark == pickupLandmark)&&(identical(other.pickupInstructions, pickupInstructions) || other.pickupInstructions == pickupInstructions)&&(identical(other.pickupLat, pickupLat) || other.pickupLat == pickupLat)&&(identical(other.pickupLng, pickupLng) || other.pickupLng == pickupLng)&&(identical(other.dropoffLat, dropoffLat) || other.dropoffLat == dropoffLat)&&(identical(other.dropoffLng, dropoffLng) || other.dropoffLng == dropoffLng)&&(identical(other.recipientName, recipientName) || other.recipientName == recipientName)&&(identical(other.recipientPhone, recipientPhone) || other.recipientPhone == recipientPhone)&&(identical(other.dropoffDistrict, dropoffDistrict) || other.dropoffDistrict == dropoffDistrict)&&(identical(other.dropoffLandmark, dropoffLandmark) || other.dropoffLandmark == dropoffLandmark)&&(identical(other.dropoffInstructions, dropoffInstructions) || other.dropoffInstructions == dropoffInstructions)&&(identical(other.subtotal, subtotal) || other.subtotal == subtotal)&&(identical(other.deliveryFee, deliveryFee) || other.deliveryFee == deliveryFee)&&(identical(other.total, total) || other.total == total)&&(identical(other.commissionAmount, commissionAmount) || other.commissionAmount == commissionAmount)&&(identical(other.courierEarning, courierEarning) || other.courierEarning == courierEarning)&&(identical(other.platformAmount, platformAmount) || other.platformAmount == platformAmount)&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.paymentStatus, paymentStatus) || other.paymentStatus == paymentStatus)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.closeReason, closeReason) || other.closeReason == closeReason)&&(identical(other.courierId, courierId) || other.courierId == courierId)&&(identical(other.courierInfo, courierInfo) || other.courierInfo == courierInfo)&&(identical(other.dispatchAlertedAt, dispatchAlertedAt) || other.dispatchAlertedAt == dispatchAlertedAt)&&(identical(other.codeLockedAt, codeLockedAt) || other.codeLockedAt == codeLockedAt)&&(identical(other.problemReportedAt, problemReportedAt) || other.problemReportedAt == problemReportedAt)&&const DeepCollectionEquality().equals(other._items, _items));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,number,type,status,zoneId,restaurantId,parcelTypeId,parcelDescription,pickupName,pickupPhone,pickupDistrict,pickupLandmark,recipientName,recipientPhone,dropoffDistrict,dropoffLandmark,dropoffInstructions,subtotal,deliveryFee,total,commissionAmount,courierEarning,platformAmount,currency,paymentMethod,createdAt,closeReason,courierId,courierInfo,dispatchAlertedAt,const DeepCollectionEquality().hash(_items)]);
+int get hashCode => Object.hashAll([runtimeType,id,number,type,status,zoneId,restaurantId,parcelTypeId,parcelDescription,pickupName,pickupPhone,pickupDistrict,pickupLandmark,pickupInstructions,pickupLat,pickupLng,dropoffLat,dropoffLng,recipientName,recipientPhone,dropoffDistrict,dropoffLandmark,dropoffInstructions,subtotal,deliveryFee,total,commissionAmount,courierEarning,platformAmount,currency,paymentMethod,paymentStatus,createdAt,closeReason,courierId,courierInfo,dispatchAlertedAt,codeLockedAt,problemReportedAt,const DeepCollectionEquality().hash(_items)]);
 
 @override
 String toString() {
-  return 'Order(id: $id, number: $number, type: $type, status: $status, zoneId: $zoneId, restaurantId: $restaurantId, parcelTypeId: $parcelTypeId, parcelDescription: $parcelDescription, pickupName: $pickupName, pickupPhone: $pickupPhone, pickupDistrict: $pickupDistrict, pickupLandmark: $pickupLandmark, recipientName: $recipientName, recipientPhone: $recipientPhone, dropoffDistrict: $dropoffDistrict, dropoffLandmark: $dropoffLandmark, dropoffInstructions: $dropoffInstructions, subtotal: $subtotal, deliveryFee: $deliveryFee, total: $total, commissionAmount: $commissionAmount, courierEarning: $courierEarning, platformAmount: $platformAmount, currency: $currency, paymentMethod: $paymentMethod, createdAt: $createdAt, closeReason: $closeReason, courierId: $courierId, courierInfo: $courierInfo, dispatchAlertedAt: $dispatchAlertedAt, items: $items)';
+  return 'Order(id: $id, number: $number, type: $type, status: $status, zoneId: $zoneId, restaurantId: $restaurantId, parcelTypeId: $parcelTypeId, parcelDescription: $parcelDescription, pickupName: $pickupName, pickupPhone: $pickupPhone, pickupDistrict: $pickupDistrict, pickupLandmark: $pickupLandmark, pickupInstructions: $pickupInstructions, pickupLat: $pickupLat, pickupLng: $pickupLng, dropoffLat: $dropoffLat, dropoffLng: $dropoffLng, recipientName: $recipientName, recipientPhone: $recipientPhone, dropoffDistrict: $dropoffDistrict, dropoffLandmark: $dropoffLandmark, dropoffInstructions: $dropoffInstructions, subtotal: $subtotal, deliveryFee: $deliveryFee, total: $total, commissionAmount: $commissionAmount, courierEarning: $courierEarning, platformAmount: $platformAmount, currency: $currency, paymentMethod: $paymentMethod, paymentStatus: $paymentStatus, createdAt: $createdAt, closeReason: $closeReason, courierId: $courierId, courierInfo: $courierInfo, dispatchAlertedAt: $dispatchAlertedAt, codeLockedAt: $codeLockedAt, problemReportedAt: $problemReportedAt, items: $items)';
 }
 
 
@@ -327,7 +345,7 @@ abstract mixin class _$OrderCopyWith<$Res> implements $OrderCopyWith<$Res> {
   factory _$OrderCopyWith(_Order value, $Res Function(_Order) _then) = __$OrderCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String number, OrderType type, OrderStatus status, String? zoneId, String? restaurantId, String? parcelTypeId, String? parcelDescription, String pickupName, String? pickupPhone, String pickupDistrict, String pickupLandmark, String recipientName, String? recipientPhone, String dropoffDistrict, String dropoffLandmark, String? dropoffInstructions, int subtotal, int deliveryFee, int total, int commissionAmount, int courierEarning, int platformAmount, String currency, PaymentMethod paymentMethod, DateTime createdAt, String? closeReason, String? courierId, CourierInfo? courierInfo, DateTime? dispatchAlertedAt,@JsonKey(name: 'order_items') List<OrderItem> items
+ String id, String number, OrderType type, OrderStatus status, String? zoneId, String? restaurantId, String? parcelTypeId, String? parcelDescription, String pickupName, String? pickupPhone, String pickupDistrict, String pickupLandmark, String? pickupInstructions, double pickupLat, double pickupLng, double dropoffLat, double dropoffLng, String recipientName, String? recipientPhone, String dropoffDistrict, String dropoffLandmark, String? dropoffInstructions, int subtotal, int deliveryFee, int total, int commissionAmount, int courierEarning, int platformAmount, String currency, PaymentMethod paymentMethod, OrderPaymentStatus paymentStatus, DateTime createdAt, String? closeReason, String? courierId, CourierInfo? courierInfo, DateTime? dispatchAlertedAt, DateTime? codeLockedAt, DateTime? problemReportedAt,@JsonKey(name: 'order_items') List<OrderItem> items
 });
 
 
@@ -344,7 +362,7 @@ class __$OrderCopyWithImpl<$Res>
 
 /// Create a copy of Order
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? number = null,Object? type = null,Object? status = null,Object? zoneId = freezed,Object? restaurantId = freezed,Object? parcelTypeId = freezed,Object? parcelDescription = freezed,Object? pickupName = null,Object? pickupPhone = freezed,Object? pickupDistrict = null,Object? pickupLandmark = null,Object? recipientName = null,Object? recipientPhone = freezed,Object? dropoffDistrict = null,Object? dropoffLandmark = null,Object? dropoffInstructions = freezed,Object? subtotal = null,Object? deliveryFee = null,Object? total = null,Object? commissionAmount = null,Object? courierEarning = null,Object? platformAmount = null,Object? currency = null,Object? paymentMethod = null,Object? createdAt = null,Object? closeReason = freezed,Object? courierId = freezed,Object? courierInfo = freezed,Object? dispatchAlertedAt = freezed,Object? items = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? number = null,Object? type = null,Object? status = null,Object? zoneId = freezed,Object? restaurantId = freezed,Object? parcelTypeId = freezed,Object? parcelDescription = freezed,Object? pickupName = null,Object? pickupPhone = freezed,Object? pickupDistrict = null,Object? pickupLandmark = null,Object? pickupInstructions = freezed,Object? pickupLat = null,Object? pickupLng = null,Object? dropoffLat = null,Object? dropoffLng = null,Object? recipientName = null,Object? recipientPhone = freezed,Object? dropoffDistrict = null,Object? dropoffLandmark = null,Object? dropoffInstructions = freezed,Object? subtotal = null,Object? deliveryFee = null,Object? total = null,Object? commissionAmount = null,Object? courierEarning = null,Object? platformAmount = null,Object? currency = null,Object? paymentMethod = null,Object? paymentStatus = null,Object? createdAt = null,Object? closeReason = freezed,Object? courierId = freezed,Object? courierInfo = freezed,Object? dispatchAlertedAt = freezed,Object? codeLockedAt = freezed,Object? problemReportedAt = freezed,Object? items = null,}) {
   return _then(_Order(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,number: null == number ? _self.number : number // ignore: cast_nullable_to_non_nullable
@@ -358,7 +376,12 @@ as String?,pickupName: null == pickupName ? _self.pickupName : pickupName // ign
 as String,pickupPhone: freezed == pickupPhone ? _self.pickupPhone : pickupPhone // ignore: cast_nullable_to_non_nullable
 as String?,pickupDistrict: null == pickupDistrict ? _self.pickupDistrict : pickupDistrict // ignore: cast_nullable_to_non_nullable
 as String,pickupLandmark: null == pickupLandmark ? _self.pickupLandmark : pickupLandmark // ignore: cast_nullable_to_non_nullable
-as String,recipientName: null == recipientName ? _self.recipientName : recipientName // ignore: cast_nullable_to_non_nullable
+as String,pickupInstructions: freezed == pickupInstructions ? _self.pickupInstructions : pickupInstructions // ignore: cast_nullable_to_non_nullable
+as String?,pickupLat: null == pickupLat ? _self.pickupLat : pickupLat // ignore: cast_nullable_to_non_nullable
+as double,pickupLng: null == pickupLng ? _self.pickupLng : pickupLng // ignore: cast_nullable_to_non_nullable
+as double,dropoffLat: null == dropoffLat ? _self.dropoffLat : dropoffLat // ignore: cast_nullable_to_non_nullable
+as double,dropoffLng: null == dropoffLng ? _self.dropoffLng : dropoffLng // ignore: cast_nullable_to_non_nullable
+as double,recipientName: null == recipientName ? _self.recipientName : recipientName // ignore: cast_nullable_to_non_nullable
 as String,recipientPhone: freezed == recipientPhone ? _self.recipientPhone : recipientPhone // ignore: cast_nullable_to_non_nullable
 as String?,dropoffDistrict: null == dropoffDistrict ? _self.dropoffDistrict : dropoffDistrict // ignore: cast_nullable_to_non_nullable
 as String,dropoffLandmark: null == dropoffLandmark ? _self.dropoffLandmark : dropoffLandmark // ignore: cast_nullable_to_non_nullable
@@ -371,11 +394,14 @@ as int,courierEarning: null == courierEarning ? _self.courierEarning : courierEa
 as int,platformAmount: null == platformAmount ? _self.platformAmount : platformAmount // ignore: cast_nullable_to_non_nullable
 as int,currency: null == currency ? _self.currency : currency // ignore: cast_nullable_to_non_nullable
 as String,paymentMethod: null == paymentMethod ? _self.paymentMethod : paymentMethod // ignore: cast_nullable_to_non_nullable
-as PaymentMethod,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as PaymentMethod,paymentStatus: null == paymentStatus ? _self.paymentStatus : paymentStatus // ignore: cast_nullable_to_non_nullable
+as OrderPaymentStatus,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,closeReason: freezed == closeReason ? _self.closeReason : closeReason // ignore: cast_nullable_to_non_nullable
 as String?,courierId: freezed == courierId ? _self.courierId : courierId // ignore: cast_nullable_to_non_nullable
 as String?,courierInfo: freezed == courierInfo ? _self.courierInfo : courierInfo // ignore: cast_nullable_to_non_nullable
 as CourierInfo?,dispatchAlertedAt: freezed == dispatchAlertedAt ? _self.dispatchAlertedAt : dispatchAlertedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,codeLockedAt: freezed == codeLockedAt ? _self.codeLockedAt : codeLockedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,problemReportedAt: freezed == problemReportedAt ? _self.problemReportedAt : problemReportedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
 as List<OrderItem>,
   ));
@@ -2039,6 +2065,293 @@ as double,district: null == district ? _self.district : district // ignore: cast
 as String,landmark: null == landmark ? _self.landmark : landmark // ignore: cast_nullable_to_non_nullable
 as String,instructions: freezed == instructions ? _self.instructions : instructions // ignore: cast_nullable_to_non_nullable
 as String?,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$MissionRecord {
+
+ String get id; String get number; OrderType get type; OrderStatus get status; String get pickupDistrict; String get dropoffDistrict; int get courierEarning; DateTime? get assignedAt; DateTime? get closedAt;
+/// Create a copy of MissionRecord
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$MissionRecordCopyWith<MissionRecord> get copyWith => _$MissionRecordCopyWithImpl<MissionRecord>(this as MissionRecord, _$identity);
+
+  /// Serializes this MissionRecord to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MissionRecord&&(identical(other.id, id) || other.id == id)&&(identical(other.number, number) || other.number == number)&&(identical(other.type, type) || other.type == type)&&(identical(other.status, status) || other.status == status)&&(identical(other.pickupDistrict, pickupDistrict) || other.pickupDistrict == pickupDistrict)&&(identical(other.dropoffDistrict, dropoffDistrict) || other.dropoffDistrict == dropoffDistrict)&&(identical(other.courierEarning, courierEarning) || other.courierEarning == courierEarning)&&(identical(other.assignedAt, assignedAt) || other.assignedAt == assignedAt)&&(identical(other.closedAt, closedAt) || other.closedAt == closedAt));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,number,type,status,pickupDistrict,dropoffDistrict,courierEarning,assignedAt,closedAt);
+
+@override
+String toString() {
+  return 'MissionRecord(id: $id, number: $number, type: $type, status: $status, pickupDistrict: $pickupDistrict, dropoffDistrict: $dropoffDistrict, courierEarning: $courierEarning, assignedAt: $assignedAt, closedAt: $closedAt)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $MissionRecordCopyWith<$Res>  {
+  factory $MissionRecordCopyWith(MissionRecord value, $Res Function(MissionRecord) _then) = _$MissionRecordCopyWithImpl;
+@useResult
+$Res call({
+ String id, String number, OrderType type, OrderStatus status, String pickupDistrict, String dropoffDistrict, int courierEarning, DateTime? assignedAt, DateTime? closedAt
+});
+
+
+
+
+}
+/// @nodoc
+class _$MissionRecordCopyWithImpl<$Res>
+    implements $MissionRecordCopyWith<$Res> {
+  _$MissionRecordCopyWithImpl(this._self, this._then);
+
+  final MissionRecord _self;
+  final $Res Function(MissionRecord) _then;
+
+/// Create a copy of MissionRecord
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? number = null,Object? type = null,Object? status = null,Object? pickupDistrict = null,Object? dropoffDistrict = null,Object? courierEarning = null,Object? assignedAt = freezed,Object? closedAt = freezed,}) {
+  return _then(_self.copyWith(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,number: null == number ? _self.number : number // ignore: cast_nullable_to_non_nullable
+as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as OrderType,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as OrderStatus,pickupDistrict: null == pickupDistrict ? _self.pickupDistrict : pickupDistrict // ignore: cast_nullable_to_non_nullable
+as String,dropoffDistrict: null == dropoffDistrict ? _self.dropoffDistrict : dropoffDistrict // ignore: cast_nullable_to_non_nullable
+as String,courierEarning: null == courierEarning ? _self.courierEarning : courierEarning // ignore: cast_nullable_to_non_nullable
+as int,assignedAt: freezed == assignedAt ? _self.assignedAt : assignedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,closedAt: freezed == closedAt ? _self.closedAt : closedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [MissionRecord].
+extension MissionRecordPatterns on MissionRecord {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _MissionRecord value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _MissionRecord() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _MissionRecord value)  $default,){
+final _that = this;
+switch (_that) {
+case _MissionRecord():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _MissionRecord value)?  $default,){
+final _that = this;
+switch (_that) {
+case _MissionRecord() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String number,  OrderType type,  OrderStatus status,  String pickupDistrict,  String dropoffDistrict,  int courierEarning,  DateTime? assignedAt,  DateTime? closedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _MissionRecord() when $default != null:
+return $default(_that.id,_that.number,_that.type,_that.status,_that.pickupDistrict,_that.dropoffDistrict,_that.courierEarning,_that.assignedAt,_that.closedAt);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String number,  OrderType type,  OrderStatus status,  String pickupDistrict,  String dropoffDistrict,  int courierEarning,  DateTime? assignedAt,  DateTime? closedAt)  $default,) {final _that = this;
+switch (_that) {
+case _MissionRecord():
+return $default(_that.id,_that.number,_that.type,_that.status,_that.pickupDistrict,_that.dropoffDistrict,_that.courierEarning,_that.assignedAt,_that.closedAt);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String number,  OrderType type,  OrderStatus status,  String pickupDistrict,  String dropoffDistrict,  int courierEarning,  DateTime? assignedAt,  DateTime? closedAt)?  $default,) {final _that = this;
+switch (_that) {
+case _MissionRecord() when $default != null:
+return $default(_that.id,_that.number,_that.type,_that.status,_that.pickupDistrict,_that.dropoffDistrict,_that.courierEarning,_that.assignedAt,_that.closedAt);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _MissionRecord implements MissionRecord {
+  const _MissionRecord({required this.id, required this.number, required this.type, required this.status, required this.pickupDistrict, required this.dropoffDistrict, required this.courierEarning, this.assignedAt, this.closedAt});
+  factory _MissionRecord.fromJson(Map<String, dynamic> json) => _$MissionRecordFromJson(json);
+
+@override final  String id;
+@override final  String number;
+@override final  OrderType type;
+@override final  OrderStatus status;
+@override final  String pickupDistrict;
+@override final  String dropoffDistrict;
+@override final  int courierEarning;
+@override final  DateTime? assignedAt;
+@override final  DateTime? closedAt;
+
+/// Create a copy of MissionRecord
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$MissionRecordCopyWith<_MissionRecord> get copyWith => __$MissionRecordCopyWithImpl<_MissionRecord>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$MissionRecordToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MissionRecord&&(identical(other.id, id) || other.id == id)&&(identical(other.number, number) || other.number == number)&&(identical(other.type, type) || other.type == type)&&(identical(other.status, status) || other.status == status)&&(identical(other.pickupDistrict, pickupDistrict) || other.pickupDistrict == pickupDistrict)&&(identical(other.dropoffDistrict, dropoffDistrict) || other.dropoffDistrict == dropoffDistrict)&&(identical(other.courierEarning, courierEarning) || other.courierEarning == courierEarning)&&(identical(other.assignedAt, assignedAt) || other.assignedAt == assignedAt)&&(identical(other.closedAt, closedAt) || other.closedAt == closedAt));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,number,type,status,pickupDistrict,dropoffDistrict,courierEarning,assignedAt,closedAt);
+
+@override
+String toString() {
+  return 'MissionRecord(id: $id, number: $number, type: $type, status: $status, pickupDistrict: $pickupDistrict, dropoffDistrict: $dropoffDistrict, courierEarning: $courierEarning, assignedAt: $assignedAt, closedAt: $closedAt)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$MissionRecordCopyWith<$Res> implements $MissionRecordCopyWith<$Res> {
+  factory _$MissionRecordCopyWith(_MissionRecord value, $Res Function(_MissionRecord) _then) = __$MissionRecordCopyWithImpl;
+@override @useResult
+$Res call({
+ String id, String number, OrderType type, OrderStatus status, String pickupDistrict, String dropoffDistrict, int courierEarning, DateTime? assignedAt, DateTime? closedAt
+});
+
+
+
+
+}
+/// @nodoc
+class __$MissionRecordCopyWithImpl<$Res>
+    implements _$MissionRecordCopyWith<$Res> {
+  __$MissionRecordCopyWithImpl(this._self, this._then);
+
+  final _MissionRecord _self;
+  final $Res Function(_MissionRecord) _then;
+
+/// Create a copy of MissionRecord
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? number = null,Object? type = null,Object? status = null,Object? pickupDistrict = null,Object? dropoffDistrict = null,Object? courierEarning = null,Object? assignedAt = freezed,Object? closedAt = freezed,}) {
+  return _then(_MissionRecord(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,number: null == number ? _self.number : number // ignore: cast_nullable_to_non_nullable
+as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as OrderType,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as OrderStatus,pickupDistrict: null == pickupDistrict ? _self.pickupDistrict : pickupDistrict // ignore: cast_nullable_to_non_nullable
+as String,dropoffDistrict: null == dropoffDistrict ? _self.dropoffDistrict : dropoffDistrict // ignore: cast_nullable_to_non_nullable
+as String,courierEarning: null == courierEarning ? _self.courierEarning : courierEarning // ignore: cast_nullable_to_non_nullable
+as int,assignedAt: freezed == assignedAt ? _self.assignedAt : assignedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,closedAt: freezed == closedAt ? _self.closedAt : closedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 

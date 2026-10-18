@@ -54,6 +54,8 @@ class _OfferScreenState extends ConsumerState<OfferScreen> {
   }
 
   Future<void> _respond(bool accept) async {
+    // Double appui avant le rafraîchissement de l'écran : une seule réponse part.
+    if (_outcome != _Outcome.deciding) return;
     setState(() => _outcome = _Outcome.sending);
     try {
       await ref
@@ -294,7 +296,8 @@ class _OfferScreenState extends ConsumerState<OfferScreen> {
           child: EmptyState(icon: icon, title: title, body: body),
         ),
         FilledButton(
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () =>
+              Navigator.of(context).pop(_outcome == _Outcome.accepted),
           child: Text(l10n.actionContinue),
         ),
       ],

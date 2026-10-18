@@ -13,7 +13,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Commande de repas réelle contre Supabase local : devis, commande unique malgré un double envoi,
 /// réception en temps réel par le restaurant, acceptation, annulation refusée ensuite ; colis ;
-/// attribution : offre reçue en direct par le livreur en ligne, acceptation, livreur visible du client.
+/// attribution : offre reçue en direct par le livreur en ligne, acceptation, livreur visible du client ;
+/// mission jusqu'à la livraison par code et l'encaissement des espèces.
 void main() {
   setUpAll(() => HttpOverrides.global = null);
 
@@ -147,6 +148,10 @@ void main() {
   tearDownAll(() async {
     await service.from('addresses').delete().eq('id', addressId);
     await service.from('orders').delete().eq('customer_id', ids['client']!);
+    await service
+        .from('cash_ledger')
+        .delete()
+        .eq('courier_id', ids['livreur']!);
     await service.from('restaurants').delete().eq('id', restaurantId);
     for (final id in ids.values) {
       await service.auth.admin.deleteUser(id);
@@ -341,6 +346,32 @@ void main() {
           ),
         ),
       );
+
+      // Mission : prête, récupérée, en route, code faux puis juste, espèces encaissées (MIS-04 à MIS-06).
+      await expectLater(
+        missions.confirmPickup(order.id),
+        throwsA(isA<AppFailure>().having((f) => f.code, 'code', 'not_ready')),
+      );
+      await manager.transition(order.id, OrderStatus.ready);
+      await missions.confirmPickup(order.id);
+      await missions.startDelivery(order.id);
+      final code = (await client.deliveryCode(order.id))!;
+      final wrong = ((int.parse(code) + 1) % 10000).toString().padLeft(4, '0');
+      final miss = await missions.confirmDelivery(order.id, wrong);
+      expect(miss.delivered, isFalse);
+      expect(miss.attemptsLeft, 4);
+      expect(
+        (await missions.confirmDelivery(order.id, code)).delivered,
+        isTrue,
+      );
+      await missions.confirmCash(order.id);
+      final done = await client.fetch(order.id);
+      expect(done.status, OrderStatus.delivered);
+      expect(done.paymentStatus, OrderPaymentStatus.paid);
+      final summary = await missions.summary();
+      expect(summary.deliveriesToday, 1);
+      expect(summary.cashDue, order.total);
+      expect((await missions.history()).single.status, OrderStatus.delivered);
 
       await clientClient.dispose();
       await managerClient.dispose();

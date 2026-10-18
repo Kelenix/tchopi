@@ -146,3 +146,30 @@ Map<String, dynamic> _$DispatchCandidateToJson(_DispatchCandidate instance) =>
       'busy': instance.busy,
       'offer_pending': instance.offerPending,
     };
+
+_CourierSummary _$CourierSummaryFromJson(Map<String, dynamic> json) =>
+    _CourierSummary(
+      earningsToday: (json['earnings_today'] as num?)?.toInt() ?? 0,
+      deliveriesToday: (json['deliveries_today'] as num?)?.toInt() ?? 0,
+      cashDue: (json['cash_due'] as num?)?.toInt() ?? 0,
+    );
+
+Map<String, dynamic> _$CourierSummaryToJson(_CourierSummary instance) =>
+    <String, dynamic>{
+      'earnings_today': instance.earningsToday,
+      'deliveries_today': instance.deliveriesToday,
+      'cash_due': instance.cashDue,
+    };
+
+_CodeResult _$CodeResultFromJson(Map<String, dynamic> json) => _CodeResult(
+  delivered: json['delivered'] as bool,
+  attemptsLeft: (json['attempts_left'] as num).toInt(),
+  locked: json['locked'] as bool,
+);
+
+Map<String, dynamic> _$CodeResultToJson(_CodeResult instance) =>
+    <String, dynamic>{
+      'delivered': instance.delivered,
+      'attempts_left': instance.attemptsLeft,
+      'locked': instance.locked,
+    };

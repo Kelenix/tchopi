@@ -317,6 +317,47 @@ void main() {
     expect(find.text('Nouvelle commande !'), findsNothing);
   });
 
+  testWidgets('restaurant : livreur attribué, remise au livreur', (
+    tester,
+  ) async {
+    final ready = order('o3', OrderStatus.ready).copyWith(
+      courierId: 'k1',
+      courierInfo: const CourierInfo(
+        firstName: 'Koffi',
+        vehicleType: VehicleType.motorbike,
+        plateNumber: 'AB-123-CI',
+      ),
+    );
+    await tester.pumpWidget(
+      app(const RestaurantOrdersScreen(), [
+        managedRestaurantIdProvider.overrideWithValue('r1'),
+        managedRestaurantProvider('r1').overrideWith(
+          (ref) async => const Restaurant(
+            id: 'r1',
+            zoneId: 'z',
+            name: 'Maquis Chez Tante',
+            phone: '+2250701020304',
+            latitude: 5.35,
+            longitude: -4,
+            district: 'Cocody',
+            landmark: 'Carrefour',
+          ),
+        ),
+        restaurantOrdersProvider(
+          'r1',
+        ).overrideWith((ref) => Stream.value([ready])),
+        orderItemsProvider('o3').overrideWith((ref) async => ready.items),
+      ]),
+    );
+    await tester.pump();
+    await tester.pump();
+    await tester.tap(find.textContaining('En cours'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Livreur : Koffi · Moto AB-123-CI'), findsOneWidget);
+    expect(find.text('Remise au livreur'), findsOneWidget);
+  });
+
   parcelTests();
 }
 

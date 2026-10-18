@@ -98,18 +98,18 @@ class _SupervisionScreenState extends ConsumerState<SupervisionScreen> {
                 runSpacing: Space.sm,
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
-                  alertChip(
-                    OrderAlert.noCourier,
-                    l10n.supervisionAlertNoCourier(
-                      counts[OrderAlert.noCourier]!,
+                  for (final alert in OrderAlert.values)
+                    alertChip(
+                      alert,
+                      switch (alert) {
+                        OrderAlert.noCourier => l10n.supervisionAlertNoCourier,
+                        OrderAlert.restaurantSilent =>
+                          l10n.supervisionAlertRestaurant,
+                        OrderAlert.codeLocked =>
+                          l10n.supervisionAlertCodeLocked,
+                        OrderAlert.problem => l10n.supervisionAlertProblem,
+                      }(counts[alert]!),
                     ),
-                  ),
-                  alertChip(
-                    OrderAlert.restaurantSilent,
-                    l10n.supervisionAlertRestaurant(
-                      counts[OrderAlert.restaurantSilent]!,
-                    ),
-                  ),
                   for (final (type, label) in [
                     (null, l10n.supervisionAll),
                     (OrderType.food, l10n.homeServiceFood),

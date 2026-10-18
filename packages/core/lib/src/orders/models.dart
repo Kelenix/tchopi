@@ -45,6 +45,14 @@ enum OrderStatus {
 
 enum OrderType { food, parcel }
 
+enum OrderPaymentStatus {
+  unpaid,
+  paid,
+  @JsonValue('refund_pending')
+  refundPending,
+  refunded,
+}
+
 enum PaymentMethod {
   cash,
   @JsonValue('mobile_money')
@@ -70,6 +78,11 @@ abstract class Order with _$Order {
     String? pickupPhone,
     @Default('') String pickupDistrict,
     @Default('') String pickupLandmark,
+    String? pickupInstructions,
+    @Default(0) double pickupLat,
+    @Default(0) double pickupLng,
+    @Default(0) double dropoffLat,
+    @Default(0) double dropoffLng,
     required String recipientName,
     String? recipientPhone,
     required String dropoffDistrict,
@@ -83,6 +96,7 @@ abstract class Order with _$Order {
     @Default(0) int platformAmount,
     @Default('XOF') String currency,
     required PaymentMethod paymentMethod,
+    @Default(OrderPaymentStatus.unpaid) OrderPaymentStatus paymentStatus,
     required DateTime createdAt,
     String? closeReason,
     String? courierId,
@@ -90,6 +104,10 @@ abstract class Order with _$Order {
 
     /// Toujours sans livreur après le délai d'alerte (DIS-03).
     DateTime? dispatchAlertedAt,
+
+    /// Alertes de supervision (ADM-03) : code de livraison bloqué, problème signalé par le livreur.
+    DateTime? codeLockedAt,
+    DateTime? problemReportedAt,
     @JsonKey(name: 'order_items') @Default([]) List<OrderItem> items,
   }) = _Order;
 
@@ -192,4 +210,23 @@ abstract class ParcelPoint with _$ParcelPoint {
     'landmark': landmark.trim(),
     'instructions': instructions?.trim(),
   };
+}
+
+/// Mission de l'historique (MIS-10), sans coordonnées ni téléphone.
+@freezed
+abstract class MissionRecord with _$MissionRecord {
+  const factory MissionRecord({
+    required String id,
+    required String number,
+    required OrderType type,
+    required OrderStatus status,
+    required String pickupDistrict,
+    required String dropoffDistrict,
+    required int courierEarning,
+    DateTime? assignedAt,
+    DateTime? closedAt,
+  }) = _MissionRecord;
+
+  factory MissionRecord.fromJson(Map<String, dynamic> json) =>
+      _$MissionRecordFromJson(json);
 }

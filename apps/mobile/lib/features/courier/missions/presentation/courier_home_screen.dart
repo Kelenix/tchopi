@@ -6,10 +6,13 @@ import 'package:go_router/go_router.dart';
 
 import '../../profile/presentation/courier_profile_screen.dart';
 import '../missions_providers.dart';
+import 'history_screen.dart';
+import 'mission_screen.dart';
 import 'offer_screen.dart';
 
-/// L-03 : tableau de bord du livreur approuvé — interrupteur En ligne / Hors ligne, mission en cours ;
-/// chaque nouvelle offre s'ouvre en plein écran (COU-05, DIS-02). Gains et espèces : Inc-8.
+/// L-03 : tableau de bord du livreur approuvé — interrupteur En ligne / Hors ligne, gains et livraisons du
+/// jour, espèces à reverser, mission en cours ; chaque nouvelle offre s'ouvre en plein écran (COU-05, DIS-02,
+/// MIS-01).
 class CourierHomeScreen extends ConsumerStatefulWidget {
   const CourierHomeScreen({super.key});
 
@@ -72,18 +75,21 @@ class _CourierHomeScreenState extends ConsumerState<CourierHomeScreen> {
     );
   }
 
-  void _showOffer(DeliveryOffer offer) {
+  Future<void> _showOffer(DeliveryOffer offer) async {
     if (offer.id == _shownOffer || !offer.expiresAt.isAfter(DateTime.now())) {
       return;
     }
     _shownOffer = offer.id;
     ScaffoldMessenger.of(context).clearSnackBars();
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
+    final accepted = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
         fullscreenDialog: true,
         builder: (_) => OfferScreen(offer: offer),
       ),
     );
+    if ((accepted ?? false) && mounted) {
+      await context.push(MissionScreen.location(offer.orderId));
+    }
   }
 
   @override
@@ -97,6 +103,7 @@ class _CourierHomeScreenState extends ConsumerState<CourierHomeScreen> {
     final firstName = ref.watch(currentProfileProvider).value?.firstName;
     final online = ref.watch(courierPresenceProvider).value ?? false;
     final mission = ref.watch(currentMissionProvider).value;
+    final summary = ref.watch(courierSummaryProvider).value;
 
     return Scaffold(
       appBar: AppBar(
@@ -106,6 +113,11 @@ class _CourierHomeScreenState extends ConsumerState<CourierHomeScreen> {
               : l10n.homeGreeting(firstName),
         ),
         actions: [
+          IconButton(
+            tooltip: l10n.courierHistory,
+            icon: const Icon(Icons.history),
+            onPressed: () => context.push(HistoryScreen.path),
+          ),
           IconButton(
             tooltip: l10n.courierEditProfile,
             icon: const Icon(Icons.badge_outlined),
@@ -174,7 +186,26 @@ class _CourierHomeScreenState extends ConsumerState<CourierHomeScreen> {
               ),
             ),
           ),
-          const SizedBox(height: Space.xxl),
+          const SizedBox(height: Space.lg),
+          if (summary != null)
+            Row(
+              children: [
+                _Kpi(
+                  value: formatMoney(summary.earningsToday),
+                  label: l10n.kpiEarnings,
+                ),
+                _Kpi(
+                  value: '${summary.deliveriesToday}',
+                  label: l10n.kpiDeliveries,
+                ),
+                _Kpi(
+                  value: formatMoney(summary.cashDue),
+                  label: l10n.kpiCash,
+                  warn: summary.cashDue > 0,
+                ),
+              ],
+            ),
+          const SizedBox(height: Space.xl),
           if (mission != null)
             _MissionCard(order: mission)
           else if (online)
@@ -214,49 +245,99 @@ class _MissionCard extends StatelessWidget {
       children: [
         SectionHeader(title: l10n.courierMissionTitle),
         Card(
-          child: Padding(
-            padding: const EdgeInsets.all(Space.lg),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        l10n.orderNumber(order.number),
-                        style: text.titleMedium,
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: () => context.push(MissionScreen.location(order.id)),
+            child: Padding(
+              padding: const EdgeInsets.all(Space.lg),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          l10n.orderNumber(order.number),
+                          style: text.titleMedium,
+                        ),
                       ),
-                    ),
-                    Text(
-                      l10n.courierMissionEarning(
-                        formatMoney(order.courierEarning),
+                      Text(
+                        l10n.courierMissionEarning(
+                          formatMoney(order.courierEarning),
+                        ),
+                        style: text.titleMedium!.copyWith(
+                          color: tokens.success,
+                        ),
                       ),
-                      style: text.titleMedium!.copyWith(color: tokens.success),
-                    ),
-                  ],
-                ),
-                stop(
-                  tokens.ink,
-                  l10n.offerPickup(order.pickupName),
-                  order.pickupDistrict,
-                  order.pickupLandmark,
-                ),
-                stop(
-                  tokens.primary,
-                  l10n.offerDropoff(order.recipientName),
-                  order.dropoffDistrict,
-                  order.dropoffLandmark,
-                ),
-                if (order.paymentMethod == PaymentMethod.cash)
-                  Text(
-                    l10n.offerCash(formatMoney(order.total)),
-                    style: text.labelLarge!.copyWith(color: tokens.warning),
+                    ],
                   ),
-              ],
+                  stop(
+                    tokens.ink,
+                    l10n.offerPickup(order.pickupName),
+                    order.pickupDistrict,
+                    order.pickupLandmark,
+                  ),
+                  stop(
+                    tokens.primary,
+                    l10n.offerDropoff(order.recipientName),
+                    order.dropoffDistrict,
+                    order.dropoffLandmark,
+                  ),
+                  if (order.paymentMethod == PaymentMethod.cash &&
+                      order.paymentStatus == OrderPaymentStatus.unpaid)
+                    Text(
+                      l10n.offerCash(formatMoney(order.total)),
+                      style: text.labelLarge!.copyWith(color: tokens.warning),
+                    ),
+                  const SizedBox(height: Space.md),
+                  FilledButton(
+                    onPressed: () =>
+                        context.push(MissionScreen.location(order.id)),
+                    child: Text(l10n.missionOpen),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Indicateur du jour (MIS-01) ; en orange s'il appelle une action (espèces à reverser).
+class _Kpi extends StatelessWidget {
+  const _Kpi({required this.value, required this.label, this.warn = false});
+
+  final String value;
+  final String label;
+  final bool warn;
+
+  @override
+  Widget build(BuildContext context) {
+    final tokens = context.tokens;
+    final text = Theme.of(context).textTheme;
+    return Expanded(
+      child: Card(
+        color: warn ? tokens.warningSoft : null,
+        child: Padding(
+          padding: const EdgeInsets.all(Space.md),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(value, style: text.titleLarge),
+              ),
+              Text(
+                label,
+                maxLines: 2,
+                style: text.bodySmall!.copyWith(color: tokens.muted),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

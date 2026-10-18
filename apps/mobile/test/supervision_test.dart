@@ -82,6 +82,23 @@ void main() {
       orderAlerts(order('R-3', OrderStatus.pending), settings, now),
       isEmpty,
     );
+    expect(
+      orderAlerts(
+        order('C-4', OrderStatus.inTransit).copyWith(codeLockedAt: now),
+        settings,
+        now,
+      ),
+      {OrderAlert.codeLocked},
+    );
+    expect(
+      orderAlerts(
+        order('C-5', OrderStatus.failed).copyWith(problemReportedAt: now),
+        settings,
+        now,
+      ),
+      {OrderAlert.problem},
+      reason: "un échec attend la décision de l'admin",
+    );
   });
 
   testWidgets('supervision : bandeau d\'alertes et filtres', (tester) async {

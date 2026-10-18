@@ -3308,6 +3308,414 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Se reconnecter'**
   String get accountSignInAgain;
+
+  /// No description provided for @failureNotReady.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le restaurant n\'a pas encore indiqué que la commande est prête.'**
+  String get failureNotReady;
+
+  /// No description provided for @failureCashConfirmation.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confirmez d\'abord l\'encaissement auprès de l\'expéditeur.'**
+  String get failureCashConfirmation;
+
+  /// No description provided for @failureNoCourierAssigned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun livreur n\'est encore attribué à cette commande.'**
+  String get failureNoCourierAssigned;
+
+  /// No description provided for @missionStepPickup.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aller au retrait'**
+  String get missionStepPickup;
+
+  /// No description provided for @missionStepDeliver.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livrer'**
+  String get missionStepDeliver;
+
+  /// No description provided for @missionPickupTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retrait'**
+  String get missionPickupTitle;
+
+  /// No description provided for @missionDropoffTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraison'**
+  String get missionDropoffTitle;
+
+  /// No description provided for @missionCall.
+  ///
+  /// In fr, this message translates to:
+  /// **'Appeler'**
+  String get missionCall;
+
+  /// No description provided for @missionRoute.
+  ///
+  /// In fr, this message translates to:
+  /// **'Itinéraire'**
+  String get missionRoute;
+
+  /// No description provided for @missionGoogleMaps.
+  ///
+  /// In fr, this message translates to:
+  /// **'Google Maps'**
+  String get missionGoogleMaps;
+
+  /// No description provided for @missionWaze.
+  ///
+  /// In fr, this message translates to:
+  /// **'Waze'**
+  String get missionWaze;
+
+  /// No description provided for @missionContents.
+  ///
+  /// In fr, this message translates to:
+  /// **'Contenu'**
+  String get missionContents;
+
+  /// No description provided for @missionCashToCollect.
+  ///
+  /// In fr, this message translates to:
+  /// **'À encaisser : {amount}'**
+  String missionCashToCollect(String amount);
+
+  /// No description provided for @missionPickedUp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande récupérée'**
+  String get missionPickedUp;
+
+  /// No description provided for @missionCashFromSenderTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Encaisser {amount}'**
+  String missionCashFromSenderTitle(String amount);
+
+  /// No description provided for @missionCashFromSenderBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'expéditeur paie la livraison maintenant, en espèces.'**
+  String get missionCashFromSenderBody;
+
+  /// No description provided for @missionCashFromSender.
+  ///
+  /// In fr, this message translates to:
+  /// **'J\'ai reçu {amount}'**
+  String missionCashFromSender(String amount);
+
+  /// No description provided for @missionStart.
+  ///
+  /// In fr, this message translates to:
+  /// **'Je pars livrer'**
+  String get missionStart;
+
+  /// No description provided for @missionEnterCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Arrivé — saisir le code'**
+  String get missionEnterCode;
+
+  /// No description provided for @missionRelease.
+  ///
+  /// In fr, this message translates to:
+  /// **'Abandonner la mission'**
+  String get missionRelease;
+
+  /// No description provided for @missionReleaseReason.
+  ///
+  /// In fr, this message translates to:
+  /// **'Motif de l\'abandon'**
+  String get missionReleaseReason;
+
+  /// No description provided for @missionCancelledTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mission annulée'**
+  String get missionCancelledTitle;
+
+  /// No description provided for @missionCancelledBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'La commande a été annulée. Vous êtes de nouveau disponible pour d\'autres missions.'**
+  String get missionCancelledBody;
+
+  /// No description provided for @missionOpen.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvrir la mission'**
+  String get missionOpen;
+
+  /// No description provided for @codeTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Demandez le code au destinataire'**
+  String get codeTitle;
+
+  /// No description provided for @codeAttemptsLeft.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code incorrect : encore {count} essai(s).'**
+  String codeAttemptsLeft(int count);
+
+  /// No description provided for @codeLocked.
+  ///
+  /// In fr, this message translates to:
+  /// **'Saisie bloquée après trop d\'erreurs. Contactez le support.'**
+  String get codeLocked;
+
+  /// No description provided for @codeValidate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Valider'**
+  String get codeValidate;
+
+  /// No description provided for @codeNoCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le destinataire n\'a pas de code ? Appeler le support'**
+  String get codeNoCode;
+
+  /// No description provided for @cashCollectTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Encaissez {amount}'**
+  String cashCollectTitle(String amount);
+
+  /// No description provided for @cashCollectBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le client paie maintenant, en espèces.'**
+  String get cashCollectBody;
+
+  /// No description provided for @cashCollectButton.
+  ///
+  /// In fr, this message translates to:
+  /// **'J\'ai reçu {amount}'**
+  String cashCollectButton(String amount);
+
+  /// No description provided for @deliveryDoneTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraison terminée'**
+  String get deliveryDoneTitle;
+
+  /// No description provided for @deliveryDoneBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'+{amount} pour cette mission.'**
+  String deliveryDoneBody(String amount);
+
+  /// No description provided for @problemTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un problème ?'**
+  String get problemTitle;
+
+  /// No description provided for @problemCustomerUnreachable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Client injoignable'**
+  String get problemCustomerUnreachable;
+
+  /// No description provided for @problemAddressNotFound.
+  ///
+  /// In fr, this message translates to:
+  /// **'Adresse introuvable'**
+  String get problemAddressNotFound;
+
+  /// No description provided for @problemRecipientAbsent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Destinataire absent'**
+  String get problemRecipientAbsent;
+
+  /// No description provided for @problemOther.
+  ///
+  /// In fr, this message translates to:
+  /// **'Autre'**
+  String get problemOther;
+
+  /// No description provided for @problemComment.
+  ///
+  /// In fr, this message translates to:
+  /// **'Précisez le problème'**
+  String get problemComment;
+
+  /// No description provided for @problemReport.
+  ///
+  /// In fr, this message translates to:
+  /// **'Signaler à l\'équipe'**
+  String get problemReport;
+
+  /// No description provided for @problemReported.
+  ///
+  /// In fr, this message translates to:
+  /// **'Problème signalé à l\'équipe.'**
+  String get problemReported;
+
+  /// No description provided for @problemCallCustomer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Appeler le client'**
+  String get problemCallCustomer;
+
+  /// No description provided for @problemCallSupport.
+  ///
+  /// In fr, this message translates to:
+  /// **'Appeler le support'**
+  String get problemCallSupport;
+
+  /// No description provided for @problemDeclareFailure.
+  ///
+  /// In fr, this message translates to:
+  /// **'Déclarer l\'échec de livraison'**
+  String get problemDeclareFailure;
+
+  /// No description provided for @problemFailureReason.
+  ///
+  /// In fr, this message translates to:
+  /// **'Motif de l\'échec'**
+  String get problemFailureReason;
+
+  /// No description provided for @kpiEarnings.
+  ///
+  /// In fr, this message translates to:
+  /// **'Gains du jour'**
+  String get kpiEarnings;
+
+  /// No description provided for @kpiDeliveries.
+  ///
+  /// In fr, this message translates to:
+  /// **'Missions livrées'**
+  String get kpiDeliveries;
+
+  /// No description provided for @kpiCash.
+  ///
+  /// In fr, this message translates to:
+  /// **'Espèces à reverser'**
+  String get kpiCash;
+
+  /// No description provided for @courierHistory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Historique'**
+  String get courierHistory;
+
+  /// No description provided for @historyTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Historique et gains'**
+  String get historyTitle;
+
+  /// No description provided for @historyToday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aujourd\'hui'**
+  String get historyToday;
+
+  /// No description provided for @historyWeek.
+  ///
+  /// In fr, this message translates to:
+  /// **'7 derniers jours'**
+  String get historyWeek;
+
+  /// No description provided for @historyEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vos missions apparaîtront ici'**
+  String get historyEmpty;
+
+  /// No description provided for @restaurantHandover.
+  ///
+  /// In fr, this message translates to:
+  /// **'Remise au livreur'**
+  String get restaurantHandover;
+
+  /// No description provided for @restaurantCourier.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livreur : {name}'**
+  String restaurantCourier(String name);
+
+  /// No description provided for @adminConfirmWithoutCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confirmer la livraison sans code'**
+  String get adminConfirmWithoutCode;
+
+  /// No description provided for @adminConfirmReason.
+  ///
+  /// In fr, this message translates to:
+  /// **'Motif de la confirmation'**
+  String get adminConfirmReason;
+
+  /// No description provided for @adminDelivered.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraison confirmée.'**
+  String get adminDelivered;
+
+  /// No description provided for @adminPaymentPaid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Payée'**
+  String get adminPaymentPaid;
+
+  /// No description provided for @adminPaymentUnpaid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Non encaissée'**
+  String get adminPaymentUnpaid;
+
+  /// No description provided for @supervisionAlertCodeLocked.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code bloqué : {count}'**
+  String supervisionAlertCodeLocked(int count);
+
+  /// No description provided for @supervisionAlertProblem.
+  ///
+  /// In fr, this message translates to:
+  /// **'Problème signalé : {count}'**
+  String supervisionAlertProblem(int count);
+
+  /// No description provided for @eventCodeFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code incorrect'**
+  String get eventCodeFailed;
+
+  /// No description provided for @eventCodeLocked.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code bloqué'**
+  String get eventCodeLocked;
+
+  /// No description provided for @eventProblemReported.
+  ///
+  /// In fr, this message translates to:
+  /// **'Problème signalé'**
+  String get eventProblemReported;
+
+  /// No description provided for @eventCourierChanged.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre livreur a dû annuler, nous en cherchons un autre'**
+  String get eventCourierChanged;
+
+  /// No description provided for @missionFailedBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'équipe est prévenue et décide de la suite avec le client.'**
+  String get missionFailedBody;
 }
 
 class _AppLocalizationsDelegate

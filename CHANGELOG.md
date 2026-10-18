@@ -4,6 +4,17 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · versions [S
 
 ## [Non publié]
 
+### Ajouté (Inc-8, ADR-024)
+- Livreur : écran de mission (étape, carte, itinéraire Google Maps / Waze, retrait et destination avec appel,
+  contenu, espèces) ; « Commande récupérée » (colis en espèces : encaissement confirmé d'abord), « Je pars livrer »,
+  saisie du code à 4 chiffres (essais limités, blocage après 5 erreurs), encaissement des espèces, « Un problème ? »
+  (signalement, échec de livraison), abandon avant récupération ; gains et livraisons du jour, espèces à reverser ;
+  historique et gains (jour, 7 jours).
+- Restaurant : nom du livreur attribué, « Remise au livreur ».
+- Admin : alertes « code bloqué » et « problème signalé », commandes en échec visibles, confirmation de livraison
+  sans code avec motif, statut d'encaissement.
+- Client : « Votre livreur a dû annuler, nous en cherchons un autre » dans le suivi.
+
 ### Ajouté (Inc-7, ADR-023)
 - Livreur : tableau de bord avec interrupteur En ligne / Hors ligne (explication puis autorisation de localisation,
   notification permanente sur Android), position partagée tant qu'il est en ligne, mission en cours ; offres en

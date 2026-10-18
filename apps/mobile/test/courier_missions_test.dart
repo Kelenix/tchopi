@@ -92,6 +92,13 @@ List<Override> courier({
 }) => [
   courierPresenceProvider.overrideWith(() => _Presence(online)),
   currentMissionProvider.overrideWith((ref) => Stream.value(current)),
+  courierSummaryProvider.overrideWith(
+    (ref) async => const CourierSummary(
+      earningsToday: 2200,
+      deliveriesToday: 2,
+      cashDue: 17500,
+    ),
+  ),
   pendingOfferProvider.overrideWith((ref) => Stream.value(pending)),
 ];
 
@@ -121,6 +128,10 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('En ligne'), findsOneWidget);
     expect(find.text('Mission en cours'), findsOneWidget);
+    expect(find.text(formatMoney(2200)), findsOneWidget);
+    expect(find.text('Missions livrées'), findsOneWidget);
+    expect(find.text(formatMoney(17500)), findsOneWidget);
+    expect(find.text('Espèces à reverser'), findsOneWidget);
     expect(find.text('Commande R-48K2Q'), findsOneWidget);
     expect(find.text('Retrait · Chez Tantie Rose'), findsOneWidget);
     expect(find.textContaining('Espèces à encaisser'), findsOneWidget);

@@ -1452,4 +1452,542 @@ as bool,
 
 }
 
+
+/// @nodoc
+mixin _$CourierSummary {
+
+ int get earningsToday; int get deliveriesToday; int get cashDue;
+/// Create a copy of CourierSummary
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$CourierSummaryCopyWith<CourierSummary> get copyWith => _$CourierSummaryCopyWithImpl<CourierSummary>(this as CourierSummary, _$identity);
+
+  /// Serializes this CourierSummary to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CourierSummary&&(identical(other.earningsToday, earningsToday) || other.earningsToday == earningsToday)&&(identical(other.deliveriesToday, deliveriesToday) || other.deliveriesToday == deliveriesToday)&&(identical(other.cashDue, cashDue) || other.cashDue == cashDue));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,earningsToday,deliveriesToday,cashDue);
+
+@override
+String toString() {
+  return 'CourierSummary(earningsToday: $earningsToday, deliveriesToday: $deliveriesToday, cashDue: $cashDue)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $CourierSummaryCopyWith<$Res>  {
+  factory $CourierSummaryCopyWith(CourierSummary value, $Res Function(CourierSummary) _then) = _$CourierSummaryCopyWithImpl;
+@useResult
+$Res call({
+ int earningsToday, int deliveriesToday, int cashDue
+});
+
+
+
+
+}
+/// @nodoc
+class _$CourierSummaryCopyWithImpl<$Res>
+    implements $CourierSummaryCopyWith<$Res> {
+  _$CourierSummaryCopyWithImpl(this._self, this._then);
+
+  final CourierSummary _self;
+  final $Res Function(CourierSummary) _then;
+
+/// Create a copy of CourierSummary
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? earningsToday = null,Object? deliveriesToday = null,Object? cashDue = null,}) {
+  return _then(_self.copyWith(
+earningsToday: null == earningsToday ? _self.earningsToday : earningsToday // ignore: cast_nullable_to_non_nullable
+as int,deliveriesToday: null == deliveriesToday ? _self.deliveriesToday : deliveriesToday // ignore: cast_nullable_to_non_nullable
+as int,cashDue: null == cashDue ? _self.cashDue : cashDue // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [CourierSummary].
+extension CourierSummaryPatterns on CourierSummary {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _CourierSummary value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _CourierSummary() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _CourierSummary value)  $default,){
+final _that = this;
+switch (_that) {
+case _CourierSummary():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _CourierSummary value)?  $default,){
+final _that = this;
+switch (_that) {
+case _CourierSummary() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int earningsToday,  int deliveriesToday,  int cashDue)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _CourierSummary() when $default != null:
+return $default(_that.earningsToday,_that.deliveriesToday,_that.cashDue);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int earningsToday,  int deliveriesToday,  int cashDue)  $default,) {final _that = this;
+switch (_that) {
+case _CourierSummary():
+return $default(_that.earningsToday,_that.deliveriesToday,_that.cashDue);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int earningsToday,  int deliveriesToday,  int cashDue)?  $default,) {final _that = this;
+switch (_that) {
+case _CourierSummary() when $default != null:
+return $default(_that.earningsToday,_that.deliveriesToday,_that.cashDue);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _CourierSummary implements CourierSummary {
+  const _CourierSummary({this.earningsToday = 0, this.deliveriesToday = 0, this.cashDue = 0});
+  factory _CourierSummary.fromJson(Map<String, dynamic> json) => _$CourierSummaryFromJson(json);
+
+@override@JsonKey() final  int earningsToday;
+@override@JsonKey() final  int deliveriesToday;
+@override@JsonKey() final  int cashDue;
+
+/// Create a copy of CourierSummary
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$CourierSummaryCopyWith<_CourierSummary> get copyWith => __$CourierSummaryCopyWithImpl<_CourierSummary>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$CourierSummaryToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CourierSummary&&(identical(other.earningsToday, earningsToday) || other.earningsToday == earningsToday)&&(identical(other.deliveriesToday, deliveriesToday) || other.deliveriesToday == deliveriesToday)&&(identical(other.cashDue, cashDue) || other.cashDue == cashDue));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,earningsToday,deliveriesToday,cashDue);
+
+@override
+String toString() {
+  return 'CourierSummary(earningsToday: $earningsToday, deliveriesToday: $deliveriesToday, cashDue: $cashDue)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$CourierSummaryCopyWith<$Res> implements $CourierSummaryCopyWith<$Res> {
+  factory _$CourierSummaryCopyWith(_CourierSummary value, $Res Function(_CourierSummary) _then) = __$CourierSummaryCopyWithImpl;
+@override @useResult
+$Res call({
+ int earningsToday, int deliveriesToday, int cashDue
+});
+
+
+
+
+}
+/// @nodoc
+class __$CourierSummaryCopyWithImpl<$Res>
+    implements _$CourierSummaryCopyWith<$Res> {
+  __$CourierSummaryCopyWithImpl(this._self, this._then);
+
+  final _CourierSummary _self;
+  final $Res Function(_CourierSummary) _then;
+
+/// Create a copy of CourierSummary
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? earningsToday = null,Object? deliveriesToday = null,Object? cashDue = null,}) {
+  return _then(_CourierSummary(
+earningsToday: null == earningsToday ? _self.earningsToday : earningsToday // ignore: cast_nullable_to_non_nullable
+as int,deliveriesToday: null == deliveriesToday ? _self.deliveriesToday : deliveriesToday // ignore: cast_nullable_to_non_nullable
+as int,cashDue: null == cashDue ? _self.cashDue : cashDue // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$CodeResult {
+
+ bool get delivered; int get attemptsLeft; bool get locked;
+/// Create a copy of CodeResult
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$CodeResultCopyWith<CodeResult> get copyWith => _$CodeResultCopyWithImpl<CodeResult>(this as CodeResult, _$identity);
+
+  /// Serializes this CodeResult to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CodeResult&&(identical(other.delivered, delivered) || other.delivered == delivered)&&(identical(other.attemptsLeft, attemptsLeft) || other.attemptsLeft == attemptsLeft)&&(identical(other.locked, locked) || other.locked == locked));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,delivered,attemptsLeft,locked);
+
+@override
+String toString() {
+  return 'CodeResult(delivered: $delivered, attemptsLeft: $attemptsLeft, locked: $locked)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $CodeResultCopyWith<$Res>  {
+  factory $CodeResultCopyWith(CodeResult value, $Res Function(CodeResult) _then) = _$CodeResultCopyWithImpl;
+@useResult
+$Res call({
+ bool delivered, int attemptsLeft, bool locked
+});
+
+
+
+
+}
+/// @nodoc
+class _$CodeResultCopyWithImpl<$Res>
+    implements $CodeResultCopyWith<$Res> {
+  _$CodeResultCopyWithImpl(this._self, this._then);
+
+  final CodeResult _self;
+  final $Res Function(CodeResult) _then;
+
+/// Create a copy of CodeResult
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? delivered = null,Object? attemptsLeft = null,Object? locked = null,}) {
+  return _then(_self.copyWith(
+delivered: null == delivered ? _self.delivered : delivered // ignore: cast_nullable_to_non_nullable
+as bool,attemptsLeft: null == attemptsLeft ? _self.attemptsLeft : attemptsLeft // ignore: cast_nullable_to_non_nullable
+as int,locked: null == locked ? _self.locked : locked // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [CodeResult].
+extension CodeResultPatterns on CodeResult {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _CodeResult value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _CodeResult() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _CodeResult value)  $default,){
+final _that = this;
+switch (_that) {
+case _CodeResult():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _CodeResult value)?  $default,){
+final _that = this;
+switch (_that) {
+case _CodeResult() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool delivered,  int attemptsLeft,  bool locked)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _CodeResult() when $default != null:
+return $default(_that.delivered,_that.attemptsLeft,_that.locked);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool delivered,  int attemptsLeft,  bool locked)  $default,) {final _that = this;
+switch (_that) {
+case _CodeResult():
+return $default(_that.delivered,_that.attemptsLeft,_that.locked);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool delivered,  int attemptsLeft,  bool locked)?  $default,) {final _that = this;
+switch (_that) {
+case _CodeResult() when $default != null:
+return $default(_that.delivered,_that.attemptsLeft,_that.locked);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _CodeResult implements CodeResult {
+  const _CodeResult({required this.delivered, required this.attemptsLeft, required this.locked});
+  factory _CodeResult.fromJson(Map<String, dynamic> json) => _$CodeResultFromJson(json);
+
+@override final  bool delivered;
+@override final  int attemptsLeft;
+@override final  bool locked;
+
+/// Create a copy of CodeResult
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$CodeResultCopyWith<_CodeResult> get copyWith => __$CodeResultCopyWithImpl<_CodeResult>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$CodeResultToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CodeResult&&(identical(other.delivered, delivered) || other.delivered == delivered)&&(identical(other.attemptsLeft, attemptsLeft) || other.attemptsLeft == attemptsLeft)&&(identical(other.locked, locked) || other.locked == locked));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,delivered,attemptsLeft,locked);
+
+@override
+String toString() {
+  return 'CodeResult(delivered: $delivered, attemptsLeft: $attemptsLeft, locked: $locked)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$CodeResultCopyWith<$Res> implements $CodeResultCopyWith<$Res> {
+  factory _$CodeResultCopyWith(_CodeResult value, $Res Function(_CodeResult) _then) = __$CodeResultCopyWithImpl;
+@override @useResult
+$Res call({
+ bool delivered, int attemptsLeft, bool locked
+});
+
+
+
+
+}
+/// @nodoc
+class __$CodeResultCopyWithImpl<$Res>
+    implements _$CodeResultCopyWith<$Res> {
+  __$CodeResultCopyWithImpl(this._self, this._then);
+
+  final _CodeResult _self;
+  final $Res Function(_CodeResult) _then;
+
+/// Create a copy of CodeResult
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? delivered = null,Object? attemptsLeft = null,Object? locked = null,}) {
+  return _then(_CodeResult(
+delivered: null == delivered ? _self.delivered : delivered // ignore: cast_nullable_to_non_nullable
+as bool,attemptsLeft: null == attemptsLeft ? _self.attemptsLeft : attemptsLeft // ignore: cast_nullable_to_non_nullable
+as int,locked: null == locked ? _self.locked : locked // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+
+}
+
 // dart format on

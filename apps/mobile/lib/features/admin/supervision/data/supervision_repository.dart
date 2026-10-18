@@ -7,6 +7,7 @@ class SupervisionRepository {
 
   final SupabaseClient _client;
 
+  /// Commandes à suivre : en cours, et en échec (l'admin décide de la suite, remboursement à l'Inc-13).
   static const activeStatuses = [
     'awaiting_payment',
     'pending',
@@ -17,6 +18,7 @@ class SupervisionRepository {
     'courier_assigned',
     'picked_up',
     'in_transit',
+    'failed',
   ];
 
   /// Commandes en cours, en temps réel, les plus récentes d'abord (ADM-03).
@@ -57,6 +59,14 @@ class SupervisionRepository {
           },
         ),
       );
+
+  /// MIS-07 : livraison confirmée sans code, après vérification (motif tracé).
+  Future<void> confirmDelivery(String orderId, String reason) => guardCall(
+    () => _client.rpc<void>(
+      'admin_confirm_delivery',
+      params: {'p_order_id': orderId, 'p_reason': reason},
+    ),
+  );
 
   Future<PlatformSettings> settings() => guardCall(() async {
     final row = await _client.from('settings').select().single();

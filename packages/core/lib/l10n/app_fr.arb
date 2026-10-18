@@ -798,5 +798,143 @@
   "supervisionAllStatuses": "Tous les statuts",
   "supervisionAllZones": "Toutes les zones",
   "failureSessionExpired": "Votre session a expiré ou ce compte n'existe plus. Reconnectez-vous pour continuer.",
-  "accountSignInAgain": "Se reconnecter"
+  "accountSignInAgain": "Se reconnecter",
+  "failureNotReady": "Le restaurant n'a pas encore indiqué que la commande est prête.",
+  "failureCashConfirmation": "Confirmez d'abord l'encaissement auprès de l'expéditeur.",
+  "failureNoCourierAssigned": "Aucun livreur n'est encore attribué à cette commande.",
+  "missionStepPickup": "Aller au retrait",
+  "missionStepDeliver": "Livrer",
+  "missionPickupTitle": "Retrait",
+  "missionDropoffTitle": "Livraison",
+  "missionCall": "Appeler",
+  "missionRoute": "Itinéraire",
+  "missionGoogleMaps": "Google Maps",
+  "missionWaze": "Waze",
+  "missionContents": "Contenu",
+  "missionCashToCollect": "À encaisser : {amount}",
+  "@missionCashToCollect": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "missionPickedUp": "Commande récupérée",
+  "missionCashFromSenderTitle": "Encaisser {amount}",
+  "@missionCashFromSenderTitle": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "missionCashFromSenderBody": "L'expéditeur paie la livraison maintenant, en espèces.",
+  "missionCashFromSender": "J'ai reçu {amount}",
+  "@missionCashFromSender": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "missionStart": "Je pars livrer",
+  "missionEnterCode": "Arrivé — saisir le code",
+  "missionRelease": "Abandonner la mission",
+  "missionReleaseReason": "Motif de l'abandon",
+  "missionCancelledTitle": "Mission annulée",
+  "missionCancelledBody": "La commande a été annulée. Vous êtes de nouveau disponible pour d'autres missions.",
+  "missionOpen": "Ouvrir la mission",
+  "codeTitle": "Demandez le code au destinataire",
+  "codeAttemptsLeft": "Code incorrect : encore {count} essai(s).",
+  "@codeAttemptsLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "codeLocked": "Saisie bloquée après trop d'erreurs. Contactez le support.",
+  "codeValidate": "Valider",
+  "codeNoCode": "Le destinataire n'a pas de code ? Appeler le support",
+  "cashCollectTitle": "Encaissez {amount}",
+  "@cashCollectTitle": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "cashCollectBody": "Le client paie maintenant, en espèces.",
+  "cashCollectButton": "J'ai reçu {amount}",
+  "@cashCollectButton": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "deliveryDoneTitle": "Livraison terminée",
+  "deliveryDoneBody": "+{amount} pour cette mission.",
+  "@deliveryDoneBody": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "problemTitle": "Un problème ?",
+  "problemCustomerUnreachable": "Client injoignable",
+  "problemAddressNotFound": "Adresse introuvable",
+  "problemRecipientAbsent": "Destinataire absent",
+  "problemOther": "Autre",
+  "problemComment": "Précisez le problème",
+  "problemReport": "Signaler à l'équipe",
+  "problemReported": "Problème signalé à l'équipe.",
+  "problemCallCustomer": "Appeler le client",
+  "problemCallSupport": "Appeler le support",
+  "problemDeclareFailure": "Déclarer l'échec de livraison",
+  "problemFailureReason": "Motif de l'échec",
+  "kpiEarnings": "Gains du jour",
+  "kpiDeliveries": "Missions livrées",
+  "kpiCash": "Espèces à reverser",
+  "courierHistory": "Historique",
+  "historyTitle": "Historique et gains",
+  "historyToday": "Aujourd'hui",
+  "historyWeek": "7 derniers jours",
+  "historyEmpty": "Vos missions apparaîtront ici",
+  "restaurantHandover": "Remise au livreur",
+  "restaurantCourier": "Livreur : {name}",
+  "@restaurantCourier": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "adminConfirmWithoutCode": "Confirmer la livraison sans code",
+  "adminConfirmReason": "Motif de la confirmation",
+  "adminDelivered": "Livraison confirmée.",
+  "adminPaymentPaid": "Payée",
+  "adminPaymentUnpaid": "Non encaissée",
+  "supervisionAlertCodeLocked": "Code bloqué : {count}",
+  "@supervisionAlertCodeLocked": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "supervisionAlertProblem": "Problème signalé : {count}",
+  "@supervisionAlertProblem": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventCodeFailed": "Code incorrect",
+  "eventCodeLocked": "Code bloqué",
+  "eventProblemReported": "Problème signalé",
+  "eventCourierChanged": "Votre livreur a dû annuler, nous en cherchons un autre",
+  "missionFailedBody": "L'équipe est prévenue et décide de la suite avec le client."
 }

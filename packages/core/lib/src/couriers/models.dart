@@ -110,3 +110,29 @@ abstract class DispatchCandidate with _$DispatchCandidate {
   factory DispatchCandidate.fromJson(Map<String, dynamic> json) =>
       _$DispatchCandidateFromJson(json);
 }
+
+/// Tableau de bord du livreur (MIS-01) : gains et livraisons du jour, espèces à reverser.
+@freezed
+abstract class CourierSummary with _$CourierSummary {
+  const factory CourierSummary({
+    @Default(0) int earningsToday,
+    @Default(0) int deliveriesToday,
+    @Default(0) int cashDue,
+  }) = _CourierSummary;
+
+  factory CourierSummary.fromJson(Map<String, dynamic> json) =>
+      _$CourierSummaryFromJson(json);
+}
+
+/// Résultat d'une saisie du code de livraison (MIS-06).
+@freezed
+abstract class CodeResult with _$CodeResult {
+  const factory CodeResult({
+    required bool delivered,
+    required int attemptsLeft,
+    required bool locked,
+  }) = _CodeResult;
+
+  factory CodeResult.fromJson(Map<String, dynamic> json) =>
+      _$CodeResultFromJson(json);
+}

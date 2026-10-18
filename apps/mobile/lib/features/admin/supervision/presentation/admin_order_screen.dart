@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../shared/dialogs.dart';
 import '../../../orders/orders_providers.dart';
 import '../../../orders/presentation/order_widgets.dart';
-import '../../admin_scaffold.dart';
 import '../supervision_providers.dart';
 
 /// A-02 (détail) : contenu, acteurs, montants séparés, chronologie complète ; attribuer, réattribuer (A-03)
@@ -44,6 +44,24 @@ class AdminOrderScreen extends ConsumerWidget {
           .assign(orderId, courier.userId, reason);
       ref.invalidate(orderProvider(orderId));
       messenger.showSnackBar(SnackBar(content: Text(l10n.assignDone)));
+    } on AppFailure catch (failure) {
+      messenger.showSnackBar(
+        SnackBar(content: Text(failureMessage(l10n, failure))),
+      );
+    }
+  }
+
+  Future<void> _confirmDelivery(BuildContext context, WidgetRef ref) async {
+    final l10n = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final reason = await askReason(context, l10n.adminConfirmReason);
+    if (reason == null) return;
+    try {
+      await ref
+          .read(supervisionRepositoryProvider)
+          .confirmDelivery(orderId, reason);
+      ref.invalidate(orderProvider(orderId));
+      messenger.showSnackBar(SnackBar(content: Text(l10n.adminDelivered)));
     } on AppFailure catch (failure) {
       messenger.showSnackBar(
         SnackBar(content: Text(failureMessage(l10n, failure))),
@@ -193,6 +211,12 @@ class AdminOrderScreen extends ConsumerWidget {
                       value: formatMoney(o.total),
                       strong: true,
                     ),
+                    AmountRow(
+                      label: l10n.paymentCash,
+                      value: o.paymentStatus == OrderPaymentStatus.paid
+                          ? l10n.adminPaymentPaid
+                          : l10n.adminPaymentUnpaid,
+                    ),
                     const Divider(height: Space.xl),
                     AmountRow(
                       label: l10n.todayCommission,
@@ -214,6 +238,14 @@ class AdminOrderScreen extends ConsumerWidget {
               const SizedBox(height: Space.lg),
               SectionHeader(title: l10n.orderTimeline),
               OrderTimeline(events: events, detailed: true),
+            ],
+            if (o.status == OrderStatus.pickedUp ||
+                o.status == OrderStatus.inTransit) ...[
+              const SizedBox(height: Space.xxl),
+              FilledButton(
+                onPressed: () => _confirmDelivery(context, ref),
+                child: Text(l10n.adminConfirmWithoutCode),
+              ),
             ],
             if (!o.status.isClosed &&
                 o.status != OrderStatus.pickedUp &&

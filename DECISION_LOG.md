@@ -6,6 +6,32 @@
 
 ---
 
+## ADR-024 — Mission du livreur, code de livraison, espèces (Inc-8)
+
+- **Date** : 2026-10-19
+- **Statut** : Accepté
+- **Décideur** : Claude (rôle : backend-engineer / flutter-engineer)
+- **Contexte** : Stories MIS-01 à MIS-10, remise au livreur (ORD-10) ; paiements et rapprochement aux Inc-10 et 13.
+- **Décision** :
+  - Une fonction serveur par étape (`confirm_pickup`, `start_delivery`, `confirm_delivery`, `confirm_cash_collected`,
+    `report_problem`, `declare_failure`, `release_mission`, `admin_confirm_delivery`), chacune limitée au livreur de
+    la mission (ou à l'admin) ; le restaurant peut déclarer la remise (`transition_order` → « Récupérée »).
+  - **Code** : comparé côté serveur, jamais lisible par le livreur ; un essai faux est **enregistré** (la fonction
+    rend un résultat au lieu de lever une erreur, sinon l'essai serait annulé) ; blocage après 5 erreurs (paramètre),
+    alerte admin, puis livraison confirmée par l'admin avec motif.
+  - **Espèces** : registre `cash_ledger` (encaissé / versé) dès maintenant, une seule écriture par commande ; colis :
+    l'expéditeur paie à la récupération (confirmation obligatoire) ; repas : encaissement après le code. Les
+    transactions et versements arrivent à l'Inc-10.
+  - **Confidentialité** : le livreur lit la commande pendant la mission et une heure après (règle RLS) ; ensuite,
+    l'historique passe par `courier_missions()`, sans téléphones ni repères.
+  - Abandon avant récupération : la recherche repart de zéro (délais d'alerte remis à zéro) sans reproposer ce livreur.
+  - Itinéraire : carte OpenStreetMap + ouverture de Google Maps ou Waze (aucune API payante, ADR-005).
+- **Reporté** : notifications (« votre livreur est en route »…) à l'Inc-9 ; décision de remboursement après échec
+  à l'Inc-13.
+- **Impact** : métier (fort : preuve de livraison, espèces), sécurité (moyen).
+
+---
+
 ## ADR-023 — Mise en ligne et attribution des livreurs (Inc-7)
 
 - **Date** : 2026-10-18

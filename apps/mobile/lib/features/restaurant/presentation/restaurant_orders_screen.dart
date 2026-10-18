@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../../admin/admin_scaffold.dart' show askText;
+import '../../../shared/dialogs.dart';
 import '../../orders/orders_providers.dart';
 import '../../orders/presentation/order_widgets.dart';
 import '../restaurant_providers.dart';
@@ -470,7 +470,16 @@ class _RestaurantOrderCardState extends ConsumerState<_RestaurantOrderCard> {
                 style: text.labelLarge!.copyWith(color: tokens.warning),
               ),
             ],
-            if (o.status == OrderStatus.ready) ...[
+            if (o.courierInfo case final courier? when !o.status.isClosed) ...[
+              const SizedBox(height: Space.sm),
+              Text(
+                l10n.restaurantCourier(
+                  '${courier.firstName} · '
+                  '${vehicleLabel(l10n, courier.vehicleType, courier.plateNumber)}',
+                ),
+                style: text.labelLarge!.copyWith(color: tokens.primary),
+              ),
+            ] else if (o.status == OrderStatus.ready) ...[
               const SizedBox(height: Space.sm),
               Text(
                 l10n.orderWaitingCourier,
@@ -515,6 +524,14 @@ class _RestaurantOrderCardState extends ConsumerState<_RestaurantOrderCard> {
                 FilledButton(
                   onPressed: _busy ? null : () => _move(OrderStatus.ready),
                   child: Text(l10n.orderMarkReady),
+                ),
+              ],
+              // ORD-10 : remise déclarée par le restaurant, une fois le livreur arrivé.
+              OrderStatus.ready when o.courierId != null => [
+                const SizedBox(height: Space.md),
+                FilledButton(
+                  onPressed: _busy ? null : () => _move(OrderStatus.pickedUp),
+                  child: Text(l10n.restaurantHandover),
                 ),
               ],
               _ => const <Widget>[],

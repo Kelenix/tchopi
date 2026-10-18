@@ -19,6 +19,11 @@ _Order _$OrderFromJson(Map<String, dynamic> json) => _Order(
   pickupPhone: json['pickup_phone'] as String?,
   pickupDistrict: json['pickup_district'] as String? ?? '',
   pickupLandmark: json['pickup_landmark'] as String? ?? '',
+  pickupInstructions: json['pickup_instructions'] as String?,
+  pickupLat: (json['pickup_lat'] as num?)?.toDouble() ?? 0,
+  pickupLng: (json['pickup_lng'] as num?)?.toDouble() ?? 0,
+  dropoffLat: (json['dropoff_lat'] as num?)?.toDouble() ?? 0,
+  dropoffLng: (json['dropoff_lng'] as num?)?.toDouble() ?? 0,
   recipientName: json['recipient_name'] as String,
   recipientPhone: json['recipient_phone'] as String?,
   dropoffDistrict: json['dropoff_district'] as String,
@@ -32,6 +37,12 @@ _Order _$OrderFromJson(Map<String, dynamic> json) => _Order(
   platformAmount: (json['platform_amount'] as num?)?.toInt() ?? 0,
   currency: json['currency'] as String? ?? 'XOF',
   paymentMethod: $enumDecode(_$PaymentMethodEnumMap, json['payment_method']),
+  paymentStatus:
+      $enumDecodeNullable(
+        _$OrderPaymentStatusEnumMap,
+        json['payment_status'],
+      ) ??
+      OrderPaymentStatus.unpaid,
   createdAt: DateTime.parse(json['created_at'] as String),
   closeReason: json['close_reason'] as String?,
   courierId: json['courier_id'] as String?,
@@ -41,6 +52,12 @@ _Order _$OrderFromJson(Map<String, dynamic> json) => _Order(
   dispatchAlertedAt: json['dispatch_alerted_at'] == null
       ? null
       : DateTime.parse(json['dispatch_alerted_at'] as String),
+  codeLockedAt: json['code_locked_at'] == null
+      ? null
+      : DateTime.parse(json['code_locked_at'] as String),
+  problemReportedAt: json['problem_reported_at'] == null
+      ? null
+      : DateTime.parse(json['problem_reported_at'] as String),
   items:
       (json['order_items'] as List<dynamic>?)
           ?.map((e) => OrderItem.fromJson(e as Map<String, dynamic>))
@@ -61,6 +78,11 @@ Map<String, dynamic> _$OrderToJson(_Order instance) => <String, dynamic>{
   'pickup_phone': instance.pickupPhone,
   'pickup_district': instance.pickupDistrict,
   'pickup_landmark': instance.pickupLandmark,
+  'pickup_instructions': instance.pickupInstructions,
+  'pickup_lat': instance.pickupLat,
+  'pickup_lng': instance.pickupLng,
+  'dropoff_lat': instance.dropoffLat,
+  'dropoff_lng': instance.dropoffLng,
   'recipient_name': instance.recipientName,
   'recipient_phone': instance.recipientPhone,
   'dropoff_district': instance.dropoffDistrict,
@@ -74,11 +96,14 @@ Map<String, dynamic> _$OrderToJson(_Order instance) => <String, dynamic>{
   'platform_amount': instance.platformAmount,
   'currency': instance.currency,
   'payment_method': _$PaymentMethodEnumMap[instance.paymentMethod]!,
+  'payment_status': _$OrderPaymentStatusEnumMap[instance.paymentStatus]!,
   'created_at': instance.createdAt.toIso8601String(),
   'close_reason': instance.closeReason,
   'courier_id': instance.courierId,
   'courier_info': instance.courierInfo,
   'dispatch_alerted_at': instance.dispatchAlertedAt?.toIso8601String(),
+  'code_locked_at': instance.codeLockedAt?.toIso8601String(),
+  'problem_reported_at': instance.problemReportedAt?.toIso8601String(),
   'order_items': instance.items,
 };
 
@@ -104,6 +129,13 @@ const _$PaymentMethodEnumMap = {
   PaymentMethod.cash: 'cash',
   PaymentMethod.mobileMoney: 'mobile_money',
   PaymentMethod.card: 'card',
+};
+
+const _$OrderPaymentStatusEnumMap = {
+  OrderPaymentStatus.unpaid: 'unpaid',
+  OrderPaymentStatus.paid: 'paid',
+  OrderPaymentStatus.refundPending: 'refund_pending',
+  OrderPaymentStatus.refunded: 'refunded',
 };
 
 _OrderItem _$OrderItemFromJson(Map<String, dynamic> json) => _OrderItem(
@@ -191,4 +223,34 @@ Map<String, dynamic> _$ParcelTypeToJson(_ParcelType instance) =>
       'code': instance.code,
       'label': instance.label,
       'max_weight_kg': instance.maxWeightKg,
+    };
+
+_MissionRecord _$MissionRecordFromJson(Map<String, dynamic> json) =>
+    _MissionRecord(
+      id: json['id'] as String,
+      number: json['number'] as String,
+      type: $enumDecode(_$OrderTypeEnumMap, json['type']),
+      status: $enumDecode(_$OrderStatusEnumMap, json['status']),
+      pickupDistrict: json['pickup_district'] as String,
+      dropoffDistrict: json['dropoff_district'] as String,
+      courierEarning: (json['courier_earning'] as num).toInt(),
+      assignedAt: json['assigned_at'] == null
+          ? null
+          : DateTime.parse(json['assigned_at'] as String),
+      closedAt: json['closed_at'] == null
+          ? null
+          : DateTime.parse(json['closed_at'] as String),
+    );
+
+Map<String, dynamic> _$MissionRecordToJson(_MissionRecord instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'number': instance.number,
+      'type': _$OrderTypeEnumMap[instance.type]!,
+      'status': _$OrderStatusEnumMap[instance.status]!,
+      'pickup_district': instance.pickupDistrict,
+      'dropoff_district': instance.dropoffDistrict,
+      'courier_earning': instance.courierEarning,
+      'assigned_at': instance.assignedAt?.toIso8601String(),
+      'closed_at': instance.closedAt?.toIso8601String(),
     };

@@ -22,8 +22,9 @@ Future<PlatformSettings> platformSettings(Ref ref) =>
     ref.watch(supervisionRepositoryProvider).settings();
 
 /// Alertes du bandeau de supervision (ADM-03) : sans livreur après le délai d'alerte, restaurant silencieux
-/// depuis la moitié de son délai de réponse. Code bloqué, échec et remboursement arrivent aux Inc-8 et 13.
-enum OrderAlert { noCourier, restaurantSilent }
+/// depuis la moitié de son délai de réponse, code de livraison bloqué, problème signalé ou échec.
+/// Paiement à rembourser : Inc-13.
+enum OrderAlert { noCourier, restaurantSilent, codeLocked, problem }
 
 Set<OrderAlert> orderAlerts(
   Order order,
@@ -36,4 +37,9 @@ Set<OrderAlert> orderAlerts(
       now.difference(order.createdAt).inSeconds >
           (settings?.restaurantTimeoutS ?? 600) ~/ 2)
     OrderAlert.restaurantSilent,
+  if (order.codeLockedAt != null && !order.status.isClosed)
+    OrderAlert.codeLocked,
+  if (order.problemReportedAt != null &&
+      (!order.status.isClosed || order.status == OrderStatus.failed))
+    OrderAlert.problem,
 };
