@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../l10n/app_localizations.dart';
-import '../design/dish_art.dart';
-import '../design/tokens.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../design/dish_art.dart';
+import '../../design/tokens.dart';
 
 class WelcomeFeature {
   const WelcomeFeature(this.icon, this.label);
@@ -12,8 +13,7 @@ class WelcomeFeature {
   final String label;
 }
 
-/// Écran S-01 : illustration plein écran, promesse de l'app, atouts.
-/// Les actions « Créer un compte » / « Se connecter » arrivent avec l'authentification (Inc-1).
+/// Écran S-01 : illustration plein écran, promesse de l'app, atouts, puis inscription ou connexion.
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({
     super.key,
@@ -158,31 +158,46 @@ class _FeaturesSheet extends StatelessWidget {
       ),
       child: SafeArea(
         top: false,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            for (final feature in features)
-              Expanded(
-                child: Column(
-                  children: [
-                    CircleAvatar(
-                      radius: 20,
-                      backgroundColor: tokens.primarySoft,
-                      child: Icon(
-                        feature.icon,
-                        size: 20,
-                        color: tokens.primary,
-                      ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (final feature in features)
+                  Expanded(
+                    child: Column(
+                      children: [
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundColor: tokens.primarySoft,
+                          child: Icon(
+                            feature.icon,
+                            size: 20,
+                            color: tokens.primary,
+                          ),
+                        ),
+                        const SizedBox(height: Space.sm),
+                        Text(
+                          feature.label,
+                          style: label,
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: Space.sm),
-                    Text(
-                      feature.label,
-                      style: label,
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: Space.xxl),
+            FilledButton(
+              onPressed: () => context.push('/sign-up'),
+              child: Text(AppLocalizations.of(context).actionCreateAccount),
+            ),
+            const SizedBox(height: Space.sm),
+            OutlinedButton(
+              onPressed: () => context.push('/sign-in'),
+              child: Text(AppLocalizations.of(context).actionSignIn),
+            ),
           ],
         ),
       ),

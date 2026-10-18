@@ -6,6 +6,32 @@
 
 ---
 
+## ADR-014 — Authentification : choix de mise en œuvre (Inc-1)
+
+- **Date** : 2026-10-18
+- **Statut** : Accepté
+- **Décideur** : Claude (rôle : security-engineer / backend-engineer)
+- **Contexte** : Mettre en œuvre ADR-004 avec le minimum de code, en restant testable de bout en bout en local.
+- **Décision** :
+  - Codes à 6 chiffres par email (modèles FR, `{{ .Token }}`) plutôt que des liens ; validité 10 min.
+  - Changement d'email sans double confirmation (`double_confirm_changes = false`) : seul le nouvel email reçoit un code.
+  - Suppression de compte : anonymisation du profil (SQL) puis suppression « douce » du compte d'authentification
+    (fonction serveur `account-delete`) ; le profil reste pour l'historique des commandes, sans donnée identifiante.
+  - Inscription existante détectée (réponse sans identité) pour afficher « Un compte existe déjà » (AUTH-01), au prix
+    d'une possible énumération des comptes, acceptée pour l'expérience utilisateur.
+  - Local : fournisseur SMS déclaré factice pour activer le téléphone ; seuls les numéros de test (code 123456) marchent.
+  - Ville saisie librement (préremplie « Abidjan ») jusqu'à l'arrivée des zones (Inc-2), qui la transformera en liste.
+  - Back-office réservé aux admins en Inc-1 ; les membres de restaurants y accéderont à l'Inc-4.
+  - Nouvelles dépendances : `freezed` / `json_serializable` (modèles), `phone_numbers_parser` (numéros), `http`
+    (lecture des méthodes de connexion actives), `go_router` dans `core` (navigation commune).
+- **Alternatives écartées** : liens magiques (gestion des liens profonds) ; suppression définitive du compte (casserait
+  l'historique comptable) ; mock du serveur dans les tests d'intégration (tests contre le vrai Supabase local à la place).
+- **Conséquences** : parcours complets testés automatiquement contre Supabase local ; SMTP et SMS réels restent à
+  configurer sur le VPS (tâches manuelles 5 et 6).
+- **Impact** : sécurité / métier (moyen).
+
+---
+
 ## ADR-013 — Socle technique et dépendances (Inc-0)
 
 - **Date** : 2026-10-18

@@ -7,8 +7,8 @@ select ok(
   'un visiteur ne peut pas utiliser le schéma private'
 );
 select ok(
-  not has_schema_privilege('authenticated', 'private', 'usage'),
-  'un utilisateur connecté ne peut pas utiliser le schéma private'
+  not has_function_privilege('authenticated', 'private.set_updated_at()', 'execute'),
+  'un utilisateur connecté ne peut pas exécuter une fonction interne non autorisée'
 );
 
 create temporary table sample (id int primary key, updated_at timestamptz not null default '2000-01-01');

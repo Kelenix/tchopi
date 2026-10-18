@@ -76,6 +76,15 @@ cd packages/core && flutter test
 supabase db reset && supabase test db
 ```
 
+Tests d'intégration réels (Supabase local démarré, `env/local.json` présent) :
+
+```bash
+cd packages/core && flutter test -t integration --run-skipped
+```
+
+Comptes de test locaux : numéros `+2250700000001` et `+2250700000002`, code SMS `123456`.
+Les emails envoyés en local (codes de vérification) sont visibles sur http://127.0.0.1:54324.
+
 ## Structure du code Flutter
 
 ```

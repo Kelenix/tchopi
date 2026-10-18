@@ -1,0 +1,106 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../domain/app_failure.dart';
+import '../domain/login_identifier.dart';
+import '../domain/models.dart';
+
+/// Inscription, connexion, codes de vérification et mots de passe (Supabase Auth).
+/// Toute erreur est convertie en [AppFailure].
+class AuthRepository {
+  AuthRepository(this._auth, {required this.apiUrl, required this.apiKey});
+
+  final GoTrueClient _auth;
+  final String apiUrl;
+  final String apiKey;
+
+  Session? get currentSession => _auth.currentSession;
+
+  Stream<Session?> get sessionChanges =>
+      _auth.onAuthStateChange.map((state) => state.session);
+
+  /// La connexion par téléphone n'est proposée que si un fournisseur SMS est configuré sur le serveur.
+  Future<bool> isPhoneAuthEnabled() => guardCall(() async {
+    final response = await http
+        .get(Uri.parse('$apiUrl/auth/v1/settings'), headers: {'apikey': apiKey})
+        .timeout(const Duration(seconds: 10));
+    final settings = jsonDecode(response.body) as Map<String, dynamic>;
+    return (settings['external'] as Map<String, dynamic>?)?['phone'] == true;
+  });
+
+  Future<void> signUp(
+    LoginIdentifier id,
+    String password,
+  ) => guardCall(() async {
+    final response = id.isEmail
+        ? await _auth.signUp(email: id.value, password: password)
+        : await _auth.signUp(phone: id.value, password: password);
+    // Avec confirmation obligatoire, Auth répond « succès » sans identité pour un compte existant.
+    if (response.user?.identities?.isEmpty ?? false) {
+      throw const AppFailure('user_already_exists');
+    }
+  });
+
+  Future<void> signIn(LoginIdentifier id, String password) => guardCall(
+    () => id.isEmail
+        ? _auth.signInWithPassword(email: id.value, password: password)
+        : _auth.signInWithPassword(phone: id.value, password: password),
+  );
+
+  Future<void> verifyCode(CodeTarget target, String code) => guardCall(
+    () async {
+      final id = target.identifier;
+      final type = switch ((target.purpose, id.kind)) {
+        (CodePurpose.signup, IdentifierKind.email) => OtpType.signup,
+        (CodePurpose.recovery, IdentifierKind.email) => OtpType.recovery,
+        (CodePurpose.loginChange, IdentifierKind.email) => OtpType.emailChange,
+        (CodePurpose.loginChange, IdentifierKind.phone) => OtpType.phoneChange,
+        (_, IdentifierKind.phone) => OtpType.sms,
+      };
+      await (id.isEmail
+          ? _auth.verifyOTP(type: type, email: id.value, token: code)
+          : _auth.verifyOTP(type: type, phone: id.value, token: code));
+    },
+  );
+
+  Future<void> resendCode(CodeTarget target) {
+    final id = target.identifier;
+    return switch (target.purpose) {
+      CodePurpose.recovery => requestPasswordReset(id),
+      CodePurpose.signup => guardCall(
+        () => id.isEmail
+            ? _auth.resend(type: OtpType.signup, email: id.value)
+            : _auth.resend(type: OtpType.sms, phone: id.value),
+      ),
+      CodePurpose.loginChange => guardCall(
+        () => id.isEmail
+            ? _auth.resend(type: OtpType.emailChange, email: id.value)
+            : _auth.resend(type: OtpType.phoneChange, phone: id.value),
+      ),
+    };
+  }
+
+  /// Envoie un code de réinitialisation ; la réponse est identique que le compte existe ou non.
+  Future<void> requestPasswordReset(LoginIdentifier id) => guardCall(
+    () => id.isEmail
+        ? _auth.resetPasswordForEmail(id.value)
+        : _auth.signInWithOtp(phone: id.value, shouldCreateUser: false),
+  );
+
+  /// Après vérification du code de réinitialisation (session ouverte), enregistre le nouveau mot de passe.
+  Future<void> updatePassword(String password) =>
+      guardCall(() => _auth.updateUser(UserAttributes(password: password)));
+
+  /// Demande le changement d'identifiant ; il n'est effectif qu'après vérification du code envoyé au nouveau.
+  Future<void> requestLoginChange(LoginIdentifier id) => guardCall(
+    () => _auth.updateUser(
+      id.isEmail
+          ? UserAttributes(email: id.value)
+          : UserAttributes(phone: id.value),
+    ),
+  );
+
+  Future<void> signOut() => guardCall(() => _auth.signOut());
+}
