@@ -2,6 +2,7 @@ import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../orders/presentation/order_widgets.dart';
 import '../../admin_scaffold.dart';
 import '../data/admin_people_repository.dart';
 import '../people_providers.dart';
@@ -72,7 +73,11 @@ class _CourierList extends ConsumerWidget {
                 subtitle: Text(
                   [
                     entry.phone,
-                    _vehicleLabel(l10n, entry.courier),
+                    vehicleLabel(
+                      l10n,
+                      entry.courier.vehicleType,
+                      entry.courier.plateNumber,
+                    ),
                     entry.zone,
                   ].where((s) => s.isNotEmpty).join(' · '),
                   style: text.bodySmall!.copyWith(color: tokens.muted),
@@ -94,18 +99,6 @@ class _CourierList extends ConsumerWidget {
       _ => const Center(child: CircularProgressIndicator()),
     };
   }
-}
-
-String _vehicleLabel(AppLocalizations l10n, Courier courier) {
-  final vehicle = switch (courier.vehicleType) {
-    VehicleType.motorbike => l10n.vehicleMotorbike,
-    VehicleType.bicycle => l10n.vehicleBicycle,
-    VehicleType.car => l10n.vehicleCar,
-    VehicleType.onFoot => l10n.vehicleOnFoot,
-  };
-  return courier.plateNumber == null
-      ? vehicle
-      : '$vehicle ${courier.plateNumber}';
 }
 
 class _CourierAvatar extends ConsumerWidget {
@@ -240,7 +233,7 @@ class _CourierSheetState extends ConsumerState<_CourierSheet> {
             Text(
               [
                 entry.phone,
-                _vehicleLabel(l10n, courier),
+                vehicleLabel(l10n, courier.vehicleType, courier.plateNumber),
                 entry.zone,
               ].where((s) => s.isNotEmpty).join(' · '),
               style: text.bodyMedium!.copyWith(color: tokens.muted),

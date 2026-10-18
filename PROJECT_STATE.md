@@ -8,7 +8,7 @@
 - **Phase courante** : 4 — Implémentation · Inc-0 (socle) livré, sauf déploiement VPS (accès non fourni)
 - **Dernière mise à jour** : 2026-10-18
 - **Santé** : 🟢 OK · accès VPS et dépôt GitHub non fournis
-- **Prochaine action** : Inc-7 (en ligne, attribution, supervision, paramètres)
+- **Prochaine action** : Inc-8 (mission livreur, code de livraison, échecs)
 - **Plan de référence** : `docs/plan-de-realisation.md` · Design : `docs/design/design-system.md`
 - **Maquette** : `docs/design/maquette.html` — https://claude.ai/artifact/9GyaG6F34CkTe1qQpsy1cP (privée)
 
@@ -25,7 +25,7 @@ Flutter 3.41.9 · Dart 3.11.5 · Supabase CLI 2.116.0 · Docker 29.8.2 · Java 2
 | 1 — Définition produit      | ✅ fait | `docs/product/user-stories.md` (60 stories), `docs/product/screens.md` (45 fiches) |
 | 2 — Planification           | ✅ fait | Backlog, jalons, chemin critique ci-dessous ; risques : plan §10 |
 | 3 — Architecture & design   | ✅ fait | Architecture, conception, données, design system ; maquette v1 validée |
-| 4 — Implémentation          | 🔄 en cours | Inc-0 à Inc-5 livrés ; app unique (ADR-016) |
+| 4 — Implémentation          | 🔄 en cours | Inc-0 à Inc-7 livrés ; app unique (ADR-016) |
 | 5 — Qualité & performance   | ⬜ à faire | Scénarios S1–S6 |
 | 6 — Publication (stores)    | ⬜ à faire | |
 | 7 — Documentation           | ⬜ à faire | |
@@ -44,7 +44,7 @@ Flutter 3.41.9 · Dart 3.11.5 · Supabase CLI 2.116.0 · Docker 29.8.2 · Java 2
 | Inc-4 | Restaurants et catalogue | RES-01 à 05 | §3.1, §6.C | M | ✅ |
 | Inc-5 | Commande de repas (client + restaurant) | ORD-01 à 13 | §3.1, §6.A | L | ✅ |
 | Inc-6 | Livraison de colis | PAR-01 à 05 | §3.2 | M | ✅ |
-| Inc-7 | En ligne, attribution, supervision, paramètres | COU-05, DIS-01 à 04, ADM-03, ADM-05 | §4.1 | L | ⬜ |
+| Inc-7 | En ligne, attribution, supervision, paramètres | COU-05, DIS-01 à 04, ADM-03, ADM-05 | §4.1 | L | ✅ |
 | Inc-8 | Mission livreur, code de livraison, échecs | MIS-01 à 10 | §4.2, §4.5 | L | ⬜ |
 | Inc-9 | Suivi temps réel, chronologie, notifications | TRK-01 à 03, NOT-01 à 04 | §4.3, §4.4, §4.6 | L | ⬜ |
 | Inc-10 | Espèces, transactions, montants séparés | PAY-01, PAY-02, PAY-06, TRX-01 | §5.3, §5.4, §5.6 | M | ⬜ |
@@ -86,6 +86,18 @@ validation de la maquette → code des écrans à partir de l'Inc-1. Registre de
 - voir `docs/manual-tasks.md` (priorité : compte marchand de paiement, à démarrer tôt)
 
 ## Journal de session (résumé court, le plus récent en haut)
+
+- 2026-10-18 — Inc-7 (branche feat/inc-7-attribution, ADR-023) : paramètres de la plateforme, mise en ligne et
+  position des livreurs, offres de 45 s au plus proche, refus / expiration → suivant, alerte 10 min et annulation
+  30 min sans livreur (tâche toutes les 10 s), attribution manuelle ; plus de commande sans livreur en ligne ;
+  écrans Livreur (tableau de bord, offre plein écran), suivi client (livreur, « toujours sans livreur »), Admin
+  (Commandes en cours, détail, attribution, Paramètres). Vérifié dans le navigateur (deux comptes) : livreur en ligne,
+  commande R-UKGXB acceptée puis en préparation, offre reçue en direct (+1 075 F, 45 s), acceptée, livreur visible du
+  client, supervision, attribution, paramètres enregistrés et tracés. Position simulée dans le navigateur intégré
+  (géolocalisation refusée par celui-ci ; message d'erreur prévu affiché). Corrigé à cette occasion : message
+  d'erreur persistant par-dessus l'offre, bouton d'appel illisible, libellé des filtres. Preuves : analyse 0 problème ;
+  36 + 34 tests Flutter ; pgTAP 147/147 ; 3 + 7 tests d'intégration réels (dont offre reçue en temps réel et acceptée).
+  Non vérifié : notification permanente et suivi GPS sur un vrai téléphone Android.
 
 - 2026-10-18 — Inc-6 (branche feat/inc-6-colis, ADR-022) : types de colis, devis et demande serveur, codes de
   livraison (aussi pour les repas), annulation colis ; écran 4 étapes, suivi avec code et partage. Vérifié dans le

@@ -6,6 +6,39 @@
 
 ---
 
+## ADR-023 — Mise en ligne et attribution des livreurs (Inc-7)
+
+- **Date** : 2026-10-18
+- **Statut** : Accepté
+- **Décideur** : Claude (rôle : backend-engineer / flutter-engineer)
+- **Contexte** : Stories COU-05, DIS-01 à 04, ADM-03, ADM-05, plus les points reportés des Inc-5 et 6.
+- **Décision** :
+  - **Tout dans Postgres** (ADR-003) : offres (`delivery_offers`), dernière position (`courier_locations`),
+    paramètres (`settings`, ligne unique tracée dans l'audit). Recherche lancée par déclencheur quand un repas passe
+    « En préparation » ou qu'un colis est confirmé, relancée quand un livreur est retiré ; tâche `pg_cron`
+    **toutes les 10 s** (offres expirées, recherches en attente, alerte à 10 min, annulation à 30 min, refus
+    restaurant). Verrouillage toujours **commande puis offre** (pas d'interblocage) et `SKIP LOCKED` sur les livreurs.
+  - Livreur éligible : approuvé, en ligne, **position de moins de 2 min**, même zone, moyen adapté au colis, sans
+    mission ni offre en attente, jamais sollicité pour cette commande ; le plus proche du retrait à vol d'oiseau.
+  - **Aucune commande sans livreur en ligne** (déclencheur à l'insertion) ; les devis l'annoncent avant la
+    confirmation ; les types de colis proposés dépendent des moyens des livreurs en ligne.
+  - Position : envoi immédiat, à chaque déplacement de 25 m (au plus toutes les 10 s) et toutes les 30 s à l'arrêt ;
+    effacée au passage hors ligne. Android : service de premier plan « location » avec notification permanente
+    (pas de localisation en arrière-plan ; visible sans autorisation de notification jusqu'à Android 12, au-delà
+    une fois l'autorisation demandée avec les notifications push, Inc-9).
+  - Offre plein écran : vibration répétée, son système ; le son personnalisé et la notification arrivent à l'Inc-9.
+  - DIS-03 : le client peut annuler un repas déjà en préparation une fois l'alerte déclenchée (sans livreur).
+  - Supervision admin : commandes en cours en temps réel, filtres, alertes « sans livreur » et « restaurant sans
+    réponse » (au-delà de la moitié du délai) ; attribution manuelle avec motif.
+- **Reporté** : alertes « code bloqué » et « échec signalé », livraison sans code (Inc-8) ; « paiement à
+  rembourser » (Inc-13) ; moyens de paiement par pays dans les paramètres (Inc-11) ; gains et espèces du livreur (Inc-8).
+- **Alternatives écartées** : attribution dans une Edge Function (un aller-retour de plus, verrous moins sûrs) ;
+  position en arrière-plan permanente (refus fréquent des stores et batterie).
+- **Impact** : métier (fort : plus de commande sans livreur en ligne), technique (moyen), stores (déclaration du
+  service de premier plan, `docs/manual-tasks.md` §11).
+
+---
+
 ## ADR-022 — Livraison de colis : choix de mise en œuvre (Inc-6)
 
 - **Date** : 2026-10-18

@@ -4,6 +4,19 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · versions [S
 
 ## [Non publié]
 
+### Ajouté (Inc-7, ADR-023)
+- Livreur : tableau de bord avec interrupteur En ligne / Hors ligne (explication puis autorisation de localisation,
+  notification permanente sur Android), position partagée tant qu'il est en ligne, mission en cours ; offres en
+  plein écran avec compte à rebours, gain, distances, repères et espèces à encaisser, acceptation ou refus.
+- Attribution automatique au livreur éligible le plus proche, une offre à la fois ; offre suivante au refus ou à
+  l'expiration ; alerte après 10 min et annulation après 30 min sans livreur (délais réglables).
+- Client : livreur attribué (prénom, moyen, appel) sur le suivi, « Nous cherchons encore un livreur » avec choix
+  d'attendre ou d'annuler ; commande impossible sans livreur en ligne, annoncé dès le devis ; types de colis selon
+  les livreurs disponibles.
+- Admin : Commandes en cours (temps réel, filtres statut / type / zone, alertes), détail avec montants séparés et
+  chronologie complète, attribution et réattribution manuelles avec motif, annulation motivée ; Paramètres
+  (délais, numéro du support).
+
 ### Ajouté (Inc-6)
 - Livraison de colis : demande en 4 étapes (départ, arrivée, colis, récapitulatif), devis serveur, demande unique,
   code de livraison à 4 chiffres partageable (WhatsApp, SMS), annulation avant récupération (ADR-022).

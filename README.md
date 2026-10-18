@@ -62,6 +62,11 @@ Windows PowerShell n'accepte pas `&&` : une commande par ligne, ou les scripts c
    .\dev-admin.ps1 +2250700000001
    ```
    puis se déconnecter / reconnecter. L'espace Restaurant apparaît pour un compte invité comme gérant par l'admin.
+6. Commander exige **un livreur en ligne** dans la zone (sinon « Aucun livreur disponible ») : avec un second
+   compte (`07 00 00 00 02`) ouvert dans une fenêtre de navigation privée, espace Livreur → « Devenir livreur »,
+   validation par l'admin (Admin → Livreurs), puis interrupteur « En ligne » (autoriser la localisation).
+   Garder cette fenêtre ouverte : la position part toutes les 30 s et les offres s'y affichent en plein écran.
+   L'admin suit tout dans Admin → Commandes en cours.
 
 En local, trois restaurants de démonstration et leurs menus sont créés par `supabase/seed.sql` (à chaque
 `supabase db reset`). La carte utilise les tuiles OpenStreetMap, sans clé (voir `docs/manual-tasks.md` §7 pour la production).

@@ -550,7 +550,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get courierApprovedBody =>
-      'Votre compte est validé. Vous pourrez passer en ligne et recevoir des missions dès l\'ouverture des missions dans l\'app.';
+      'Votre compte est validé : passez en ligne depuis l\'accueil pour recevoir des missions.';
 
   @override
   String get courierRejectedTitle => 'Profil refusé';
@@ -1465,4 +1465,308 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get orderRecipient => 'Destinataire';
+
+  @override
+  String get failureNoCourier =>
+      'Aucun livreur disponible pour le moment. Réessayez dans quelques minutes.';
+
+  @override
+  String get failureCourierNotApproved =>
+      'Votre compte livreur doit être approuvé pour passer en ligne.';
+
+  @override
+  String get failureMissionInProgress =>
+      'Terminez votre mission avant de passer hors ligne.';
+
+  @override
+  String get failureCourierOffline =>
+      'Vous êtes hors ligne : passez en ligne pour partager votre position.';
+
+  @override
+  String get failureOfferUnavailable => 'Cette mission n\'est plus disponible.';
+
+  @override
+  String get failureCourierBusy =>
+      'Ce livreur vient d\'accepter une autre mission.';
+
+  @override
+  String get failureCourierUnavailable => 'Ce livreur n\'est plus en ligne.';
+
+  @override
+  String get courierOnline => 'En ligne';
+
+  @override
+  String get courierOffline => 'Hors ligne';
+
+  @override
+  String get courierOnlineBody =>
+      'Vous recevez des missions autour de vous. Votre position est partagée tant que vous êtes en ligne.';
+
+  @override
+  String get courierOfflineBody =>
+      'Passez en ligne pour recevoir des missions.';
+
+  @override
+  String get courierLocationTitle => 'Partager votre position';
+
+  @override
+  String get courierLocationBody =>
+      'En ligne, votre position sert uniquement à vous proposer les missions les plus proches. Elle n\'est plus partagée dès que vous passez hors ligne.';
+
+  @override
+  String get courierLocationDenied =>
+      'La localisation est nécessaire pour recevoir des missions.';
+
+  @override
+  String get courierGpsOff => 'Activez le GPS pour passer en ligne.';
+
+  @override
+  String get courierOpenSettings => 'Ouvrir les réglages';
+
+  @override
+  String get courierNotificationTitle => 'Vous êtes en ligne';
+
+  @override
+  String get courierNotificationText =>
+      'Votre position est partagée pour recevoir des missions.';
+
+  @override
+  String get courierWaitingTitle => 'En attente d\'une mission';
+
+  @override
+  String get courierWaitingBody =>
+      'Restez en ligne : chaque nouvelle demande s\'affiche en plein écran.';
+
+  @override
+  String get courierMissionTitle => 'Mission en cours';
+
+  @override
+  String courierMissionEarning(String amount) {
+    return 'Gain $amount';
+  }
+
+  @override
+  String get offerFood => 'Nouvelle mission · Repas';
+
+  @override
+  String get offerParcel => 'Nouvelle mission · Colis';
+
+  @override
+  String offerTotalDistance(String km) {
+    return '$km km au total';
+  }
+
+  @override
+  String get offerSeconds => 'secondes';
+
+  @override
+  String get offerEarning => 'Votre gain';
+
+  @override
+  String offerPickup(String name) {
+    return 'Retrait · $name';
+  }
+
+  @override
+  String offerDropoff(String name) {
+    return 'Livraison · $name';
+  }
+
+  @override
+  String offerCash(String amount) {
+    return 'Espèces à encaisser · $amount';
+  }
+
+  @override
+  String get offerAccept => 'Accepter';
+
+  @override
+  String get offerDecline => 'Refuser';
+
+  @override
+  String get offerAcceptedTitle => 'Mission acceptée';
+
+  @override
+  String offerAcceptedBody(String place, String km) {
+    return 'Direction $place, à $km km. Le client est prévenu.';
+  }
+
+  @override
+  String get offerExpiredTitle => 'Offre expirée';
+
+  @override
+  String get offerDeclinedTitle => 'Offre refusée';
+
+  @override
+  String get offerDeclinedBody =>
+      'Elle est proposée à un autre livreur. Restez en ligne pour la prochaine.';
+
+  @override
+  String get orderCourierTitle => 'Votre livreur';
+
+  @override
+  String get orderCourierCall => 'Appeler';
+
+  @override
+  String get dispatchAlertTitle => 'Nous cherchons encore un livreur';
+
+  @override
+  String get dispatchAlertBody =>
+      'Aucun livreur n\'est disponible pour l\'instant. Vous pouvez continuer d\'attendre ou annuler sans frais.';
+
+  @override
+  String get dispatchKeepWaiting => 'Continuer d\'attendre';
+
+  @override
+  String get eventCourierAssigned => 'Livreur assigné';
+
+  @override
+  String get eventCourierReleased => 'Livreur retiré';
+
+  @override
+  String get eventDispatchAlert => 'Alerte : toujours sans livreur';
+
+  @override
+  String get orderNoCourier => 'Aucun livreur disponible';
+
+  @override
+  String get adminSupervision => 'Commandes en cours';
+
+  @override
+  String get adminSettings => 'Paramètres';
+
+  @override
+  String get supervisionAll => 'Tous';
+
+  @override
+  String supervisionAlertNoCourier(int count) {
+    return 'Sans livreur : $count';
+  }
+
+  @override
+  String supervisionAlertRestaurant(int count) {
+    return 'Restaurant sans réponse : $count';
+  }
+
+  @override
+  String get supervisionEmpty => 'Aucune commande en cours';
+
+  @override
+  String get supervisionEmptyBody =>
+      'Les nouvelles commandes apparaissent ici en temps réel.';
+
+  @override
+  String get adminOrderCustomer => 'Client';
+
+  @override
+  String get adminOrderCourier => 'Livreur';
+
+  @override
+  String get adminOrderNoCourier => 'Aucun livreur attribué';
+
+  @override
+  String get adminAssign => 'Attribuer un livreur';
+
+  @override
+  String get adminReassign => 'Changer de livreur';
+
+  @override
+  String get assignTitle => 'Livreurs en ligne';
+
+  @override
+  String get assignEmpty => 'Aucun livreur en ligne dans la zone.';
+
+  @override
+  String get candidateBusy => 'En mission';
+
+  @override
+  String get candidateOffer => 'Offre en cours';
+
+  @override
+  String get candidateFree => 'Disponible';
+
+  @override
+  String candidateDetails(String distance, String age) {
+    return '$distance km · position il y a $age';
+  }
+
+  @override
+  String get assignReason => 'Motif de l\'attribution';
+
+  @override
+  String get assignDone => 'Livreur attribué.';
+
+  @override
+  String get adminCancelReason => 'Motif de l\'annulation';
+
+  @override
+  String get actorCustomer => 'Client';
+
+  @override
+  String get actorRestaurant => 'Restaurant';
+
+  @override
+  String get actorCourier => 'Livreur';
+
+  @override
+  String get actorAdmin => 'Admin';
+
+  @override
+  String get actorSystem => 'Système';
+
+  @override
+  String get settingsDelaysTitle => 'Délais';
+
+  @override
+  String get settingsOfferTimeout => 'Délai d\'une offre (secondes)';
+
+  @override
+  String get settingsRestaurantTimeout =>
+      'Délai de réponse du restaurant (minutes)';
+
+  @override
+  String get settingsPaymentTimeout => 'Expiration d\'un paiement (minutes)';
+
+  @override
+  String get settingsDispatchAlert => 'Alerte sans livreur (minutes)';
+
+  @override
+  String get settingsDispatchCancel => 'Annulation sans livreur (minutes)';
+
+  @override
+  String get settingsSupportTitle => 'Support';
+
+  @override
+  String get settingsSupportPhone => 'Numéro du support';
+
+  @override
+  String settingsRange(int min, int max) {
+    return 'Entre $min et $max.';
+  }
+
+  @override
+  String get settingsCancelAfterAlert =>
+      'L\'annulation doit venir après l\'alerte.';
+
+  @override
+  String get settingsSaved =>
+      'Paramètres enregistrés : ils s\'appliquent aux nouvelles commandes.';
+
+  @override
+  String get courierOpenDashboard => 'Recevoir des missions';
+
+  @override
+  String get adminOrderCourierEarning => 'Rémunération du livreur';
+
+  @override
+  String get adminOrderPlatform => 'Part de la plateforme';
+
+  @override
+  String get adminOrderAmounts => 'Montants';
+
+  @override
+  String get supervisionAllStatuses => 'Tous les statuts';
+
+  @override
+  String get supervisionAllZones => 'Toutes les zones';
 }

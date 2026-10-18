@@ -90,17 +90,17 @@ final class MyOrdersProvider
 
 String _$myOrdersHash() => r'd12715bf5db3d5fabe806f89fb6a57ca71f12c4d';
 
-/// Commande complète, rechargée à chaque changement de statut (motif de refus, dates).
+/// Commande complète, rechargée à chaque changement en direct (motif de refus, livreur, dates).
 
 @ProviderFor(order)
 final orderProvider = OrderFamily._();
 
-/// Commande complète, rechargée à chaque changement de statut (motif de refus, dates).
+/// Commande complète, rechargée à chaque changement en direct (motif de refus, livreur, dates).
 
 final class OrderProvider
     extends $FunctionalProvider<AsyncValue<Order>, Order, FutureOr<Order>>
     with $FutureModifier<Order>, $FutureProvider<Order> {
-  /// Commande complète, rechargée à chaque changement de statut (motif de refus, dates).
+  /// Commande complète, rechargée à chaque changement en direct (motif de refus, livreur, dates).
   OrderProvider._({
     required OrderFamily super.from,
     required String super.argument,
@@ -144,9 +144,9 @@ final class OrderProvider
   }
 }
 
-String _$orderHash() => r'71bac15cd1d2b7ca7b9ba08bfee84a879fbaa7dd';
+String _$orderHash() => r'89bee9908266ee99d362ff1c9df7db82bf224272';
 
-/// Commande complète, rechargée à chaque changement de statut (motif de refus, dates).
+/// Commande complète, rechargée à chaque changement en direct (motif de refus, livreur, dates).
 
 final class OrderFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<Order>, String> {
@@ -159,7 +159,7 @@ final class OrderFamily extends $Family
         isAutoDispose: true,
       );
 
-  /// Commande complète, rechargée à chaque changement de statut (motif de refus, dates).
+  /// Commande complète, rechargée à chaque changement en direct (motif de refus, livreur, dates).
 
   OrderProvider call(String id) => OrderProvider._(argument: id, from: this);
 
@@ -167,53 +167,48 @@ final class OrderFamily extends $Family
   String toString() => r'orderProvider';
 }
 
-@ProviderFor(orderStatus)
-final orderStatusProvider = OrderStatusFamily._();
+@ProviderFor(orderLive)
+final orderLiveProvider = OrderLiveFamily._();
 
-final class OrderStatusProvider
+final class OrderLiveProvider
     extends
-        $FunctionalProvider<
-          AsyncValue<OrderStatus>,
-          OrderStatus,
-          Stream<OrderStatus>
-        >
-    with $FutureModifier<OrderStatus>, $StreamProvider<OrderStatus> {
-  OrderStatusProvider._({
-    required OrderStatusFamily super.from,
+        $FunctionalProvider<AsyncValue<OrderLive>, OrderLive, Stream<OrderLive>>
+    with $FutureModifier<OrderLive>, $StreamProvider<OrderLive> {
+  OrderLiveProvider._({
+    required OrderLiveFamily super.from,
     required String super.argument,
   }) : super(
          retry: null,
-         name: r'orderStatusProvider',
+         name: r'orderLiveProvider',
          isAutoDispose: true,
          dependencies: null,
          $allTransitiveDependencies: null,
        );
 
   @override
-  String debugGetCreateSourceHash() => _$orderStatusHash();
+  String debugGetCreateSourceHash() => _$orderLiveHash();
 
   @override
   String toString() {
-    return r'orderStatusProvider'
+    return r'orderLiveProvider'
         ''
         '($argument)';
   }
 
   @$internal
   @override
-  $StreamProviderElement<OrderStatus> $createElement(
-    $ProviderPointer pointer,
-  ) => $StreamProviderElement(pointer);
+  $StreamProviderElement<OrderLive> $createElement($ProviderPointer pointer) =>
+      $StreamProviderElement(pointer);
 
   @override
-  Stream<OrderStatus> create(Ref ref) {
+  Stream<OrderLive> create(Ref ref) {
     final argument = this.argument as String;
-    return orderStatus(ref, argument);
+    return orderLive(ref, argument);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is OrderStatusProvider && other.argument == argument;
+    return other is OrderLiveProvider && other.argument == argument;
   }
 
   @override
@@ -222,32 +217,32 @@ final class OrderStatusProvider
   }
 }
 
-String _$orderStatusHash() => r'3ceec3ba981826a4c3d3b13547f43dca0e3427d7';
+String _$orderLiveHash() => r'670b31b49d811e9539d36a316df78aef15250c77';
 
-final class OrderStatusFamily extends $Family
-    with $FunctionalFamilyOverride<Stream<OrderStatus>, String> {
-  OrderStatusFamily._()
+final class OrderLiveFamily extends $Family
+    with $FunctionalFamilyOverride<Stream<OrderLive>, String> {
+  OrderLiveFamily._()
     : super(
         retry: null,
-        name: r'orderStatusProvider',
+        name: r'orderLiveProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
         isAutoDispose: true,
       );
 
-  OrderStatusProvider call(String id) =>
-      OrderStatusProvider._(argument: id, from: this);
+  OrderLiveProvider call(String id) =>
+      OrderLiveProvider._(argument: id, from: this);
 
   @override
-  String toString() => r'orderStatusProvider';
+  String toString() => r'orderLiveProvider';
 }
 
-/// Chronologie, rechargée à chaque changement de statut.
+/// Chronologie, rechargée à chaque changement en direct.
 
 @ProviderFor(orderEvents)
 final orderEventsProvider = OrderEventsFamily._();
 
-/// Chronologie, rechargée à chaque changement de statut.
+/// Chronologie, rechargée à chaque changement en direct.
 
 final class OrderEventsProvider
     extends
@@ -257,7 +252,7 @@ final class OrderEventsProvider
           FutureOr<List<OrderEvent>>
         >
     with $FutureModifier<List<OrderEvent>>, $FutureProvider<List<OrderEvent>> {
-  /// Chronologie, rechargée à chaque changement de statut.
+  /// Chronologie, rechargée à chaque changement en direct.
   OrderEventsProvider._({
     required OrderEventsFamily super.from,
     required String super.argument,
@@ -302,9 +297,9 @@ final class OrderEventsProvider
   }
 }
 
-String _$orderEventsHash() => r'cf032b3639f3cab6d4a46c65d119558efd355d43';
+String _$orderEventsHash() => r'fec750d90ac9bebae07f377368f0f3cd55a66d57';
 
-/// Chronologie, rechargée à chaque changement de statut.
+/// Chronologie, rechargée à chaque changement en direct.
 
 final class OrderEventsFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<List<OrderEvent>>, String> {
@@ -317,7 +312,7 @@ final class OrderEventsFamily extends $Family
         isAutoDispose: true,
       );
 
-  /// Chronologie, rechargée à chaque changement de statut.
+  /// Chronologie, rechargée à chaque changement en direct.
 
   OrderEventsProvider call(String id) =>
       OrderEventsProvider._(argument: id, from: this);
@@ -560,7 +555,7 @@ final class CartQuoteFamily extends $Family
 }
 
 @ProviderFor(parcelTypes)
-final parcelTypesProvider = ParcelTypesProvider._();
+final parcelTypesProvider = ParcelTypesFamily._();
 
 final class ParcelTypesProvider
     extends
@@ -570,19 +565,26 @@ final class ParcelTypesProvider
           FutureOr<List<ParcelType>>
         >
     with $FutureModifier<List<ParcelType>>, $FutureProvider<List<ParcelType>> {
-  ParcelTypesProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'parcelTypesProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+  ParcelTypesProvider._({
+    required ParcelTypesFamily super.from,
+    required (double, double) super.argument,
+  }) : super(
+         retry: null,
+         name: r'parcelTypesProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
   String debugGetCreateSourceHash() => _$parcelTypesHash();
+
+  @override
+  String toString() {
+    return r'parcelTypesProvider'
+        ''
+        '$argument';
+  }
 
   @$internal
   @override
@@ -592,11 +594,44 @@ final class ParcelTypesProvider
 
   @override
   FutureOr<List<ParcelType>> create(Ref ref) {
-    return parcelTypes(ref);
+    final argument = this.argument as (double, double);
+    return parcelTypes(ref, argument.$1, argument.$2);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ParcelTypesProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
   }
 }
 
-String _$parcelTypesHash() => r'21195b721d2b7ba8905bdab226980165b5a8f293';
+String _$parcelTypesHash() => r'931c28423af53c26c2c19dcc14005f9eb50fc6b1';
+
+final class ParcelTypesFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<List<ParcelType>>,
+          (double, double)
+        > {
+  ParcelTypesFamily._()
+    : super(
+        retry: null,
+        name: r'parcelTypesProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  ParcelTypesProvider call(double lat, double lng) =>
+      ParcelTypesProvider._(argument: (lat, lng), from: this);
+
+  @override
+  String toString() => r'parcelTypesProvider';
+}
 
 @ProviderFor(deliveryCode)
 final deliveryCodeProvider = DeliveryCodeFamily._();

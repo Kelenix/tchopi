@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mobile/features/courier/missions/presentation/courier_home_screen.dart';
 import 'package:mobile/features/courier/profile/presentation/courier_profile_screen.dart';
 import 'package:mobile/features/courier/profile/presentation/courier_status_screen.dart';
 import 'package:mobile/spaces/spaces.dart';
@@ -52,5 +53,17 @@ void main() {
     );
     expect(guardSpaces(CourierStatusScreen.path, courier), isNull);
     expect(guardSpaces(CourierProfileScreen.path, client), isNull);
+  });
+
+  test('tableau de bord livreur réservé aux livreurs approuvés', () {
+    expect(
+      guardSpaces(CourierHomeScreen.path, client),
+      CourierProfileScreen.path,
+    );
+    expect(
+      guardSpaces(CourierHomeScreen.path, courier),
+      CourierStatusScreen.path,
+    );
+    expect(guardSpaces(CourierHomeScreen.path, admin), isNull);
   });
 }

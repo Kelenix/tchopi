@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../features/admin/zones/presentation/zones_screen.dart';
+import '../features/admin/supervision/presentation/supervision_screen.dart';
 import '../features/client/home/client_home_screen.dart';
+import '../features/courier/missions/presentation/courier_home_screen.dart';
 import '../features/courier/profile/presentation/courier_profile_screen.dart';
 import '../features/courier/profile/presentation/courier_status_screen.dart';
 import '../features/restaurant/presentation/restaurant_orders_screen.dart';
@@ -14,9 +15,9 @@ part 'spaces.g.dart';
 /// Espaces de l'app (ADR-016).
 enum AppSpace {
   client(Icons.shopping_bag_outlined, ClientHomeScreen.path),
-  courier(Icons.two_wheeler, CourierStatusScreen.path),
+  courier(Icons.two_wheeler, CourierHomeScreen.path),
   restaurant(Icons.storefront_outlined, RestaurantOrdersScreen.path),
-  admin(Icons.admin_panel_settings_outlined, ZonesScreen.path);
+  admin(Icons.admin_panel_settings_outlined, SupervisionScreen.path);
 
   const AppSpace(this.icon, this.home);
 
@@ -61,9 +62,17 @@ String? guardSpaces(String location, AccountRoles roles) {
   if (location.startsWith('/restaurant') && roles.restaurantIds.isEmpty) {
     return SpaceRoutes.entry;
   }
-  // Sans profil livreur, l'espace Livreur commence par l'inscription (« Devenir livreur », COU-01).
-  if (location == CourierStatusScreen.path && roles.courierStatus == null) {
+  // Sans profil livreur, l'espace Livreur commence par l'inscription (« Devenir livreur », COU-01) ;
+  // le tableau de bord est réservé aux livreurs approuvés, les autres voient leur statut.
+  final courierPage =
+      location == CourierStatusScreen.path ||
+      location == CourierHomeScreen.path;
+  if (courierPage && roles.courierStatus == null) {
     return CourierProfileScreen.path;
+  }
+  if (location == CourierHomeScreen.path &&
+      roles.courierStatus != CourierStatus.approved) {
+    return CourierStatusScreen.path;
   }
   return null;
 }

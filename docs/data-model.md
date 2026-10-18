@@ -72,7 +72,7 @@ courier_assigned, picked_up, in_transit, delivered, cancelled, failed`. Pour un 
 |-------|----------------------|-------|
 | `zones` | `id`, `name`, `city`, `country_code` (`CI`), `currency` (`XOF`), `timezone` (`Africa/Abidjan`), `center`, `radius_m`, `is_active` | Une adresse appartient à la zone active qui la contient (la plus proche si chevauchement) |
 | `pricing_rules` | PK (`zone_id`, `service`) ; `base_fee`, `per_km_fee`, `min_fee`, `max_fee`, `detour_factor` (1,30), `rounding_step` (25), `courier_base`, `courier_per_km` | Frais = arrondi supérieur au pas de (base + prix/km × km × détour), borné [plancher, plafond] |
-| `settings` | ligne unique : `offer_timeout_s` (45), `restaurant_timeout_s` (600), `payment_timeout_s` (900), `dispatch_alert_s` (600), `dispatch_cancel_s` (1800), `location_fresh_s` (120), `delivery_code_max_attempts` (5), `support_phone` | Modifiables par l'admin (ADM-05) |
+| `settings` | ligne unique : `offer_timeout_s` (45), `restaurant_timeout_s` (600), `payment_timeout_s` (900), `dispatch_alert_s` (600), `dispatch_cancel_s` (1800), `location_fresh_s` (120), `support_phone` ; `delivery_code_max_attempts` (5) ajouté à l'Inc-8 | Modifiables par l'admin (ADM-05), chaque modification tracée dans `audit_log` |
 | `payment_options` | `country_code`, `method`, `operator` (`orange`, `mtn`, `wave`, `moov`…), `provider` (`stripe`, `paystack`, `cinetpay`, `cash`), `label`, `is_enabled`, `position` | Seules les lignes activées sont proposées (PAY-01) |
 | `parcel_types` | `id`, `code`, `label`, `max_weight_kg`, `allowed_vehicles vehicle_type[]`, `position`, `is_active` | Données initiales : Documents · Petit colis ≤ 5 kg · Colis moyen ≤ 15 kg |
 
@@ -84,7 +84,7 @@ courier_assigned, picked_up, in_transit, delivered, cancelled, failed`. Pour un 
 | `admins` | PK `user_id` | Capacité admin (le 1ᵉʳ admin par script) |
 | `addresses` | `id`, `user_id`, `zone_id`, `city`, `label`, `district`, `landmark`, `instructions`, `location`, `is_default` | Déclencheur : calcule zone et ville, refuse hors zone ; index unique partiel « une seule adresse par défaut » |
 | `couriers` | PK `user_id` ; `zone_id`, `vehicle_type`, `plate_number`, `photo_path`, `status`, `status_reason`, `approved_at`, `is_online`, `online_since` | `check` : immatriculation obligatoire si moto ou voiture |
-| `courier_locations` | PK `courier_id` ; `location`, `accuracy_m`, `heading`, `speed_mps`, `recorded_at` | Une ligne par livreur (dernière position), index spatial |
+| `courier_locations` | PK `courier_id` ; `latitude`, `longitude`, `location` (calculée), `accuracy_m`, `recorded_at` | Une ligne par livreur en ligne (dernière position, effacée hors ligne), index spatial |
 | `push_tokens` | PK `token` ; `user_id`, `app` (`client`, `courier`, `backoffice`), `platform`, `updated_at` | |
 
 ### Restaurants et catalogue

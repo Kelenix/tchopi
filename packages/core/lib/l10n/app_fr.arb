@@ -210,7 +210,7 @@
   "courierPendingTitle": "Nous vérifions votre profil",
   "courierPendingBody": "L'équipe valide votre profil, généralement sous 48 heures. Revenez ici pour suivre son statut.",
   "courierApprovedTitle": "Compte approuvé",
-  "courierApprovedBody": "Votre compte est validé. Vous pourrez passer en ligne et recevoir des missions dès l'ouverture des missions dans l'app.",
+  "courierApprovedBody": "Votre compte est validé : passez en ligne depuis l'accueil pour recevoir des missions.",
   "courierRejectedTitle": "Profil refusé",
   "courierRejectedBody": "Motif : {reason}. Corrigez votre profil puis soumettez-le à nouveau.",
   "@courierRejectedBody": {
@@ -628,5 +628,173 @@
   "orderParcelTitle": "Colis",
   "orderPickupTitle": "Départ",
   "orderDropoffTitle": "Arrivée",
-  "orderRecipient": "Destinataire"
+  "orderRecipient": "Destinataire",
+  "failureNoCourier": "Aucun livreur disponible pour le moment. Réessayez dans quelques minutes.",
+  "failureCourierNotApproved": "Votre compte livreur doit être approuvé pour passer en ligne.",
+  "failureMissionInProgress": "Terminez votre mission avant de passer hors ligne.",
+  "failureCourierOffline": "Vous êtes hors ligne : passez en ligne pour partager votre position.",
+  "failureOfferUnavailable": "Cette mission n'est plus disponible.",
+  "failureCourierBusy": "Ce livreur vient d'accepter une autre mission.",
+  "failureCourierUnavailable": "Ce livreur n'est plus en ligne.",
+  "courierOnline": "En ligne",
+  "courierOffline": "Hors ligne",
+  "courierOnlineBody": "Vous recevez des missions autour de vous. Votre position est partagée tant que vous êtes en ligne.",
+  "courierOfflineBody": "Passez en ligne pour recevoir des missions.",
+  "courierLocationTitle": "Partager votre position",
+  "courierLocationBody": "En ligne, votre position sert uniquement à vous proposer les missions les plus proches. Elle n'est plus partagée dès que vous passez hors ligne.",
+  "courierLocationDenied": "La localisation est nécessaire pour recevoir des missions.",
+  "courierGpsOff": "Activez le GPS pour passer en ligne.",
+  "courierOpenSettings": "Ouvrir les réglages",
+  "courierNotificationTitle": "Vous êtes en ligne",
+  "courierNotificationText": "Votre position est partagée pour recevoir des missions.",
+  "courierWaitingTitle": "En attente d'une mission",
+  "courierWaitingBody": "Restez en ligne : chaque nouvelle demande s'affiche en plein écran.",
+  "courierMissionTitle": "Mission en cours",
+  "courierMissionEarning": "Gain {amount}",
+  "@courierMissionEarning": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "offerFood": "Nouvelle mission · Repas",
+  "offerParcel": "Nouvelle mission · Colis",
+  "offerTotalDistance": "{km} km au total",
+  "@offerTotalDistance": {
+    "placeholders": {
+      "km": {
+        "type": "String"
+      }
+    }
+  },
+  "offerSeconds": "secondes",
+  "offerEarning": "Votre gain",
+  "offerPickup": "Retrait · {name}",
+  "@offerPickup": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "offerDropoff": "Livraison · {name}",
+  "@offerDropoff": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "offerCash": "Espèces à encaisser · {amount}",
+  "@offerCash": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "offerAccept": "Accepter",
+  "offerDecline": "Refuser",
+  "offerAcceptedTitle": "Mission acceptée",
+  "offerAcceptedBody": "Direction {place}, à {km} km. Le client est prévenu.",
+  "@offerAcceptedBody": {
+    "placeholders": {
+      "place": {
+        "type": "String"
+      },
+      "km": {
+        "type": "String"
+      }
+    }
+  },
+  "offerExpiredTitle": "Offre expirée",
+  "offerDeclinedTitle": "Offre refusée",
+  "offerDeclinedBody": "Elle est proposée à un autre livreur. Restez en ligne pour la prochaine.",
+  "orderCourierTitle": "Votre livreur",
+  "orderCourierCall": "Appeler",
+  "dispatchAlertTitle": "Nous cherchons encore un livreur",
+  "dispatchAlertBody": "Aucun livreur n'est disponible pour l'instant. Vous pouvez continuer d'attendre ou annuler sans frais.",
+  "dispatchKeepWaiting": "Continuer d'attendre",
+  "eventCourierAssigned": "Livreur assigné",
+  "eventCourierReleased": "Livreur retiré",
+  "eventDispatchAlert": "Alerte : toujours sans livreur",
+  "orderNoCourier": "Aucun livreur disponible",
+  "adminSupervision": "Commandes en cours",
+  "adminSettings": "Paramètres",
+  "supervisionAll": "Tous",
+  "supervisionAlertNoCourier": "Sans livreur : {count}",
+  "@supervisionAlertNoCourier": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "supervisionAlertRestaurant": "Restaurant sans réponse : {count}",
+  "@supervisionAlertRestaurant": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "supervisionEmpty": "Aucune commande en cours",
+  "supervisionEmptyBody": "Les nouvelles commandes apparaissent ici en temps réel.",
+  "adminOrderCustomer": "Client",
+  "adminOrderCourier": "Livreur",
+  "adminOrderNoCourier": "Aucun livreur attribué",
+  "adminAssign": "Attribuer un livreur",
+  "adminReassign": "Changer de livreur",
+  "assignTitle": "Livreurs en ligne",
+  "assignEmpty": "Aucun livreur en ligne dans la zone.",
+  "candidateBusy": "En mission",
+  "candidateOffer": "Offre en cours",
+  "candidateFree": "Disponible",
+  "candidateDetails": "{distance} km · position il y a {age}",
+  "@candidateDetails": {
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      },
+      "age": {
+        "type": "String"
+      }
+    }
+  },
+  "assignReason": "Motif de l'attribution",
+  "assignDone": "Livreur attribué.",
+  "adminCancelReason": "Motif de l'annulation",
+  "actorCustomer": "Client",
+  "actorRestaurant": "Restaurant",
+  "actorCourier": "Livreur",
+  "actorAdmin": "Admin",
+  "actorSystem": "Système",
+  "settingsDelaysTitle": "Délais",
+  "settingsOfferTimeout": "Délai d'une offre (secondes)",
+  "settingsRestaurantTimeout": "Délai de réponse du restaurant (minutes)",
+  "settingsPaymentTimeout": "Expiration d'un paiement (minutes)",
+  "settingsDispatchAlert": "Alerte sans livreur (minutes)",
+  "settingsDispatchCancel": "Annulation sans livreur (minutes)",
+  "settingsSupportTitle": "Support",
+  "settingsSupportPhone": "Numéro du support",
+  "settingsRange": "Entre {min} et {max}.",
+  "@settingsRange": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsCancelAfterAlert": "L'annulation doit venir après l'alerte.",
+  "settingsSaved": "Paramètres enregistrés : ils s'appliquent aux nouvelles commandes.",
+  "courierOpenDashboard": "Recevoir des missions",
+  "adminOrderCourierEarning": "Rémunération du livreur",
+  "adminOrderPlatform": "Part de la plateforme",
+  "adminOrderAmounts": "Montants",
+  "supervisionAllStatuses": "Tous les statuts",
+  "supervisionAllZones": "Toutes les zones"
 }

@@ -1093,7 +1093,7 @@ abstract class AppLocalizations {
   /// No description provided for @courierApprovedBody.
   ///
   /// In fr, this message translates to:
-  /// **'Votre compte est validé. Vous pourrez passer en ligne et recevoir des missions dès l\'ouverture des missions dans l\'app.'**
+  /// **'Votre compte est validé : passez en ligne depuis l\'accueil pour recevoir des missions.'**
   String get courierApprovedBody;
 
   /// No description provided for @courierRejectedTitle.
@@ -2762,6 +2762,540 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Destinataire'**
   String get orderRecipient;
+
+  /// No description provided for @failureNoCourier.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun livreur disponible pour le moment. Réessayez dans quelques minutes.'**
+  String get failureNoCourier;
+
+  /// No description provided for @failureCourierNotApproved.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre compte livreur doit être approuvé pour passer en ligne.'**
+  String get failureCourierNotApproved;
+
+  /// No description provided for @failureMissionInProgress.
+  ///
+  /// In fr, this message translates to:
+  /// **'Terminez votre mission avant de passer hors ligne.'**
+  String get failureMissionInProgress;
+
+  /// No description provided for @failureCourierOffline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vous êtes hors ligne : passez en ligne pour partager votre position.'**
+  String get failureCourierOffline;
+
+  /// No description provided for @failureOfferUnavailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette mission n\'est plus disponible.'**
+  String get failureOfferUnavailable;
+
+  /// No description provided for @failureCourierBusy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce livreur vient d\'accepter une autre mission.'**
+  String get failureCourierBusy;
+
+  /// No description provided for @failureCourierUnavailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce livreur n\'est plus en ligne.'**
+  String get failureCourierUnavailable;
+
+  /// No description provided for @courierOnline.
+  ///
+  /// In fr, this message translates to:
+  /// **'En ligne'**
+  String get courierOnline;
+
+  /// No description provided for @courierOffline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hors ligne'**
+  String get courierOffline;
+
+  /// No description provided for @courierOnlineBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vous recevez des missions autour de vous. Votre position est partagée tant que vous êtes en ligne.'**
+  String get courierOnlineBody;
+
+  /// No description provided for @courierOfflineBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Passez en ligne pour recevoir des missions.'**
+  String get courierOfflineBody;
+
+  /// No description provided for @courierLocationTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Partager votre position'**
+  String get courierLocationTitle;
+
+  /// No description provided for @courierLocationBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'En ligne, votre position sert uniquement à vous proposer les missions les plus proches. Elle n\'est plus partagée dès que vous passez hors ligne.'**
+  String get courierLocationBody;
+
+  /// No description provided for @courierLocationDenied.
+  ///
+  /// In fr, this message translates to:
+  /// **'La localisation est nécessaire pour recevoir des missions.'**
+  String get courierLocationDenied;
+
+  /// No description provided for @courierGpsOff.
+  ///
+  /// In fr, this message translates to:
+  /// **'Activez le GPS pour passer en ligne.'**
+  String get courierGpsOff;
+
+  /// No description provided for @courierOpenSettings.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvrir les réglages'**
+  String get courierOpenSettings;
+
+  /// No description provided for @courierNotificationTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vous êtes en ligne'**
+  String get courierNotificationTitle;
+
+  /// No description provided for @courierNotificationText.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre position est partagée pour recevoir des missions.'**
+  String get courierNotificationText;
+
+  /// No description provided for @courierWaitingTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'En attente d\'une mission'**
+  String get courierWaitingTitle;
+
+  /// No description provided for @courierWaitingBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Restez en ligne : chaque nouvelle demande s\'affiche en plein écran.'**
+  String get courierWaitingBody;
+
+  /// No description provided for @courierMissionTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mission en cours'**
+  String get courierMissionTitle;
+
+  /// No description provided for @courierMissionEarning.
+  ///
+  /// In fr, this message translates to:
+  /// **'Gain {amount}'**
+  String courierMissionEarning(String amount);
+
+  /// No description provided for @offerFood.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle mission · Repas'**
+  String get offerFood;
+
+  /// No description provided for @offerParcel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle mission · Colis'**
+  String get offerParcel;
+
+  /// No description provided for @offerTotalDistance.
+  ///
+  /// In fr, this message translates to:
+  /// **'{km} km au total'**
+  String offerTotalDistance(String km);
+
+  /// No description provided for @offerSeconds.
+  ///
+  /// In fr, this message translates to:
+  /// **'secondes'**
+  String get offerSeconds;
+
+  /// No description provided for @offerEarning.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre gain'**
+  String get offerEarning;
+
+  /// No description provided for @offerPickup.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retrait · {name}'**
+  String offerPickup(String name);
+
+  /// No description provided for @offerDropoff.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraison · {name}'**
+  String offerDropoff(String name);
+
+  /// No description provided for @offerCash.
+  ///
+  /// In fr, this message translates to:
+  /// **'Espèces à encaisser · {amount}'**
+  String offerCash(String amount);
+
+  /// No description provided for @offerAccept.
+  ///
+  /// In fr, this message translates to:
+  /// **'Accepter'**
+  String get offerAccept;
+
+  /// No description provided for @offerDecline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Refuser'**
+  String get offerDecline;
+
+  /// No description provided for @offerAcceptedTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mission acceptée'**
+  String get offerAcceptedTitle;
+
+  /// No description provided for @offerAcceptedBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Direction {place}, à {km} km. Le client est prévenu.'**
+  String offerAcceptedBody(String place, String km);
+
+  /// No description provided for @offerExpiredTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Offre expirée'**
+  String get offerExpiredTitle;
+
+  /// No description provided for @offerDeclinedTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Offre refusée'**
+  String get offerDeclinedTitle;
+
+  /// No description provided for @offerDeclinedBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Elle est proposée à un autre livreur. Restez en ligne pour la prochaine.'**
+  String get offerDeclinedBody;
+
+  /// No description provided for @orderCourierTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre livreur'**
+  String get orderCourierTitle;
+
+  /// No description provided for @orderCourierCall.
+  ///
+  /// In fr, this message translates to:
+  /// **'Appeler'**
+  String get orderCourierCall;
+
+  /// No description provided for @dispatchAlertTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nous cherchons encore un livreur'**
+  String get dispatchAlertTitle;
+
+  /// No description provided for @dispatchAlertBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun livreur n\'est disponible pour l\'instant. Vous pouvez continuer d\'attendre ou annuler sans frais.'**
+  String get dispatchAlertBody;
+
+  /// No description provided for @dispatchKeepWaiting.
+  ///
+  /// In fr, this message translates to:
+  /// **'Continuer d\'attendre'**
+  String get dispatchKeepWaiting;
+
+  /// No description provided for @eventCourierAssigned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livreur assigné'**
+  String get eventCourierAssigned;
+
+  /// No description provided for @eventCourierReleased.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livreur retiré'**
+  String get eventCourierReleased;
+
+  /// No description provided for @eventDispatchAlert.
+  ///
+  /// In fr, this message translates to:
+  /// **'Alerte : toujours sans livreur'**
+  String get eventDispatchAlert;
+
+  /// No description provided for @orderNoCourier.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun livreur disponible'**
+  String get orderNoCourier;
+
+  /// No description provided for @adminSupervision.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commandes en cours'**
+  String get adminSupervision;
+
+  /// No description provided for @adminSettings.
+  ///
+  /// In fr, this message translates to:
+  /// **'Paramètres'**
+  String get adminSettings;
+
+  /// No description provided for @supervisionAll.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tous'**
+  String get supervisionAll;
+
+  /// No description provided for @supervisionAlertNoCourier.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sans livreur : {count}'**
+  String supervisionAlertNoCourier(int count);
+
+  /// No description provided for @supervisionAlertRestaurant.
+  ///
+  /// In fr, this message translates to:
+  /// **'Restaurant sans réponse : {count}'**
+  String supervisionAlertRestaurant(int count);
+
+  /// No description provided for @supervisionEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune commande en cours'**
+  String get supervisionEmpty;
+
+  /// No description provided for @supervisionEmptyBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les nouvelles commandes apparaissent ici en temps réel.'**
+  String get supervisionEmptyBody;
+
+  /// No description provided for @adminOrderCustomer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Client'**
+  String get adminOrderCustomer;
+
+  /// No description provided for @adminOrderCourier.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livreur'**
+  String get adminOrderCourier;
+
+  /// No description provided for @adminOrderNoCourier.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun livreur attribué'**
+  String get adminOrderNoCourier;
+
+  /// No description provided for @adminAssign.
+  ///
+  /// In fr, this message translates to:
+  /// **'Attribuer un livreur'**
+  String get adminAssign;
+
+  /// No description provided for @adminReassign.
+  ///
+  /// In fr, this message translates to:
+  /// **'Changer de livreur'**
+  String get adminReassign;
+
+  /// No description provided for @assignTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livreurs en ligne'**
+  String get assignTitle;
+
+  /// No description provided for @assignEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun livreur en ligne dans la zone.'**
+  String get assignEmpty;
+
+  /// No description provided for @candidateBusy.
+  ///
+  /// In fr, this message translates to:
+  /// **'En mission'**
+  String get candidateBusy;
+
+  /// No description provided for @candidateOffer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Offre en cours'**
+  String get candidateOffer;
+
+  /// No description provided for @candidateFree.
+  ///
+  /// In fr, this message translates to:
+  /// **'Disponible'**
+  String get candidateFree;
+
+  /// No description provided for @candidateDetails.
+  ///
+  /// In fr, this message translates to:
+  /// **'{distance} km · position il y a {age}'**
+  String candidateDetails(String distance, String age);
+
+  /// No description provided for @assignReason.
+  ///
+  /// In fr, this message translates to:
+  /// **'Motif de l\'attribution'**
+  String get assignReason;
+
+  /// No description provided for @assignDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livreur attribué.'**
+  String get assignDone;
+
+  /// No description provided for @adminCancelReason.
+  ///
+  /// In fr, this message translates to:
+  /// **'Motif de l\'annulation'**
+  String get adminCancelReason;
+
+  /// No description provided for @actorCustomer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Client'**
+  String get actorCustomer;
+
+  /// No description provided for @actorRestaurant.
+  ///
+  /// In fr, this message translates to:
+  /// **'Restaurant'**
+  String get actorRestaurant;
+
+  /// No description provided for @actorCourier.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livreur'**
+  String get actorCourier;
+
+  /// No description provided for @actorAdmin.
+  ///
+  /// In fr, this message translates to:
+  /// **'Admin'**
+  String get actorAdmin;
+
+  /// No description provided for @actorSystem.
+  ///
+  /// In fr, this message translates to:
+  /// **'Système'**
+  String get actorSystem;
+
+  /// No description provided for @settingsDelaysTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Délais'**
+  String get settingsDelaysTitle;
+
+  /// No description provided for @settingsOfferTimeout.
+  ///
+  /// In fr, this message translates to:
+  /// **'Délai d\'une offre (secondes)'**
+  String get settingsOfferTimeout;
+
+  /// No description provided for @settingsRestaurantTimeout.
+  ///
+  /// In fr, this message translates to:
+  /// **'Délai de réponse du restaurant (minutes)'**
+  String get settingsRestaurantTimeout;
+
+  /// No description provided for @settingsPaymentTimeout.
+  ///
+  /// In fr, this message translates to:
+  /// **'Expiration d\'un paiement (minutes)'**
+  String get settingsPaymentTimeout;
+
+  /// No description provided for @settingsDispatchAlert.
+  ///
+  /// In fr, this message translates to:
+  /// **'Alerte sans livreur (minutes)'**
+  String get settingsDispatchAlert;
+
+  /// No description provided for @settingsDispatchCancel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annulation sans livreur (minutes)'**
+  String get settingsDispatchCancel;
+
+  /// No description provided for @settingsSupportTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Support'**
+  String get settingsSupportTitle;
+
+  /// No description provided for @settingsSupportPhone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Numéro du support'**
+  String get settingsSupportPhone;
+
+  /// No description provided for @settingsRange.
+  ///
+  /// In fr, this message translates to:
+  /// **'Entre {min} et {max}.'**
+  String settingsRange(int min, int max);
+
+  /// No description provided for @settingsCancelAfterAlert.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'annulation doit venir après l\'alerte.'**
+  String get settingsCancelAfterAlert;
+
+  /// No description provided for @settingsSaved.
+  ///
+  /// In fr, this message translates to:
+  /// **'Paramètres enregistrés : ils s\'appliquent aux nouvelles commandes.'**
+  String get settingsSaved;
+
+  /// No description provided for @courierOpenDashboard.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recevoir des missions'**
+  String get courierOpenDashboard;
+
+  /// No description provided for @adminOrderCourierEarning.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rémunération du livreur'**
+  String get adminOrderCourierEarning;
+
+  /// No description provided for @adminOrderPlatform.
+  ///
+  /// In fr, this message translates to:
+  /// **'Part de la plateforme'**
+  String get adminOrderPlatform;
+
+  /// No description provided for @adminOrderAmounts.
+  ///
+  /// In fr, this message translates to:
+  /// **'Montants'**
+  String get adminOrderAmounts;
+
+  /// No description provided for @supervisionAllStatuses.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tous les statuts'**
+  String get supervisionAllStatuses;
+
+  /// No description provided for @supervisionAllZones.
+  ///
+  /// In fr, this message translates to:
+  /// **'Toutes les zones'**
+  String get supervisionAllZones;
 }
 
 class _AppLocalizationsDelegate

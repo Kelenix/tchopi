@@ -3,6 +3,10 @@
     <!-- Position « pendant l'utilisation » : adresses (client) ; demandée au moment voulu, jamais au lancement. -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <!-- Livreur en ligne : position envoyée écran éteint, avec la notification permanente « Vous êtes en ligne »
+         (service de premier plan de type « location », démarré depuis l'app ouverte ; pas de position en arrière-plan). -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION"/>
     <application
         android:label="Tchopi"
         android:name="${applicationName}"

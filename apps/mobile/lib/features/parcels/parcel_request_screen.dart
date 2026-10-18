@@ -278,7 +278,8 @@ class _ParcelRequestScreenState extends ConsumerState<ParcelRequestScreen> {
               builder: (context, snapshot) {
                 final quote = snapshot.data;
                 return FilledButton(
-                  onPressed: quote == null || _placing
+                  onPressed:
+                      quote == null || !quote.couriersAvailable || _placing
                       ? null
                       : () => _confirm(quote),
                   child: _placing
@@ -468,7 +469,9 @@ class _ParcelRequestScreenState extends ConsumerState<ParcelRequestScreen> {
   Widget _detailsStep(AppLocalizations l10n) {
     final tokens = context.tokens;
     final text = Theme.of(context).textTheme;
-    final types = ref.watch(parcelTypesProvider).value ?? const <ParcelType>[];
+    final pickup = _pickup;
+    final typesProvider = parcelTypesProvider(pickup.lat, pickup.lng);
+    final types = ref.watch(typesProvider);
     return Form(
       key: _forms[2],
       child: Column(
@@ -497,7 +500,9 @@ class _ParcelRequestScreenState extends ConsumerState<ParcelRequestScreen> {
           const SizedBox(height: Space.xl),
           Text(l10n.parcelType, style: text.titleMedium),
           const SizedBox(height: Space.sm),
-          for (final type in types)
+          if (types.value?.isEmpty ?? false)
+            NoCourierBanner(onRetry: () => ref.invalidate(typesProvider)),
+          for (final type in types.value ?? const <ParcelType>[])
             Padding(
               padding: const EdgeInsets.only(bottom: Space.sm),
               child: Material(
@@ -680,6 +685,16 @@ class _ParcelRequestScreenState extends ConsumerState<ParcelRequestScreen> {
             else if (quote == null)
               const Center(child: CircularProgressIndicator())
             else ...[
+              if (!quote.couriersAvailable) ...[
+                NoCourierBanner(
+                  onRetry: () => setState(
+                    () => _quote = ref
+                        .read(orderRepositoryProvider)
+                        .quoteParcel(_pickup, _dropoff, _type!.id),
+                  ),
+                ),
+                const SizedBox(height: Space.lg),
+              ],
               AmountRow(
                 label: l10n.parcelDistance,
                 value: l10n.parcelDistanceValue(

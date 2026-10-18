@@ -12,12 +12,16 @@ class AdminSection {
 }
 
 const adminSections = [
+  AdminSection(Icons.receipt_long_outlined, _orders, '/admin/orders'),
   AdminSection(Icons.radar, _zones, '/admin/zones'),
   AdminSection(Icons.storefront_outlined, _restaurants, '/admin/restaurants'),
   AdminSection(Icons.two_wheeler, _couriers, '/admin/couriers'),
   AdminSection(Icons.group_outlined, _users, '/admin/users'),
+  AdminSection(Icons.tune, _settings, '/admin/settings'),
 ];
 
+String _orders(AppLocalizations l10n) => l10n.adminSupervision;
+String _settings(AppLocalizations l10n) => l10n.adminSettings;
 String _zones(AppLocalizations l10n) => l10n.adminZones;
 String _restaurants(AppLocalizations l10n) => l10n.adminRestaurants;
 String _couriers(AppLocalizations l10n) => l10n.adminCouriers;

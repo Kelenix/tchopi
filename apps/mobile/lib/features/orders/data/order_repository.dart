@@ -3,6 +3,13 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../cart.dart';
 
+/// Ce qui change en direct sur une commande : statut, livreur attribué, alerte « toujours sans livreur ».
+typedef OrderLive = ({
+  OrderStatus status,
+  String? courierId,
+  DateTime? dispatchAlertedAt,
+});
+
 /// Commandes de repas : devis, création et suivi (client), réception et actions (restaurant).
 /// Montants et statuts ne sont jamais écrits directement : uniquement par les fonctions serveur (RLS).
 class OrderRepository {
@@ -71,29 +78,37 @@ class OrderRepository {
     return Order.fromJson(row);
   });
 
-  /// Changements de statut en temps réel (sans les lignes, qui ne changent pas).
-  Stream<OrderStatus> watchStatus(String id) => _client
+  /// Changements en temps réel (sans les lignes, qui ne changent pas).
+  Stream<OrderLive> watchLive(String id) => _client
       .from('orders')
       .stream(primaryKey: ['id'])
       .eq('id', id)
       .where((rows) => rows.isNotEmpty)
-      .map(
-        (rows) =>
-            Order.fromJson({...rows.first, 'order_items': <Object>[]}).status,
-      )
+      .map((rows) {
+        final o = Order.fromJson({...rows.first, 'order_items': <Object>[]});
+        return (
+          status: o.status,
+          courierId: o.courierId,
+          dispatchAlertedAt: o.dispatchAlertedAt,
+        );
+      })
       .handleError((Object error) => throw toFailure(error));
 
   Future<List<OrderEvent>> events(String id) => guardCall(() async {
     final rows = await _client
         .from('order_events')
-        .select('status, actor_role, reason, created_at')
+        .select('kind, status, actor_role, reason, created_at')
         .eq('order_id', id)
-        .order('created_at', ascending: true);
+        .order('id', ascending: true);
     return rows.map(OrderEvent.fromJson).toList();
   });
 
-  Future<void> cancel(String id) => guardCall(
-    () => _client.rpc<void>('cancel_order', params: {'p_order_id': id}),
+  /// Le motif n'est exigé que de l'admin (commande déjà acceptée).
+  Future<void> cancel(String id, {String? reason}) => guardCall(
+    () => _client.rpc<void>(
+      'cancel_order',
+      params: {'p_order_id': id, 'p_reason': reason},
+    ),
   );
 
   /// Commandes du restaurant en temps réel, les plus récentes d'abord.
@@ -134,14 +149,18 @@ class OrderRepository {
 
   // Colis (Inc-6)
 
-  Future<List<ParcelType>> parcelTypes() => guardCall(() async {
-    final rows = await _client
-        .from('parcel_types')
-        .select('id, code, label, max_weight_kg')
-        .eq('is_active', true)
-        .order('position', ascending: true);
-    return rows.map(ParcelType.fromJson).toList();
-  });
+  /// Types transportables par les livreurs en ligne autour du point de départ (PAR-01).
+  Future<List<ParcelType>> parcelTypes(double lat, double lng) =>
+      guardCall(() async {
+        final rows = await _client.rpc<List<dynamic>>(
+          'available_parcel_types',
+          params: {'p_lat': lat, 'p_lng': lng},
+        );
+        return rows
+            .cast<Map<String, dynamic>>()
+            .map(ParcelType.fromJson)
+            .toList();
+      });
 
   Future<FoodQuote> quoteParcel(
     ParcelPoint pickup,

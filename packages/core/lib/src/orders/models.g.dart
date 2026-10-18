@@ -11,6 +11,7 @@ _Order _$OrderFromJson(Map<String, dynamic> json) => _Order(
   number: json['number'] as String,
   type: $enumDecodeNullable(_$OrderTypeEnumMap, json['type']) ?? OrderType.food,
   status: $enumDecode(_$OrderStatusEnumMap, json['status']),
+  zoneId: json['zone_id'] as String?,
   restaurantId: json['restaurant_id'] as String?,
   parcelTypeId: json['parcel_type_id'] as String?,
   parcelDescription: json['parcel_description'] as String?,
@@ -27,10 +28,19 @@ _Order _$OrderFromJson(Map<String, dynamic> json) => _Order(
   deliveryFee: (json['delivery_fee'] as num).toInt(),
   total: (json['total'] as num).toInt(),
   commissionAmount: (json['commission_amount'] as num?)?.toInt() ?? 0,
+  courierEarning: (json['courier_earning'] as num?)?.toInt() ?? 0,
+  platformAmount: (json['platform_amount'] as num?)?.toInt() ?? 0,
   currency: json['currency'] as String? ?? 'XOF',
   paymentMethod: $enumDecode(_$PaymentMethodEnumMap, json['payment_method']),
   createdAt: DateTime.parse(json['created_at'] as String),
   closeReason: json['close_reason'] as String?,
+  courierId: json['courier_id'] as String?,
+  courierInfo: json['courier_info'] == null
+      ? null
+      : CourierInfo.fromJson(json['courier_info'] as Map<String, dynamic>),
+  dispatchAlertedAt: json['dispatch_alerted_at'] == null
+      ? null
+      : DateTime.parse(json['dispatch_alerted_at'] as String),
   items:
       (json['order_items'] as List<dynamic>?)
           ?.map((e) => OrderItem.fromJson(e as Map<String, dynamic>))
@@ -43,6 +53,7 @@ Map<String, dynamic> _$OrderToJson(_Order instance) => <String, dynamic>{
   'number': instance.number,
   'type': _$OrderTypeEnumMap[instance.type]!,
   'status': _$OrderStatusEnumMap[instance.status]!,
+  'zone_id': instance.zoneId,
   'restaurant_id': instance.restaurantId,
   'parcel_type_id': instance.parcelTypeId,
   'parcel_description': instance.parcelDescription,
@@ -59,10 +70,15 @@ Map<String, dynamic> _$OrderToJson(_Order instance) => <String, dynamic>{
   'delivery_fee': instance.deliveryFee,
   'total': instance.total,
   'commission_amount': instance.commissionAmount,
+  'courier_earning': instance.courierEarning,
+  'platform_amount': instance.platformAmount,
   'currency': instance.currency,
   'payment_method': _$PaymentMethodEnumMap[instance.paymentMethod]!,
   'created_at': instance.createdAt.toIso8601String(),
   'close_reason': instance.closeReason,
+  'courier_id': instance.courierId,
+  'courier_info': instance.courierInfo,
+  'dispatch_alerted_at': instance.dispatchAlertedAt?.toIso8601String(),
   'order_items': instance.items,
 };
 
@@ -108,6 +124,7 @@ Map<String, dynamic> _$OrderItemToJson(_OrderItem instance) =>
     };
 
 _OrderEvent _$OrderEventFromJson(Map<String, dynamic> json) => _OrderEvent(
+  kind: json['kind'] as String? ?? 'status_changed',
   status: $enumDecodeNullable(_$OrderStatusEnumMap, json['status']),
   actorRole: json['actor_role'] as String,
   reason: json['reason'] as String?,
@@ -116,6 +133,7 @@ _OrderEvent _$OrderEventFromJson(Map<String, dynamic> json) => _OrderEvent(
 
 Map<String, dynamic> _$OrderEventToJson(_OrderEvent instance) =>
     <String, dynamic>{
+      'kind': instance.kind,
       'status': _$OrderStatusEnumMap[instance.status],
       'actor_role': instance.actorRole,
       'reason': instance.reason,
@@ -133,6 +151,7 @@ _FoodQuote _$FoodQuoteFromJson(Map<String, dynamic> json) => _FoodQuote(
           ?.map((e) => QuoteIssue.fromJson(e as Map<String, dynamic>))
           .toList() ??
       const [],
+  couriersAvailable: json['couriers_available'] as bool? ?? true,
 );
 
 Map<String, dynamic> _$FoodQuoteToJson(_FoodQuote instance) =>
@@ -143,6 +162,7 @@ Map<String, dynamic> _$FoodQuoteToJson(_FoodQuote instance) =>
       'distance_m': instance.distanceM,
       'currency': instance.currency,
       'issues': instance.issues,
+      'couriers_available': instance.couriersAvailable,
     };
 
 _QuoteIssue _$QuoteIssueFromJson(Map<String, dynamic> json) => _QuoteIssue(

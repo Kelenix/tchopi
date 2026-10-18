@@ -106,6 +106,10 @@
 - **Pourquoi** : publier les apps (phase 6).
 - **Quand** : Google Play dès la phase 4 (test interne possible tôt) ; Apple si Q4 = B.
 - **Étapes** : 1. Google Play Console (vérification d'identité incluse). 2. Apple Developer Program (si iOS).
+  3. À la première soumission, remplir dans la Play Console « Contenu de l'application » : **déclaration des
+  services de premier plan** (type « localisation » : position du livreur en ligne, avec notification permanente)
+  et **accès à la localisation** (pendant l'utilisation seulement). Claude fournira le texte et la courte vidéo
+  demandés.
 - **Coût** : Google Play 25 $ (une fois) ; Apple 99 $/an.
 - **Vérification** : accès à la console et création de la fiche de l'app.
 

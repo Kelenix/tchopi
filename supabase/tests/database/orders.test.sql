@@ -29,6 +29,14 @@ insert into public.products (id, restaurant_id, name, price, is_available) value
 insert into public.addresses (id, user_id, district, landmark, latitude, longitude)
 values ('88888888-8888-8888-8888-888888888888', '00000000-0000-0000-0000-0000000000c1', 'Lobia',
         'Près du marché', 6.8850, -6.4400);
+-- Un livreur en ligne dans la zone : sans lui, aucune commande n'est acceptée (ORD-07, PAR-03).
+insert into auth.users (id, email, aud, role, email_confirmed_at)
+values ('00000000-0000-0000-0000-0000000000a1', 'livreur@exemple.ci', 'authenticated', 'authenticated', now());
+insert into public.couriers (user_id, zone_id, vehicle_type, plate_number, photo_path, status, approved_at, is_online)
+values ('00000000-0000-0000-0000-0000000000a1', '55555555-5555-5555-5555-555555555555', 'motorbike', 'AB-123-CI',
+        '00000000-0000-0000-0000-0000000000a1/p.jpg', 'approved', now(), true);
+insert into public.courier_locations (courier_id, latitude, longitude)
+values ('00000000-0000-0000-0000-0000000000a1', 6.8790, -6.4505);
 set local role authenticated;
 set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000c1","role":"authenticated"}';
 

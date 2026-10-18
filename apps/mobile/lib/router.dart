@@ -5,6 +5,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'features/admin/people/presentation/couriers_admin_screen.dart';
 import 'features/admin/people/presentation/users_admin_screen.dart';
+import 'features/admin/supervision/presentation/admin_order_screen.dart';
+import 'features/admin/supervision/presentation/settings_screen.dart';
+import 'features/admin/supervision/presentation/supervision_screen.dart';
 import 'features/admin/zones/presentation/zone_form_screen.dart';
 import 'features/admin/zones/presentation/zones_screen.dart';
 import 'features/client/addresses/presentation/address_editor_screen.dart';
@@ -13,6 +16,7 @@ import 'features/client/home/client_home_screen.dart';
 import 'features/client/home/restaurant_detail_screen.dart';
 import 'features/client/payments/payments_screen.dart';
 import 'features/parcels/parcel_request_screen.dart';
+import 'features/courier/missions/presentation/courier_home_screen.dart';
 import 'features/courier/profile/presentation/courier_profile_screen.dart';
 import 'features/courier/profile/presentation/courier_status_screen.dart';
 import 'features/admin/restaurants/presentation/restaurant_form_screen.dart';
@@ -101,6 +105,10 @@ GoRouter router(Ref ref) => buildAppRouter(
     ),
     // Espace Livreur
     GoRoute(
+      path: CourierHomeScreen.path,
+      builder: (_, _) => const CourierHomeScreen(),
+    ),
+    GoRoute(
       path: CourierStatusScreen.path,
       builder: (_, _) => const CourierStatusScreen(),
     ),
@@ -124,6 +132,19 @@ GoRouter router(Ref ref) => buildAppRouter(
       builder: (_, _) => const RestaurantProfileScreen(),
     ),
     // Espace Admin
+    GoRoute(
+      path: SupervisionScreen.path,
+      builder: (_, _) => const SupervisionScreen(),
+    ),
+    GoRoute(
+      path: AdminOrderScreen.path,
+      builder: (_, state) =>
+          AdminOrderScreen(orderId: state.pathParameters['id']!),
+    ),
+    GoRoute(
+      path: SettingsScreen.path,
+      builder: (_, _) => const SettingsScreen(),
+    ),
     GoRoute(path: ZonesScreen.path, builder: (_, _) => const ZonesScreen()),
     GoRoute(
       path: ZonesScreen.editPath,

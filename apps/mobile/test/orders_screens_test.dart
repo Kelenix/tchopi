@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mobile/features/client/addresses/application/addresses_providers.dart';
 import 'package:mobile/features/orders/cart.dart';
+import 'package:mobile/features/orders/data/order_repository.dart';
 import 'package:mobile/features/orders/orders_providers.dart';
 import 'package:mobile/features/orders/presentation/checkout_screen.dart';
 import 'package:mobile/features/orders/presentation/order_detail_screen.dart';
@@ -63,6 +64,9 @@ Order order(String id, OrderStatus status) => Order(
     ),
   ],
 );
+
+OrderLive live(OrderStatus status) =>
+    (status: status, courierId: null, dispatchAlertedAt: null);
 
 Widget app(Widget home, List<Override> overrides) => ProviderScope(
   overrides: overrides,
@@ -159,9 +163,9 @@ void main() {
         orderProvider(
           'o1',
         ).overrideWith((ref) async => order('o1', OrderStatus.pending)),
-        orderStatusProvider(
+        orderLiveProvider(
           'o1',
-        ).overrideWith((ref) => Stream.value(OrderStatus.pending)),
+        ).overrideWith((ref) => Stream.value(live(OrderStatus.pending))),
         orderEventsProvider('o1').overrideWith(
           (ref) async => [
             OrderEvent(
@@ -180,6 +184,91 @@ void main() {
     expect(find.text('2 × Garba'), findsOneWidget);
     expect(find.text('Annuler la commande'), findsOneWidget);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('suivi : livreur attribué, chronologie « Livreur assigné »', (
+    tester,
+  ) async {
+    tall(tester);
+    final assigned = order('o1', OrderStatus.preparing).copyWith(
+      courierId: 'k1',
+      courierInfo: const CourierInfo(
+        firstName: 'Koffi',
+        phone: '+2250700000031',
+        vehicleType: VehicleType.motorbike,
+        plateNumber: 'AB-123-CI',
+      ),
+    );
+    await tester.pumpWidget(
+      app(const OrderDetailScreen(orderId: 'o1'), [
+        orderProvider('o1').overrideWith((ref) async => assigned),
+        orderLiveProvider(
+          'o1',
+        ).overrideWith((ref) => Stream.value(live(OrderStatus.preparing))),
+        orderEventsProvider('o1').overrideWith(
+          (ref) async => [
+            OrderEvent(
+              status: OrderStatus.preparing,
+              actorRole: 'restaurant',
+              createdAt: DateTime.now(),
+            ),
+            OrderEvent(
+              kind: 'courier_assigned',
+              actorRole: 'courier',
+              createdAt: DateTime.now(),
+            ),
+            OrderEvent(
+              kind: 'dispatch_alert',
+              actorRole: 'system',
+              createdAt: DateTime.now(),
+            ),
+          ],
+        ),
+      ]),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Koffi'), findsOneWidget);
+    expect(find.text('Votre livreur · Moto AB-123-CI'), findsOneWidget);
+    expect(find.byTooltip('Appeler'), findsOneWidget);
+    expect(find.text('Livreur assigné'), findsOneWidget);
+    expect(
+      find.text('Alerte : toujours sans livreur'),
+      findsNothing,
+      reason: 'alerte réservée à l\'admin',
+    );
+    expect(find.text('Annuler la commande'), findsNothing);
+  });
+
+  testWidgets('toujours sans livreur : attendre ou annuler sans frais', (
+    tester,
+  ) async {
+    tall(tester);
+    final searching = order(
+      'o1',
+      OrderStatus.preparing,
+    ).copyWith(dispatchAlertedAt: DateTime.now());
+    await tester.pumpWidget(
+      app(const OrderDetailScreen(orderId: 'o1'), [
+        orderProvider('o1').overrideWith((ref) async => searching),
+        orderLiveProvider(
+          'o1',
+        ).overrideWith((ref) => Stream.value(live(OrderStatus.preparing))),
+        orderEventsProvider('o1').overrideWith((ref) async => const []),
+      ]),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Nous cherchons encore un livreur'), findsOneWidget);
+    expect(find.text('Annuler la commande'), findsNWidgets(2));
+    await tester.tap(find.text('Continuer d\'attendre'));
+    await tester.pump();
+    expect(find.text('Nous cherchons encore un livreur'), findsNothing);
+    expect(
+      find.text('Annuler la commande'),
+      findsOneWidget,
+      reason: 'l\'annulation reste possible en bas de l\'écran',
+    );
   });
 
   testWidgets('restaurant : nouvelles commandes, actions et totaux du jour', (
@@ -251,9 +340,9 @@ void parcelTests() {
     await tester.pumpWidget(
       app(const OrderDetailScreen(orderId: 'o2'), [
         orderProvider('o2').overrideWith((ref) async => parcel),
-        orderStatusProvider(
-          'o2',
-        ).overrideWith((ref) => Stream.value(OrderStatus.searchingCourier)),
+        orderLiveProvider('o2').overrideWith(
+          (ref) => Stream.value(live(OrderStatus.searchingCourier)),
+        ),
         orderEventsProvider('o2').overrideWith((ref) async => const []),
         deliveryCodeProvider('o2').overrideWith((ref) async => '4821'),
       ]),

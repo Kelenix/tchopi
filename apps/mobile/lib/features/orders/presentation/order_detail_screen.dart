@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../orders_providers.dart';
@@ -46,7 +45,7 @@ class OrderDetailScreen extends ConsumerWidget {
     final tokens = context.tokens;
     final text = Theme.of(context).textTheme;
     final order = ref.watch(orderProvider(orderId));
-    final live = ref.watch(orderStatusProvider(orderId)).value;
+    final live = ref.watch(orderLiveProvider(orderId)).value?.status;
     final events = ref.watch(orderEventsProvider(orderId)).value ?? const [];
 
     return Scaffold(
@@ -59,10 +58,15 @@ class OrderDetailScreen extends ConsumerWidget {
         AsyncData(value: final o) => () {
           final status = live ?? o.status;
           final parcel = o.type == OrderType.parcel;
+          // DIS-03 : toujours sans livreur après le délai d'alerte.
+          final stillSearching =
+              o.dispatchAlertedAt != null &&
+              o.courierId == null &&
+              !status.isClosed;
           final cancellable = parcel
               ? status == OrderStatus.searchingCourier ||
                     status == OrderStatus.courierAssigned
-              : status == OrderStatus.pending;
+              : status == OrderStatus.pending || stillSearching;
           return ListView(
             padding: const EdgeInsets.fromLTRB(
               Space.screen,
@@ -72,11 +76,19 @@ class OrderDetailScreen extends ConsumerWidget {
             ),
             children: [
               _StatusHeader(order: o, status: status),
+              if (stillSearching) ...[
+                const SizedBox(height: Space.lg),
+                _StillSearching(onCancel: () => _cancel(context, ref, parcel)),
+              ],
+              if (o.courierInfo case final courier? when !status.isClosed) ...[
+                const SizedBox(height: Space.lg),
+                _CourierCard(courier: courier),
+              ],
               if (events.isNotEmpty) ...[
                 const SizedBox(height: Space.xxl),
                 Text(l10n.orderTimeline, style: text.titleMedium),
                 const SizedBox(height: Space.sm),
-                _Timeline(events: events),
+                OrderTimeline(events: events),
               ],
               if (!status.isClosed) ...[
                 const SizedBox(height: Space.lg),
@@ -251,66 +263,97 @@ class _StatusHeader extends StatelessWidget {
   }
 }
 
-/// Chronologie : une étape par statut, avec l'heure.
-class _Timeline extends StatelessWidget {
-  const _Timeline({required this.events});
+/// DIS-03 : « Nous cherchons encore un livreur » — continuer d'attendre ou annuler sans frais.
+class _StillSearching extends StatefulWidget {
+  const _StillSearching({required this.onCancel});
 
-  final List<OrderEvent> events;
+  final VoidCallback onCancel;
+
+  @override
+  State<_StillSearching> createState() => _StillSearchingState();
+}
+
+class _StillSearchingState extends State<_StillSearching> {
+  bool _waiting = false;
+
+  @override
+  Widget build(BuildContext context) {
+    if (_waiting) return const SizedBox.shrink();
+    final l10n = AppLocalizations.of(context);
+    final tokens = context.tokens;
+    final text = Theme.of(context).textTheme;
+    return Card(
+      color: tokens.warningSoft,
+      child: Padding(
+        padding: const EdgeInsets.all(Space.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(l10n.dispatchAlertTitle, style: text.titleMedium),
+            const SizedBox(height: Space.xs),
+            Text(l10n.dispatchAlertBody, style: text.bodyMedium),
+            const SizedBox(height: Space.md),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => setState(() => _waiting = true),
+                    child: Text(l10n.dispatchKeepWaiting),
+                  ),
+                ),
+                const SizedBox(width: Space.sm),
+                Expanded(
+                  child: FilledButton(
+                    onPressed: widget.onCancel,
+                    child: Text(l10n.orderCancel),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Livreur attribué : prénom, moyen de transport, appel direct.
+class _CourierCard extends StatelessWidget {
+  const _CourierCard({required this.courier});
+
+  final CourierInfo courier;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final tokens = context.tokens;
-    final text = Theme.of(context).textTheme;
-    final time = DateFormat.Hm('fr');
-    final steps = events.where((e) => e.status != null).toList();
     return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(
           horizontal: Space.lg,
-          vertical: Space.md,
+          vertical: Space.xs,
         ),
-        child: Column(
-          children: [
-            for (final (index, event) in steps.indexed)
-              IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Column(
-                      children: [
-                        Icon(
-                          index == steps.length - 1
-                              ? Icons.radio_button_checked
-                              : Icons.check_circle,
-                          size: 20,
-                          color: tokens.primary,
-                        ),
-                        if (index < steps.length - 1)
-                          Expanded(
-                            child: Container(width: 2, color: tokens.border),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(width: Space.md),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: Space.lg),
-                        child: Text(
-                          event.status!.label(l10n),
-                          style: text.titleMedium,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      time.format(event.createdAt.toLocal()),
-                      style: text.bodySmall!.copyWith(color: tokens.muted),
-                    ),
-                  ],
+        leading: CircleAvatar(
+          backgroundColor: tokens.primarySoft,
+          child: Icon(Icons.two_wheeler, color: tokens.primary),
+        ),
+        title: Text(courier.firstName),
+        subtitle: Text(
+          '${l10n.orderCourierTitle} · '
+          '${vehicleLabel(l10n, courier.vehicleType, courier.plateNumber)}',
+        ),
+        trailing: courier.phone == null
+            ? null
+            : IconButton.filled(
+                style: IconButton.styleFrom(
+                  backgroundColor: tokens.primary,
+                  foregroundColor: tokens.onPrimary,
                 ),
+                tooltip: l10n.orderCourierCall,
+                icon: const Icon(Icons.call_outlined),
+                onPressed: () =>
+                    launchUrl(Uri(scheme: 'tel', path: courier.phone)),
               ),
-          ],
-        ),
       ),
     );
   }

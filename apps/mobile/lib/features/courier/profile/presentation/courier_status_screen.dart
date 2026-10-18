@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../missions/presentation/courier_home_screen.dart';
 import '../courier_providers.dart';
 import 'courier_profile_screen.dart';
 
@@ -52,6 +53,13 @@ class CourierStatusScreen extends ConsumerWidget {
               _ => const Center(child: CircularProgressIndicator()),
             },
             const SizedBox(height: Space.xxl),
+            if (courier.value?.status == CourierStatus.approved) ...[
+              FilledButton(
+                onPressed: () => context.go(CourierHomeScreen.path),
+                child: Text(l10n.courierOpenDashboard),
+              ),
+              const SizedBox(height: Space.md),
+            ],
             if (courier.value?.status != CourierStatus.suspended)
               OutlinedButton.icon(
                 onPressed: () => context.push(CourierProfileScreen.path),

@@ -1,5 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../couriers/models.dart';
+
 part 'models.freezed.dart';
 part 'models.g.dart';
 
@@ -60,6 +62,7 @@ abstract class Order with _$Order {
     required String number,
     @Default(OrderType.food) OrderType type,
     required OrderStatus status,
+    String? zoneId,
     String? restaurantId,
     String? parcelTypeId,
     String? parcelDescription,
@@ -76,10 +79,17 @@ abstract class Order with _$Order {
     required int deliveryFee,
     required int total,
     @Default(0) int commissionAmount,
+    @Default(0) int courierEarning,
+    @Default(0) int platformAmount,
     @Default('XOF') String currency,
     required PaymentMethod paymentMethod,
     required DateTime createdAt,
     String? closeReason,
+    String? courierId,
+    CourierInfo? courierInfo,
+
+    /// Toujours sans livreur après le délai d'alerte (DIS-03).
+    DateTime? dispatchAlertedAt,
     @JsonKey(name: 'order_items') @Default([]) List<OrderItem> items,
   }) = _Order;
 
@@ -100,10 +110,12 @@ abstract class OrderItem with _$OrderItem {
       _$OrderItemFromJson(json);
 }
 
-/// Étape de la chronologie (TRK-03).
+/// Étape de la chronologie (TRK-03) : changement de statut, ou événement (`courier_assigned`,
+/// `courier_released`, `dispatch_alert`).
 @freezed
 abstract class OrderEvent with _$OrderEvent {
   const factory OrderEvent({
+    @Default('status_changed') String kind,
     OrderStatus? status,
     required String actorRole,
     String? reason,
@@ -124,6 +136,9 @@ abstract class FoodQuote with _$FoodQuote {
     required int distanceM,
     @Default('XOF') String currency,
     @Default([]) List<QuoteIssue> issues,
+
+    /// Au moins un livreur en ligne dans la zone (ORD-07, PAR-03).
+    @Default(true) bool couriersAvailable,
   }) = _FoodQuote;
 
   factory FoodQuote.fromJson(Map<String, dynamic> json) =>

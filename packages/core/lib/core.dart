@@ -22,6 +22,7 @@ export 'src/orders/models.dart';
 export 'src/places/models.dart';
 export 'src/places/places_providers.dart';
 export 'src/restaurants/models.dart';
+export 'src/settings/models.dart';
 export 'src/routing/app_router.dart';
 export 'src/supabase/supabase_setup.dart';
 export 'src/utils/money.dart';

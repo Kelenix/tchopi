@@ -14,21 +14,21 @@ OrderRepository orderRepository(Ref ref) =>
 Future<List<Order>> myOrders(Ref ref) =>
     ref.watch(orderRepositoryProvider).mine();
 
-/// Commande complète, rechargée à chaque changement de statut (motif de refus, dates).
+/// Commande complète, rechargée à chaque changement en direct (motif de refus, livreur, dates).
 @riverpod
 Future<Order> order(Ref ref, String id) {
-  ref.watch(orderStatusProvider(id));
+  ref.watch(orderLiveProvider(id));
   return ref.watch(orderRepositoryProvider).fetch(id);
 }
 
 @riverpod
-Stream<OrderStatus> orderStatus(Ref ref, String id) =>
-    ref.watch(orderRepositoryProvider).watchStatus(id);
+Stream<OrderLive> orderLive(Ref ref, String id) =>
+    ref.watch(orderRepositoryProvider).watchLive(id);
 
-/// Chronologie, rechargée à chaque changement de statut.
+/// Chronologie, rechargée à chaque changement en direct.
 @riverpod
 Future<List<OrderEvent>> orderEvents(Ref ref, String id) {
-  ref.watch(orderStatusProvider(id));
+  ref.watch(orderLiveProvider(id));
   return ref.watch(orderRepositoryProvider).events(id);
 }
 
@@ -49,8 +49,8 @@ Future<FoodQuote?> cartQuote(Ref ref, String addressId) async {
 }
 
 @riverpod
-Future<List<ParcelType>> parcelTypes(Ref ref) =>
-    ref.watch(orderRepositoryProvider).parcelTypes();
+Future<List<ParcelType>> parcelTypes(Ref ref, double lat, double lng) =>
+    ref.watch(orderRepositoryProvider).parcelTypes(lat, lng);
 
 @riverpod
 Future<String?> deliveryCode(Ref ref, String orderId) =>

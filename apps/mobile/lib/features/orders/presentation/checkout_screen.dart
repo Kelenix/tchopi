@@ -119,6 +119,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
         address != null &&
         ready != null &&
         ready.issues.isEmpty &&
+        ready.couriersAvailable &&
         !quote!.isLoading &&
         !_placing;
 
@@ -199,6 +200,13 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                   if (ready != null && ready.issues.isNotEmpty) ...[
                     const SizedBox(height: Space.lg),
                     _IssuesBanner(issues: ready.issues),
+                  ],
+                  if (ready != null && !ready.couriersAvailable) ...[
+                    const SizedBox(height: Space.lg),
+                    NoCourierBanner(
+                      onRetry: () =>
+                          ref.invalidate(cartQuoteProvider(address!.id!)),
+                    ),
                   ],
                   const SizedBox(height: Space.xxl),
                   _SectionTitle(l10n.checkoutDeliverTo),

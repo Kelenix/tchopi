@@ -13,6 +13,14 @@ insert into public.zones (id, name, city, center_lat, center_lng, radius_m) valu
 insert into public.pricing_rules (zone_id, service, base_fee, per_km_fee, min_fee, max_fee, courier_base, courier_per_km)
 values ('55555555-5555-5555-5555-555555555555', 'parcel', 700, 175, 700, 4000, 500, 120);
 
+-- Un livreur en ligne dans la zone : sans lui, aucune commande n'est acceptée (ORD-07, PAR-03).
+insert into auth.users (id, email, aud, role, email_confirmed_at)
+values ('00000000-0000-0000-0000-0000000000a1', 'livreur@exemple.ci', 'authenticated', 'authenticated', now());
+insert into public.couriers (user_id, zone_id, vehicle_type, plate_number, photo_path, status, approved_at, is_online)
+values ('00000000-0000-0000-0000-0000000000a1', '55555555-5555-5555-5555-555555555555', 'motorbike', 'AB-123-CI',
+        '00000000-0000-0000-0000-0000000000a1/p.jpg', 'approved', now(), true);
+insert into public.courier_locations (courier_id, latitude, longitude)
+values ('00000000-0000-0000-0000-0000000000a1', 6.8790, -6.4505);
 create temporary table pt on commit drop as select id from public.parcel_types where code = 'small';
 grant select on pt to authenticated;
 

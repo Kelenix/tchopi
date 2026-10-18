@@ -41,3 +41,108 @@ const _$CourierStatusEnumMap = {
   CourierStatus.rejected: 'rejected',
   CourierStatus.suspended: 'suspended',
 };
+
+_CourierInfo _$CourierInfoFromJson(Map<String, dynamic> json) => _CourierInfo(
+  firstName: json['first_name'] as String,
+  phone: json['phone'] as String?,
+  vehicleType: $enumDecode(_$VehicleTypeEnumMap, json['vehicle_type']),
+  plateNumber: json['plate_number'] as String?,
+);
+
+Map<String, dynamic> _$CourierInfoToJson(_CourierInfo instance) =>
+    <String, dynamic>{
+      'first_name': instance.firstName,
+      'phone': instance.phone,
+      'vehicle_type': _$VehicleTypeEnumMap[instance.vehicleType]!,
+      'plate_number': instance.plateNumber,
+    };
+
+_DeliveryOffer _$DeliveryOfferFromJson(Map<String, dynamic> json) =>
+    _DeliveryOffer(
+      id: json['id'] as String,
+      orderId: json['order_id'] as String,
+      status: $enumDecode(_$OfferStatusEnumMap, json['status']),
+      expiresAt: DateTime.parse(json['expires_at'] as String),
+      summary: OfferSummary.fromJson(json['summary'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$DeliveryOfferToJson(_DeliveryOffer instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'order_id': instance.orderId,
+      'status': _$OfferStatusEnumMap[instance.status]!,
+      'expires_at': instance.expiresAt.toIso8601String(),
+      'summary': instance.summary,
+    };
+
+const _$OfferStatusEnumMap = {
+  OfferStatus.pending: 'pending',
+  OfferStatus.accepted: 'accepted',
+  OfferStatus.declined: 'declined',
+  OfferStatus.expired: 'expired',
+  OfferStatus.cancelled: 'cancelled',
+};
+
+_OfferSummary _$OfferSummaryFromJson(Map<String, dynamic> json) =>
+    _OfferSummary(
+      number: json['number'] as String,
+      type: json['type'] as String,
+      pickupName: json['pickup_name'] as String?,
+      pickupDistrict: json['pickup_district'] as String,
+      pickupLandmark: json['pickup_landmark'] as String,
+      recipientName: json['recipient_name'] as String,
+      dropoffDistrict: json['dropoff_district'] as String,
+      dropoffLandmark: json['dropoff_landmark'] as String,
+      parcelType: json['parcel_type'] as String?,
+      earning: (json['earning'] as num).toInt(),
+      toPickupM: (json['to_pickup_m'] as num).toInt(),
+      tripM: (json['trip_m'] as num).toInt(),
+      cashAmount: (json['cash_amount'] as num).toInt(),
+      currency: json['currency'] as String? ?? 'XOF',
+    );
+
+Map<String, dynamic> _$OfferSummaryToJson(_OfferSummary instance) =>
+    <String, dynamic>{
+      'number': instance.number,
+      'type': instance.type,
+      'pickup_name': instance.pickupName,
+      'pickup_district': instance.pickupDistrict,
+      'pickup_landmark': instance.pickupLandmark,
+      'recipient_name': instance.recipientName,
+      'dropoff_district': instance.dropoffDistrict,
+      'dropoff_landmark': instance.dropoffLandmark,
+      'parcel_type': instance.parcelType,
+      'earning': instance.earning,
+      'to_pickup_m': instance.toPickupM,
+      'trip_m': instance.tripM,
+      'cash_amount': instance.cashAmount,
+      'currency': instance.currency,
+    };
+
+_DispatchCandidate _$DispatchCandidateFromJson(Map<String, dynamic> json) =>
+    _DispatchCandidate(
+      userId: json['user_id'] as String,
+      firstName: json['first_name'] as String?,
+      lastName: json['last_name'] as String?,
+      phone: json['phone'] as String?,
+      vehicleType: $enumDecode(_$VehicleTypeEnumMap, json['vehicle_type']),
+      plateNumber: json['plate_number'] as String?,
+      distanceM: (json['distance_m'] as num?)?.toInt(),
+      locationAgeS: (json['location_age_s'] as num?)?.toInt(),
+      busy: json['busy'] as bool,
+      offerPending: json['offer_pending'] as bool,
+    );
+
+Map<String, dynamic> _$DispatchCandidateToJson(_DispatchCandidate instance) =>
+    <String, dynamic>{
+      'user_id': instance.userId,
+      'first_name': instance.firstName,
+      'last_name': instance.lastName,
+      'phone': instance.phone,
+      'vehicle_type': _$VehicleTypeEnumMap[instance.vehicleType]!,
+      'plate_number': instance.plateNumber,
+      'distance_m': instance.distanceM,
+      'location_age_s': instance.locationAgeS,
+      'busy': instance.busy,
+      'offer_pending': instance.offerPending,
+    };

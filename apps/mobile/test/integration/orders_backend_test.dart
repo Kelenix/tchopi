@@ -6,12 +6,14 @@ import 'dart:io';
 
 import 'package:core/core.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mobile/features/courier/missions/data/mission_repository.dart';
 import 'package:mobile/features/orders/cart.dart';
 import 'package:mobile/features/orders/data/order_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Commande de repas réelle contre Supabase local : devis, commande unique malgré un double envoi,
-/// réception en temps réel par le restaurant, acceptation, annulation refusée ensuite.
+/// réception en temps réel par le restaurant, acceptation, annulation refusée ensuite ; colis ;
+/// attribution : offre reçue en direct par le livreur en ligne, acceptation, livreur visible du client.
 void main() {
   setUpAll(() => HttpOverrides.global = null);
 
@@ -22,7 +24,8 @@ void main() {
   final anonKey = env['SUPABASE_ANON_KEY'] as String;
   final stamp = DateTime.now().microsecondsSinceEpoch;
   final emails = {
-    for (final role in ['gerant', 'client']) role: '$role$stamp@exemple.ci',
+    for (final role in ['gerant', 'client', 'livreur'])
+      role: '$role$stamp@exemple.ci',
   };
   final ids = <String, String>{};
   late SupabaseClient service;
@@ -121,6 +124,24 @@ void main() {
                 .single())['id']
             as String;
     await owner.dispose();
+
+    // Livreur approuvé, en ligne au restaurant : sans lui, aucune commande n'est acceptée (ORD-07).
+    await service
+        .from('profiles')
+        .update({'first_name': 'Moussa', 'phone': '+2250700000033'})
+        .eq('id', ids['livreur']!);
+    await service.from('couriers').insert({
+      'user_id': ids['livreur'],
+      'zone_id': zoneId,
+      'vehicle_type': 'motorbike',
+      'plate_number': 'AB-123-CI',
+      'photo_path': '${ids['livreur']}/p.jpg',
+      'status': 'approved',
+    });
+    final courier = await signedIn('livreur');
+    await MissionRepository(courier).setOnline(true);
+    await MissionRepository(courier).reportLocation(5.36, -3.97, 10);
+    await courier.dispose();
   });
 
   tearDownAll(() async {
@@ -203,9 +224,10 @@ void main() {
     () async {
       final clientClient = await signedIn('client');
       final client = OrderRepository(clientClient);
-      final type = (await client.parcelTypes()).firstWhere(
-        (t) => t.code == 'small',
-      );
+      final type = (await client.parcelTypes(
+        5.37,
+        -3.95,
+      )).firstWhere((t) => t.code == 'small');
       const pickup = ParcelPoint(
         lat: 5.37,
         lng: -3.95,
@@ -247,6 +269,82 @@ void main() {
       await client.cancel(first.id);
       expect((await client.fetch(first.id)).status, OrderStatus.cancelled);
       await clientClient.dispose();
+    },
+  );
+
+  test(
+    'attribution : offre en direct au livreur, acceptation, livreur visible',
+    () async {
+      final clientClient = await signedIn('client');
+      final managerClient = await signedIn('gerant');
+      final courierClient = await signedIn('livreur');
+      final client = OrderRepository(clientClient);
+      final manager = OrderRepository(managerClient);
+      final missions = MissionRepository(courierClient);
+
+      // Le livreur écoute ses offres avant la commande.
+      final offered = missions
+          .watchPendingOffer(ids['livreur']!)
+          .firstWhere((offer) => offer != null);
+      await Future<void>.delayed(const Duration(seconds: 3));
+
+      final cart = Cart(
+        restaurantId: restaurantId,
+        restaurantName: 'Maquis',
+        lines: [
+          CartLine(
+            productId: productId,
+            name: 'Garba',
+            unitPrice: 1500,
+            quantity: 1,
+          ),
+        ],
+      );
+      final quote = await client.quote(cart, addressId);
+      expect(quote.couriersAvailable, isTrue);
+      final order = await client.place(
+        cart: cart,
+        addressId: addressId,
+        method: PaymentMethod.cash,
+        expectedTotal: quote.total,
+        idempotencyKey: '00000000-0000-4000-a000-$stamp'.substring(0, 36),
+      );
+      await manager.transition(order.id, OrderStatus.accepted);
+      await manager.transition(order.id, OrderStatus.preparing);
+
+      final offer = (await offered.timeout(const Duration(seconds: 10)))!;
+      expect(offer.orderId, order.id);
+      expect(offer.summary.earning, greaterThan(0));
+      expect(offer.summary.cashAmount, order.total);
+      expect(offer.expiresAt.isAfter(DateTime.now()), isTrue);
+
+      await missions.respond(offer.id, accept: true);
+      final assigned = await client.fetch(order.id);
+      expect(assigned.courierId, ids['livreur']);
+      expect(assigned.courierInfo?.firstName, 'Moussa');
+      expect(
+        (await client.events(order.id)).map((e) => e.kind),
+        contains('courier_assigned'),
+      );
+      final mission = await missions
+          .watchMission(ids['livreur']!)
+          .firstWhere((m) => m != null)
+          .timeout(const Duration(seconds: 10));
+      expect(mission?.id, order.id);
+      await expectLater(
+        missions.setOnline(false),
+        throwsA(
+          isA<AppFailure>().having(
+            (f) => f.code,
+            'code',
+            'mission_in_progress',
+          ),
+        ),
+      );
+
+      await clientClient.dispose();
+      await managerClient.dispose();
+      await courierClient.dispose();
     },
   );
 }
