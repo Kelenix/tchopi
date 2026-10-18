@@ -1,7 +1,9 @@
 {
   "@@locale": "fr",
   "appBrand": "tchopi",
-  "@appBrand": { "description": "Nom de l'app (provisoire), affiché en logo texte." },
+  "@appBrand": {
+    "description": "Nom de l'app (provisoire), affiché en logo texte."
+  },
   "welcomeClientHeadline": "Vos plats et vos colis, livrés dans tout Abidjan.",
   "welcomeClientSubtitle": "Payez en Mobile Money, par carte ou en espèces.",
   "welcomeCourierHeadline": "Livrez à Abidjan, à votre rythme.",
@@ -17,7 +19,6 @@
   "featureLiveOrders": "Commandes en temps réel",
   "featureMenu": "Menu toujours à jour",
   "featureSupervision": "Supervision des livraisons",
-
   "actionCreateAccount": "Créer un compte",
   "actionSignIn": "Se connecter",
   "actionContinue": "Continuer",
@@ -25,7 +26,6 @@
   "actionRetry": "Réessayer",
   "actionCancel": "Annuler",
   "actionBack": "Retour",
-
   "fieldEmail": "Email",
   "fieldPhone": "Téléphone",
   "fieldPhoneHint": "+225 07 00 00 00 00",
@@ -38,13 +38,11 @@
   "fieldCity": "Ville",
   "showPassword": "Afficher le mot de passe",
   "hidePassword": "Masquer le mot de passe",
-
   "errorEmail": "Adresse email invalide.",
   "errorPhone": "Numéro de mobile invalide.",
   "errorIdentifier": "Saisissez un email ou un numéro de mobile valide.",
   "errorPassword": "Le mot de passe doit faire 8 caractères minimum, avec des lettres et des chiffres.",
   "errorRequired": "Ce champ est obligatoire.",
-
   "signUpTitle": "Créer votre compte",
   "signUpSubtitle": "Un code de confirmation vous sera envoyé.",
   "signUpHaveAccount": "J'ai déjà un compte",
@@ -52,29 +50,43 @@
   "signInSubtitle": "Connectez-vous avec votre email ou votre numéro.",
   "signInForgot": "Mot de passe oublié ?",
   "signInNoAccount": "Pas encore de compte ? Créer un compte",
-
   "verifyTitle": "Saisissez le code",
   "verifySubtitle": "Un code à 6 chiffres a été envoyé à {destination}.",
-  "@verifySubtitle": { "placeholders": { "destination": { "type": "String" } } },
+  "@verifySubtitle": {
+    "placeholders": {
+      "destination": {
+        "type": "String"
+      }
+    }
+  },
   "verifyResend": "Renvoyer le code",
   "verifyResendIn": "Renvoyer le code dans {seconds} s",
-  "@verifyResendIn": { "placeholders": { "seconds": { "type": "int" } } },
+  "@verifyResendIn": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
   "verifyResent": "Nouveau code envoyé.",
   "verifyChangeDestination": "Modifier l'email ou le numéro",
   "verifyMissing": "Cette vérification a expiré. Recommencez depuis la connexion.",
-
   "resetTitle": "Mot de passe oublié",
   "resetSubtitle": "Recevez un code pour choisir un nouveau mot de passe.",
   "resetCodeSubtitle": "Si un compte existe pour {destination}, un code vient d'être envoyé.",
-  "@resetCodeSubtitle": { "placeholders": { "destination": { "type": "String" } } },
+  "@resetCodeSubtitle": {
+    "placeholders": {
+      "destination": {
+        "type": "String"
+      }
+    }
+  },
   "resetSubmit": "Changer le mot de passe",
   "resetDone": "Mot de passe modifié.",
-
   "profileSetupTitle": "Faisons connaissance",
   "profileSetupSubtitle": "Ces informations permettent au livreur de vous joindre.",
   "profileEditTitle": "Mes informations",
   "profileSaved": "Informations enregistrées.",
-
   "accountTitle": "Mon compte",
   "accountLogin": "Identifiant de connexion",
   "accountEdit": "Modifier mes informations",
@@ -87,17 +99,14 @@
   "deleteConfirmTitle": "Supprimer votre compte ?",
   "deleteConfirmBody": "Votre nom, votre téléphone et vos accès seront effacés. Cette action est définitive. L'historique des commandes est conservé sans donnée vous identifiant.",
   "deleteConfirmAction": "Oui, supprimer",
-
   "loginChangeTitle": "Changer d'identifiant",
   "loginChangeSubtitle": "Un code sera envoyé à la nouvelle adresse ou au nouveau numéro. L'ancien reste valable tant que le code n'est pas saisi.",
   "loginChangeField": "Nouvel email ou numéro",
   "loginChangeDone": "Identifiant de connexion modifié.",
-
   "restrictedTitle": "Accès réservé",
   "restrictedBody": "Cet espace est réservé aux restaurants partenaires et à l'équipe. Si vous gérez un restaurant partenaire, demandez votre accès à l'équipe.",
   "loadingAccount": "Chargement de votre compte…",
   "loadingAccountError": "Impossible de charger votre compte.",
-
   "failureNetwork": "Pas de connexion internet. Vérifiez votre réseau puis réessayez.",
   "failureInvalidCredentials": "Email, numéro ou mot de passe incorrect.",
   "failureUserExists": "Un compte existe déjà avec cet identifiant.",
@@ -107,5 +116,102 @@
   "failureSamePassword": "Choisissez un mot de passe différent de l'actuel.",
   "failureSuspended": "Votre compte est suspendu. Contactez le support.",
   "failureNotConfirmed": "Votre compte n'est pas encore confirmé. Un nouveau code vient d'être envoyé.",
-  "failureUnknown": "Une erreur est survenue. Réessayez dans un instant."
+  "failureUnknown": "Une erreur est survenue. Réessayez dans un instant.",
+  "accountAddresses": "Mes adresses",
+  "addressesTitle": "Mes adresses",
+  "addressesEmpty": "Ajoutez votre première adresse",
+  "addressesEmptyBody": "Une position sur la carte, votre quartier et un point de repère suffisent : pas besoin du nom de la rue.",
+  "addressAdd": "Ajouter une adresse",
+  "addressDefault": "Par défaut",
+  "addressSetDefault": "Définir par défaut",
+  "addressEdit": "Modifier",
+  "addressDelete": "Supprimer",
+  "addressDeleteTitle": "Supprimer cette adresse ?",
+  "addressDeleteBody": "Les commandes déjà passées gardent leur adresse d'origine.",
+  "addressNewTitle": "Nouvelle adresse",
+  "addressEditTitle": "Modifier l'adresse",
+  "addressSaved": "Adresse enregistrée.",
+  "addressMoveMap": "Déplacez la carte pour placer l'épingle sur votre entrée.",
+  "addressMyPosition": "Ma position",
+  "mapUnavailable": "Carte non configurée sur cet appareil. Utilisez « Ma position » pour placer l'adresse.",
+  "mapPosition": "Position : {lat}, {lng}",
+  "@mapPosition": {
+    "placeholders": {
+      "lat": {
+        "type": "String"
+      },
+      "lng": {
+        "type": "String"
+      }
+    }
+  },
+  "fieldLabel": "Libellé",
+  "labelHome": "Maison",
+  "labelWork": "Bureau",
+  "labelOther": "Autre",
+  "fieldDistrict": "Quartier",
+  "fieldLandmark": "Point de repère",
+  "fieldLandmarkHint": "Ex. derrière la pharmacie centrale",
+  "fieldInstructions": "Instructions (facultatif)",
+  "fieldInstructionsHint": "Ex. maison avec portail bleu",
+  "locationRationaleTitle": "Utiliser votre position ?",
+  "locationRationaleBody": "Votre position sert uniquement à placer l'adresse sur la carte. Vous pourrez ensuite l'ajuster.",
+  "locationDenied": "Localisation refusée : placez l'épingle sur la carte.",
+  "locationDeniedForever": "Localisation bloquée. Autorisez-la dans les réglages du téléphone.",
+  "locationOpenSettings": "Réglages",
+  "locationOff": "Activez la localisation (GPS) du téléphone.",
+  "locationLowAccuracy": "Précision faible : ajustez l'épingle sur la carte.",
+  "failureOutOfZone": "Cette adresse est hors de la zone desservie.",
+  "failureForbidden": "Action réservée aux administrateurs.",
+  "adminZones": "Zones et tarifs",
+  "zonesEmpty": "Aucune zone pour le moment",
+  "zoneAdd": "Ajouter une zone",
+  "zoneNewTitle": "Nouvelle zone",
+  "zoneEditTitle": "Modifier la zone",
+  "zoneActive": "Zone active",
+  "zoneInactive": "Désactivée",
+  "zoneRadius": "Rayon {km} km",
+  "@zoneRadius": {
+    "placeholders": {
+      "km": {
+        "type": "String"
+      }
+    }
+  },
+  "zoneViewOnMap": "Voir le centre sur une carte",
+  "zoneSaved": "Zone et tarifs enregistrés.",
+  "fieldZoneName": "Nom de la zone",
+  "fieldCenterLat": "Latitude du centre",
+  "fieldCenterLng": "Longitude du centre",
+  "fieldRadiusKm": "Rayon (km)",
+  "pricingFood": "Tarifs repas",
+  "pricingParcel": "Tarifs colis",
+  "fieldBaseFee": "Base (F)",
+  "fieldPerKm": "Prix par km (F)",
+  "fieldMinFee": "Plancher (F)",
+  "fieldMaxFee": "Plafond (F)",
+  "fieldDetour": "Coefficient de détour",
+  "fieldRounding": "Arrondi (F)",
+  "fieldCourierBase": "Livreur : fixe (F)",
+  "fieldCourierPerKm": "Livreur : par km (F)",
+  "simulatorTitle": "Simulateur",
+  "simulatorDistance": "Distance à vol d'oiseau (km)",
+  "simulatorRun": "Calculer",
+  "simulatorResult": "{distance} km de référence · frais {fee} · livreur {earning}",
+  "@simulatorResult": {
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      },
+      "fee": {
+        "type": "String"
+      },
+      "earning": {
+        "type": "String"
+      }
+    }
+  },
+  "simulatorSaveFirst": "Enregistrez la zone pour simuler ses tarifs.",
+  "errorNumber": "Nombre invalide.",
+  "errorMinMax": "Le plancher doit être inférieur ou égal au plafond."
 }

@@ -64,6 +64,8 @@ GoRouter buildAppRouter(
   required WidgetBuilder welcome,
   bool requiresAdmin = false,
   String home = AppRoutes.account,
+  List<RouteBase> routes = const [],
+  List<AccountLink> accountLinks = const [],
 }) {
   final refresh = ValueNotifier(0);
   void bump(Object? _, Object? _) => refresh.value++;
@@ -115,7 +117,7 @@ GoRouter buildAppRouter(
       ),
       GoRoute(
         path: AppRoutes.account,
-        builder: (_, _) => const AccountScreen(),
+        builder: (_, _) => AccountScreen(links: accountLinks),
         routes: [
           GoRoute(
             path: 'edit',
@@ -124,6 +126,7 @@ GoRouter buildAppRouter(
           GoRoute(path: 'login', builder: (_, _) => const LoginChangeScreen()),
         ],
       ),
+      ...routes,
     ],
   );
 }

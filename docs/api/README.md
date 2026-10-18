@@ -30,6 +30,15 @@ Règle mot de passe (serveur) : 8 caractères minimum, lettres et chiffres.
 | `POST /rest/v1/rpc/my_roles` | connecté | `{ "is_admin": bool }` — s'enrichira (livreur, restaurants) |
 | `POST /functions/v1/account-delete` | connecté | Anonymise le profil et supprime l'accès (`{ "ok": true }`) |
 
+## Zones, tarifs, adresses — Inc-2
+
+| Ressource / action | Accès | Description |
+|--------------------|-------|-------------|
+| `GET /rest/v1/zones?is_active=eq.true` | connecté | Zones actives (nom, ville, devise, centre, rayon) |
+| `GET` / `POST` / `PATCH` / `DELETE /rest/v1/addresses` | titulaire | Champs écrits : `label`, `district`, `landmark`, `instructions`, `latitude`, `longitude`, `is_default` ; `zone_id` et `city` calculés par le serveur |
+| `zones`, `pricing_rules` (écriture) | admin | Gestion des zones et des règles par service (`food`, `parcel`) |
+| `POST /rest/v1/rpc/admin_simulate_fee` | admin | `{ p_zone_id, p_service, p_straight_km }` → `distance_m`, `delivery_fee`, `courier_earning` |
+
 ## Codes d'erreur stables
 
 | Code | Signification |
@@ -43,3 +52,5 @@ Règle mot de passe (serveur) : 8 caractères minimum, lettres et chiffres.
 | `email_not_confirmed` / `phone_not_confirmed` | Inscription non vérifiée |
 | `unauthorized` | Appel de fonction sans session valide |
 | `account_delete_failed` | Suppression impossible (réessayer) |
+| `address_out_of_zone` | Position hors de toute zone active |
+| `forbidden` | Action réservée aux admins |

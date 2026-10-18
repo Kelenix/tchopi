@@ -17,6 +17,8 @@ String failureMessage(AppLocalizations l10n, Object? error) {
     'same_password' => l10n.failureSamePassword,
     'account_suspended' => l10n.failureSuspended,
     'not_confirmed' => l10n.failureNotConfirmed,
+    'address_out_of_zone' => l10n.failureOutOfZone,
+    'forbidden' => l10n.failureForbidden,
     _ => l10n.failureUnknown,
   };
 }

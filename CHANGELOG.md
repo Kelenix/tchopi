@@ -5,6 +5,9 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · versions [S
 ## [Non publié]
 
 ### Ajouté
+- Inc-2 — zones desservies et tarifs (frais calculés par le serveur, simulateur admin), adresses client sans nom de
+  rue (carte ou GPS, quartier, point de repère, instructions, adresse par défaut, refus hors zone), écran Zones et
+  tarifs du back-office, liste des villes desservies dans le profil.
 - Inc-1 — comptes : inscription et connexion par email ou téléphone avec mot de passe, codes de vérification
   (email, SMS), mot de passe oublié, profil obligatoire, écran Mon compte (modification, changement d'identifiant,
   déconnexion, suppression du compte), accès selon le rôle ; table profils + admins avec RLS testée ; fonction

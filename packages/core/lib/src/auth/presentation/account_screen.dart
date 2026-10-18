@@ -9,9 +9,20 @@ import '../application/auth_providers.dart';
 import 'widgets/auth_form_scaffold.dart';
 import 'widgets/confirm_sheet.dart';
 
+/// Entrée propre à une app dans « Mon compte » (ex. « Mes adresses » dans l'app Client).
+class AccountLink {
+  const AccountLink(this.icon, this.label, this.path);
+
+  final IconData icon;
+  final String Function(AppLocalizations l10n) label;
+  final String path;
+}
+
 /// Mon compte : identité, identifiant de connexion, déconnexion et suppression (AUTH-06/07/08).
 class AccountScreen extends ConsumerWidget {
-  const AccountScreen({super.key});
+  const AccountScreen({super.key, this.links = const []});
+
+  final List<AccountLink> links;
 
   Future<void> _signOut(BuildContext context, WidgetRef ref) async {
     final l10n = AppLocalizations.of(context);
@@ -132,6 +143,14 @@ class AccountScreen extends ConsumerWidget {
                   subtitle: Text(login, style: text.bodyMedium),
                 ),
                 const Divider(),
+                for (final link in links) ...[
+                  action(
+                    link.icon,
+                    link.label(l10n),
+                    () => context.push(link.path),
+                  ),
+                  const Divider(),
+                ],
                 action(
                   Icons.edit_outlined,
                   l10n.accountEdit,

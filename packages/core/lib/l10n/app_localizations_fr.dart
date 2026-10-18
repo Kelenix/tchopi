@@ -316,4 +316,221 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get failureUnknown =>
       'Une erreur est survenue. Réessayez dans un instant.';
+
+  @override
+  String get accountAddresses => 'Mes adresses';
+
+  @override
+  String get addressesTitle => 'Mes adresses';
+
+  @override
+  String get addressesEmpty => 'Ajoutez votre première adresse';
+
+  @override
+  String get addressesEmptyBody =>
+      'Une position sur la carte, votre quartier et un point de repère suffisent : pas besoin du nom de la rue.';
+
+  @override
+  String get addressAdd => 'Ajouter une adresse';
+
+  @override
+  String get addressDefault => 'Par défaut';
+
+  @override
+  String get addressSetDefault => 'Définir par défaut';
+
+  @override
+  String get addressEdit => 'Modifier';
+
+  @override
+  String get addressDelete => 'Supprimer';
+
+  @override
+  String get addressDeleteTitle => 'Supprimer cette adresse ?';
+
+  @override
+  String get addressDeleteBody =>
+      'Les commandes déjà passées gardent leur adresse d\'origine.';
+
+  @override
+  String get addressNewTitle => 'Nouvelle adresse';
+
+  @override
+  String get addressEditTitle => 'Modifier l\'adresse';
+
+  @override
+  String get addressSaved => 'Adresse enregistrée.';
+
+  @override
+  String get addressMoveMap =>
+      'Déplacez la carte pour placer l\'épingle sur votre entrée.';
+
+  @override
+  String get addressMyPosition => 'Ma position';
+
+  @override
+  String get mapUnavailable =>
+      'Carte non configurée sur cet appareil. Utilisez « Ma position » pour placer l\'adresse.';
+
+  @override
+  String mapPosition(String lat, String lng) {
+    return 'Position : $lat, $lng';
+  }
+
+  @override
+  String get fieldLabel => 'Libellé';
+
+  @override
+  String get labelHome => 'Maison';
+
+  @override
+  String get labelWork => 'Bureau';
+
+  @override
+  String get labelOther => 'Autre';
+
+  @override
+  String get fieldDistrict => 'Quartier';
+
+  @override
+  String get fieldLandmark => 'Point de repère';
+
+  @override
+  String get fieldLandmarkHint => 'Ex. derrière la pharmacie centrale';
+
+  @override
+  String get fieldInstructions => 'Instructions (facultatif)';
+
+  @override
+  String get fieldInstructionsHint => 'Ex. maison avec portail bleu';
+
+  @override
+  String get locationRationaleTitle => 'Utiliser votre position ?';
+
+  @override
+  String get locationRationaleBody =>
+      'Votre position sert uniquement à placer l\'adresse sur la carte. Vous pourrez ensuite l\'ajuster.';
+
+  @override
+  String get locationDenied =>
+      'Localisation refusée : placez l\'épingle sur la carte.';
+
+  @override
+  String get locationDeniedForever =>
+      'Localisation bloquée. Autorisez-la dans les réglages du téléphone.';
+
+  @override
+  String get locationOpenSettings => 'Réglages';
+
+  @override
+  String get locationOff => 'Activez la localisation (GPS) du téléphone.';
+
+  @override
+  String get locationLowAccuracy =>
+      'Précision faible : ajustez l\'épingle sur la carte.';
+
+  @override
+  String get failureOutOfZone => 'Cette adresse est hors de la zone desservie.';
+
+  @override
+  String get failureForbidden => 'Action réservée aux administrateurs.';
+
+  @override
+  String get adminZones => 'Zones et tarifs';
+
+  @override
+  String get zonesEmpty => 'Aucune zone pour le moment';
+
+  @override
+  String get zoneAdd => 'Ajouter une zone';
+
+  @override
+  String get zoneNewTitle => 'Nouvelle zone';
+
+  @override
+  String get zoneEditTitle => 'Modifier la zone';
+
+  @override
+  String get zoneActive => 'Zone active';
+
+  @override
+  String get zoneInactive => 'Désactivée';
+
+  @override
+  String zoneRadius(String km) {
+    return 'Rayon $km km';
+  }
+
+  @override
+  String get zoneViewOnMap => 'Voir le centre sur une carte';
+
+  @override
+  String get zoneSaved => 'Zone et tarifs enregistrés.';
+
+  @override
+  String get fieldZoneName => 'Nom de la zone';
+
+  @override
+  String get fieldCenterLat => 'Latitude du centre';
+
+  @override
+  String get fieldCenterLng => 'Longitude du centre';
+
+  @override
+  String get fieldRadiusKm => 'Rayon (km)';
+
+  @override
+  String get pricingFood => 'Tarifs repas';
+
+  @override
+  String get pricingParcel => 'Tarifs colis';
+
+  @override
+  String get fieldBaseFee => 'Base (F)';
+
+  @override
+  String get fieldPerKm => 'Prix par km (F)';
+
+  @override
+  String get fieldMinFee => 'Plancher (F)';
+
+  @override
+  String get fieldMaxFee => 'Plafond (F)';
+
+  @override
+  String get fieldDetour => 'Coefficient de détour';
+
+  @override
+  String get fieldRounding => 'Arrondi (F)';
+
+  @override
+  String get fieldCourierBase => 'Livreur : fixe (F)';
+
+  @override
+  String get fieldCourierPerKm => 'Livreur : par km (F)';
+
+  @override
+  String get simulatorTitle => 'Simulateur';
+
+  @override
+  String get simulatorDistance => 'Distance à vol d\'oiseau (km)';
+
+  @override
+  String get simulatorRun => 'Calculer';
+
+  @override
+  String simulatorResult(String distance, String fee, String earning) {
+    return '$distance km de référence · frais $fee · livreur $earning';
+  }
+
+  @override
+  String get simulatorSaveFirst =>
+      'Enregistrez la zone pour simuler ses tarifs.';
+
+  @override
+  String get errorNumber => 'Nombre invalide.';
+
+  @override
+  String get errorMinMax =>
+      'Le plancher doit être inférieur ou égal au plafond.';
 }

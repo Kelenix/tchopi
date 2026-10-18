@@ -6,6 +6,10 @@ abstract final class Env {
   static const supabaseUrl = String.fromEnvironment('SUPABASE_URL');
   static const supabaseAnonKey = String.fromEnvironment('SUPABASE_ANON_KEY');
 
+  /// Vrai quand une clé Google Maps est fournie au build Android (`MAPS_API_KEY`, voir README) ;
+  /// sinon les écrans affichent un emplacement à la place de la carte.
+  static const mapsEnabled = bool.fromEnvironment('GOOGLE_MAPS_ENABLED');
+
   /// Échoue au démarrage plutôt qu'au premier appel réseau si la configuration manque.
   static void ensureConfigured() {
     final missing = [

@@ -651,6 +651,408 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Une erreur est survenue. Réessayez dans un instant.'**
   String get failureUnknown;
+
+  /// No description provided for @accountAddresses.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes adresses'**
+  String get accountAddresses;
+
+  /// No description provided for @addressesTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes adresses'**
+  String get addressesTitle;
+
+  /// No description provided for @addressesEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoutez votre première adresse'**
+  String get addressesEmpty;
+
+  /// No description provided for @addressesEmptyBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une position sur la carte, votre quartier et un point de repère suffisent : pas besoin du nom de la rue.'**
+  String get addressesEmptyBody;
+
+  /// No description provided for @addressAdd.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter une adresse'**
+  String get addressAdd;
+
+  /// No description provided for @addressDefault.
+  ///
+  /// In fr, this message translates to:
+  /// **'Par défaut'**
+  String get addressDefault;
+
+  /// No description provided for @addressSetDefault.
+  ///
+  /// In fr, this message translates to:
+  /// **'Définir par défaut'**
+  String get addressSetDefault;
+
+  /// No description provided for @addressEdit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier'**
+  String get addressEdit;
+
+  /// No description provided for @addressDelete.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer'**
+  String get addressDelete;
+
+  /// No description provided for @addressDeleteTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer cette adresse ?'**
+  String get addressDeleteTitle;
+
+  /// No description provided for @addressDeleteBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les commandes déjà passées gardent leur adresse d\'origine.'**
+  String get addressDeleteBody;
+
+  /// No description provided for @addressNewTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle adresse'**
+  String get addressNewTitle;
+
+  /// No description provided for @addressEditTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier l\'adresse'**
+  String get addressEditTitle;
+
+  /// No description provided for @addressSaved.
+  ///
+  /// In fr, this message translates to:
+  /// **'Adresse enregistrée.'**
+  String get addressSaved;
+
+  /// No description provided for @addressMoveMap.
+  ///
+  /// In fr, this message translates to:
+  /// **'Déplacez la carte pour placer l\'épingle sur votre entrée.'**
+  String get addressMoveMap;
+
+  /// No description provided for @addressMyPosition.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ma position'**
+  String get addressMyPosition;
+
+  /// No description provided for @mapUnavailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Carte non configurée sur cet appareil. Utilisez « Ma position » pour placer l\'adresse.'**
+  String get mapUnavailable;
+
+  /// No description provided for @mapPosition.
+  ///
+  /// In fr, this message translates to:
+  /// **'Position : {lat}, {lng}'**
+  String mapPosition(String lat, String lng);
+
+  /// No description provided for @fieldLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Libellé'**
+  String get fieldLabel;
+
+  /// No description provided for @labelHome.
+  ///
+  /// In fr, this message translates to:
+  /// **'Maison'**
+  String get labelHome;
+
+  /// No description provided for @labelWork.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bureau'**
+  String get labelWork;
+
+  /// No description provided for @labelOther.
+  ///
+  /// In fr, this message translates to:
+  /// **'Autre'**
+  String get labelOther;
+
+  /// No description provided for @fieldDistrict.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quartier'**
+  String get fieldDistrict;
+
+  /// No description provided for @fieldLandmark.
+  ///
+  /// In fr, this message translates to:
+  /// **'Point de repère'**
+  String get fieldLandmark;
+
+  /// No description provided for @fieldLandmarkHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. derrière la pharmacie centrale'**
+  String get fieldLandmarkHint;
+
+  /// No description provided for @fieldInstructions.
+  ///
+  /// In fr, this message translates to:
+  /// **'Instructions (facultatif)'**
+  String get fieldInstructions;
+
+  /// No description provided for @fieldInstructionsHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. maison avec portail bleu'**
+  String get fieldInstructionsHint;
+
+  /// No description provided for @locationRationaleTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Utiliser votre position ?'**
+  String get locationRationaleTitle;
+
+  /// No description provided for @locationRationaleBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre position sert uniquement à placer l\'adresse sur la carte. Vous pourrez ensuite l\'ajuster.'**
+  String get locationRationaleBody;
+
+  /// No description provided for @locationDenied.
+  ///
+  /// In fr, this message translates to:
+  /// **'Localisation refusée : placez l\'épingle sur la carte.'**
+  String get locationDenied;
+
+  /// No description provided for @locationDeniedForever.
+  ///
+  /// In fr, this message translates to:
+  /// **'Localisation bloquée. Autorisez-la dans les réglages du téléphone.'**
+  String get locationDeniedForever;
+
+  /// No description provided for @locationOpenSettings.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réglages'**
+  String get locationOpenSettings;
+
+  /// No description provided for @locationOff.
+  ///
+  /// In fr, this message translates to:
+  /// **'Activez la localisation (GPS) du téléphone.'**
+  String get locationOff;
+
+  /// No description provided for @locationLowAccuracy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Précision faible : ajustez l\'épingle sur la carte.'**
+  String get locationLowAccuracy;
+
+  /// No description provided for @failureOutOfZone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette adresse est hors de la zone desservie.'**
+  String get failureOutOfZone;
+
+  /// No description provided for @failureForbidden.
+  ///
+  /// In fr, this message translates to:
+  /// **'Action réservée aux administrateurs.'**
+  String get failureForbidden;
+
+  /// No description provided for @adminZones.
+  ///
+  /// In fr, this message translates to:
+  /// **'Zones et tarifs'**
+  String get adminZones;
+
+  /// No description provided for @zonesEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune zone pour le moment'**
+  String get zonesEmpty;
+
+  /// No description provided for @zoneAdd.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter une zone'**
+  String get zoneAdd;
+
+  /// No description provided for @zoneNewTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle zone'**
+  String get zoneNewTitle;
+
+  /// No description provided for @zoneEditTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier la zone'**
+  String get zoneEditTitle;
+
+  /// No description provided for @zoneActive.
+  ///
+  /// In fr, this message translates to:
+  /// **'Zone active'**
+  String get zoneActive;
+
+  /// No description provided for @zoneInactive.
+  ///
+  /// In fr, this message translates to:
+  /// **'Désactivée'**
+  String get zoneInactive;
+
+  /// No description provided for @zoneRadius.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rayon {km} km'**
+  String zoneRadius(String km);
+
+  /// No description provided for @zoneViewOnMap.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir le centre sur une carte'**
+  String get zoneViewOnMap;
+
+  /// No description provided for @zoneSaved.
+  ///
+  /// In fr, this message translates to:
+  /// **'Zone et tarifs enregistrés.'**
+  String get zoneSaved;
+
+  /// No description provided for @fieldZoneName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom de la zone'**
+  String get fieldZoneName;
+
+  /// No description provided for @fieldCenterLat.
+  ///
+  /// In fr, this message translates to:
+  /// **'Latitude du centre'**
+  String get fieldCenterLat;
+
+  /// No description provided for @fieldCenterLng.
+  ///
+  /// In fr, this message translates to:
+  /// **'Longitude du centre'**
+  String get fieldCenterLng;
+
+  /// No description provided for @fieldRadiusKm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rayon (km)'**
+  String get fieldRadiusKm;
+
+  /// No description provided for @pricingFood.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tarifs repas'**
+  String get pricingFood;
+
+  /// No description provided for @pricingParcel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tarifs colis'**
+  String get pricingParcel;
+
+  /// No description provided for @fieldBaseFee.
+  ///
+  /// In fr, this message translates to:
+  /// **'Base (F)'**
+  String get fieldBaseFee;
+
+  /// No description provided for @fieldPerKm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix par km (F)'**
+  String get fieldPerKm;
+
+  /// No description provided for @fieldMinFee.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plancher (F)'**
+  String get fieldMinFee;
+
+  /// No description provided for @fieldMaxFee.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plafond (F)'**
+  String get fieldMaxFee;
+
+  /// No description provided for @fieldDetour.
+  ///
+  /// In fr, this message translates to:
+  /// **'Coefficient de détour'**
+  String get fieldDetour;
+
+  /// No description provided for @fieldRounding.
+  ///
+  /// In fr, this message translates to:
+  /// **'Arrondi (F)'**
+  String get fieldRounding;
+
+  /// No description provided for @fieldCourierBase.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livreur : fixe (F)'**
+  String get fieldCourierBase;
+
+  /// No description provided for @fieldCourierPerKm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livreur : par km (F)'**
+  String get fieldCourierPerKm;
+
+  /// No description provided for @simulatorTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Simulateur'**
+  String get simulatorTitle;
+
+  /// No description provided for @simulatorDistance.
+  ///
+  /// In fr, this message translates to:
+  /// **'Distance à vol d\'oiseau (km)'**
+  String get simulatorDistance;
+
+  /// No description provided for @simulatorRun.
+  ///
+  /// In fr, this message translates to:
+  /// **'Calculer'**
+  String get simulatorRun;
+
+  /// No description provided for @simulatorResult.
+  ///
+  /// In fr, this message translates to:
+  /// **'{distance} km de référence · frais {fee} · livreur {earning}'**
+  String simulatorResult(String distance, String fee, String earning);
+
+  /// No description provided for @simulatorSaveFirst.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrez la zone pour simuler ses tarifs.'**
+  String get simulatorSaveFirst;
+
+  /// No description provided for @errorNumber.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nombre invalide.'**
+  String get errorNumber;
+
+  /// No description provided for @errorMinMax.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le plancher doit être inférieur ou égal au plafond.'**
+  String get errorMinMax;
 }
 
 class _AppLocalizationsDelegate

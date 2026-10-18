@@ -71,7 +71,10 @@
   2. Activer un compte de facturation (requis même pour l'usage gratuit). 3. Créer une clé par app, **restreinte** au nom de package
   et à l'empreinte de signature (Android) ou au domaine (web).
 - **Coût** : SDK mobile gratuit ; carte web admin dans le quota gratuit.
-- **Vérification** : la carte s'affiche dans l'app.
+- **Dans le projet** : ajouter `MAPS_API_KEY=…` dans `apps/client/android/local.properties` (fichier non versionné), puis
+  lancer l'app avec `--dart-define=GOOGLE_MAPS_ENABLED=true` en plus de `--dart-define-from-file`. Sans clé, l'éditeur
+  d'adresse fonctionne avec le GPS seul et affiche un emplacement à la place de la carte.
+- **Vérification** : la carte s'affiche dans l'écran « Nouvelle adresse ».
 
 ## 8. Créer le projet Firebase (notifications push)
 - **Pourquoi** : notifications client, livreur, restaurant — Inc-9.

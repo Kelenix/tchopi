@@ -1,9 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Position « pendant l'utilisation » uniquement, demandée lors de l'ajout d'une adresse (ADR-01). -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <application
         android:label="Tchopi"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <!-- Clé Google Maps injectée au build (local.properties : MAPS_API_KEY), jamais versionnée. -->
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="${MAPS_API_KEY}"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

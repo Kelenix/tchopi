@@ -6,6 +6,30 @@
 
 ---
 
+## ADR-015 — Zones, tarifs et adresses : choix de mise en œuvre (Inc-2)
+
+- **Date** : 2026-10-18
+- **Statut** : Accepté
+- **Décideur** : Claude (rôle : database-architect / flutter-engineer)
+- **Contexte** : Mettre en œuvre ADR-005, H-02 à H-04 et les stories ADR-01 à ADR-07 sans service payant.
+- **Décision** :
+  - Positions stockées en latitude / longitude + colonne PostGIS générée (lecture et écriture simples depuis les apps).
+  - Zone et ville d'une adresse calculées par un déclencheur ; adresse hors zone refusée (`address_out_of_zone`) ;
+    une seule adresse par défaut garantie par la base.
+  - Calcul des frais dans une seule fonction SQL (`private.price_delivery`), réutilisée par les devis des Inc-5/6.
+  - Règles tarifaires invisibles des clients (ils ne voient que les devis).
+  - Carte : Google Maps quand une clé est fournie (`GOOGLE_MAPS_ENABLED`) ; sinon l'éditeur fonctionne au GPS seul.
+  - Back-office : centre de zone saisi en coordonnées + lien « Voir sur une carte » au lieu d'une carte intégrée
+    (évite une clé Maps web pour un usage admin ponctuel) ; écart à la fiche A-08 assumé.
+  - App Client : « Mes adresses » sert d'accueil provisoire jusqu'à l'accueil des commandes (Inc-5).
+  - Nouvelles dépendances : `google_maps_flutter`, `geolocator`, `geocoding` (quartier suggéré par le téléphone,
+    gratuit), `url_launcher` (back-office).
+- **Alternatives écartées** : saisie libre de la ville (incohérences) ; géocodage payant ; carte web intégrée à l'admin.
+- **Conséquences** : la carte reste à vérifier dès que la clé Google Maps existe (tâche manuelle 7).
+- **Impact** : technique / métier (faible).
+
+---
+
 ## ADR-014 — Authentification : choix de mise en œuvre (Inc-1)
 
 - **Date** : 2026-10-18
