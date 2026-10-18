@@ -1,13 +1,18 @@
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../shared/restaurant_cover.dart';
+import '../../orders/cart.dart';
+import '../../orders/presentation/checkout_screen.dart';
+import '../../orders/presentation/order_widgets.dart';
 import '../../restaurant/restaurant_providers.dart';
 import 'catalog_providers.dart';
 
-/// C-03 : fiche restaurant — grande photo, ouverture, temps de préparation, menu par catégorie.
-/// La commande (panier) arrive avec l'Inc-5.
+/// C-03 : fiche restaurant — grande photo, ouverture, temps de préparation, menu par catégorie ;
+/// ajout au panier et barre « Voir le panier » (ORD-04, ORD-05).
 class RestaurantDetailScreen extends ConsumerWidget {
   const RestaurantDetailScreen({
     super.key,
@@ -37,6 +42,7 @@ class RestaurantDetailScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: tokens.surface,
+      bottomNavigationBar: _CartBar(restaurantId: restaurantId),
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
@@ -112,8 +118,10 @@ class RestaurantDetailScreen extends ConsumerWidget {
                   sliver: SliverList.separated(
                     itemCount: products.length,
                     separatorBuilder: (_, _) => const Divider(),
-                    itemBuilder: (_, index) =>
-                        _ProductTile(product: products[index]),
+                    itemBuilder: (_, index) => _ProductTile(
+                      product: products[index],
+                      restaurant: restaurant,
+                    ),
                   ),
                 ),
               ],
@@ -218,12 +226,6 @@ class _Header extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: Space.xl),
-          _Note(
-            icon: Icons.delivery_dining_outlined,
-            text: l10n.restaurantOrderSoon,
-            inline: true,
-          ),
         ],
       ),
     );
@@ -276,13 +278,41 @@ class _Fact extends StatelessWidget {
 }
 
 /// Produit : nom, description, prix ; photo à droite. Grisé quand il est indisponible.
-class _ProductTile extends StatelessWidget {
-  const _ProductTile({required this.product});
+class _ProductTile extends ConsumerWidget {
+  const _ProductTile({required this.product, required this.restaurant});
 
   final Product product;
 
+  /// Null tant que le restaurant charge : pas d'ajout possible.
+  final Restaurant? restaurant;
+
+  Future<void> _add(BuildContext context, WidgetRef ref, Restaurant r) async {
+    final cart = ref.read(cartControllerProvider.notifier);
+    if (cart.add(r, product)) {
+      await HapticFeedback.lightImpact();
+      return;
+    }
+    final l10n = AppLocalizations.of(context);
+    final current = ref.read(cartControllerProvider).value!.restaurantName;
+    final replace = await showConfirmSheet(
+      context,
+      icon: Icons.shopping_bag_outlined,
+      title: l10n.cartReplaceTitle,
+      body: l10n.cartReplaceBody(current),
+      confirmLabel: l10n.cartReplaceConfirm,
+    );
+    if (replace) cart.replaceWith(r, product);
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final r = restaurant;
+    final orderable =
+        r != null && r.isOpen && !r.isTemporarilyClosed && product.isAvailable;
+    final cart = ref.watch(cartControllerProvider).value;
+    final quantity = cart != null && cart.restaurantId == r?.id
+        ? cart.quantityOf(product.id!)
+        : 0;
     final l10n = AppLocalizations.of(context);
     final tokens = context.tokens;
     final text = Theme.of(context).textTheme;
@@ -320,20 +350,56 @@ class _ProductTile extends StatelessWidget {
                       fontFeatures: const [FontFeature.tabularFigures()],
                     ),
                   ),
+                  if (quantity > 0) ...[
+                    const SizedBox(height: Space.sm),
+                    QuantityStepper(
+                      quantity: quantity,
+                      onChanged: (value) => ref
+                          .read(cartControllerProvider.notifier)
+                          .setQuantity(p.id!, value),
+                    ),
+                  ],
                 ],
               ),
             ),
             const SizedBox(width: Space.md),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(Radii.field),
-              child: SizedBox.square(
-                dimension: 96,
-                child: MediaImage(
-                  path: p.photoPath,
-                  icon: Icons.lunch_dining_outlined,
-                  seed: p.restaurantId,
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(Radii.field),
+                  child: SizedBox.square(
+                    dimension: 96,
+                    child: MediaImage(
+                      path: p.photoPath,
+                      icon: Icons.lunch_dining_outlined,
+                      seed: p.restaurantId,
+                    ),
+                  ),
                 ),
-              ),
+                if (orderable && quantity == 0)
+                  Positioned(
+                    right: -Space.xs,
+                    bottom: -Space.xs,
+                    child: Material(
+                      color: tokens.primary,
+                      shape: CircleBorder(
+                        side: BorderSide(color: tokens.surface, width: 3),
+                      ),
+                      child: InkWell(
+                        customBorder: const CircleBorder(),
+                        onTap: () => _add(context, ref, r),
+                        child: Tooltip(
+                          message: l10n.productAddTooltip,
+                          child: SizedBox.square(
+                            dimension: 40,
+                            child: Icon(Icons.add, color: tokens.onPrimary),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
             ),
           ],
         ),
@@ -343,59 +409,98 @@ class _ProductTile extends StatelessWidget {
 }
 
 class _Note extends StatelessWidget {
-  const _Note({
-    required this.icon,
-    required this.text,
-    this.action,
-    this.inline = false,
-  });
+  const _Note({required this.icon, required this.text, this.action});
 
   final IconData icon;
   final String text;
   final Widget? action;
 
-  /// Bandeau dans l'en-tête (sans marges propres).
-  final bool inline;
-
   @override
   Widget build(BuildContext context) {
     final tokens = context.tokens;
-    final note = Container(
-      padding: const EdgeInsets.all(Space.lg),
-      decoration: BoxDecoration(
-        color: tokens.primarySoft,
-        borderRadius: BorderRadius.circular(Radii.field),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        Space.screen,
+        Space.xxl,
+        Space.screen,
+        0,
       ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Icon(icon, color: tokens.primary),
-              const SizedBox(width: Space.md),
-              Expanded(
-                child: Text(
-                  text,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.labelLarge!.copyWith(color: tokens.primary),
+      child: Container(
+        padding: const EdgeInsets.all(Space.lg),
+        decoration: BoxDecoration(
+          color: tokens.primarySoft,
+          borderRadius: BorderRadius.circular(Radii.field),
+        ),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Icon(icon, color: tokens.primary),
+                const SizedBox(width: Space.md),
+                Expanded(
+                  child: Text(
+                    text,
+                    style: Theme.of(
+                      context,
+                    ).textTheme.labelLarge!.copyWith(color: tokens.primary),
+                  ),
                 ),
-              ),
-            ],
-          ),
-          if (action != null) ...[const SizedBox(height: Space.md), action!],
-        ],
+              ],
+            ),
+            if (action != null) ...[const SizedBox(height: Space.md), action!],
+          ],
+        ),
       ),
     );
-    return inline
-        ? note
-        : Padding(
-            padding: const EdgeInsets.fromLTRB(
-              Space.screen,
-              Space.xxl,
-              Space.screen,
-              0,
-            ),
-            child: note,
-          );
+  }
+}
+
+/// Barre basse « Voir le panier » quand le panier contient des plats de ce restaurant.
+class _CartBar extends ConsumerWidget {
+  const _CartBar({required this.restaurantId});
+
+  final String restaurantId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final tokens = context.tokens;
+    final cart = ref.watch(cartControllerProvider).value;
+    if (cart == null || cart.restaurantId != restaurantId) {
+      return const SizedBox.shrink();
+    }
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(
+          Space.screen,
+          Space.sm,
+          Space.screen,
+          Space.md,
+        ),
+        child: FilledButton(
+          onPressed: () => context.push(CheckoutScreen.path),
+          child: Row(
+            children: [
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  color: tokens.onPrimary.withValues(alpha: 0.18),
+                  borderRadius: BorderRadius.circular(Radii.chip),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: Space.sm,
+                    vertical: 2,
+                  ),
+                  child: Text(l10n.cartItems(cart.count)),
+                ),
+              ),
+              const SizedBox(width: Space.md),
+              Expanded(child: Text(l10n.cartView)),
+              Text(formatMoney(cart.subtotal)),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

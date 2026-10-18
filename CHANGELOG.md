@@ -4,6 +4,13 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · versions [S
 
 ## [Non publié]
 
+### Ajouté (Inc-5)
+- Commande de repas : panier (un restaurant, conservé), validation avec devis serveur (frais selon la distance), paiement
+  en espèces, commande unique même en cas de double envoi, suivi en direct et chronologie, annulation avant acceptation,
+  « Mes commandes » et commande en cours sur l'accueil.
+- Espace Restaurant : onglet Commandes en direct (nouvelles avec délai de 10 min, en cours, terminées), accepter / refuser
+  avec motif, préparation, prête, totaux du jour (ventes, commission, net) ; refus automatique sans réponse.
+
 ### Modifié
 - Refonte visuelle (ADR-019) : thème clair imposé, écran de bienvenue clair, vraie carte OpenStreetMap dans l'éditeur
   d'adresse (épingle animée), nouvel accueil client (adresse, services, restaurants) et fiche restaurant avec menu.

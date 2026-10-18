@@ -15,7 +15,11 @@ import 'features/courier/profile/presentation/courier_profile_screen.dart';
 import 'features/courier/profile/presentation/courier_status_screen.dart';
 import 'features/admin/restaurants/presentation/restaurant_form_screen.dart';
 import 'features/admin/restaurants/presentation/restaurants_admin_screen.dart';
+import 'features/orders/presentation/checkout_screen.dart';
+import 'features/orders/presentation/order_detail_screen.dart';
+import 'features/orders/presentation/orders_screen.dart';
 import 'features/restaurant/presentation/menu_screen.dart';
+import 'features/restaurant/presentation/restaurant_orders_screen.dart';
 import 'features/restaurant/presentation/product_editor_screen.dart';
 import 'features/restaurant/presentation/restaurant_profile_screen.dart';
 import 'spaces/spaces.dart';
@@ -33,6 +37,11 @@ GoRouter router(Ref ref) => buildAppRouter(
       Icons.swap_horiz,
       (l10n) => l10n.spacesTitle,
       SpacesScreen.path,
+    ),
+    AccountLink(
+      Icons.receipt_long_outlined,
+      (l10n) => l10n.ordersTitle,
+      OrdersScreen.path,
     ),
     AccountLink(
       Icons.place_outlined,
@@ -70,6 +79,16 @@ GoRouter router(Ref ref) => buildAppRouter(
       builder: (_, state) =>
           AddressEditorScreen(address: state.extra as Address?),
     ),
+    GoRoute(
+      path: CheckoutScreen.path,
+      builder: (_, _) => const CheckoutScreen(),
+    ),
+    GoRoute(path: OrdersScreen.path, builder: (_, _) => const OrdersScreen()),
+    GoRoute(
+      path: OrderDetailScreen.path,
+      builder: (_, state) =>
+          OrderDetailScreen(orderId: state.pathParameters['id']!),
+    ),
     // Espace Livreur
     GoRoute(
       path: CourierStatusScreen.path,
@@ -80,6 +99,10 @@ GoRouter router(Ref ref) => buildAppRouter(
       builder: (_, _) => const CourierProfileScreen(),
     ),
     // Espace Restaurant
+    GoRoute(
+      path: RestaurantOrdersScreen.path,
+      builder: (_, _) => const RestaurantOrdersScreen(),
+    ),
     GoRoute(path: MenuScreen.path, builder: (_, _) => const MenuScreen()),
     GoRoute(
       path: ProductEditorScreen.path,

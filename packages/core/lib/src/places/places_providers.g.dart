@@ -49,7 +49,7 @@ final class ActiveZonesProvider
   }
 }
 
-String _$activeZonesHash() => r'5ea35442b7452f847a9efe65173979e4c94ec9ef';
+String _$activeZonesHash() => r'81172348fb954d398d547a8d489aadc10dd6d0fb';
 
 /// Villes desservies, proposées dans le profil (AUTH-03).
 

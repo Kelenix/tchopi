@@ -272,7 +272,7 @@
   "spaceBecomeCourier": "Devenir livreur",
   "spaceBecomeCourierBody": "Livrez à Abidjan à votre rythme. Votre profil est validé par l'équipe.",
   "spaceRestaurant": "Restaurant",
-  "spaceRestaurantBody": "Mon menu, mes horaires, puis les commandes reçues.",
+  "spaceRestaurantBody": "Commandes reçues en direct, menu et horaires.",
   "restaurantMenu": "Menu",
   "restaurantProfile": "Profil et horaires",
   "menuEmpty": "Ajoutez votre premier produit",
@@ -374,8 +374,138 @@
     }
   },
   "restaurantMenuSoon": "Le menu de ce restaurant arrive bientôt.",
-  "restaurantOrderSoon": "La commande en ligne ouvre très bientôt.",
   "menuOther": "Autres",
   "factPrep": "Préparation",
-  "factNow": "Maintenant"
+  "factNow": "Maintenant",
+  "cartView": "Voir le panier",
+  "cartItems": "{count, plural, =1{1 article} other{{count} articles}}",
+  "@cartItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cartReplaceTitle": "Commencer un nouveau panier ?",
+  "cartReplaceBody": "Votre panier contient des plats de {restaurant}. Il sera vidé.",
+  "@cartReplaceBody": {
+    "placeholders": {
+      "restaurant": {
+        "type": "String"
+      }
+    }
+  },
+  "cartReplaceConfirm": "Vider et ajouter",
+  "productAddTooltip": "Ajouter au panier",
+  "checkoutTitle": "Votre commande",
+  "checkoutDeliverTo": "Livrer à",
+  "checkoutChangeAddress": "Changer",
+  "checkoutPayment": "Paiement",
+  "paymentCash": "Espèces à la livraison",
+  "paymentMobileMoney": "Mobile Money",
+  "paymentCard": "Carte bancaire",
+  "paymentSoon": "Bientôt",
+  "checkoutSubtotal": "Sous-total",
+  "checkoutDeliveryFee": "Frais de livraison",
+  "checkoutTotal": "Total",
+  "checkoutToConfirm": "À confirmer",
+  "checkoutConfirm": "Commander · {total}",
+  "@checkoutConfirm": {
+    "placeholders": {
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "checkoutNeedAddress": "Ajoutez une adresse de livraison pour commander.",
+  "checkoutEmpty": "Votre panier est vide",
+  "checkoutUpdateCart": "Mettre à jour le panier",
+  "issueRestaurantClosed": "Le restaurant est fermé pour le moment.",
+  "issueProductUnavailable": "« {name} » n'est plus disponible.",
+  "@issueProductUnavailable": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "failurePriceChanged": "Les prix ont changé : vérifiez le nouveau total.",
+  "failureCartChanged": "Votre panier a changé : vérifiez-le avant de commander.",
+  "failurePaymentUnavailable": "Ce moyen de paiement n'est pas encore disponible.",
+  "failureAlreadyAccepted": "Le restaurant prépare déjà votre commande. Contactez le support.",
+  "failureInvalidTransition": "Cette action n'est plus possible : la commande a changé.",
+  "failureCartEmpty": "Votre panier est vide.",
+  "ordersTitle": "Mes commandes",
+  "ordersEmpty": "Aucune commande pour le moment",
+  "ordersEmptyBody": "Vos commandes de repas apparaîtront ici.",
+  "ordersActive": "En cours",
+  "ordersPast": "Historique",
+  "orderNumber": "Commande {number}",
+  "@orderNumber": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "orderItemsTitle": "Articles",
+  "orderTimeline": "Suivi",
+  "orderDeliveryTitle": "Livraison",
+  "orderCancel": "Annuler la commande",
+  "orderCancelTitle": "Annuler cette commande ?",
+  "orderCancelBody": "Le restaurant n'a pas encore accepté : rien ne vous sera facturé.",
+  "orderCancelled": "Commande annulée.",
+  "orderReason": "Motif : {reason}",
+  "@orderReason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "orderNoResponse": "Sans réponse du restaurant",
+  "orderCancelledByCustomer": "Annulée par le client",
+  "homeActiveOrder": "Commande en cours",
+  "restaurantOrders": "Commandes",
+  "ordersNew": "Nouvelles",
+  "ordersInProgress": "En cours",
+  "ordersDone": "Terminées",
+  "ordersNewEmpty": "Aucune nouvelle commande. Elles apparaissent ici en direct.",
+  "ordersInProgressEmpty": "Aucune commande en cours.",
+  "ordersDoneEmpty": "Aucune commande terminée aujourd'hui.",
+  "orderAccept": "Accepter",
+  "orderReject": "Refuser",
+  "orderStartPreparing": "Lancer la préparation",
+  "orderMarkReady": "Commande prête",
+  "orderAnswerWithin": "Répondre sous {minutes} min",
+  "@orderAnswerWithin": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "orderWaitingCourier": "En attente du livreur",
+  "rejectTitle": "Motif du refus",
+  "rejectUnavailable": "Produit indisponible",
+  "rejectClosing": "Fermeture du restaurant",
+  "rejectBusy": "Trop de commandes",
+  "rejectOther": "Autre motif",
+  "todaySales": "Ventes du jour",
+  "todayCommission": "Commission",
+  "todayNet": "Net",
+  "newOrderAlert": "Nouvelle commande !",
+  "orderStatusAwaitingPayment": "Paiement en attente",
+  "orderStatusPending": "En attente de confirmation",
+  "orderStatusAccepted": "Acceptée",
+  "orderStatusPreparing": "En préparation",
+  "orderStatusReady": "Prête",
+  "orderStatusSearchingCourier": "Recherche d'un livreur",
+  "orderStatusCourierAssigned": "Livreur assigné",
+  "orderStatusPickedUp": "Récupérée",
+  "orderStatusInTransit": "En route",
+  "orderStatusDelivered": "Livrée",
+  "orderStatusRejected": "Refusée",
+  "orderStatusCancelled": "Annulée",
+  "orderStatusFailed": "Échec de livraison"
 }

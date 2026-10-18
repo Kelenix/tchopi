@@ -703,7 +703,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get spaceRestaurantBody =>
-      'Mon menu, mes horaires, puis les commandes reçues.';
+      'Commandes reçues en direct, menu et horaires.';
 
   @override
   String get restaurantMenu => 'Menu';
@@ -949,9 +949,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get restaurantMenuSoon => 'Le menu de ce restaurant arrive bientôt.';
 
   @override
-  String get restaurantOrderSoon => 'La commande en ligne ouvre très bientôt.';
-
-  @override
   String get menuOther => 'Autres';
 
   @override
@@ -959,4 +956,278 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get factNow => 'Maintenant';
+
+  @override
+  String get cartView => 'Voir le panier';
+
+  @override
+  String cartItems(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count articles',
+      one: '1 article',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get cartReplaceTitle => 'Commencer un nouveau panier ?';
+
+  @override
+  String cartReplaceBody(String restaurant) {
+    return 'Votre panier contient des plats de $restaurant. Il sera vidé.';
+  }
+
+  @override
+  String get cartReplaceConfirm => 'Vider et ajouter';
+
+  @override
+  String get productAddTooltip => 'Ajouter au panier';
+
+  @override
+  String get checkoutTitle => 'Votre commande';
+
+  @override
+  String get checkoutDeliverTo => 'Livrer à';
+
+  @override
+  String get checkoutChangeAddress => 'Changer';
+
+  @override
+  String get checkoutPayment => 'Paiement';
+
+  @override
+  String get paymentCash => 'Espèces à la livraison';
+
+  @override
+  String get paymentMobileMoney => 'Mobile Money';
+
+  @override
+  String get paymentCard => 'Carte bancaire';
+
+  @override
+  String get paymentSoon => 'Bientôt';
+
+  @override
+  String get checkoutSubtotal => 'Sous-total';
+
+  @override
+  String get checkoutDeliveryFee => 'Frais de livraison';
+
+  @override
+  String get checkoutTotal => 'Total';
+
+  @override
+  String get checkoutToConfirm => 'À confirmer';
+
+  @override
+  String checkoutConfirm(String total) {
+    return 'Commander · $total';
+  }
+
+  @override
+  String get checkoutNeedAddress =>
+      'Ajoutez une adresse de livraison pour commander.';
+
+  @override
+  String get checkoutEmpty => 'Votre panier est vide';
+
+  @override
+  String get checkoutUpdateCart => 'Mettre à jour le panier';
+
+  @override
+  String get issueRestaurantClosed => 'Le restaurant est fermé pour le moment.';
+
+  @override
+  String issueProductUnavailable(String name) {
+    return '« $name » n\'est plus disponible.';
+  }
+
+  @override
+  String get failurePriceChanged =>
+      'Les prix ont changé : vérifiez le nouveau total.';
+
+  @override
+  String get failureCartChanged =>
+      'Votre panier a changé : vérifiez-le avant de commander.';
+
+  @override
+  String get failurePaymentUnavailable =>
+      'Ce moyen de paiement n\'est pas encore disponible.';
+
+  @override
+  String get failureAlreadyAccepted =>
+      'Le restaurant prépare déjà votre commande. Contactez le support.';
+
+  @override
+  String get failureInvalidTransition =>
+      'Cette action n\'est plus possible : la commande a changé.';
+
+  @override
+  String get failureCartEmpty => 'Votre panier est vide.';
+
+  @override
+  String get ordersTitle => 'Mes commandes';
+
+  @override
+  String get ordersEmpty => 'Aucune commande pour le moment';
+
+  @override
+  String get ordersEmptyBody => 'Vos commandes de repas apparaîtront ici.';
+
+  @override
+  String get ordersActive => 'En cours';
+
+  @override
+  String get ordersPast => 'Historique';
+
+  @override
+  String orderNumber(String number) {
+    return 'Commande $number';
+  }
+
+  @override
+  String get orderItemsTitle => 'Articles';
+
+  @override
+  String get orderTimeline => 'Suivi';
+
+  @override
+  String get orderDeliveryTitle => 'Livraison';
+
+  @override
+  String get orderCancel => 'Annuler la commande';
+
+  @override
+  String get orderCancelTitle => 'Annuler cette commande ?';
+
+  @override
+  String get orderCancelBody =>
+      'Le restaurant n\'a pas encore accepté : rien ne vous sera facturé.';
+
+  @override
+  String get orderCancelled => 'Commande annulée.';
+
+  @override
+  String orderReason(String reason) {
+    return 'Motif : $reason';
+  }
+
+  @override
+  String get orderNoResponse => 'Sans réponse du restaurant';
+
+  @override
+  String get orderCancelledByCustomer => 'Annulée par le client';
+
+  @override
+  String get homeActiveOrder => 'Commande en cours';
+
+  @override
+  String get restaurantOrders => 'Commandes';
+
+  @override
+  String get ordersNew => 'Nouvelles';
+
+  @override
+  String get ordersInProgress => 'En cours';
+
+  @override
+  String get ordersDone => 'Terminées';
+
+  @override
+  String get ordersNewEmpty =>
+      'Aucune nouvelle commande. Elles apparaissent ici en direct.';
+
+  @override
+  String get ordersInProgressEmpty => 'Aucune commande en cours.';
+
+  @override
+  String get ordersDoneEmpty => 'Aucune commande terminée aujourd\'hui.';
+
+  @override
+  String get orderAccept => 'Accepter';
+
+  @override
+  String get orderReject => 'Refuser';
+
+  @override
+  String get orderStartPreparing => 'Lancer la préparation';
+
+  @override
+  String get orderMarkReady => 'Commande prête';
+
+  @override
+  String orderAnswerWithin(int minutes) {
+    return 'Répondre sous $minutes min';
+  }
+
+  @override
+  String get orderWaitingCourier => 'En attente du livreur';
+
+  @override
+  String get rejectTitle => 'Motif du refus';
+
+  @override
+  String get rejectUnavailable => 'Produit indisponible';
+
+  @override
+  String get rejectClosing => 'Fermeture du restaurant';
+
+  @override
+  String get rejectBusy => 'Trop de commandes';
+
+  @override
+  String get rejectOther => 'Autre motif';
+
+  @override
+  String get todaySales => 'Ventes du jour';
+
+  @override
+  String get todayCommission => 'Commission';
+
+  @override
+  String get todayNet => 'Net';
+
+  @override
+  String get newOrderAlert => 'Nouvelle commande !';
+
+  @override
+  String get orderStatusAwaitingPayment => 'Paiement en attente';
+
+  @override
+  String get orderStatusPending => 'En attente de confirmation';
+
+  @override
+  String get orderStatusAccepted => 'Acceptée';
+
+  @override
+  String get orderStatusPreparing => 'En préparation';
+
+  @override
+  String get orderStatusReady => 'Prête';
+
+  @override
+  String get orderStatusSearchingCourier => 'Recherche d\'un livreur';
+
+  @override
+  String get orderStatusCourierAssigned => 'Livreur assigné';
+
+  @override
+  String get orderStatusPickedUp => 'Récupérée';
+
+  @override
+  String get orderStatusInTransit => 'En route';
+
+  @override
+  String get orderStatusDelivered => 'Livrée';
+
+  @override
+  String get orderStatusRejected => 'Refusée';
+
+  @override
+  String get orderStatusCancelled => 'Annulée';
+
+  @override
+  String get orderStatusFailed => 'Échec de livraison';
 }

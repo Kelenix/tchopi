@@ -6,6 +6,30 @@
 
 ---
 
+## ADR-020 — Commande de repas : choix de mise en œuvre (Inc-5)
+
+- **Date** : 2026-10-18
+- **Statut** : Accepté
+- **Décideur** : Claude (rôle : backend-engineer / flutter-engineer)
+- **Contexte** : Stories ORD-01 à ORD-13 ; paiements, livreurs et notifications arrivent aux Inc-7 à 13.
+- **Décision** :
+  - Tables `orders`, `order_items`, `order_events` complètes dès maintenant (statuts colis et livreur inclus) ;
+    positions figées en latitude / longitude. Aucune écriture directe : devis, création, annulation et transitions par
+    fonctions serveur ; chronologie écrite dans la même transaction.
+  - Devis serveur (`quote_food_order`) : les écarts (fermé, indisponible) sont rendus au client, la création les refuse
+    (`cart_changed`) ; total comparé à celui affiché (`price_changed`) ; clé d'idempotence par tentative.
+  - **Espèces seulement** pour l'instant (`payment_unavailable` sinon) ; Mobile Money et carte aux Inc-11 / 12.
+  - Le contrôle « aucun livreur en ligne » est **reporté à l'Inc-7** : sans mise en ligne des livreurs, il bloquerait toutes les commandes.
+  - Refus automatique après 10 min sans réponse : tâche `pg_cron` chaque minute.
+  - Restaurant : écran Commandes en temps réel (Realtime filtré par la RLS), alerte par vibration répétée et bandeau ;
+    **le son arrive avec les notifications (Inc-9)**. La remise au livreur (`ready → picked_up`) arrive à l'Inc-8.
+  - Panier sur le téléphone (un seul restaurant), conservé entre deux ouvertures ; prix recalculés par le serveur.
+- **Reporté** : recherche de restaurants (ORD-03, « Should »), frais et distance sur chaque carte restaurant (ORD-02),
+  bouton d'appel du support (numéro à fournir).
+- **Impact** : métier / sécurité (moyen).
+
+---
+
 ## ADR-019 — Thème clair imposé, cartes OpenStreetMap, accueil client (refonte visuelle)
 
 - **Date** : 2026-10-18

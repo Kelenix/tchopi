@@ -8,7 +8,7 @@
 - **Phase courante** : 4 — Implémentation · Inc-0 (socle) livré, sauf déploiement VPS (accès non fourni)
 - **Dernière mise à jour** : 2026-10-18
 - **Santé** : 🟢 OK · accès VPS et dépôt GitHub non fournis
-- **Prochaine action** : Inc-5 (commande de repas)
+- **Prochaine action** : Inc-6 (livraison de colis)
 - **Plan de référence** : `docs/plan-de-realisation.md` · Design : `docs/design/design-system.md`
 - **Maquette** : `docs/design/maquette.html` — https://claude.ai/artifact/9GyaG6F34CkTe1qQpsy1cP (privée)
 
@@ -25,7 +25,7 @@ Flutter 3.41.9 · Dart 3.11.5 · Supabase CLI 2.116.0 · Docker 29.8.2 · Java 2
 | 1 — Définition produit      | ✅ fait | `docs/product/user-stories.md` (60 stories), `docs/product/screens.md` (45 fiches) |
 | 2 — Planification           | ✅ fait | Backlog, jalons, chemin critique ci-dessous ; risques : plan §10 |
 | 3 — Architecture & design   | ✅ fait | Architecture, conception, données, design system ; maquette v1 validée |
-| 4 — Implémentation          | 🔄 en cours | Inc-0 à Inc-4 livrés ; app unique (ADR-016) |
+| 4 — Implémentation          | 🔄 en cours | Inc-0 à Inc-5 livrés ; app unique (ADR-016) |
 | 5 — Qualité & performance   | ⬜ à faire | Scénarios S1–S6 |
 | 6 — Publication (stores)    | ⬜ à faire | |
 | 7 — Documentation           | ⬜ à faire | |
@@ -42,7 +42,7 @@ Flutter 3.41.9 · Dart 3.11.5 · Supabase CLI 2.116.0 · Docker 29.8.2 · Java 2
 | Inc-2 | Zones + tarifs (admin), adresses client | ADR-01 à 07 | §2.2, §5.6 | M | ✅ |
 | Inc-3 | Profils livreurs, validation admin, gestion utilisateurs | COU-01 à 04, ADM-02 | §2.3, §6.D | M | ✅ |
 | Inc-4 | Restaurants et catalogue | RES-01 à 05 | §3.1, §6.C | M | ✅ |
-| Inc-5 | Commande de repas (client + restaurant) | ORD-01 à 13 | §3.1, §6.A | L | ⬜ |
+| Inc-5 | Commande de repas (client + restaurant) | ORD-01 à 13 | §3.1, §6.A | L | ✅ (ORD-03 reporté) |
 | Inc-6 | Livraison de colis | PAR-01 à 05 | §3.2 | M | ⬜ |
 | Inc-7 | En ligne, attribution, supervision, paramètres | COU-05, DIS-01 à 04, ADM-03, ADM-05 | §4.1 | L | ⬜ |
 | Inc-8 | Mission livreur, code de livraison, échecs | MIS-01 à 10 | §4.2, §4.5 | L | ⬜ |
@@ -86,6 +86,13 @@ validation de la maquette → code des écrans à partir de l'Inc-1. Registre de
 - voir `docs/manual-tasks.md` (priorité : compte marchand de paiement, à démarrer tôt)
 
 ## Journal de session (résumé court, le plus récent en haut)
+
+- 2026-10-18 — Inc-5 (branche feat/inc-5-commandes, ADR-020) : commandes, devis et création serveur, machine à états,
+  refus auto (pg_cron), temps réel ; panier, validation, suivi, historique ; écran Commandes du restaurant.
+  Preuves : analyse 0 problème ; 35 + 22 tests Flutter ; pgTAP 94/94 ; 5 tests d'intégration app verts dont commande
+  réelle (double envoi, réception en direct, acceptation) ; parcours vérifié dans Chrome (ajout au panier, devis 1 525 F
+  de frais, commande R-GWG8R, réception et acceptation côté restaurant, statut mis à jour sur l'accueil).
+  Note : le test d'intégration core « téléphone » échoue tant que le compte 07 00 00 00 01 existe (passe après db reset).
 
 - 2026-10-18 — Refonte visuelle après retour utilisateur (ADR-019) : thème clair imposé, bienvenue claire, carte
   OpenStreetMap (flutter_map) avec épingle animée, accueil client et fiche restaurant, motifs teintés sans photo,

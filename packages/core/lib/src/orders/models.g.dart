@@ -1,0 +1,147 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'models.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+_Order _$OrderFromJson(Map<String, dynamic> json) => _Order(
+  id: json['id'] as String,
+  number: json['number'] as String,
+  status: $enumDecode(_$OrderStatusEnumMap, json['status']),
+  restaurantId: json['restaurant_id'] as String?,
+  pickupName: json['pickup_name'] as String,
+  pickupPhone: json['pickup_phone'] as String?,
+  recipientName: json['recipient_name'] as String,
+  recipientPhone: json['recipient_phone'] as String?,
+  dropoffDistrict: json['dropoff_district'] as String,
+  dropoffLandmark: json['dropoff_landmark'] as String,
+  dropoffInstructions: json['dropoff_instructions'] as String?,
+  subtotal: (json['subtotal'] as num).toInt(),
+  deliveryFee: (json['delivery_fee'] as num).toInt(),
+  total: (json['total'] as num).toInt(),
+  commissionAmount: (json['commission_amount'] as num?)?.toInt() ?? 0,
+  currency: json['currency'] as String? ?? 'XOF',
+  paymentMethod: $enumDecode(_$PaymentMethodEnumMap, json['payment_method']),
+  createdAt: DateTime.parse(json['created_at'] as String),
+  closeReason: json['close_reason'] as String?,
+  items:
+      (json['order_items'] as List<dynamic>?)
+          ?.map((e) => OrderItem.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
+);
+
+Map<String, dynamic> _$OrderToJson(_Order instance) => <String, dynamic>{
+  'id': instance.id,
+  'number': instance.number,
+  'status': _$OrderStatusEnumMap[instance.status]!,
+  'restaurant_id': instance.restaurantId,
+  'pickup_name': instance.pickupName,
+  'pickup_phone': instance.pickupPhone,
+  'recipient_name': instance.recipientName,
+  'recipient_phone': instance.recipientPhone,
+  'dropoff_district': instance.dropoffDistrict,
+  'dropoff_landmark': instance.dropoffLandmark,
+  'dropoff_instructions': instance.dropoffInstructions,
+  'subtotal': instance.subtotal,
+  'delivery_fee': instance.deliveryFee,
+  'total': instance.total,
+  'commission_amount': instance.commissionAmount,
+  'currency': instance.currency,
+  'payment_method': _$PaymentMethodEnumMap[instance.paymentMethod]!,
+  'created_at': instance.createdAt.toIso8601String(),
+  'close_reason': instance.closeReason,
+  'order_items': instance.items,
+};
+
+const _$OrderStatusEnumMap = {
+  OrderStatus.awaitingPayment: 'awaiting_payment',
+  OrderStatus.pending: 'pending',
+  OrderStatus.accepted: 'accepted',
+  OrderStatus.preparing: 'preparing',
+  OrderStatus.ready: 'ready',
+  OrderStatus.searchingCourier: 'searching_courier',
+  OrderStatus.courierAssigned: 'courier_assigned',
+  OrderStatus.pickedUp: 'picked_up',
+  OrderStatus.inTransit: 'in_transit',
+  OrderStatus.delivered: 'delivered',
+  OrderStatus.rejected: 'rejected',
+  OrderStatus.cancelled: 'cancelled',
+  OrderStatus.failed: 'failed',
+};
+
+const _$PaymentMethodEnumMap = {
+  PaymentMethod.cash: 'cash',
+  PaymentMethod.mobileMoney: 'mobile_money',
+  PaymentMethod.card: 'card',
+};
+
+_OrderItem _$OrderItemFromJson(Map<String, dynamic> json) => _OrderItem(
+  orderId: json['order_id'] as String,
+  name: json['name'] as String,
+  unitPrice: (json['unit_price'] as num).toInt(),
+  quantity: (json['quantity'] as num).toInt(),
+  lineTotal: (json['line_total'] as num).toInt(),
+);
+
+Map<String, dynamic> _$OrderItemToJson(_OrderItem instance) =>
+    <String, dynamic>{
+      'order_id': instance.orderId,
+      'name': instance.name,
+      'unit_price': instance.unitPrice,
+      'quantity': instance.quantity,
+      'line_total': instance.lineTotal,
+    };
+
+_OrderEvent _$OrderEventFromJson(Map<String, dynamic> json) => _OrderEvent(
+  status: $enumDecodeNullable(_$OrderStatusEnumMap, json['status']),
+  actorRole: json['actor_role'] as String,
+  reason: json['reason'] as String?,
+  createdAt: DateTime.parse(json['created_at'] as String),
+);
+
+Map<String, dynamic> _$OrderEventToJson(_OrderEvent instance) =>
+    <String, dynamic>{
+      'status': _$OrderStatusEnumMap[instance.status],
+      'actor_role': instance.actorRole,
+      'reason': instance.reason,
+      'created_at': instance.createdAt.toIso8601String(),
+    };
+
+_FoodQuote _$FoodQuoteFromJson(Map<String, dynamic> json) => _FoodQuote(
+  subtotal: (json['subtotal'] as num).toInt(),
+  deliveryFee: (json['delivery_fee'] as num).toInt(),
+  total: (json['total'] as num).toInt(),
+  distanceM: (json['distance_m'] as num).toInt(),
+  currency: json['currency'] as String? ?? 'XOF',
+  issues:
+      (json['issues'] as List<dynamic>?)
+          ?.map((e) => QuoteIssue.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
+);
+
+Map<String, dynamic> _$FoodQuoteToJson(_FoodQuote instance) =>
+    <String, dynamic>{
+      'subtotal': instance.subtotal,
+      'delivery_fee': instance.deliveryFee,
+      'total': instance.total,
+      'distance_m': instance.distanceM,
+      'currency': instance.currency,
+      'issues': instance.issues,
+    };
+
+_QuoteIssue _$QuoteIssueFromJson(Map<String, dynamic> json) => _QuoteIssue(
+  issue: json['issue'] as String,
+  productId: json['product_id'] as String?,
+  name: json['name'] as String?,
+);
+
+Map<String, dynamic> _$QuoteIssueToJson(_QuoteIssue instance) =>
+    <String, dynamic>{
+      'issue': instance.issue,
+      'product_id': instance.productId,
+      'name': instance.name,
+    };

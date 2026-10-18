@@ -25,6 +25,12 @@ String failureMessage(AppLocalizations l10n, Object? error) {
     'not_found' => l10n.failureNotFound,
     'cannot_target_self' => l10n.failureCannotTargetSelf,
     'invalid_identifier' => l10n.failureInvalidIdentifier,
+    'price_changed' => l10n.failurePriceChanged,
+    'cart_changed' => l10n.failureCartChanged,
+    'cart_empty' => l10n.failureCartEmpty,
+    'payment_unavailable' => l10n.failurePaymentUnavailable,
+    'already_accepted' => l10n.failureAlreadyAccepted,
+    'invalid_transition' => l10n.failureInvalidTransition,
     _ => l10n.failureUnknown,
   };
 }

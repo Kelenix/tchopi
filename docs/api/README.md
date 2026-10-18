@@ -63,6 +63,20 @@ Règle mot de passe (serveur) : 8 caractères minimum, lettres et chiffres.
 | `POST /rest/v1/rpc/admin_invite_member` / `admin_remove_member` | admin | `{ p_restaurant_id, p_email ou p_phone }` / `{ p_member_id }` |
 | `POST /rest/v1/rpc/my_roles` | connecté | `{ is_admin, courier_status, restaurant_ids }` |
 
+## Commandes de repas — Inc-5
+
+| Ressource / action | Accès | Description |
+|--------------------|-------|-------------|
+| `POST /rest/v1/rpc/quote_food_order` | client | `{ p_restaurant_id, p_address_id, p_items: [{ product_id, quantity 1–50 }] }` → `subtotal`, `delivery_fee`, `total`, `distance_m`, `currency`, `items`, `issues` (`restaurant_closed`, `product_unavailable`) |
+| `POST /rest/v1/rpc/place_food_order` | client | `{ p_restaurant_id, p_address_id, p_items, p_payment_method: 'cash', p_expected_total, p_idempotency_key (uuid) }` → la commande ; même clé = même commande |
+| `POST /rest/v1/rpc/cancel_order` | client (en attente), admin (motif) | `{ p_order_id, p_reason }` |
+| `POST /rest/v1/rpc/transition_order` | gérant, admin | `{ p_order_id, p_to_status, p_reason }` : `pending` → `accepted` ou `rejected` (motif), `accepted` → `preparing` → `ready` |
+| `GET /rest/v1/orders?select=*,order_items(*)` | client (siennes), gérant (son restaurant), admin | Montants et adresses figés ; aucune écriture directe |
+| `GET /rest/v1/order_events?order_id=eq.<id>` | idem | Chronologie des statuts |
+| Temps réel `orders`, `order_events` | idem (RLS) | Nouvelles commandes côté restaurant, suivi côté client |
+
+Refus automatique « sans réponse du restaurant » (`close_reason = no_response`) 10 minutes après la commande.
+
 ## Codes d'erreur stables
 
 | Code | Signification |
@@ -84,3 +98,9 @@ Règle mot de passe (serveur) : 8 caractères minimum, lettres et chiffres.
 | `not_found` | Élément introuvable |
 | `cannot_target_self` | Action interdite sur son propre compte |
 | `invalid_identifier` | Email ou numéro invalide |
+| `cart_empty` / `invalid_quantity` | Panier vide ou quantité hors limites |
+| `cart_changed` | Restaurant fermé ou produit indisponible : refaire le devis |
+| `price_changed` | Le total diffère de celui affiché : refaire le devis |
+| `payment_unavailable` | Moyen de paiement pas encore proposé |
+| `already_accepted` | Annulation impossible : le restaurant a accepté |
+| `invalid_transition` | Changement de statut non autorisé |

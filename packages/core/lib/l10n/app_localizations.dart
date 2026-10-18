@@ -1381,7 +1381,7 @@ abstract class AppLocalizations {
   /// No description provided for @spaceRestaurantBody.
   ///
   /// In fr, this message translates to:
-  /// **'Mon menu, mes horaires, puis les commandes reçues.'**
+  /// **'Commandes reçues en direct, menu et horaires.'**
   String get spaceRestaurantBody;
 
   /// No description provided for @restaurantMenu.
@@ -1846,12 +1846,6 @@ abstract class AppLocalizations {
   /// **'Le menu de ce restaurant arrive bientôt.'**
   String get restaurantMenuSoon;
 
-  /// No description provided for @restaurantOrderSoon.
-  ///
-  /// In fr, this message translates to:
-  /// **'La commande en ligne ouvre très bientôt.'**
-  String get restaurantOrderSoon;
-
   /// No description provided for @menuOther.
   ///
   /// In fr, this message translates to:
@@ -1869,6 +1863,498 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Maintenant'**
   String get factNow;
+
+  /// No description provided for @cartView.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir le panier'**
+  String get cartView;
+
+  /// No description provided for @cartItems.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 article} other{{count} articles}}'**
+  String cartItems(int count);
+
+  /// No description provided for @cartReplaceTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commencer un nouveau panier ?'**
+  String get cartReplaceTitle;
+
+  /// No description provided for @cartReplaceBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre panier contient des plats de {restaurant}. Il sera vidé.'**
+  String cartReplaceBody(String restaurant);
+
+  /// No description provided for @cartReplaceConfirm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vider et ajouter'**
+  String get cartReplaceConfirm;
+
+  /// No description provided for @productAddTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter au panier'**
+  String get productAddTooltip;
+
+  /// No description provided for @checkoutTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre commande'**
+  String get checkoutTitle;
+
+  /// No description provided for @checkoutDeliverTo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livrer à'**
+  String get checkoutDeliverTo;
+
+  /// No description provided for @checkoutChangeAddress.
+  ///
+  /// In fr, this message translates to:
+  /// **'Changer'**
+  String get checkoutChangeAddress;
+
+  /// No description provided for @checkoutPayment.
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement'**
+  String get checkoutPayment;
+
+  /// No description provided for @paymentCash.
+  ///
+  /// In fr, this message translates to:
+  /// **'Espèces à la livraison'**
+  String get paymentCash;
+
+  /// No description provided for @paymentMobileMoney.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mobile Money'**
+  String get paymentMobileMoney;
+
+  /// No description provided for @paymentCard.
+  ///
+  /// In fr, this message translates to:
+  /// **'Carte bancaire'**
+  String get paymentCard;
+
+  /// No description provided for @paymentSoon.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bientôt'**
+  String get paymentSoon;
+
+  /// No description provided for @checkoutSubtotal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sous-total'**
+  String get checkoutSubtotal;
+
+  /// No description provided for @checkoutDeliveryFee.
+  ///
+  /// In fr, this message translates to:
+  /// **'Frais de livraison'**
+  String get checkoutDeliveryFee;
+
+  /// No description provided for @checkoutTotal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Total'**
+  String get checkoutTotal;
+
+  /// No description provided for @checkoutToConfirm.
+  ///
+  /// In fr, this message translates to:
+  /// **'À confirmer'**
+  String get checkoutToConfirm;
+
+  /// No description provided for @checkoutConfirm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commander · {total}'**
+  String checkoutConfirm(String total);
+
+  /// No description provided for @checkoutNeedAddress.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoutez une adresse de livraison pour commander.'**
+  String get checkoutNeedAddress;
+
+  /// No description provided for @checkoutEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre panier est vide'**
+  String get checkoutEmpty;
+
+  /// No description provided for @checkoutUpdateCart.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mettre à jour le panier'**
+  String get checkoutUpdateCart;
+
+  /// No description provided for @issueRestaurantClosed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le restaurant est fermé pour le moment.'**
+  String get issueRestaurantClosed;
+
+  /// No description provided for @issueProductUnavailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'« {name} » n\'est plus disponible.'**
+  String issueProductUnavailable(String name);
+
+  /// No description provided for @failurePriceChanged.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les prix ont changé : vérifiez le nouveau total.'**
+  String get failurePriceChanged;
+
+  /// No description provided for @failureCartChanged.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre panier a changé : vérifiez-le avant de commander.'**
+  String get failureCartChanged;
+
+  /// No description provided for @failurePaymentUnavailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce moyen de paiement n\'est pas encore disponible.'**
+  String get failurePaymentUnavailable;
+
+  /// No description provided for @failureAlreadyAccepted.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le restaurant prépare déjà votre commande. Contactez le support.'**
+  String get failureAlreadyAccepted;
+
+  /// No description provided for @failureInvalidTransition.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette action n\'est plus possible : la commande a changé.'**
+  String get failureInvalidTransition;
+
+  /// No description provided for @failureCartEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre panier est vide.'**
+  String get failureCartEmpty;
+
+  /// No description provided for @ordersTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes commandes'**
+  String get ordersTitle;
+
+  /// No description provided for @ordersEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune commande pour le moment'**
+  String get ordersEmpty;
+
+  /// No description provided for @ordersEmptyBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vos commandes de repas apparaîtront ici.'**
+  String get ordersEmptyBody;
+
+  /// No description provided for @ordersActive.
+  ///
+  /// In fr, this message translates to:
+  /// **'En cours'**
+  String get ordersActive;
+
+  /// No description provided for @ordersPast.
+  ///
+  /// In fr, this message translates to:
+  /// **'Historique'**
+  String get ordersPast;
+
+  /// No description provided for @orderNumber.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande {number}'**
+  String orderNumber(String number);
+
+  /// No description provided for @orderItemsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Articles'**
+  String get orderItemsTitle;
+
+  /// No description provided for @orderTimeline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Suivi'**
+  String get orderTimeline;
+
+  /// No description provided for @orderDeliveryTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraison'**
+  String get orderDeliveryTitle;
+
+  /// No description provided for @orderCancel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler la commande'**
+  String get orderCancel;
+
+  /// No description provided for @orderCancelTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler cette commande ?'**
+  String get orderCancelTitle;
+
+  /// No description provided for @orderCancelBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le restaurant n\'a pas encore accepté : rien ne vous sera facturé.'**
+  String get orderCancelBody;
+
+  /// No description provided for @orderCancelled.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande annulée.'**
+  String get orderCancelled;
+
+  /// No description provided for @orderReason.
+  ///
+  /// In fr, this message translates to:
+  /// **'Motif : {reason}'**
+  String orderReason(String reason);
+
+  /// No description provided for @orderNoResponse.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sans réponse du restaurant'**
+  String get orderNoResponse;
+
+  /// No description provided for @orderCancelledByCustomer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annulée par le client'**
+  String get orderCancelledByCustomer;
+
+  /// No description provided for @homeActiveOrder.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande en cours'**
+  String get homeActiveOrder;
+
+  /// No description provided for @restaurantOrders.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commandes'**
+  String get restaurantOrders;
+
+  /// No description provided for @ordersNew.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelles'**
+  String get ordersNew;
+
+  /// No description provided for @ordersInProgress.
+  ///
+  /// In fr, this message translates to:
+  /// **'En cours'**
+  String get ordersInProgress;
+
+  /// No description provided for @ordersDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Terminées'**
+  String get ordersDone;
+
+  /// No description provided for @ordersNewEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune nouvelle commande. Elles apparaissent ici en direct.'**
+  String get ordersNewEmpty;
+
+  /// No description provided for @ordersInProgressEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune commande en cours.'**
+  String get ordersInProgressEmpty;
+
+  /// No description provided for @ordersDoneEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune commande terminée aujourd\'hui.'**
+  String get ordersDoneEmpty;
+
+  /// No description provided for @orderAccept.
+  ///
+  /// In fr, this message translates to:
+  /// **'Accepter'**
+  String get orderAccept;
+
+  /// No description provided for @orderReject.
+  ///
+  /// In fr, this message translates to:
+  /// **'Refuser'**
+  String get orderReject;
+
+  /// No description provided for @orderStartPreparing.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lancer la préparation'**
+  String get orderStartPreparing;
+
+  /// No description provided for @orderMarkReady.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande prête'**
+  String get orderMarkReady;
+
+  /// No description provided for @orderAnswerWithin.
+  ///
+  /// In fr, this message translates to:
+  /// **'Répondre sous {minutes} min'**
+  String orderAnswerWithin(int minutes);
+
+  /// No description provided for @orderWaitingCourier.
+  ///
+  /// In fr, this message translates to:
+  /// **'En attente du livreur'**
+  String get orderWaitingCourier;
+
+  /// No description provided for @rejectTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Motif du refus'**
+  String get rejectTitle;
+
+  /// No description provided for @rejectUnavailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Produit indisponible'**
+  String get rejectUnavailable;
+
+  /// No description provided for @rejectClosing.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fermeture du restaurant'**
+  String get rejectClosing;
+
+  /// No description provided for @rejectBusy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Trop de commandes'**
+  String get rejectBusy;
+
+  /// No description provided for @rejectOther.
+  ///
+  /// In fr, this message translates to:
+  /// **'Autre motif'**
+  String get rejectOther;
+
+  /// No description provided for @todaySales.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ventes du jour'**
+  String get todaySales;
+
+  /// No description provided for @todayCommission.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commission'**
+  String get todayCommission;
+
+  /// No description provided for @todayNet.
+  ///
+  /// In fr, this message translates to:
+  /// **'Net'**
+  String get todayNet;
+
+  /// No description provided for @newOrderAlert.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle commande !'**
+  String get newOrderAlert;
+
+  /// No description provided for @orderStatusAwaitingPayment.
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement en attente'**
+  String get orderStatusAwaitingPayment;
+
+  /// No description provided for @orderStatusPending.
+  ///
+  /// In fr, this message translates to:
+  /// **'En attente de confirmation'**
+  String get orderStatusPending;
+
+  /// No description provided for @orderStatusAccepted.
+  ///
+  /// In fr, this message translates to:
+  /// **'Acceptée'**
+  String get orderStatusAccepted;
+
+  /// No description provided for @orderStatusPreparing.
+  ///
+  /// In fr, this message translates to:
+  /// **'En préparation'**
+  String get orderStatusPreparing;
+
+  /// No description provided for @orderStatusReady.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prête'**
+  String get orderStatusReady;
+
+  /// No description provided for @orderStatusSearchingCourier.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recherche d\'un livreur'**
+  String get orderStatusSearchingCourier;
+
+  /// No description provided for @orderStatusCourierAssigned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livreur assigné'**
+  String get orderStatusCourierAssigned;
+
+  /// No description provided for @orderStatusPickedUp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Récupérée'**
+  String get orderStatusPickedUp;
+
+  /// No description provided for @orderStatusInTransit.
+  ///
+  /// In fr, this message translates to:
+  /// **'En route'**
+  String get orderStatusInTransit;
+
+  /// No description provided for @orderStatusDelivered.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livrée'**
+  String get orderStatusDelivered;
+
+  /// No description provided for @orderStatusRejected.
+  ///
+  /// In fr, this message translates to:
+  /// **'Refusée'**
+  String get orderStatusRejected;
+
+  /// No description provided for @orderStatusCancelled.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annulée'**
+  String get orderStatusCancelled;
+
+  /// No description provided for @orderStatusFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Échec de livraison'**
+  String get orderStatusFailed;
 }
 
 class _AppLocalizationsDelegate

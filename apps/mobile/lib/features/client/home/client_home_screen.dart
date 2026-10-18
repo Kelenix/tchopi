@@ -6,6 +6,8 @@ import 'package:go_router/go_router.dart';
 import '../../../shared/restaurant_cover.dart';
 import '../addresses/application/addresses_providers.dart';
 import '../addresses/presentation/addresses_screen.dart';
+import '../../orders/orders_providers.dart';
+import '../../orders/presentation/orders_screen.dart';
 import 'catalog_providers.dart';
 import 'restaurant_detail_screen.dart';
 
@@ -35,7 +37,10 @@ class _ClientHomeScreenState extends ConsumerState<ClientHomeScreen> {
       body: SafeArea(
         bottom: false,
         child: RefreshIndicator(
-          onRefresh: () => ref.refresh(catalogRestaurantsProvider.future),
+          onRefresh: () {
+            ref.invalidate(myOrdersProvider);
+            return ref.refresh(catalogRestaurantsProvider.future);
+          },
           child: CustomScrollView(
             slivers: [
               SliverPadding(
@@ -64,6 +69,7 @@ class _ClientHomeScreenState extends ConsumerState<ClientHomeScreen> {
                     const SizedBox(height: Space.xs),
                     Text(l10n.homeHeadline, style: text.displaySmall),
                     const SizedBox(height: Space.xxl),
+                    const _ActiveOrders(),
                     IntrinsicHeight(
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -495,6 +501,35 @@ class _Message extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Commandes en cours en tête de l'accueil (ORD-01).
+class _ActiveOrders extends ConsumerWidget {
+  const _ActiveOrders();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final active = [
+      for (final order in ref.watch(myOrdersProvider).value ?? const <Order>[])
+        if (!order.status.isClosed) order,
+    ];
+    if (active.isEmpty) return const SizedBox.shrink();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          AppLocalizations.of(context).homeActiveOrder,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        const SizedBox(height: Space.sm),
+        for (final order in active) ...[
+          OrderTile(order: order),
+          const SizedBox(height: Space.md),
+        ],
+        const SizedBox(height: Space.lg),
+      ],
     );
   }
 }

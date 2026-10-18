@@ -19,17 +19,20 @@ dependencies:
   geolocator: ^14.1.1
   go_router: ^17.5.0
   image_picker: ^1.2.4
+  intl: ^0.20.2
   latlong2: ^0.10.1
   riverpod_annotation: ^4.0.2
   shared_preferences: ^2.5.6
   supabase_flutter: ^2.18.3
   url_launcher: ^6.3.3
+  uuid: ^4.5.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
   riverpod_generator: ^4.0.3
+  shared_preferences_platform_interface: ^2.4.1
   build_runner: ^2.15.1
 
 flutter:

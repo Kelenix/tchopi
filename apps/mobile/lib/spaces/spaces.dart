@@ -7,7 +7,7 @@ import '../features/admin/zones/presentation/zones_screen.dart';
 import '../features/client/home/client_home_screen.dart';
 import '../features/courier/profile/presentation/courier_profile_screen.dart';
 import '../features/courier/profile/presentation/courier_status_screen.dart';
-import '../features/restaurant/presentation/menu_screen.dart';
+import '../features/restaurant/presentation/restaurant_orders_screen.dart';
 
 part 'spaces.g.dart';
 
@@ -15,7 +15,7 @@ part 'spaces.g.dart';
 enum AppSpace {
   client(Icons.shopping_bag_outlined, ClientHomeScreen.path),
   courier(Icons.two_wheeler, CourierStatusScreen.path),
-  restaurant(Icons.storefront_outlined, MenuScreen.path),
+  restaurant(Icons.storefront_outlined, RestaurantOrdersScreen.path),
   admin(Icons.admin_panel_settings_outlined, ZonesScreen.path);
 
   const AppSpace(this.icon, this.home);

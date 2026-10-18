@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'menu_screen.dart';
+import 'restaurant_orders_screen.dart';
 import 'restaurant_profile_screen.dart';
 
-/// Structure de l'espace Restaurant : barre basse Menu / Profil et horaires (les commandes arrivent à l'Inc-5).
+/// Structure de l'espace Restaurant : barre basse Commandes / Menu / Profil et horaires.
 class RestaurantScaffold extends StatelessWidget {
   const RestaurantScaffold({
     super.key,
@@ -20,7 +21,11 @@ class RestaurantScaffold extends StatelessWidget {
   final Widget body;
   final Widget? fab;
 
-  static const _tabs = [MenuScreen.path, RestaurantProfileScreen.path];
+  static const _tabs = [
+    RestaurantOrdersScreen.path,
+    MenuScreen.path,
+    RestaurantProfileScreen.path,
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +48,10 @@ class RestaurantScaffold extends StatelessWidget {
         selectedIndex: _tabs.indexOf(current),
         onDestinationSelected: (index) => context.go(_tabs[index]),
         destinations: [
+          NavigationDestination(
+            icon: const Icon(Icons.receipt_long_outlined),
+            label: l10n.restaurantOrders,
+          ),
           NavigationDestination(
             icon: const Icon(Icons.restaurant_menu_outlined),
             label: l10n.restaurantMenu,

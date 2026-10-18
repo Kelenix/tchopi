@@ -24,6 +24,9 @@ Le code SMS n'est demandé qu'à l'inscription. Aucun vrai SMS n'est envoyé en 
 - **Gérant de restaurant** : en admin, Restaurants → un restaurant → « Inviter un gérant » → `0700000002`.
   Le compte de test se déconnecte / reconnecte : l'espace Restaurant apparaît (Compte → Espaces).
 
+Le compte de test `07 00 00 00 02` est aussi **gérant du Grill du Plateau** (Compte → Changer d'espace → Restaurant)
+pour tester la réception des commandes.
+
 ## Restaurants de démonstration
 
 Maquis Chez Tante (ouvert), Le Grill du Plateau (ouvert), Pâtisserie Akwaba (ouvert de 6 h 30 à 9 h) et leurs menus,
