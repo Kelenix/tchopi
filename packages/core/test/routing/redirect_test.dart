@@ -15,14 +15,14 @@ String? redirect(
   bool signedIn = true,
   AsyncValue<Profile?> profile = const AsyncData(complete),
   AsyncValue<AccountRoles?> roles = const AsyncData(AccountRoles()),
-  bool requiresAdmin = false,
+  String? Function(String, AccountRoles)? roleRedirect,
 }) => resolveRedirect(
   location: location,
   isSignedIn: signedIn,
   profile: profile,
   roles: roles,
-  requiresAdmin: requiresAdmin,
   home: AppRoutes.account,
+  roleRedirect: roleRedirect,
 );
 
 void main() {
@@ -59,18 +59,21 @@ void main() {
     expect(redirect(AppRoutes.reset), isNull);
   });
 
-  test('back-office : réservé aux admins', () {
-    expect(
-      redirect(AppRoutes.account, requiresAdmin: true),
-      AppRoutes.restricted,
-    );
+  test("règle propre à l'app : appliquée une fois le compte prêt", () {
+    String? adminOnly(String location, AccountRoles roles) =>
+        location.startsWith('/admin') && !roles.isAdmin ? '/space' : null;
+    expect(redirect('/admin/zones', roleRedirect: adminOnly), '/space');
     expect(
       redirect(
-        AppRoutes.account,
-        requiresAdmin: true,
+        '/admin/zones',
+        roleRedirect: adminOnly,
         roles: const AsyncData(AccountRoles(isAdmin: true)),
       ),
       isNull,
+    );
+    expect(
+      redirect('/admin/zones', roleRedirect: adminOnly, signedIn: false),
+      AppRoutes.welcome,
     );
   });
 }

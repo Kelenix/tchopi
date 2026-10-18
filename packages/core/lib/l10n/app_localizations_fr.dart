@@ -20,21 +20,6 @@ class AppLocalizationsFr extends AppLocalizations {
       'Payez en Mobile Money, par carte ou en espèces.';
 
   @override
-  String get welcomeCourierHeadline => 'Livrez à Abidjan, à votre rythme.';
-
-  @override
-  String get welcomeCourierSubtitle =>
-      'Passez en ligne quand vous voulez et suivez vos gains au jour le jour.';
-
-  @override
-  String get welcomeBackofficeHeadline =>
-      'L\'espace des restaurants partenaires et de l\'équipe.';
-
-  @override
-  String get welcomeBackofficeSubtitle =>
-      'Recevez les commandes, tenez votre menu à jour, supervisez les livraisons.';
-
-  @override
   String get featureRestaurants => 'Restaurants du quartier';
 
   @override
@@ -42,24 +27,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get featureTracking => 'Suivi en direct';
-
-  @override
-  String get featureNearbyMissions => 'Missions près de vous';
-
-  @override
-  String get featureEarnings => 'Gains du jour visibles';
-
-  @override
-  String get featureDirections => 'Itinéraire en un geste';
-
-  @override
-  String get featureLiveOrders => 'Commandes en temps réel';
-
-  @override
-  String get featureMenu => 'Menu toujours à jour';
-
-  @override
-  String get featureSupervision => 'Supervision des livraisons';
 
   @override
   String get actionCreateAccount => 'Créer un compte';
@@ -265,13 +232,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get loginChangeDone => 'Identifiant de connexion modifié.';
-
-  @override
-  String get restrictedTitle => 'Accès réservé';
-
-  @override
-  String get restrictedBody =>
-      'Cet espace est réservé aux restaurants partenaires et à l\'équipe. Si vous gérez un restaurant partenaire, demandez votre accès à l\'équipe.';
 
   @override
   String get loadingAccount => 'Chargement de votre compte…';
@@ -533,4 +493,217 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get errorMinMax =>
       'Le plancher doit être inférieur ou égal au plafond.';
+
+  @override
+  String get courierProfileTitle => 'Devenir livreur';
+
+  @override
+  String get courierProfileEditTitle => 'Mon profil livreur';
+
+  @override
+  String get courierProfileSubtitle =>
+      'Ces informations sont vérifiées par l\'équipe avant votre première mission.';
+
+  @override
+  String get fieldZone => 'Zone de travail';
+
+  @override
+  String get fieldVehicle => 'Moyen de transport';
+
+  @override
+  String get vehicleMotorbike => 'Moto';
+
+  @override
+  String get vehicleBicycle => 'Vélo';
+
+  @override
+  String get vehicleCar => 'Voiture';
+
+  @override
+  String get vehicleOnFoot => 'À pied';
+
+  @override
+  String get fieldPlate => 'Immatriculation';
+
+  @override
+  String get fieldPhoto => 'Photo de profil';
+
+  @override
+  String get photoHint =>
+      'Visage bien visible : le client la voit pour vous reconnaître.';
+
+  @override
+  String get photoTake => 'Prendre une photo';
+
+  @override
+  String get photoChoose => 'Choisir dans la galerie';
+
+  @override
+  String get errorPhotoRequired => 'Ajoutez une photo de profil.';
+
+  @override
+  String get courierSubmit => 'Soumettre mon profil';
+
+  @override
+  String get courierStatusTitle => 'Mon compte livreur';
+
+  @override
+  String get courierPendingTitle => 'Nous vérifions votre profil';
+
+  @override
+  String get courierPendingBody =>
+      'L\'équipe valide votre profil, généralement sous 48 heures. Revenez ici pour suivre son statut.';
+
+  @override
+  String get courierApprovedTitle => 'Compte approuvé';
+
+  @override
+  String get courierApprovedBody =>
+      'Votre compte est validé. Vous pourrez passer en ligne et recevoir des missions dès l\'ouverture des missions dans l\'app.';
+
+  @override
+  String get courierRejectedTitle => 'Profil refusé';
+
+  @override
+  String courierRejectedBody(String reason) {
+    return 'Motif : $reason. Corrigez votre profil puis soumettez-le à nouveau.';
+  }
+
+  @override
+  String get courierSuspendedTitle => 'Compte suspendu';
+
+  @override
+  String courierSuspendedBody(String reason) {
+    return 'Motif : $reason. Contactez le support pour en savoir plus.';
+  }
+
+  @override
+  String get courierEditProfile => 'Modifier mon profil';
+
+  @override
+  String get courierRefresh => 'Actualiser';
+
+  @override
+  String get failureZoneUnavailable =>
+      'Cette zone n\'est plus desservie. Choisissez-en une autre.';
+
+  @override
+  String get failureCourierSuspended => 'Votre compte livreur est suspendu.';
+
+  @override
+  String get failureReasonRequired => 'Indiquez un motif.';
+
+  @override
+  String get failureNotFound => 'Élément introuvable. Actualisez la liste.';
+
+  @override
+  String get failureCannotTargetSelf =>
+      'Vous ne pouvez pas appliquer cette action à votre propre compte.';
+
+  @override
+  String get failureInvalidIdentifier => 'Email ou numéro invalide.';
+
+  @override
+  String get adminCouriers => 'Livreurs';
+
+  @override
+  String get adminUsers => 'Utilisateurs';
+
+  @override
+  String get statusPending => 'En attente';
+
+  @override
+  String get statusApproved => 'Approuvés';
+
+  @override
+  String get statusRejected => 'Refusés';
+
+  @override
+  String get statusSuspended => 'Suspendus';
+
+  @override
+  String get couriersEmpty => 'Aucun livreur dans cette catégorie';
+
+  @override
+  String get courierApprove => 'Approuver';
+
+  @override
+  String get courierReject => 'Refuser';
+
+  @override
+  String get courierSuspend => 'Suspendre';
+
+  @override
+  String get courierReactivate => 'Réactiver';
+
+  @override
+  String get courierDecisionDone => 'Décision enregistrée.';
+
+  @override
+  String get reasonTitleReject => 'Motif du refus';
+
+  @override
+  String get reasonTitleSuspend => 'Motif de la suspension';
+
+  @override
+  String get reasonField => 'Motif (transmis à la personne)';
+
+  @override
+  String get usersSearch => 'Rechercher par nom ou téléphone';
+
+  @override
+  String get usersEmpty => 'Aucun utilisateur trouvé';
+
+  @override
+  String get userSuspended => 'Suspendu';
+
+  @override
+  String get userSuspend => 'Suspendre le compte';
+
+  @override
+  String get userReactivate => 'Réactiver le compte';
+
+  @override
+  String get userChangeLogin => 'Modifier l\'identifiant de connexion';
+
+  @override
+  String get userChangeLoginField => 'Nouvel email ou numéro';
+
+  @override
+  String get userActionDone => 'Action enregistrée.';
+
+  @override
+  String get userNoName => 'Profil incomplet';
+
+  @override
+  String get spacesTitle => 'Changer d\'espace';
+
+  @override
+  String get spaceCurrent => 'Espace actuel';
+
+  @override
+  String get spaceClient => 'Client';
+
+  @override
+  String get spaceClientBody =>
+      'Commander un repas, envoyer un colis, gérer mes adresses.';
+
+  @override
+  String get spaceCourier => 'Livreur';
+
+  @override
+  String get spaceCourierBody => 'Mon profil livreur et mes missions.';
+
+  @override
+  String get spaceAdmin => 'Administration';
+
+  @override
+  String get spaceAdminBody => 'Zones et tarifs, livreurs, utilisateurs.';
+
+  @override
+  String get spaceBecomeCourier => 'Devenir livreur';
+
+  @override
+  String get spaceBecomeCourierBody =>
+      'Livrez à Abidjan à votre rythme. Votre profil est validé par l\'équipe.';
 }

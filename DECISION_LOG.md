@@ -6,6 +6,43 @@
 
 ---
 
+## ADR-017 — Livreurs et administration des comptes (Inc-3)
+
+- **Date** : 2026-10-18
+- **Statut** : Accepté
+- **Décideur** : Claude (rôle : backend-engineer / security-engineer)
+- **Contexte** : Stories COU-01 à COU-04 et ADM-02 (la mise en ligne COU-05 arrive à l'Inc-7).
+- **Décision** :
+  - Profil livreur soumis par une fonction SQL (`submit_courier_profile`) ; statut modifiable seulement par l'admin
+    (`admin_set_courier_status`, motif obligatoire pour refus et suspension) ; nouvelle validation si le moyen de
+    transport, l'immatriculation ou la zone change.
+  - Photos dans un bucket privé (2 Mo max, JPEG / PNG / WebP), chacun écrit dans son dossier, liens temporaires d'1 h.
+  - Suspension d'un compte : indicateur dans le profil (bloque les écritures) **et** blocage de connexion par Auth,
+    appliqués ensemble par la fonction serveur `admin-users` ; changement d'identifiant par l'admin dans la même fonction.
+  - Journal d'audit des décisions admin (`audit_log`), conservé même si le compte de l'admin est supprimé.
+  - Le livreur voit son statut en actualisant l'écran ; la notification push de la décision arrive avec l'Inc-9.
+- **Alternatives écartées** : suspension par simple indicateur (le compte pourrait encore se connecter) ; photos publiques.
+- **Conséquences** : décisions admin traçables ; une fonction serveur de plus à déployer sur le VPS.
+- **Impact** : sécurité / métier (moyen).
+
+---
+
+## ADR-016 — Une seule app mobile, un espace par rôle (remplace ADR-002)
+
+- **Date** : 2026-10-18
+- **Statut** : Accepté (décision utilisateur)
+- **Décideur** : Utilisateur ; mise en œuvre Claude (rôle : mobile-architect)
+- **Contexte** : L'utilisateur préfère publier une seule app plutôt que trois (Client, Livreur, Back-office).
+- **Décision** : `apps/mobile` (Android, iOS, web) : tout compte a l'espace Client ; les espaces Livreur, Restaurant et
+  Admin s'ouvrent selon `my_roles` ; écran « Changer d'espace », dernier espace mémorisé ; « Devenir livreur » depuis cet
+  écran. Les écrans existants ont été déplacés sans réécriture ; le back-end est inchangé.
+- **Alternatives écartées** : trois apps séparées (ADR-002).
+- **Conséquences** : une fiche store, une configuration Firebase ; la localisation en arrière-plan (livreurs, Inc-7) sera
+  déclarée dans l'app unique et devra être justifiée auprès de Google Play ; l'admin peut utiliser la version navigateur.
+- **Impact** : technique / métier (moyen).
+
+---
+
 ## ADR-015 — Zones, tarifs et adresses : choix de mise en œuvre (Inc-2)
 
 - **Date** : 2026-10-18
@@ -246,7 +283,7 @@
 ## ADR-002 — Monorepo Flutter : 3 applications + 1 package partagé
 
 - **Date** : 2026-10-18
-- **Statut** : Accepté (le back-office dépend de Q5 ; défaut : inclus)
+- **Statut** : Remplacé par ADR-016 (une seule app)
 - **Décideur** : Claude (rôle : mobile-architect)
 - **Contexte** : 4 interfaces (client, livreur, restaurant, admin) ; permissions minimales par app ; code commun.
 - **Décision** : Workspace Dart : `apps/client` (Android/iOS), `apps/courier` (Android/iOS), `apps/backoffice`

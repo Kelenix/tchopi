@@ -19,6 +19,12 @@ String failureMessage(AppLocalizations l10n, Object? error) {
     'not_confirmed' => l10n.failureNotConfirmed,
     'address_out_of_zone' => l10n.failureOutOfZone,
     'forbidden' => l10n.failureForbidden,
+    'zone_unavailable' => l10n.failureZoneUnavailable,
+    'courier_suspended' => l10n.failureCourierSuspended,
+    'reason_required' => l10n.failureReasonRequired,
+    'not_found' => l10n.failureNotFound,
+    'cannot_target_self' => l10n.failureCannotTargetSelf,
+    'invalid_identifier' => l10n.failureInvalidIdentifier,
     _ => l10n.failureUnknown,
   };
 }

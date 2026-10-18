@@ -112,30 +112,6 @@ abstract class AppLocalizations {
   /// **'Payez en Mobile Money, par carte ou en espèces.'**
   String get welcomeClientSubtitle;
 
-  /// No description provided for @welcomeCourierHeadline.
-  ///
-  /// In fr, this message translates to:
-  /// **'Livrez à Abidjan, à votre rythme.'**
-  String get welcomeCourierHeadline;
-
-  /// No description provided for @welcomeCourierSubtitle.
-  ///
-  /// In fr, this message translates to:
-  /// **'Passez en ligne quand vous voulez et suivez vos gains au jour le jour.'**
-  String get welcomeCourierSubtitle;
-
-  /// No description provided for @welcomeBackofficeHeadline.
-  ///
-  /// In fr, this message translates to:
-  /// **'L\'espace des restaurants partenaires et de l\'équipe.'**
-  String get welcomeBackofficeHeadline;
-
-  /// No description provided for @welcomeBackofficeSubtitle.
-  ///
-  /// In fr, this message translates to:
-  /// **'Recevez les commandes, tenez votre menu à jour, supervisez les livraisons.'**
-  String get welcomeBackofficeSubtitle;
-
   /// No description provided for @featureRestaurants.
   ///
   /// In fr, this message translates to:
@@ -153,42 +129,6 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Suivi en direct'**
   String get featureTracking;
-
-  /// No description provided for @featureNearbyMissions.
-  ///
-  /// In fr, this message translates to:
-  /// **'Missions près de vous'**
-  String get featureNearbyMissions;
-
-  /// No description provided for @featureEarnings.
-  ///
-  /// In fr, this message translates to:
-  /// **'Gains du jour visibles'**
-  String get featureEarnings;
-
-  /// No description provided for @featureDirections.
-  ///
-  /// In fr, this message translates to:
-  /// **'Itinéraire en un geste'**
-  String get featureDirections;
-
-  /// No description provided for @featureLiveOrders.
-  ///
-  /// In fr, this message translates to:
-  /// **'Commandes en temps réel'**
-  String get featureLiveOrders;
-
-  /// No description provided for @featureMenu.
-  ///
-  /// In fr, this message translates to:
-  /// **'Menu toujours à jour'**
-  String get featureMenu;
-
-  /// No description provided for @featureSupervision.
-  ///
-  /// In fr, this message translates to:
-  /// **'Supervision des livraisons'**
-  String get featureSupervision;
 
   /// No description provided for @actionCreateAccount.
   ///
@@ -567,18 +507,6 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Identifiant de connexion modifié.'**
   String get loginChangeDone;
-
-  /// No description provided for @restrictedTitle.
-  ///
-  /// In fr, this message translates to:
-  /// **'Accès réservé'**
-  String get restrictedTitle;
-
-  /// No description provided for @restrictedBody.
-  ///
-  /// In fr, this message translates to:
-  /// **'Cet espace est réservé aux restaurants partenaires et à l\'équipe. Si vous gérez un restaurant partenaire, demandez votre accès à l\'équipe.'**
-  String get restrictedBody;
 
   /// No description provided for @loadingAccount.
   ///
@@ -1053,6 +981,408 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Le plancher doit être inférieur ou égal au plafond.'**
   String get errorMinMax;
+
+  /// No description provided for @courierProfileTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Devenir livreur'**
+  String get courierProfileTitle;
+
+  /// No description provided for @courierProfileEditTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mon profil livreur'**
+  String get courierProfileEditTitle;
+
+  /// No description provided for @courierProfileSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ces informations sont vérifiées par l\'équipe avant votre première mission.'**
+  String get courierProfileSubtitle;
+
+  /// No description provided for @fieldZone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Zone de travail'**
+  String get fieldZone;
+
+  /// No description provided for @fieldVehicle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Moyen de transport'**
+  String get fieldVehicle;
+
+  /// No description provided for @vehicleMotorbike.
+  ///
+  /// In fr, this message translates to:
+  /// **'Moto'**
+  String get vehicleMotorbike;
+
+  /// No description provided for @vehicleBicycle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vélo'**
+  String get vehicleBicycle;
+
+  /// No description provided for @vehicleCar.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voiture'**
+  String get vehicleCar;
+
+  /// No description provided for @vehicleOnFoot.
+  ///
+  /// In fr, this message translates to:
+  /// **'À pied'**
+  String get vehicleOnFoot;
+
+  /// No description provided for @fieldPlate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Immatriculation'**
+  String get fieldPlate;
+
+  /// No description provided for @fieldPhoto.
+  ///
+  /// In fr, this message translates to:
+  /// **'Photo de profil'**
+  String get fieldPhoto;
+
+  /// No description provided for @photoHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Visage bien visible : le client la voit pour vous reconnaître.'**
+  String get photoHint;
+
+  /// No description provided for @photoTake.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prendre une photo'**
+  String get photoTake;
+
+  /// No description provided for @photoChoose.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisir dans la galerie'**
+  String get photoChoose;
+
+  /// No description provided for @errorPhotoRequired.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoutez une photo de profil.'**
+  String get errorPhotoRequired;
+
+  /// No description provided for @courierSubmit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Soumettre mon profil'**
+  String get courierSubmit;
+
+  /// No description provided for @courierStatusTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mon compte livreur'**
+  String get courierStatusTitle;
+
+  /// No description provided for @courierPendingTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nous vérifions votre profil'**
+  String get courierPendingTitle;
+
+  /// No description provided for @courierPendingBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'équipe valide votre profil, généralement sous 48 heures. Revenez ici pour suivre son statut.'**
+  String get courierPendingBody;
+
+  /// No description provided for @courierApprovedTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compte approuvé'**
+  String get courierApprovedTitle;
+
+  /// No description provided for @courierApprovedBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre compte est validé. Vous pourrez passer en ligne et recevoir des missions dès l\'ouverture des missions dans l\'app.'**
+  String get courierApprovedBody;
+
+  /// No description provided for @courierRejectedTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Profil refusé'**
+  String get courierRejectedTitle;
+
+  /// No description provided for @courierRejectedBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Motif : {reason}. Corrigez votre profil puis soumettez-le à nouveau.'**
+  String courierRejectedBody(String reason);
+
+  /// No description provided for @courierSuspendedTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compte suspendu'**
+  String get courierSuspendedTitle;
+
+  /// No description provided for @courierSuspendedBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Motif : {reason}. Contactez le support pour en savoir plus.'**
+  String courierSuspendedBody(String reason);
+
+  /// No description provided for @courierEditProfile.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier mon profil'**
+  String get courierEditProfile;
+
+  /// No description provided for @courierRefresh.
+  ///
+  /// In fr, this message translates to:
+  /// **'Actualiser'**
+  String get courierRefresh;
+
+  /// No description provided for @failureZoneUnavailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette zone n\'est plus desservie. Choisissez-en une autre.'**
+  String get failureZoneUnavailable;
+
+  /// No description provided for @failureCourierSuspended.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre compte livreur est suspendu.'**
+  String get failureCourierSuspended;
+
+  /// No description provided for @failureReasonRequired.
+  ///
+  /// In fr, this message translates to:
+  /// **'Indiquez un motif.'**
+  String get failureReasonRequired;
+
+  /// No description provided for @failureNotFound.
+  ///
+  /// In fr, this message translates to:
+  /// **'Élément introuvable. Actualisez la liste.'**
+  String get failureNotFound;
+
+  /// No description provided for @failureCannotTargetSelf.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vous ne pouvez pas appliquer cette action à votre propre compte.'**
+  String get failureCannotTargetSelf;
+
+  /// No description provided for @failureInvalidIdentifier.
+  ///
+  /// In fr, this message translates to:
+  /// **'Email ou numéro invalide.'**
+  String get failureInvalidIdentifier;
+
+  /// No description provided for @adminCouriers.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livreurs'**
+  String get adminCouriers;
+
+  /// No description provided for @adminUsers.
+  ///
+  /// In fr, this message translates to:
+  /// **'Utilisateurs'**
+  String get adminUsers;
+
+  /// No description provided for @statusPending.
+  ///
+  /// In fr, this message translates to:
+  /// **'En attente'**
+  String get statusPending;
+
+  /// No description provided for @statusApproved.
+  ///
+  /// In fr, this message translates to:
+  /// **'Approuvés'**
+  String get statusApproved;
+
+  /// No description provided for @statusRejected.
+  ///
+  /// In fr, this message translates to:
+  /// **'Refusés'**
+  String get statusRejected;
+
+  /// No description provided for @statusSuspended.
+  ///
+  /// In fr, this message translates to:
+  /// **'Suspendus'**
+  String get statusSuspended;
+
+  /// No description provided for @couriersEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun livreur dans cette catégorie'**
+  String get couriersEmpty;
+
+  /// No description provided for @courierApprove.
+  ///
+  /// In fr, this message translates to:
+  /// **'Approuver'**
+  String get courierApprove;
+
+  /// No description provided for @courierReject.
+  ///
+  /// In fr, this message translates to:
+  /// **'Refuser'**
+  String get courierReject;
+
+  /// No description provided for @courierSuspend.
+  ///
+  /// In fr, this message translates to:
+  /// **'Suspendre'**
+  String get courierSuspend;
+
+  /// No description provided for @courierReactivate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réactiver'**
+  String get courierReactivate;
+
+  /// No description provided for @courierDecisionDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Décision enregistrée.'**
+  String get courierDecisionDone;
+
+  /// No description provided for @reasonTitleReject.
+  ///
+  /// In fr, this message translates to:
+  /// **'Motif du refus'**
+  String get reasonTitleReject;
+
+  /// No description provided for @reasonTitleSuspend.
+  ///
+  /// In fr, this message translates to:
+  /// **'Motif de la suspension'**
+  String get reasonTitleSuspend;
+
+  /// No description provided for @reasonField.
+  ///
+  /// In fr, this message translates to:
+  /// **'Motif (transmis à la personne)'**
+  String get reasonField;
+
+  /// No description provided for @usersSearch.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rechercher par nom ou téléphone'**
+  String get usersSearch;
+
+  /// No description provided for @usersEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun utilisateur trouvé'**
+  String get usersEmpty;
+
+  /// No description provided for @userSuspended.
+  ///
+  /// In fr, this message translates to:
+  /// **'Suspendu'**
+  String get userSuspended;
+
+  /// No description provided for @userSuspend.
+  ///
+  /// In fr, this message translates to:
+  /// **'Suspendre le compte'**
+  String get userSuspend;
+
+  /// No description provided for @userReactivate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réactiver le compte'**
+  String get userReactivate;
+
+  /// No description provided for @userChangeLogin.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier l\'identifiant de connexion'**
+  String get userChangeLogin;
+
+  /// No description provided for @userChangeLoginField.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvel email ou numéro'**
+  String get userChangeLoginField;
+
+  /// No description provided for @userActionDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Action enregistrée.'**
+  String get userActionDone;
+
+  /// No description provided for @userNoName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Profil incomplet'**
+  String get userNoName;
+
+  /// No description provided for @spacesTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Changer d\'espace'**
+  String get spacesTitle;
+
+  /// No description provided for @spaceCurrent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Espace actuel'**
+  String get spaceCurrent;
+
+  /// No description provided for @spaceClient.
+  ///
+  /// In fr, this message translates to:
+  /// **'Client'**
+  String get spaceClient;
+
+  /// No description provided for @spaceClientBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commander un repas, envoyer un colis, gérer mes adresses.'**
+  String get spaceClientBody;
+
+  /// No description provided for @spaceCourier.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livreur'**
+  String get spaceCourier;
+
+  /// No description provided for @spaceCourierBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mon profil livreur et mes missions.'**
+  String get spaceCourierBody;
+
+  /// No description provided for @spaceAdmin.
+  ///
+  /// In fr, this message translates to:
+  /// **'Administration'**
+  String get spaceAdmin;
+
+  /// No description provided for @spaceAdminBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Zones et tarifs, livreurs, utilisateurs.'**
+  String get spaceAdminBody;
+
+  /// No description provided for @spaceBecomeCourier.
+  ///
+  /// In fr, this message translates to:
+  /// **'Devenir livreur'**
+  String get spaceBecomeCourier;
+
+  /// No description provided for @spaceBecomeCourierBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livrez à Abidjan à votre rythme. Votre profil est validé par l\'équipe.'**
+  String get spaceBecomeCourierBody;
 }
 
 class _AppLocalizationsDelegate

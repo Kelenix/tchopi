@@ -11,7 +11,7 @@ concurrency:
 
 env:
   FLUTTER_VERSION: 3.41.9
-  PACKAGES: packages/core apps/client apps/courier apps/backoffice
+  PACKAGES: packages/core apps/mobile
 
 jobs:
   flutter:
@@ -63,6 +63,5 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
-      - run: cd apps/client && flutter build apk --debug
-      - run: cd apps/courier && flutter build apk --debug
-      - run: cd apps/backoffice && flutter build web --release
+      - run: cd apps/mobile && flutter build apk --debug
+      - run: cd apps/mobile && flutter build web --release

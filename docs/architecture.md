@@ -1,5 +1,9 @@
 # Architecture
 
+> **Mise à jour 2026-10-18 (ADR-016)** : une seule app `apps/mobile` remplace `apps/client`, `apps/courier` et
+> `apps/backoffice` ; ses espaces (Client, Livreur, Restaurant, Admin) suivent les rôles du compte. Le reste de ce
+> document s'applique tel quel à l'app unique.
+>
 > Phase 3 (rôle : Mobile Architect). Décisions : `DECISION_LOG.md` (ADR-001 à ADR-011). Conception détaillée des flux :
 > `docs/system-design.md`. Base de données : `docs/data-model.md`. Design : `docs/design/design-system.md`.
 
@@ -45,7 +49,7 @@ food-delive/
 │   ├── courier/         # app Livreur (Android, iOS)
 │   └── backoffice/      # Restaurant + Admin (Android, web)
 ├── packages/
-│   └── core/            # code partagé par les 3 apps
+│   └── core/            # code partagé (design system, connexion, compte, Supabase)
 ├── supabase/
 │   ├── config.toml      # pile locale (supabase start)
 │   ├── migrations/      # schéma, RLS, fonctions métier, tâches planifiées

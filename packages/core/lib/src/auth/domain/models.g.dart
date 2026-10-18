@@ -23,7 +23,23 @@ Map<String, dynamic> _$ProfileToJson(_Profile instance) => <String, dynamic>{
 };
 
 _AccountRoles _$AccountRolesFromJson(Map<String, dynamic> json) =>
-    _AccountRoles(isAdmin: json['is_admin'] as bool? ?? false);
+    _AccountRoles(
+      isAdmin: json['is_admin'] as bool? ?? false,
+      courierStatus: $enumDecodeNullable(
+        _$CourierStatusEnumMap,
+        json['courier_status'],
+      ),
+    );
 
 Map<String, dynamic> _$AccountRolesToJson(_AccountRoles instance) =>
-    <String, dynamic>{'is_admin': instance.isAdmin};
+    <String, dynamic>{
+      'is_admin': instance.isAdmin,
+      'courier_status': _$CourierStatusEnumMap[instance.courierStatus],
+    };
+
+const _$CourierStatusEnumMap = {
+  CourierStatus.pending: 'pending',
+  CourierStatus.approved: 'approved',
+  CourierStatus.rejected: 'rejected',
+  CourierStatus.suspended: 'suspended',
+};

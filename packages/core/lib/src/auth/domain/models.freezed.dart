@@ -290,7 +290,8 @@ as String?,
 /// @nodoc
 mixin _$AccountRoles {
 
- bool get isAdmin;
+ bool get isAdmin;// Statut du profil livreur ; absent tant que le compte n'a pas demandé à devenir livreur.
+ CourierStatus? get courierStatus;
 /// Create a copy of AccountRoles
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -303,16 +304,16 @@ $AccountRolesCopyWith<AccountRoles> get copyWith => _$AccountRolesCopyWithImpl<A
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AccountRoles&&(identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AccountRoles&&(identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin)&&(identical(other.courierStatus, courierStatus) || other.courierStatus == courierStatus));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,isAdmin);
+int get hashCode => Object.hash(runtimeType,isAdmin,courierStatus);
 
 @override
 String toString() {
-  return 'AccountRoles(isAdmin: $isAdmin)';
+  return 'AccountRoles(isAdmin: $isAdmin, courierStatus: $courierStatus)';
 }
 
 
@@ -323,7 +324,7 @@ abstract mixin class $AccountRolesCopyWith<$Res>  {
   factory $AccountRolesCopyWith(AccountRoles value, $Res Function(AccountRoles) _then) = _$AccountRolesCopyWithImpl;
 @useResult
 $Res call({
- bool isAdmin
+ bool isAdmin, CourierStatus? courierStatus
 });
 
 
@@ -340,10 +341,11 @@ class _$AccountRolesCopyWithImpl<$Res>
 
 /// Create a copy of AccountRoles
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isAdmin = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isAdmin = null,Object? courierStatus = freezed,}) {
   return _then(_self.copyWith(
 isAdmin: null == isAdmin ? _self.isAdmin : isAdmin // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,courierStatus: freezed == courierStatus ? _self.courierStatus : courierStatus // ignore: cast_nullable_to_non_nullable
+as CourierStatus?,
   ));
 }
 
@@ -428,10 +430,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isAdmin)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isAdmin,  CourierStatus? courierStatus)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AccountRoles() when $default != null:
-return $default(_that.isAdmin);case _:
+return $default(_that.isAdmin,_that.courierStatus);case _:
   return orElse();
 
 }
@@ -449,10 +451,10 @@ return $default(_that.isAdmin);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isAdmin)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isAdmin,  CourierStatus? courierStatus)  $default,) {final _that = this;
 switch (_that) {
 case _AccountRoles():
-return $default(_that.isAdmin);case _:
+return $default(_that.isAdmin,_that.courierStatus);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -469,10 +471,10 @@ return $default(_that.isAdmin);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isAdmin)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isAdmin,  CourierStatus? courierStatus)?  $default,) {final _that = this;
 switch (_that) {
 case _AccountRoles() when $default != null:
-return $default(_that.isAdmin);case _:
+return $default(_that.isAdmin,_that.courierStatus);case _:
   return null;
 
 }
@@ -484,10 +486,12 @@ return $default(_that.isAdmin);case _:
 @JsonSerializable()
 
 class _AccountRoles implements AccountRoles {
-  const _AccountRoles({this.isAdmin = false});
+  const _AccountRoles({this.isAdmin = false, this.courierStatus});
   factory _AccountRoles.fromJson(Map<String, dynamic> json) => _$AccountRolesFromJson(json);
 
 @override@JsonKey() final  bool isAdmin;
+// Statut du profil livreur ; absent tant que le compte n'a pas demandé à devenir livreur.
+@override final  CourierStatus? courierStatus;
 
 /// Create a copy of AccountRoles
 /// with the given fields replaced by the non-null parameter values.
@@ -502,16 +506,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AccountRoles&&(identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AccountRoles&&(identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin)&&(identical(other.courierStatus, courierStatus) || other.courierStatus == courierStatus));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,isAdmin);
+int get hashCode => Object.hash(runtimeType,isAdmin,courierStatus);
 
 @override
 String toString() {
-  return 'AccountRoles(isAdmin: $isAdmin)';
+  return 'AccountRoles(isAdmin: $isAdmin, courierStatus: $courierStatus)';
 }
 
 
@@ -522,7 +526,7 @@ abstract mixin class _$AccountRolesCopyWith<$Res> implements $AccountRolesCopyWi
   factory _$AccountRolesCopyWith(_AccountRoles value, $Res Function(_AccountRoles) _then) = __$AccountRolesCopyWithImpl;
 @override @useResult
 $Res call({
- bool isAdmin
+ bool isAdmin, CourierStatus? courierStatus
 });
 
 
@@ -539,10 +543,11 @@ class __$AccountRolesCopyWithImpl<$Res>
 
 /// Create a copy of AccountRoles
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isAdmin = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isAdmin = null,Object? courierStatus = freezed,}) {
   return _then(_AccountRoles(
 isAdmin: null == isAdmin ? _self.isAdmin : isAdmin // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,courierStatus: freezed == courierStatus ? _self.courierStatus : courierStatus // ignore: cast_nullable_to_non_nullable
+as CourierStatus?,
   ));
 }
 

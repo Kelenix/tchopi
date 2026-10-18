@@ -18,7 +18,8 @@
 | D-4 | **Tout est hébergé sur votre VPS Hostinger** (Supabase auto-hébergé, base de données, fonctions) | Déploiement automatisé par la CI vers le VPS, HTTPS, sauvegardes, supervision (§6.2). Plus d'abonnement Supabase |
 | D-5 | Lancement en **Côte d'Ivoire (Abidjan, XOF, +225)** ; **cartes via Stripe** (vous disposez d'une société dans un pays compatible) | Stripe : paiement par carte en XOF (devise sans décimales), règlement dans la devise de votre société. Mobile Money par un second fournisseur (voir ci-dessous) |
 | D-6 | **Android d'abord** (Q4 = A) | Code compatible iOS, publication iOS plus tard |
-| D-7 | **Espace restaurant et dashboard admin dans ce projet** (Q5 = A) | App Flutter « Back-office » (Android + navigateur) |
+| D-7 | **Espace restaurant et dashboard admin dans ce projet** (Q5 = A) | Espaces de l'app unique (D-8) |
+| D-8 | **Une seule app mobile, un espace par rôle** (Client, Livreur, Restaurant, Admin) — décidé le 2026-10-18 | Remplace les 3 apps séparées (ADR-016) ; `apps/mobile` |
 
 **Reste à préciser avant l'Inc-11 (non bloquant)** : le fournisseur **Mobile Money** — **Paystack** si votre société peut
 y ouvrir un compte marchand pour la Côte d'Ivoire, sinon **CinetPay**. L'intégration est conçue pour l'un ou l'autre.
@@ -321,7 +322,7 @@ flowchart TB
 
 | Besoin | Choix | Raison |
 |--------|-------|--------|
-| 3 interfaces mobiles/web | **Monorepo Flutter** : 3 apps + 1 package partagé | Client et livreur séparés = permissions minimales par app (pas de localisation en arrière-plan côté client) ; code commun écrit une fois |
+| 4 interfaces | **Une app Flutter** (`apps/mobile`) avec un espace par rôle + 1 package partagé (ADR-016, remplace la version initiale à 3 apps) | Client et livreur séparés = permissions minimales par app (pas de localisation en arrière-plan côté client) ; code commun écrit une fois |
 | État / navigation / modèles | Riverpod · go_router · freezed | Stack du projet |
 | Règles métier critiques | **Fonctions Postgres** (machine à états, devis, attribution) + **RLS** + **pg_cron** (délais, réattribution) | Cohérence garantie côté serveur, transactionnelle, testable |
 | Paiements | **Edge Functions** (secrets côté serveur), webhooks signés, idempotence, vérification auprès du fournisseur | Jamais de « réussi » côté app |

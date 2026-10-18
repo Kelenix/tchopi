@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../couriers/models.dart';
 import 'login_identifier.dart';
 
 part 'models.freezed.dart';
@@ -31,7 +32,11 @@ abstract class Profile with _$Profile {
 
 @freezed
 abstract class AccountRoles with _$AccountRoles {
-  const factory AccountRoles({@Default(false) bool isAdmin}) = _AccountRoles;
+  const factory AccountRoles({
+    @Default(false) bool isAdmin,
+    // Statut du profil livreur ; absent tant que le compte n'a pas demandé à devenir livreur.
+    CourierStatus? courierStatus,
+  }) = _AccountRoles;
 
   factory AccountRoles.fromJson(Map<String, dynamic> json) =>
       _$AccountRolesFromJson(json);

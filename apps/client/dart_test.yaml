@@ -1,3 +1,0 @@
-tags:
-  integration:
-    skip: "Nécessite Supabase local démarré : flutter test -t integration --run-skipped"

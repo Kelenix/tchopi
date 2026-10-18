@@ -71,7 +71,7 @@
   2. Activer un compte de facturation (requis même pour l'usage gratuit). 3. Créer une clé par app, **restreinte** au nom de package
   et à l'empreinte de signature (Android) ou au domaine (web).
 - **Coût** : SDK mobile gratuit ; carte web admin dans le quota gratuit.
-- **Dans le projet** : ajouter `MAPS_API_KEY=…` dans `apps/client/android/local.properties` (fichier non versionné), puis
+- **Dans le projet** : ajouter `MAPS_API_KEY=…` dans `apps/mobile/android/local.properties` (fichier non versionné), puis
   lancer l'app avec `--dart-define=GOOGLE_MAPS_ENABLED=true` en plus de `--dart-define-from-file`. Sans clé, l'éditeur
   d'adresse fonctionne avec le GPS seul et affiche un emplacement à la place de la carte.
 - **Vérification** : la carte s'affiche dans l'écran « Nouvelle adresse ».
@@ -79,7 +79,7 @@
 ## 8. Créer le projet Firebase (notifications push)
 - **Pourquoi** : notifications client, livreur, restaurant — Inc-9.
 - **Quand** : Inc-9.
-- **Étapes** : 1. https://console.firebase.google.com → nouveau projet. 2. Ajouter les apps Android (client, livreur, back-office)
+- **Étapes** : 1. https://console.firebase.google.com → nouveau projet. 2. Ajouter l'app Android (`com.tchopi.mobile`)
   et télécharger les fichiers de configuration. 3. Générer une clé de compte de service (envoi serveur) et la saisir dans le `.env` du VPS.
 - **Coût** : gratuit.
 - **Vérification** : une notification de test arrive sur le téléphone.
@@ -88,7 +88,7 @@
 - **Pourquoi** : identité de l'app (écrans, icône, fiches stores) — maquette de la phase 3.
 - **Quand** : avant la maquette (phase 3) ; sinon un nom de travail est utilisé et remplacé plus tard.
 - **Étapes** : 1. Nom de l'app. 2. Logo (SVG ou PNG 1024 px). 3. Facultatif : photos de plats locaux dont vous détenez les droits.
-  4. Confirmer les identifiants d'application (provisoires : `com.tchopi.client`, `com.tchopi.courier`, `com.tchopi.backoffice`) :
+  4. Confirmer les identifiants d'application (provisoire : `com.tchopi.mobile`) :
   ils deviennent **définitifs** dès la première publication sur Google Play.
 - **Coût** : éventuel graphiste.
 - **Vérification** : icône et nom affichés sur le téléphone.

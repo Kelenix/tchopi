@@ -1,0 +1,35 @@
+name: mobile
+description: App mobile du MVP de livraison (espaces Client, Livreur, Restaurant, Admin).
+publish_to: 'none'
+version: 0.1.0+1
+
+resolution: workspace
+
+environment:
+  sdk: ^3.11.5
+
+dependencies:
+  core:
+    path: ../../packages/core
+  flutter:
+    sdk: flutter
+  flutter_riverpod: ^3.3.1
+  geocoding: ^5.0.0
+  geolocator: ^14.1.1
+  go_router: ^17.5.0
+  google_maps_flutter: ^2.18.1
+  image_picker: ^1.2.4
+  riverpod_annotation: ^4.0.2
+  shared_preferences: ^2.5.6
+  supabase_flutter: ^2.18.3
+  url_launcher: ^6.3.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  riverpod_generator: ^4.0.3
+  build_runner: ^2.15.1
+
+flutter:
+  uses-material-design: true

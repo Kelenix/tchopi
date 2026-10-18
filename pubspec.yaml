@@ -5,9 +5,7 @@ environment:
   sdk: ^3.11.5
 
 workspace:
-  - apps/client
-  - apps/courier
-  - apps/backoffice
+  - apps/mobile
   - packages/core
 
 dev_dependencies:

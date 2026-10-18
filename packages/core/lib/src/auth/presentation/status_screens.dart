@@ -35,22 +35,6 @@ class AccountLoadingScreen extends ConsumerWidget {
   }
 }
 
-/// Back-office ouvert par un compte qui n'est ni admin ni membre d'un restaurant (AUTH-09).
-class RestrictedScreen extends StatelessWidget {
-  const RestrictedScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return _StatusScaffold(
-      icon: Icons.lock_outline,
-      title: l10n.restrictedTitle,
-      body: l10n.restrictedBody,
-      actions: [_SignOutButton()],
-    );
-  }
-}
-
 class _SignOutButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) => OutlinedButton(

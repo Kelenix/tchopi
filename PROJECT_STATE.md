@@ -8,7 +8,7 @@
 - **Phase courante** : 4 — Implémentation · Inc-0 (socle) livré, sauf déploiement VPS (accès non fourni)
 - **Dernière mise à jour** : 2026-10-18
 - **Santé** : 🟢 OK · accès VPS et dépôt GitHub non fournis
-- **Prochaine action** : commit de l'Inc-2 → Inc-3 (profils livreurs, validation admin, utilisateurs)
+- **Prochaine action** : commit de la réorganisation + Inc-3 → Inc-4 (restaurants et catalogue)
 - **Plan de référence** : `docs/plan-de-realisation.md` · Design : `docs/design/design-system.md`
 - **Maquette** : `docs/design/maquette.html` — https://claude.ai/artifact/9GyaG6F34CkTe1qQpsy1cP (privée)
 
@@ -25,7 +25,7 @@ Flutter 3.41.9 · Dart 3.11.5 · Supabase CLI 2.116.0 · Docker 29.8.2 · Java 2
 | 1 — Définition produit      | ✅ fait | `docs/product/user-stories.md` (60 stories), `docs/product/screens.md` (45 fiches) |
 | 2 — Planification           | ✅ fait | Backlog, jalons, chemin critique ci-dessous ; risques : plan §10 |
 | 3 — Architecture & design   | ✅ fait | Architecture, conception, données, design system ; maquette v1 validée |
-| 4 — Implémentation          | 🔄 en cours | Inc-0 à Inc-2 livrés (voir ci-dessous) |
+| 4 — Implémentation          | 🔄 en cours | Inc-0 à Inc-3 livrés ; app unique (ADR-016) |
 | 5 — Qualité & performance   | ⬜ à faire | Scénarios S1–S6 |
 | 6 — Publication (stores)    | ⬜ à faire | |
 | 7 — Documentation           | ⬜ à faire | |
@@ -39,8 +39,8 @@ Flutter 3.41.9 · Dart 3.11.5 · Supabase CLI 2.116.0 · Docker 29.8.2 · Java 2
 |----|-----------|-------------------------------------------|----------|--------|------|
 | Inc-0 | Socle : monorepo, design system, l10n, navigation, Supabase local, CI, VPS + déploiement auto | TRV-02, TRV-03, TRV-04, TRV-06 | §7.A, D-1, D-4 | L | ✅ (VPS ⏸️ accès) |
 | Inc-1 | Authentification email / téléphone, profils, rôles, suppression de compte | AUTH-01 à 09 | §2.1, D-3 | L | ✅ |
-| Inc-2 | Zones + tarifs (admin), adresses client | ADR-01 à 07 | §2.2, §5.6 | M | ✅ (non commité) |
-| Inc-3 | Profils livreurs, validation admin, gestion utilisateurs | COU-01 à 04, ADM-02 | §2.3, §6.D | M | ⬜ |
+| Inc-2 | Zones + tarifs (admin), adresses client | ADR-01 à 07 | §2.2, §5.6 | M | ✅ |
+| Inc-3 | Profils livreurs, validation admin, gestion utilisateurs | COU-01 à 04, ADM-02 | §2.3, §6.D | M | ✅ (non commité) |
 | Inc-4 | Restaurants et catalogue | RES-01 à 05 | §3.1, §6.C | M | ⬜ |
 | Inc-5 | Commande de repas (client + restaurant) | ORD-01 à 13 | §3.1, §6.A | L | ⬜ |
 | Inc-6 | Livraison de colis | PAR-01 à 05 | §3.2 | M | ⬜ |
@@ -86,6 +86,12 @@ validation de la maquette → code des écrans à partir de l'Inc-1. Registre de
 - voir `docs/manual-tasks.md` (priorité : compte marchand de paiement, à démarrer tôt)
 
 ## Journal de session (résumé court, le plus récent en haut)
+
+- 2026-10-18 — Réorganisation en **une seule app** `apps/mobile` avec espaces par rôle (ADR-016), puis Inc-3 : profil
+  livreur (zone, moyen de transport, photo privée), statut, validation / refus / suspension par l'admin, gestion des
+  comptes (recherche, suspension avec blocage de connexion, changement d'identifiant), journal d'audit. Preuves :
+  analyse 0 problème ; 56 tests Flutter ; pgTAP 52/52 ; 6 tests d'intégration réels. Non vérifié : affichage sur
+  appareil (lancement local arrêté à la demande de l'utilisateur).
 
 - 2026-10-18 — Inc-2 (branche feat/inc-2-adresses) : zones desservies et règles tarifaires (PostGIS, calcul des frais
   serveur arrondi à 25 F, simulateur admin), adresses client (carte, GPS, quartier, repère, défaut, refus hors zone),

@@ -1,12 +1,10 @@
 # MVP Livraison — repas et colis (Abidjan)
 
-Trois applications Flutter et un back-end Supabase :
+Une application Flutter (un espace par rôle) et un back-end Supabase :
 
 | Dossier | Application | Plateformes |
 |---------|-------------|-------------|
-| `apps/client` | Client : commander un repas, envoyer un colis, payer, suivre | Android (iOS prêt) |
-| `apps/courier` | Livreur : missions, navigation, code de livraison, espèces | Android (iOS prêt) |
-| `apps/backoffice` | Restaurants partenaires et administration | Android, navigateur |
+| `apps/mobile` | App unique : espaces Client, Livreur, Restaurant (Inc-4), Admin — menu « Changer d'espace » | Android (iOS prêt), navigateur pour l'admin |
 | `packages/core` | Code partagé : design system, textes, Supabase, écrans communs | — |
 | `supabase/` | Base de données : migrations, règles d'accès (RLS), tests pgTAP | — |
 
@@ -54,9 +52,9 @@ cd packages/core && flutter gen-l10n && dart run build_runner build -d
    ```
 4. Lancer une app :
    ```bash
-   cd apps/client && flutter run --dart-define-from-file=../../env/local.json
+   cd apps/mobile && flutter run --dart-define-from-file=../../env/local.json
    ```
-   Back-office dans le navigateur : `cd apps/backoffice && flutter run -d chrome --dart-define-from-file=../../env/local.json`.
+   Dans le navigateur (espace Admin sur ordinateur) : ajouter `-d chrome`.
 
 Sans `--dart-define-from-file`, l'app s'arrête au démarrage avec le message « Configuration manquante ».
 
@@ -70,7 +68,7 @@ flutter analyze
 cd packages/core && flutter test
 ```
 
-(idem dans `apps/client`, `apps/courier`, `apps/backoffice`)
+(idem dans `apps/mobile`)
 
 ```bash
 supabase db reset && supabase test db

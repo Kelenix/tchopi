@@ -21,12 +21,11 @@ abstract final class AppRoutes {
   static const reset = '/reset';
   static const loading = '/loading';
   static const profileSetup = '/profile-setup';
-  static const restricted = '/restricted';
   static const account = '/account';
 
   static const public = {welcome, signUp, signIn, verify, reset};
   // Écrans de transition : quand la situation du compte est réglée, on en sort vers l'accueil.
-  static const gates = {...public, loading, profileSetup, restricted};
+  static const gates = {...public, loading, profileSetup};
 }
 
 /// Règle de navigation unique (AUTH-09). Le serveur reste seul juge des droits (RLS) :
@@ -36,8 +35,8 @@ String? resolveRedirect({
   required bool isSignedIn,
   required AsyncValue<Profile?> profile,
   required AsyncValue<AccountRoles?> roles,
-  required bool requiresAdmin,
   required String home,
+  String? Function(String location, AccountRoles roles)? roleRedirect,
 }) {
   String? goTo(String target) => location == target ? null : target;
 
@@ -53,7 +52,9 @@ String? resolveRedirect({
     return goTo(AppRoutes.loading);
   }
   if (!currentProfile.isComplete) return goTo(AppRoutes.profileSetup);
-  if (requiresAdmin && !currentRoles.isAdmin) return goTo(AppRoutes.restricted);
+  // Aiguillage propre à l'app (ex. app Livreur sans profil livreur → inscription livreur).
+  final roleTarget = roleRedirect?.call(location, currentRoles);
+  if (roleTarget != null) return goTo(roleTarget);
   return AppRoutes.gates.contains(location) || location == '/' ? home : null;
 }
 
@@ -62,10 +63,10 @@ String? resolveRedirect({
 GoRouter buildAppRouter(
   Ref ref, {
   required WidgetBuilder welcome,
-  bool requiresAdmin = false,
   String home = AppRoutes.account,
   List<RouteBase> routes = const [],
   List<AccountLink> accountLinks = const [],
+  String? Function(String location, AccountRoles roles)? roleRedirect,
 }) {
   final refresh = ValueNotifier(0);
   void bump(Object? _, Object? _) => refresh.value++;
@@ -83,8 +84,8 @@ GoRouter buildAppRouter(
       isSignedIn: ref.read(sessionProvider).value != null,
       profile: ref.read(currentProfileProvider),
       roles: ref.read(accountRolesProvider),
-      requiresAdmin: requiresAdmin,
       home: home,
+      roleRedirect: roleRedirect,
     ),
     routes: [
       GoRoute(path: '/', redirect: (_, _) => home),
@@ -110,10 +111,6 @@ GoRouter buildAppRouter(
       GoRoute(
         path: AppRoutes.profileSetup,
         builder: (_, _) => const ProfileFormScreen(isSetup: true),
-      ),
-      GoRoute(
-        path: AppRoutes.restricted,
-        builder: (_, _) => const RestrictedScreen(),
       ),
       GoRoute(
         path: AppRoutes.account,

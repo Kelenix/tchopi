@@ -39,6 +39,17 @@ Règle mot de passe (serveur) : 8 caractères minimum, lettres et chiffres.
 | `zones`, `pricing_rules` (écriture) | admin | Gestion des zones et des règles par service (`food`, `parcel`) |
 | `POST /rest/v1/rpc/admin_simulate_fee` | admin | `{ p_zone_id, p_service, p_straight_km }` → `distance_m`, `delivery_fee`, `courier_earning` |
 
+## Livreurs et administration — Inc-3
+
+| Ressource / action | Accès | Description |
+|--------------------|-------|-------------|
+| `POST /rest/v1/rpc/submit_courier_profile` | connecté | `{ p_zone_id, p_vehicle_type, p_plate_number, p_photo_path }` → profil livreur (statut `pending`) |
+| `GET /rest/v1/couriers` | titulaire, admin | Profil livreur et statut (`pending`, `approved`, `rejected`, `suspended`) |
+| Storage `couriers/<user_id>/…` | titulaire, admin | Photo de profil (bucket privé, liens signés) |
+| `POST /rest/v1/rpc/admin_set_courier_status` | admin | `{ p_user_id, p_status, p_reason }` (motif obligatoire pour refus et suspension) |
+| `POST /functions/v1/admin-users` | admin | `{ action: "suspend" ou "reactivate", user_id, reason }` ou `{ action: "update_login", user_id, email ou phone }` |
+| `POST /rest/v1/rpc/my_roles` | connecté | `{ is_admin, courier_status }` |
+
 ## Codes d'erreur stables
 
 | Code | Signification |
@@ -54,3 +65,9 @@ Règle mot de passe (serveur) : 8 caractères minimum, lettres et chiffres.
 | `account_delete_failed` | Suppression impossible (réessayer) |
 | `address_out_of_zone` | Position hors de toute zone active |
 | `forbidden` | Action réservée aux admins |
+| `zone_unavailable` | Zone inexistante ou désactivée |
+| `courier_suspended` | Profil livreur suspendu |
+| `reason_required` | Motif obligatoire |
+| `not_found` | Élément introuvable |
+| `cannot_target_self` | Action interdite sur son propre compte |
+| `invalid_identifier` | Email ou numéro invalide |
