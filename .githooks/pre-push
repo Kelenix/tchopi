@@ -1,0 +1,3 @@
+#!/bin/sh
+# Refuse un envoi si l'analyse statique échoue (les tests tournent en CI).
+flutter analyze || exit 1

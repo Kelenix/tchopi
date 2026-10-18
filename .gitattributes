@@ -1,0 +1,6 @@
+# Fins de ligne identiques sous Windows et dans la CI (le contrôle du code généré compare les fichiers).
+* text=auto eol=lf
+*.ttf binary
+*.png binary
+*.jpg binary
+*.jar binary

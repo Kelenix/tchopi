@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: 3.41.9
+  PACKAGES: packages/core apps/client apps/courier apps/backoffice
+
+jobs:
+  flutter:
+    name: Flutter — code généré, format, analyse, tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Code généré et format à jour
+        run: |
+          (cd packages/core && flutter gen-l10n)
+          for p in $PACKAGES; do (cd "$p" && dart run build_runner build -d); done
+          dart format apps packages
+          git diff --exit-code
+      - run: flutter analyze
+      - name: Tests
+        run: for p in $PACKAGES; do (cd "$p" && flutter test) || exit 1; done
+
+  database:
+    name: Base de données — migrations depuis zéro et pgTAP
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 2.116.0
+      - run: supabase db start
+      - run: supabase test db
+
+  build:
+    name: Builds de contrôle (Android, web)
+    needs: flutter
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: cd apps/client && flutter build apk --debug
+      - run: cd apps/courier && flutter build apk --debug
+      - run: cd apps/backoffice && flutter build web --release

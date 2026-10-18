@@ -1,0 +1,17 @@
+# Configuration locale des apps (clés) : seul l'exemple est versionné
+env/*.json
+!env/example.json
+
+# Dart / Flutter (compléments des .gitignore de chaque app)
+.dart_tool/
+build/
+*.iml
+.idea/
+
+# Éditeurs et système
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Assistant : réglages locaux
+.claude/settings.local.json

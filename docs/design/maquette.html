@@ -1,0 +1,1106 @@
+<title>Maquette Tchopi</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+/* Vitrine : bandeau d'en-tête, puis une rangée d'écrans par application (Client, Livreur, Restaurant).
+   Jetons = design system du projet (docs/design/design-system.md). */
+:root {
+  --canvas: #E6EAE4; --canvas-ink: #0F1412; --canvas-muted: #56605A; --canvas-line: #D3D9D1;
+  --bezel: #0F1412; --bezel-edge: #2B332E; --notch: #000000;
+  --bg: #F5F6F3; --surface: #FFFFFF; --surface-alt: #EEF1EC; --border: #E4E7E2;
+  --ink: #0F1412; --on-ink: #FFFFFF; --muted: #6B7280;
+  --primary: #0B5D3B; --on-primary: #FFFFFF; --primary-soft: #E3F1E9;
+  --success: #16A34A; --progress: #22C55E;
+  --warning: #B45309; --warning-soft: #FCEFD9; --danger: #DC2626; --danger-soft: #FDE7E7;
+  --shadow: 0 8px 24px rgb(15 20 18 / 0.07);
+  --map-land: #EAEFE7; --map-block: #DCE4D8; --map-road: #FFFFFF; --map-water: #C9E1EA; --map-park: #CFE6C9;
+  --scrim: linear-gradient(to top, rgb(5 14 9 / 0.82), rgb(5 14 9 / 0.15) 62%, rgb(5 14 9 / 0.35));
+  --on-photo: #FFFFFF;
+  /* Illustrations de plats : identiques dans les deux thèmes, comme des photos */
+  --plate-in: #FBFAF6; --plate-rim: #E9E4D9;
+  --t-green: linear-gradient(140deg, #2C5E45, #0F3324);
+  --t-wood: repeating-linear-gradient(100deg, rgb(255 255 255 / 0.04) 0 3px, transparent 3px 11px), linear-gradient(135deg, #8A5532, #57301A);
+  --t-terra: linear-gradient(135deg, #C9693F, #8E3F22);
+  --t-sand: linear-gradient(135deg, #EDE2CB, #D8C8A7);
+  --font: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --canvas: #080B09; --canvas-ink: #EEF2EE; --canvas-muted: #98A29B; --canvas-line: #1E2621;
+    --bezel: #000000; --bezel-edge: #39443D;
+    --bg: #0C110E; --surface: #151B17; --surface-alt: #1E2621; --border: #2A332D;
+    --ink: #EEF2EE; --on-ink: #0F1412; --muted: #9AA39C;
+    --primary: #3DD68C; --on-primary: #06281A; --primary-soft: #173326;
+    --success: #4ADE80; --warning: #FBBF24; --warning-soft: #33270F; --danger: #F87171; --danger-soft: #3A1717;
+    --shadow: 0 0 0 1px #2A332D;
+    --map-land: #161D19; --map-block: #1D2621; --map-road: #2A352E; --map-water: #10303A; --map-park: #183124;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --canvas: #080B09; --canvas-ink: #EEF2EE; --canvas-muted: #98A29B; --canvas-line: #1E2621;
+  --bezel: #000000; --bezel-edge: #39443D;
+  --bg: #0C110E; --surface: #151B17; --surface-alt: #1E2621; --border: #2A332D;
+  --ink: #EEF2EE; --on-ink: #0F1412; --muted: #9AA39C;
+  --primary: #3DD68C; --on-primary: #06281A; --primary-soft: #173326;
+  --success: #4ADE80; --warning: #FBBF24; --warning-soft: #33270F; --danger: #F87171; --danger-soft: #3A1717;
+  --shadow: 0 0 0 1px #2A332D;
+  --map-land: #161D19; --map-block: #1D2621; --map-road: #2A352E; --map-water: #10303A; --map-park: #183124;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body {
+  background: var(--canvas); color: var(--canvas-ink); font-family: var(--font); font-size: 15px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 48px; -webkit-font-smoothing: antialiased;
+}
+button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; padding: 0; }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 8px; }
+.num { font-variant-numeric: tabular-nums; }
+svg.i { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---------- Vitrine ---------- */
+.wrap { max-width: 1360px; margin: 0 auto; }
+.top { display: grid; gap: 20px; padding-block: 40px 28px; border-bottom: 1px solid var(--canvas-line); }
+.top-row { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; }
+.mark { display: flex; align-items: baseline; gap: 10px; }
+.wordmark { font-weight: 800; font-size: 26px; letter-spacing: -0.03em; }
+.wordmark i { font-style: normal; color: var(--primary); }
+.tag { font-size: 12px; font-weight: 600; color: var(--canvas-muted); border: 1px solid var(--canvas-line); border-radius: 999px; padding: 3px 10px; }
+.top h1 { margin: 0; font-size: clamp(30px, 5vw, 52px); line-height: 1.04; letter-spacing: -0.035em; font-weight: 800; text-wrap: balance; max-width: 18ch; }
+.lede { margin: 0; max-width: 64ch; color: var(--canvas-muted); }
+.seg { display: inline-flex; background: var(--surface); border: 1px solid var(--canvas-line); border-radius: 999px; padding: 4px; gap: 2px; }
+.seg button { font-size: 13px; font-weight: 600; padding: 7px 14px; border-radius: 999px; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--on-ink); }
+.jump { display: flex; flex-wrap: wrap; gap: 8px; }
+.jump a { color: var(--canvas-ink); text-decoration: none; font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--canvas-line); }
+.app-sec { padding-block: 40px 8px; display: grid; gap: 24px; }
+.sec-head { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: baseline; justify-content: space-between; }
+.sec-head h2 { margin: 0; font-size: 26px; letter-spacing: -0.02em; font-weight: 800; }
+.sec-head p { margin: 0; color: var(--canvas-muted); max-width: 60ch; font-size: 14px; }
+.screens { display: flex; flex-wrap: wrap; gap: 36px 28px; }
+figure { margin: 0; display: grid; gap: 12px; justify-items: start; }
+figcaption { display: grid; gap: 2px; font-size: 13px; max-width: 300px; }
+figcaption b { font-size: 14px; }
+figcaption span { color: var(--canvas-muted); }
+.demo-btn { justify-self: start; margin-top: 4px; font-size: 13px; font-weight: 600; padding: 7px 14px; border-radius: 999px; background: var(--surface); border: 1px solid var(--canvas-line); color: var(--canvas-ink); }
+.demo-btn[aria-pressed="true"] { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
+.foot { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--canvas-line); color: var(--canvas-muted); font-size: 13px; display: grid; gap: 4px; }
+
+/* ---------- Téléphone ---------- */
+.phone { width: 300px; max-width: 100%; height: 640px; background: var(--bezel); border-radius: 46px; padding: 9px; box-shadow: inset 0 0 0 1.5px var(--bezel-edge), 0 30px 60px -24px rgb(0 0 0 / 0.4); }
+.screen { position: relative; height: 100%; border-radius: 38px; overflow: hidden; background: var(--bg); color: var(--ink); display: flex; flex-direction: column; font-size: 13px; line-height: 1.45; }
+.notch { position: absolute; top: 9px; left: 50%; transform: translateX(-50%); width: 88px; height: 25px; border-radius: 20px; background: var(--notch); z-index: 20; }
+.sb { height: 42px; flex: none; padding: 13px 24px 0 28px; display: flex; justify-content: space-between; font-weight: 700; font-size: 12.5px; position: relative; z-index: 10; }
+.sb .sys { display: flex; gap: 5px; align-items: center; }
+.sb .sys svg { height: 11px; width: auto; fill: currentColor; }
+.sb.on-photo { position: absolute; inset: 0 0 auto 0; color: var(--on-photo); }
+.scroll { flex: 1; overflow-y: auto; scrollbar-width: none; }
+.scroll::-webkit-scrollbar { display: none; }
+.pad { padding: 4px 18px 18px; display: grid; gap: 16px; align-content: start; }
+.bar { display: flex; align-items: center; gap: 10px; padding: 4px 16px 10px; }
+.bar h4 { margin: 0; flex: 1; text-align: center; font-size: 15px; font-weight: 700; }
+.icon-btn { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: var(--surface); box-shadow: var(--shadow); flex: none; }
+.icon-btn.ghost { box-shadow: none; background: var(--surface-alt); }
+.spacer { width: 38px; flex: none; }
+
+.h-disp { margin: 0; font-size: 26px; line-height: 1.12; font-weight: 800; letter-spacing: -0.025em; text-wrap: balance; }
+.h-title { margin: 0; font-size: 18px; line-height: 1.25; font-weight: 800; letter-spacing: -0.015em; }
+.h-sub { margin: 0; font-size: 14.5px; font-weight: 700; }
+.muted { color: var(--muted); }
+.small { font-size: 11.5px; }
+.row { display: flex; align-items: center; gap: 10px; }
+.between { justify-content: space-between; }
+.grow { flex: 1; min-width: 0; }
+.stack { display: grid; gap: 4px; }
+.card { background: var(--surface); border-radius: 22px; padding: 14px; box-shadow: var(--shadow); }
+.pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; padding: 4px 9px; border-radius: 999px; background: var(--primary-soft); color: var(--primary); white-space: nowrap; }
+.pill.warn { background: var(--warning-soft); color: var(--warning); }
+.pill.danger { background: var(--danger-soft); color: var(--danger); }
+.pill.dark { background: rgb(0 0 0 / 0.45); color: var(--on-photo); }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.btn { display: flex; align-items: center; justify-content: center; gap: 8px; height: 50px; border-radius: 999px; font-weight: 700; font-size: 14px; width: 100%; }
+.btn.primary { background: var(--primary); color: var(--on-primary); }
+.btn.ink { background: var(--ink); color: var(--on-ink); }
+.btn.outline { border: 1.5px solid var(--border); background: var(--surface); }
+.btn.soft { background: var(--surface-alt); }
+.btn.danger { background: var(--danger); color: var(--surface); }
+.btn.text-danger { color: var(--danger); height: 40px; }
+.list-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.list-row:last-child { border-bottom: 0; }
+.ico-tile { width: 38px; height: 38px; border-radius: 12px; background: var(--surface-alt); display: grid; place-items: center; flex: none; color: var(--primary); }
+.amount-row { display: flex; justify-content: space-between; padding: 3px 0; }
+.amount-row.total { font-weight: 800; font-size: 15px; padding-top: 8px; margin-top: 6px; border-top: 1px dashed var(--border); }
+.progress { height: 6px; border-radius: 6px; background: rgb(255 255 255 / 0.25); overflow: hidden; }
+.progress > i { display: block; height: 100%; background: var(--progress); border-radius: 6px; }
+
+/* Barre de navigation */
+.nav { flex: none; height: 68px; display: flex; justify-content: space-around; align-items: center; background: var(--surface); border-top: 1px solid var(--border); padding: 0 6px 10px; }
+.nav > span { display: grid; justify-items: center; gap: 2px; font-size: 10px; font-weight: 600; color: var(--muted); text-decoration: none; min-width: 48px; }
+.nav > span .ni { width: 40px; height: 28px; border-radius: 999px; display: grid; place-items: center; }
+.nav > span.active { color: var(--primary); }
+.nav > span.active .ni { background: var(--primary-soft); }
+.nav .fab { width: 54px; height: 54px; border-radius: 50%; background: var(--primary); color: var(--on-primary); display: grid; place-items: center; transform: translateY(-14px); box-shadow: 0 10px 20px -6px color-mix(in srgb, var(--primary) 55%, transparent); }
+.nav .fab svg { width: 24px; height: 24px; }
+
+/* Illustrations de plats (provisoires, remplacées par les photos des restaurants) */
+.ph { position: relative; overflow: hidden; background: var(--t-green); }
+.ph.wood { background: var(--t-wood); }
+.ph.terra { background: var(--t-terra); }
+.ph.sand { background: var(--t-sand); }
+.plate { position: absolute; width: var(--s, 160px); aspect-ratio: 1; left: var(--x, 50%); top: var(--y, 50%); transform: translate(-50%, -50%); border-radius: 50%;
+  filter: drop-shadow(0 14px 16px rgb(0 0 0 / 0.35));
+  background:
+    radial-gradient(circle at 30% 26%, rgb(255 255 255 / 0.32), transparent 30%),
+    radial-gradient(circle at 64% 34%, var(--d) 0 6.5%, transparent 7%),
+    radial-gradient(circle at 36% 70%, var(--c) 0 7.5%, transparent 8%),
+    radial-gradient(circle at 70% 64%, var(--c) 0 5.5%, transparent 6%),
+    radial-gradient(ellipse 29% 21% at 61% 52%, var(--b) 0 97%, transparent 100%),
+    radial-gradient(circle at 40% 42%, var(--a) 0 31%, transparent 31.5%),
+    radial-gradient(circle, var(--plate-in) 0 60%, var(--plate-rim) 60.5% 70%, transparent 70.5%);
+}
+.dish-attieke { --a: #F1E6C6; --b: #B4642B; --c: #D8452F; --d: #3E8E4A; }
+.dish-poulet { --a: #E7AE55; --b: #8C3B1C; --c: #C9372C; --d: #5BA34B; }
+.dish-garba { --a: #EFE4C4; --b: #A86B2D; --c: #E5552E; --d: #F2C443; }
+.dish-kedjenou { --a: #C4572A; --b: #8A3618; --c: #F0D9A8; --d: #4E8D3C; }
+.dish-foutou { --a: #F4EFDF; --b: #8A3B1E; --c: #B83A1F; --d: #3C7A3A; }
+.glass { position: absolute; width: var(--s, 70px); aspect-ratio: 1; left: var(--x, 50%); top: var(--y, 50%); transform: translate(-50%, -50%); border-radius: 50%;
+  filter: drop-shadow(0 10px 12px rgb(0 0 0 / 0.3));
+  background: radial-gradient(circle at 34% 30%, rgb(255 255 255 / 0.45), transparent 22%), radial-gradient(circle, #7B1E3A 0 56%, #E9E4D9 57% 68%, transparent 69%); }
+.thumb { width: 54px; height: 54px; border-radius: 16px; flex: none; }
+.thumb .plate { --s: 76px; }
+.thumb .glass { --s: 52px; }
+
+/* ---------- Écrans ---------- */
+/* Bienvenue */
+.w-photo { position: relative; flex: 1; min-height: 0; }
+.w-photo::after { content: ""; position: absolute; inset: 0; background: var(--scrim); }
+.w-copy { position: absolute; left: 22px; right: 22px; bottom: 44px; color: var(--on-photo); display: grid; gap: 8px; z-index: 2; }
+.w-copy .wordmark { font-size: 18px; }
+.w-copy .wordmark i { color: var(--progress); }
+.w-copy p { margin: 0; opacity: 0.85; font-size: 12.5px; }
+.w-sheet { position: relative; z-index: 3; margin-top: -26px; background: var(--surface); border-radius: 28px 28px 0 0; padding: 20px 20px 22px; display: grid; gap: 10px; }
+.w-feats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; text-align: center; font-size: 10.5px; font-weight: 600; color: var(--muted); margin-bottom: 4px; }
+.w-feats div { display: grid; justify-items: center; gap: 5px; }
+.w-feats .ico-tile { width: 34px; height: 34px; border-radius: 50%; background: var(--primary-soft); }
+.w-feats svg.i { width: 17px; height: 17px; }
+
+/* Accueil */
+.addr-chip { display: flex; align-items: center; gap: 8px; background: var(--surface); border-radius: 16px; padding: 10px 12px; box-shadow: var(--shadow); text-align: left; width: 100%; }
+.addr-chip svg.i { color: var(--primary); }
+.hero { position: relative; border-radius: 24px; overflow: hidden; height: 172px; color: var(--on-photo); }
+.hero::after { content: ""; position: absolute; inset: 0; background: var(--scrim); }
+.hero-in { position: absolute; inset: 0; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; z-index: 2; }
+.hero .big { font-size: 19px; font-weight: 800; letter-spacing: -0.02em; }
+.services { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.svc { background: var(--surface); border-radius: 22px; padding: 12px; display: grid; gap: 8px; box-shadow: var(--shadow); text-align: left; }
+.svc .art { height: 70px; border-radius: 16px; }
+.svc .art.box { background: var(--primary-soft); color: var(--primary); display: grid; place-items: center; }
+.svc .art.box svg.i { width: 34px; height: 34px; stroke-width: 1.6; }
+.svc b { font-size: 14px; }
+.svc span { font-size: 11px; color: var(--muted); line-height: 1.3; }
+.link { color: var(--primary); font-weight: 700; font-size: 12px; text-decoration: none; }
+
+/* Restaurant + menu */
+.cover { height: 158px; flex: none; }
+.cover .bar { position: absolute; inset: 42px 0 auto 0; }
+.r-card { margin: -34px 14px 0; position: relative; z-index: 3; display: grid; gap: 10px; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; padding-top: 10px; border-top: 1px solid var(--border); }
+.stats div { display: grid; gap: 1px; }
+.stats div + div { border-left: 1px solid var(--border); }
+.stats b { font-size: 13px; }
+.stats span { font-size: 10px; color: var(--muted); }
+.chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+.chip { flex: none; font-size: 12px; font-weight: 600; padding: 7px 13px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); }
+.chip.on { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
+.prod { display: flex; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.prod:last-child { border-bottom: 0; }
+.prod .grow b { display: block; font-size: 13px; }
+.prod .grow span { display: block; font-size: 11px; color: var(--muted); line-height: 1.3; }
+.prod .price { font-size: 13px; font-weight: 800; margin-top: 3px; display: block; }
+.qty { display: flex; align-items: center; gap: 6px; background: var(--surface-alt); border-radius: 999px; padding: 3px; }
+.qty button { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--surface); }
+.qty button svg.i { width: 15px; height: 15px; }
+.qty .plus { background: var(--primary); color: var(--on-primary); }
+.qty .minus, .qty .n { display: none; }
+.in-cart .qty .minus { display: grid; }
+.in-cart .qty .n { display: block; min-width: 14px; text-align: center; font-weight: 800; font-size: 13px; }
+.prod.off { opacity: 0.5; }
+.prod.off .tagline { font-size: 10.5px; font-weight: 700; color: var(--muted); }
+.cartbar { position: absolute; left: 12px; right: 12px; bottom: 14px; z-index: 6; height: 52px; border-radius: 999px; background: var(--ink); color: var(--on-ink); display: flex; align-items: center; justify-content: space-between; padding: 0 8px 0 18px; font-weight: 700; }
+.cartbar .cnt { background: var(--primary); color: var(--on-primary); border-radius: 999px; padding: 8px 12px; font-size: 13px; }
+
+/* Paiement Mobile Money */
+.op-badge { width: 64px; height: 64px; border-radius: 22px; background: var(--warning-soft); color: var(--warning); display: grid; place-items: center; }
+.op-badge svg.i { width: 30px; height: 30px; }
+.steps { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; counter-reset: s; }
+.steps li { display: flex; gap: 10px; align-items: flex-start; counter-increment: s; }
+.steps li::before { content: counter(s); flex: none; width: 22px; height: 22px; border-radius: 50%; background: var(--surface-alt); display: grid; place-items: center; font-weight: 800; font-size: 11px; }
+.wait { display: flex; gap: 12px; align-items: center; }
+.pulse { width: 12px; height: 12px; border-radius: 50%; background: var(--warning); box-shadow: 0 0 0 0 var(--warning); animation: pulse 1.6s infinite; flex: none; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--warning) 55%, transparent); } 100% { box-shadow: 0 0 0 12px transparent; } }
+
+/* Suivi */
+.map { position: relative; height: 262px; flex: none; background: var(--map-land); }
+.map svg.m { position: absolute; inset: 0; width: 100%; height: 100%; }
+.m-land { fill: var(--map-land); } .m-block { fill: var(--map-block); } .m-water { fill: var(--map-water); } .m-park { fill: var(--map-park); }
+.m-road { stroke: var(--map-road); stroke-width: 9; stroke-linecap: round; fill: none; }
+.m-road.s { stroke-width: 5; }
+.m-route { stroke: var(--primary); stroke-width: 4; fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1 8; }
+.m-label { fill: var(--muted); font: 600 9px var(--font); letter-spacing: 0.06em; text-transform: uppercase; }
+.mk { position: absolute; transform: translate(-50%, -50%); display: grid; place-items: center; }
+.mk-shop { width: 30px; height: 30px; border-radius: 10px; background: var(--ink); color: var(--on-ink); }
+.mk-shop svg.i { width: 16px; height: 16px; }
+.mk-home { width: 30px; height: 30px; border-radius: 50%; background: var(--primary); color: var(--on-primary); border: 3px solid var(--surface); }
+.mk-home svg.i { width: 14px; height: 14px; }
+.mk-courier { width: 36px; height: 36px; border-radius: 50%; background: var(--success); color: var(--surface); border: 3px solid var(--surface); box-shadow: 0 0 0 0 var(--success); animation: ring 1.8s infinite; }
+.mk-courier svg.i { width: 18px; height: 18px; }
+@keyframes ring { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--success) 50%, transparent); } 100% { box-shadow: 0 0 0 16px transparent; } }
+.mk-tip { position: absolute; transform: translate(-50%, -100%); background: var(--surface); color: var(--ink); font-size: 10.5px; font-weight: 700; padding: 4px 8px; border-radius: 8px; box-shadow: var(--shadow); white-space: nowrap; }
+.map .bar { position: absolute; inset: 42px 0 auto 0; z-index: 4; }
+.t-sheet { position: relative; z-index: 5; background: var(--bg); border-radius: 26px 26px 0 0; padding: 16px 16px 18px; display: grid; gap: 12px; }
+.eta { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; }
+.segs { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
+.segs i { height: 5px; border-radius: 4px; background: var(--border); }
+.segs i.done { background: var(--primary); }
+.segs i.now { background: linear-gradient(90deg, var(--primary) 55%, var(--border) 55%); }
+.avatar { width: 42px; height: 42px; border-radius: 50%; background: var(--primary-soft); color: var(--primary); display: grid; place-items: center; font-weight: 800; flex: none; }
+.call { width: 40px; height: 40px; border-radius: 50%; background: var(--primary); color: var(--on-primary); display: grid; place-items: center; flex: none; }
+.call svg.i { width: 18px; height: 18px; }
+.code { display: flex; gap: 6px; }
+.code span { width: 34px; height: 40px; border-radius: 10px; background: var(--surface-alt); display: grid; place-items: center; font-weight: 800; font-size: 19px; }
+.banner { display: flex; gap: 8px; align-items: center; background: var(--warning-soft); color: var(--warning); font-weight: 700; font-size: 11.5px; padding: 8px 12px; border-radius: 12px; }
+.banner svg.i { width: 16px; height: 16px; }
+.stale-only { display: none; }
+.is-stale .stale-only { display: flex; }
+.is-stale .live-only { display: none; }
+.is-stale .mk-courier { background: var(--muted); animation: none; }
+
+/* Colis */
+.dots { display: flex; gap: 5px; }
+.dots i { width: 7px; height: 7px; border-radius: 4px; background: var(--border); }
+.dots i.on { width: 20px; background: var(--primary); }
+.field { display: grid; gap: 5px; }
+.field label { font-size: 11.5px; font-weight: 600; color: var(--muted); }
+.input { display: flex; align-items: center; gap: 10px; min-height: 46px; padding: 0 12px; border-radius: 16px; background: var(--surface); border: 1.5px solid var(--border); font-weight: 600; }
+.input svg.i { color: var(--muted); width: 18px; height: 18px; }
+.input .cc { padding-right: 10px; border-right: 1px solid var(--border); }
+.types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.type { border: 1.5px solid var(--border); border-radius: 16px; background: var(--surface); padding: 9px 6px; text-align: center; display: grid; gap: 1px; font-size: 11.5px; font-weight: 700; }
+.type span { font-size: 10px; color: var(--muted); font-weight: 500; }
+.type.on { border-color: var(--primary); background: var(--primary-soft); color: var(--primary); }
+.type.on span { color: var(--primary); }
+.check { display: flex; gap: 10px; align-items: flex-start; font-size: 12px; }
+.check .box { width: 20px; height: 20px; border-radius: 6px; background: var(--primary); color: var(--on-primary); display: grid; place-items: center; flex: none; }
+.check .box svg.i { width: 14px; height: 14px; stroke-width: 3; }
+
+/* Détail + feuille d'annulation */
+.mini-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; text-align: center; font-size: 10px; color: var(--muted); font-weight: 600; }
+.mini-steps div { display: grid; justify-items: center; gap: 4px; }
+.mini-steps .c { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--surface-alt); }
+.mini-steps .c svg.i { width: 14px; height: 14px; }
+.mini-steps .on .c { background: var(--warning-soft); color: var(--warning); }
+.mini-steps .on { color: var(--ink); }
+.veil { position: absolute; inset: 0; background: rgb(5 10 8 / 0.45); z-index: 12; display: flex; align-items: flex-end; }
+.sheet { width: 100%; background: var(--surface); border-radius: 28px 28px 0 0; padding: 10px 18px 22px; display: grid; gap: 12px; justify-items: center; text-align: center; }
+.grip { width: 38px; height: 4px; border-radius: 4px; background: var(--border); }
+.sheet .warn-ico { width: 56px; height: 56px; border-radius: 50%; background: var(--danger-soft); color: var(--danger); display: grid; place-items: center; }
+.sheet .warn-ico svg.i { width: 24px; height: 24px; }
+.sheet p { margin: 0; }
+.sheet .item { width: 100%; text-align: left; background: var(--surface-alt); border-radius: 16px; padding: 10px; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; }
+.two .btn { height: 46px; font-size: 13px; }
+.cancelled-note { display: none; }
+.is-cancelled .cancelled-note { display: flex; }
+.is-cancelled .live-only { display: none; }
+
+/* Livreur */
+.online { border-radius: 26px; padding: 18px; display: grid; gap: 14px; background: var(--surface); box-shadow: var(--shadow); text-align: left; width: 100%; }
+.online .sw { width: 64px; height: 36px; border-radius: 999px; background: var(--surface-alt); padding: 4px; flex: none; transition: background 0.2s; }
+.online .sw i { display: block; width: 28px; height: 28px; border-radius: 50%; background: var(--muted); transition: transform 0.2s, background 0.2s; }
+.online.on { background: var(--primary); color: var(--on-primary); }
+.online.on .muted { color: var(--on-primary); opacity: 0.8; }
+.online.on .sw { background: rgb(255 255 255 / 0.25); }
+.online.on .sw i { transform: translateX(28px); background: var(--on-primary); }
+.online .state { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; }
+.kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.kpi { background: var(--surface); border-radius: 18px; padding: 10px; display: grid; gap: 2px; box-shadow: var(--shadow); }
+.kpi b { font-size: 14px; }
+.kpi span { font-size: 10px; color: var(--muted); line-height: 1.25; }
+.kpi.warn b { color: var(--warning); }
+.offer { padding: 6px 18px 18px; display: grid; gap: 14px; align-content: start; }
+.ringbox { position: relative; width: 112px; height: 112px; justify-self: center; }
+.ringbox svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.ringbox .track { stroke: var(--surface-alt); }
+.ringbox .run { stroke: var(--primary); stroke-linecap: round; transition: stroke-dashoffset 1s linear; }
+.ringbox .secs { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; line-height: 1; }
+.ringbox .secs b { font-size: 30px; font-weight: 800; display: block; color: var(--ink); }
+.ringbox .secs span { font-size: 10px; color: var(--muted); }
+.gain { text-align: center; display: grid; gap: 2px; }
+.gain b { font-size: 34px; font-weight: 800; letter-spacing: -0.03em; }
+.route { display: grid; gap: 0; }
+.route .pt { display: grid; grid-template-columns: 22px 1fr auto; gap: 10px; align-items: start; }
+.route .pt + .pt { margin-top: 2px; }
+.route .bullet { width: 12px; height: 12px; border-radius: 50%; border: 3px solid var(--ink); margin: 3px auto 0; }
+.route .pt.to .bullet { background: var(--primary); border-color: var(--primary); }
+.route .line { width: 2px; height: 18px; background: var(--border); margin: 2px 0 2px 10px; }
+.cash { display: flex; align-items: center; gap: 8px; background: var(--warning-soft); color: var(--warning); border-radius: 14px; padding: 9px 12px; font-weight: 700; font-size: 12px; }
+.cash svg.i { width: 18px; height: 18px; }
+.accepted-view, .declined-view { display: none; }
+.is-accepted .offer-view, .is-declined .offer-view { display: none; }
+.is-accepted .accepted-view, .is-declined .declined-view { display: grid; }
+.done-ico { width: 72px; height: 72px; border-radius: 50%; background: var(--primary-soft); color: var(--primary); display: grid; place-items: center; justify-self: center; }
+.done-ico svg.i { width: 34px; height: 34px; stroke-width: 2.5; }
+.otp-boxes { display: flex; gap: 10px; justify-content: center; }
+.otp-boxes span { width: 50px; height: 58px; border-radius: 16px; background: var(--surface); border: 1.5px solid var(--border); display: grid; place-items: center; font-size: 26px; font-weight: 800; }
+.otp-boxes span.filled { border-color: var(--primary); }
+.otp-boxes.err span { border-color: var(--danger); color: var(--danger); }
+.shake { animation: shake 0.35s; }
+@keyframes shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+.keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.keypad button { height: 46px; border-radius: 14px; background: var(--surface); font-size: 19px; font-weight: 700; box-shadow: var(--shadow); }
+.keypad button.k-del { background: transparent; box-shadow: none; display: grid; place-items: center; }
+.keypad .k-empty { visibility: hidden; }
+.otp-msg { text-align: center; font-size: 12px; font-weight: 600; min-height: 18px; }
+.otp-msg.err { color: var(--danger); }
+.otp-cash-ask { display: grid; gap: 10px; text-align: left; }
+.otp-done, .otp-cashed { display: none; }
+.is-done .otp-entry { display: none; }
+.is-done .otp-done { display: grid; }
+.is-cashed .otp-cash-ask { display: none; }
+.is-cashed .otp-cashed { display: flex; }
+
+/* Tablette restaurant */
+.tablet { width: 100%; max-width: 980px; background: var(--bezel); border-radius: 34px; padding: 10px; box-shadow: inset 0 0 0 1.5px var(--bezel-edge), 0 30px 60px -24px rgb(0 0 0 / 0.4); }
+.t-screen { border-radius: 26px; overflow: hidden; background: var(--bg); color: var(--ink); display: grid; grid-template-columns: 76px 1fr; min-height: 560px; font-size: 13px; line-height: 1.45; }
+.rail { background: var(--surface); border-right: 1px solid var(--border); display: grid; align-content: start; gap: 6px; padding: 16px 6px; justify-items: center; }
+.rail > span { display: grid; justify-items: center; gap: 3px; font-size: 10px; font-weight: 600; color: var(--muted); text-decoration: none; padding: 6px 2px; width: 100%; border-radius: 14px; }
+.rail > span.active { color: var(--primary); background: var(--primary-soft); }
+.t-main { padding: 16px; display: grid; gap: 14px; align-content: start; min-width: 0; }
+.t-head { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+.board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.col { background: var(--surface-alt); border-radius: 20px; padding: 10px; display: grid; gap: 10px; align-content: start; min-height: 220px; }
+.col-h { display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 13px; padding: 2px 4px; }
+.col-h .count { background: var(--surface); border-radius: 999px; padding: 1px 9px; font-size: 12px; }
+.ocard { background: var(--surface); border-radius: 16px; padding: 12px; display: grid; gap: 8px; box-shadow: var(--shadow); }
+.ocard.new { box-shadow: 0 0 0 2px var(--warning); }
+.ocard ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 2px; font-size: 12.5px; }
+.ocard .acts { display: grid; grid-template-columns: 1fr 1.4fr; gap: 6px; }
+.ocard .acts.one { grid-template-columns: 1fr; }
+.ocard .btn { height: 40px; font-size: 13px; }
+.motifs { display: none; flex-wrap: wrap; gap: 6px; }
+.ocard.asking .motifs { display: flex; }
+.ocard.asking .acts { display: none; }
+.motifs button { font-size: 11.5px; font-weight: 600; padding: 6px 10px; border-radius: 999px; border: 1px solid var(--border); }
+.toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--on-ink); padding: 10px 16px; border-radius: 999px; font-weight: 600; font-size: 13px; z-index: 50; max-width: calc(100% - 32px); }
+@media (max-width: 760px) {
+  .t-screen { grid-template-columns: 1fr; }
+  .rail { grid-auto-flow: column; justify-content: space-around; border-right: 0; border-bottom: 1px solid var(--border); padding: 8px; }
+  .board { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pulse, .mk-courier, .shake { animation: none; }
+  .ringbox .run, .online .sw, .online .sw i { transition: none; }
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5.5 8h13l-1 12.5h-11z"/><path d="M9 8a3 3 0 0 1 6 0"/></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/></symbol>
+  <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M3 7h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 7l12-3.5V7M16 13.5h2"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></symbol>
+  <symbol id="i-moto" viewBox="0 0 24 24"><circle cx="5.5" cy="16.5" r="3"/><circle cx="18.5" cy="16.5" r="3"/><path d="M8.5 16.5h5l3-6.5h-4l-2-3H8M14.5 6.5h2.5"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></symbol>
+  <symbol id="i-store" viewBox="0 0 24 24"><path d="M4 9l1.5-5h13L20 9"/><path d="M4 9a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.3 0"/><path d="M5 11v9h14v-9"/></symbol>
+  <symbol id="i-offline" viewBox="0 0 24 24"><path d="M3 3l18 18M8.6 8.7A9 9 0 0 1 21 10M5.5 11.3a9 9 0 0 1 2-1.4M9 15a4 4 0 0 1 4.2-.9M12 19h.01"/></symbol>
+  <symbol id="i-cash" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="10" rx="2"/><circle cx="12" cy="12" r="2.5"/></symbol>
+  <symbol id="i-nav" viewBox="0 0 24 24"><path d="M12 3l7 18-7-4-7 4z"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><path d="M4 12v7h16v-7M12 3v12M8 7l4-4 4 4"/></symbol>
+  <symbol id="i-sound" viewBox="0 0 24 24"><path d="M5 10v4h3l4 4V6L8 10z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M6 3v8a3 3 0 0 0 6 0V3M9 3v18M17 3c-2 2-2 6 0 8v10"/></symbol>
+  <symbol id="sb-sig" viewBox="0 0 17 11"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></symbol>
+  <symbol id="sb-bat" viewBox="0 0 25 11"><rect x="0.5" y="0.5" width="21" height="10" rx="3" fill="none" stroke="currentColor" opacity="0.5"/><rect x="2" y="2" width="15" height="7" rx="1.5"/><rect x="22.5" y="3.5" width="2" height="4" rx="1" opacity="0.5"/></symbol>
+</svg>
+
+<div class="wrap">
+  <header class="top">
+    <div class="top-row">
+      <div class="mark"><span class="wordmark">tchopi<i>.</i></span><span class="tag">nom de travail</span></div>
+      <div class="seg" role="group" aria-label="Thème d'affichage">
+        <button type="button" id="th-system" data-theme-set="system" aria-pressed="true">Système</button>
+        <button type="button" id="th-light" data-theme-set="light" aria-pressed="false">Clair</button>
+        <button type="button" id="th-dark" data-theme-set="dark" aria-pressed="false">Sombre</button>
+      </div>
+    </div>
+    <h1>Maquette des écrans clés, à valider avant le code.</h1>
+    <p class="lede">Apps Client, Livreur et Restaurant, aux couleurs du design system, en thème clair et sombre. Les plats sont des illustrations provisoires : les photos des restaurants les remplaceront. Les écrans réagissent : ajoutez des plats, simulez une coupure réseau, acceptez l'offre de mission, saisissez le code 4827, acceptez une commande.</p>
+    <nav class="jump" aria-label="Sections">
+      <a href="#client">App Client · 8 écrans</a>
+      <a href="#livreur">App Livreur · 3 écrans</a>
+      <a href="#restaurant">Espace Restaurant</a>
+    </nav>
+  </header>
+
+  <!-- ===================== CLIENT ===================== -->
+  <section class="app-sec" id="client">
+    <div class="sec-head">
+      <h2>App Client</h2>
+      <p>Commander un repas ou envoyer un colis, payer, suivre la livraison. Abidjan, prix en F CFA.</p>
+    </div>
+    <div class="screens">
+
+      <!-- S-01 Bienvenue -->
+      <figure>
+        <div class="phone"><div class="screen">
+          <div class="notch"></div>
+          <div class="w-photo ph">
+            <div class="plate dish-attieke" style="--s:330px;--x:64%;--y:38%"></div><div class="glass" style="--s:86px;--x:14%;--y:22%"></div>
+            <div class="sb on-photo"><span class="num">9:41</span><span class="sys"><svg viewBox="0 0 17 11"><use href="#sb-sig"/></svg><svg viewBox="0 0 25 11"><use href="#sb-bat"/></svg></span></div>
+            <div class="w-copy">
+              <span class="wordmark">tchopi<i>.</i></span>
+              <h3 class="h-disp">Vos plats et vos colis, livrés dans tout Abidjan.</h3>
+              <p>Payez en Mobile Money, par carte ou en espèces.</p>
+            </div>
+          </div>
+          <div class="w-sheet">
+            <div class="w-feats">
+              <div><span class="ico-tile"><svg class="i"><use href="#i-bag"/></svg></span>Restaurants du quartier</div>
+              <div><span class="ico-tile"><svg class="i"><use href="#i-box"/></svg></span>Colis d'un point à un autre</div>
+              <div><span class="ico-tile"><svg class="i"><use href="#i-pin"/></svg></span>Suivi en direct</div>
+            </div>
+            <button type="button" class="btn primary">Créer un compte</button>
+            <button type="button" class="btn outline">Se connecter</button>
+          </div>
+        </div></div>
+        <figcaption><b>Bienvenue</b><span>S-01 · photo plein écran, deux actions</span></figcaption>
+      </figure>
+
+      <!-- C-01 Accueil -->
+      <figure>
+        <div class="phone"><div class="screen">
+          <div class="notch"></div>
+          <div class="sb"><span class="num">9:41</span><span class="sys"><svg viewBox="0 0 17 11"><use href="#sb-sig"/></svg><svg viewBox="0 0 25 11"><use href="#sb-bat"/></svg></span></div>
+          <div class="scroll"><div class="pad">
+            <div class="row between">
+              <div class="stack"><span class="muted small">Bonjour Aïcha</span><span class="h-title">Que voulez-vous aujourd'hui ?</span></div>
+              <button type="button" class="icon-btn" aria-label="Notifications"><svg class="i"><use href="#i-bell"/></svg></button>
+            </div>
+            <button type="button" class="addr-chip"><svg class="i"><use href="#i-pin"/></svg><span class="grow stack"><b>Cocody · Maison</b><span class="muted small">Derrière la pharmacie centrale</span></span><svg class="i muted"><use href="#i-down"/></svg></button>
+            <div class="hero ph wood">
+              <div class="plate dish-poulet" style="--s:210px;--x:82%;--y:40%"></div>
+              <div class="hero-in">
+                <span class="pill dark">Commande R-48K2Q <svg class="i" style="width:12px;height:12px"><use href="#i-chev"/></svg></span>
+                <div class="stack" style="gap:6px">
+                  <span class="small" style="opacity:.85">Chez Tantie Rose</span>
+                  <span class="big">En préparation · arrivée ≈ 25 min</span>
+                  <div class="progress"><i style="width:34%"></i></div>
+                  <span class="small" style="opacity:.8">Étape 2 sur 6</span>
+                </div>
+              </div>
+            </div>
+            <div class="services">
+              <button type="button" class="svc"><span class="art ph terra"><span class="plate dish-garba" style="--s:120px;--x:70%;--y:60%"></span></span><b>Repas</b><span>Restaurants ouverts près de vous</span></button>
+              <button type="button" class="svc"><span class="art box"><svg class="i"><use href="#i-box"/></svg></span><b>Colis</b><span>Envoyez d'un point à un autre</span></button>
+            </div>
+            <div class="row between"><span class="h-sub">Ouverts près de vous</span><span class="link">Tout voir</span></div>
+            <div class="card" style="padding:4px 12px">
+              <div class="list-row"><span class="thumb ph sand"><span class="plate dish-kedjenou"></span></span><span class="grow stack"><b>Maquis Le Baobab</b><span class="muted small">Ivoirien · 20–30 min · 1 000 F</span></span><span class="pill">Ouvert</span></div>
+              <div class="list-row"><span class="thumb ph"><span class="plate dish-foutou"></span></span><span class="grow stack"><b>La Terrasse de Marcory</b><span class="muted small">Grillades · 30–40 min · 1 500 F</span></span><span class="pill">Ouvert</span></div>
+            </div>
+          </div></div>
+          <nav class="nav" aria-label="Navigation client">
+            <span class="active"><span class="ni"><svg class="i"><use href="#i-home"/></svg></span>Accueil</span>
+            <span><span class="ni"><svg class="i"><use href="#i-bag"/></svg></span>Commandes</span>
+            <span class="fab" aria-label="Envoyer un colis" role="img"><svg class="i"><use href="#i-plus"/></svg></span>
+            <span><span class="ni"><svg class="i"><use href="#i-wallet"/></svg></span>Paiements</span>
+            <span><span class="ni"><svg class="i"><use href="#i-user"/></svg></span>Profil</span>
+          </nav>
+        </div></div>
+        <figcaption><b>Accueil</b><span>C-01 · adresse active, commande en cours, deux services</span></figcaption>
+      </figure>
+
+      <!-- C-03 Restaurant + menu -->
+      <figure>
+        <div class="phone"><div class="screen" data-menu>
+          <div class="notch"></div>
+          <div class="scroll" style="padding-bottom:76px">
+            <div class="cover ph wood">
+              <div class="plate dish-attieke" style="--s:230px;--x:72%;--y:58%"></div>
+              <div class="plate dish-poulet" style="--s:150px;--x:12%;--y:78%"></div>
+              <div class="sb on-photo"><span class="num">9:41</span><span class="sys"><svg viewBox="0 0 17 11"><use href="#sb-sig"/></svg><svg viewBox="0 0 25 11"><use href="#sb-bat"/></svg></span></div>
+              <div class="bar"><button type="button" class="icon-btn" aria-label="Retour"><svg class="i"><use href="#i-back"/></svg></button><span class="grow"></span><button type="button" class="icon-btn" aria-label="Rechercher dans le menu"><svg class="i"><use href="#i-search"/></svg></button></div>
+            </div>
+            <div class="card r-card">
+              <div class="row between"><span class="h-title">Chez Tantie Rose</span><span class="pill"><span class="dot"></span>Ouvert</span></div>
+              <span class="muted small" style="margin-top:-6px">Maquis ivoirien · Cocody · jusqu'à 23:00</span>
+              <div class="stats">
+                <div><b class="num">25–35 min</b><span>Préparation + trajet</span></div>
+                <div><b class="num">1 300 F</b><span>Livraison</span></div>
+                <div><b class="num">2,1 km</b><span>Distance</span></div>
+              </div>
+            </div>
+            <div class="pad" style="padding-top:14px;gap:8px">
+              <div class="chips"><span class="chip on">Plats</span><span class="chip">Grillades</span><span class="chip">Boissons</span></div>
+              <div>
+                <div class="prod in-cart" data-item="attieke" data-price="3500">
+                  <span class="thumb ph sand"><span class="plate dish-attieke"></span></span>
+                  <span class="grow"><b>Attiéké poisson braisé</b><span>Carpe braisée, attiéké, tomate, oignon</span><span class="price num">3 500 F</span></span>
+                  <span class="qty"><button type="button" class="minus" data-step="-1" aria-label="Retirer un attiéké poisson"><svg class="i"><use href="#i-minus"/></svg></button><span class="n num" data-qty>1</span><button type="button" class="plus" data-step="1" aria-label="Ajouter un attiéké poisson"><svg class="i"><use href="#i-plus"/></svg></button></span>
+                </div>
+                <div class="prod in-cart" data-item="poulet" data-price="4000">
+                  <span class="thumb ph"><span class="plate dish-poulet"></span></span>
+                  <span class="grow"><b>Poulet braisé + alloco</b><span>Demi-poulet, alloco, piment frais</span><span class="price num">4 000 F</span></span>
+                  <span class="qty"><button type="button" class="minus" data-step="-1" aria-label="Retirer un poulet braisé"><svg class="i"><use href="#i-minus"/></svg></button><span class="n num" data-qty>1</span><button type="button" class="plus" data-step="1" aria-label="Ajouter un poulet braisé"><svg class="i"><use href="#i-plus"/></svg></button></span>
+                </div>
+                <div class="prod" data-item="kedjenou" data-price="4500">
+                  <span class="thumb ph terra"><span class="plate dish-kedjenou"></span></span>
+                  <span class="grow"><b>Kedjenou de poulet</b><span>Mijoté à l'étouffée, riz blanc</span><span class="price num">4 500 F</span></span>
+                  <span class="qty"><button type="button" class="minus" data-step="-1" aria-label="Retirer un kedjenou"><svg class="i"><use href="#i-minus"/></svg></button><span class="n num" data-qty>0</span><button type="button" class="plus" data-step="1" aria-label="Ajouter un kedjenou"><svg class="i"><use href="#i-plus"/></svg></button></span>
+                </div>
+                <div class="prod off">
+                  <span class="thumb ph sand"><span class="plate dish-foutou"></span></span>
+                  <span class="grow"><b>Foutou sauce graine</b><span>Foutou banane, sauce graine, viande</span><span class="tagline">Indisponible aujourd'hui</span></span>
+                </div>
+                <div class="prod" data-item="bissap" data-price="500">
+                  <span class="thumb ph"><span class="glass"></span></span>
+                  <span class="grow"><b>Bissap 50 cl</b><span>Fait maison, bien frais</span><span class="price num">500 F</span></span>
+                  <span class="qty"><button type="button" class="minus" data-step="-1" aria-label="Retirer un bissap"><svg class="i"><use href="#i-minus"/></svg></button><span class="n num" data-qty>0</span><button type="button" class="plus" data-step="1" aria-label="Ajouter un bissap"><svg class="i"><use href="#i-plus"/></svg></button></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="cartbar" data-cartbar><span>Voir le panier</span><span class="cnt num"><span data-cart-count>2 articles</span> · <span data-cart-total>7 500 F</span></span></button>
+        </div></div>
+        <figcaption><b>Restaurant et menu</b><span>C-03 · touchez + et − : le panier se met à jour</span></figcaption>
+      </figure>
+
+      <!-- C-05 Validation -->
+      <figure>
+        <div class="phone"><div class="screen">
+          <div class="notch"></div>
+          <div class="sb"><span class="num">9:41</span><span class="sys"><svg viewBox="0 0 17 11"><use href="#sb-sig"/></svg><svg viewBox="0 0 25 11"><use href="#sb-bat"/></svg></span></div>
+          <div class="bar"><button type="button" class="icon-btn" aria-label="Retour"><svg class="i"><use href="#i-back"/></svg></button><h4>Validation</h4><span class="spacer"></span></div>
+          <div class="scroll"><div class="pad">
+            <div class="card" style="display:grid;gap:10px">
+              <div class="row"><span class="thumb ph wood" style="width:44px;height:44px;border-radius:14px"><span class="plate dish-attieke" style="--s:64px"></span></span><span class="grow stack"><b>Chez Tantie Rose</b><span class="muted small">Préparation ≈ 20 min</span></span></div>
+              <div style="border-top:1px solid var(--border);padding-top:8px;display:grid;gap:4px">
+                <div class="amount-row"><span>1 × Attiéké poisson braisé</span><span class="num">3 500 F</span></div>
+                <div class="amount-row"><span>1 × Poulet braisé + alloco</span><span class="num">4 000 F</span></div>
+              </div>
+            </div>
+            <div class="card" style="padding:2px 14px">
+              <div class="list-row"><span class="ico-tile"><svg class="i"><use href="#i-pin"/></svg></span><span class="grow stack"><span class="muted small">Livrer à · Maison</span><b>Cocody, derrière la pharmacie centrale</b><span class="muted small">Portail bleu, sonner deux fois</span></span><svg class="i muted"><use href="#i-chev"/></svg></div>
+              <div class="list-row"><span class="ico-tile"><svg class="i"><use href="#i-wallet"/></svg></span><span class="grow stack"><span class="muted small">Paiement</span><b>Orange Money</b><span class="muted small num">07 •• •• 45 12</span></span><svg class="i muted"><use href="#i-chev"/></svg></div>
+            </div>
+            <div class="card">
+              <div class="amount-row"><span class="muted">Sous-total</span><span class="num">7 500 F</span></div>
+              <div class="amount-row"><span class="muted">Frais de livraison · 5,2 km</span><span class="num">1 300 F</span></div>
+              <div class="amount-row total"><span>Total</span><span class="num">8 800 F</span></div>
+            </div>
+            <p class="muted small" style="margin:0;text-align:center">Prix et disponibilités sont revérifiés au moment de commander.</p>
+            <button type="button" class="btn primary">Commander · <span class="num">8 800 F</span></button>
+          </div></div>
+        </div></div>
+        <figcaption><b>Validation de la commande</b><span>C-05 · récapitulatif complet, montants séparés</span></figcaption>
+      </figure>
+
+      <!-- C-07 Paiement Mobile Money -->
+      <figure>
+        <div class="phone"><div class="screen">
+          <div class="notch"></div>
+          <div class="sb"><span class="num">9:41</span><span class="sys"><svg viewBox="0 0 17 11"><use href="#sb-sig"/></svg><svg viewBox="0 0 25 11"><use href="#sb-bat"/></svg></span></div>
+          <div class="bar"><button type="button" class="icon-btn" aria-label="Retour"><svg class="i"><use href="#i-back"/></svg></button><h4>Paiement</h4><span class="spacer"></span></div>
+          <div class="scroll"><div class="pad" style="gap:18px">
+            <div class="row"><span class="op-badge"><svg class="i"><use href="#i-wallet"/></svg></span><span class="stack"><span class="muted small">Orange Money · commande R-48K2Q</span><span class="h-title num">8 800 F</span></span></div>
+            <h3 class="h-disp" style="font-size:23px">Validez le paiement sur votre téléphone</h3>
+            <ol class="steps">
+              <li><span>Une demande de <b class="num">8 800 F</b> arrive sur le <b class="num">07 •• •• 45 12</b>.</span></li>
+              <li><span>Saisissez votre code secret Orange Money pour confirmer.</span></li>
+              <li><span>La commande part au restaurant dès que l'opérateur confirme.</span></li>
+            </ol>
+            <div class="card wait"><span class="pulse"></span><span class="grow stack"><b>En attente de confirmation</b><span class="muted small">Expire dans <span class="num" data-momo-timer>14:32</span></span></span></div>
+            <p class="muted small" style="margin:0">Vous pouvez quitter cet écran : le paiement n'est validé que par l'opérateur, jamais par l'app.</p>
+            <div style="display:grid;gap:4px">
+              <button type="button" class="btn outline">Changer de moyen de paiement</button>
+              <button type="button" class="btn text-danger">Annuler la commande</button>
+            </div>
+          </div></div>
+        </div></div>
+        <figcaption><b>Paiement Mobile Money</b><span>C-07 · confirmé seulement par l'opérateur</span></figcaption>
+      </figure>
+
+      <!-- C-09 Suivi -->
+      <figure>
+        <div class="phone"><div class="screen" data-tracking>
+          <div class="notch"></div>
+          <div class="map">
+            <svg class="m" viewBox="0 0 282 262" aria-hidden="true">
+              <rect class="m-land" width="282" height="262"/>
+              <rect class="m-block" x="18" y="60" width="62" height="44" rx="6"/>
+              <rect class="m-block" x="96" y="40" width="44" height="58" rx="6"/>
+              <rect class="m-block" x="186" y="120" width="70" height="40" rx="6"/>
+              <rect class="m-block" x="34" y="160" width="58" height="30" rx="6"/>
+              <rect class="m-park" x="200" y="30" width="72" height="52" rx="10"/>
+              <path class="m-water" d="M0 214 C38 198 74 222 112 206 S182 226 214 262 L0 262 Z"/>
+              <path class="m-road" d="M-10 132 L310 84"/>
+              <path class="m-road" d="M158 -10 L176 272"/>
+              <path class="m-road s" d="M70 -10 L92 200"/>
+              <path class="m-road s" d="M176 170 L310 186"/>
+              <path class="m-road s" d="M0 46 L160 30"/>
+              <path class="m-route" d="M74 148 L88 132 L167 120 L238 109"/>
+              <text class="m-label" x="22" y="124">Cocody</text>
+              <text class="m-label" x="214" y="206">Riviera 2</text>
+              <text class="m-label" x="30" y="240">Lagune Ébrié</text>
+            </svg>
+            <span class="mk mk-shop" style="left:74px;top:148px"><svg class="i"><use href="#i-store"/></svg></span>
+            <span class="mk mk-home" style="left:238px;top:109px"><svg class="i"><use href="#i-home"/></svg></span>
+            <span class="mk mk-courier" style="left:186px;top:117px"><svg class="i"><use href="#i-moto"/></svg></span>
+            <span class="mk-tip live-only" style="left:186px;top:96px">Koffi · à 1,6 km</span>
+            <span class="mk-tip stale-only" style="left:186px;top:96px">Position il y a 3 min</span>
+            <div class="sb" style="position:absolute;inset:0 0 auto 0"><span class="num">9:41</span><span class="sys"><svg viewBox="0 0 17 11"><use href="#sb-sig"/></svg><svg viewBox="0 0 25 11"><use href="#sb-bat"/></svg></span></div>
+            <div class="bar"><button type="button" class="icon-btn" aria-label="Retour"><svg class="i"><use href="#i-back"/></svg></button></div>
+          </div>
+          <div class="scroll" style="margin-top:-24px;position:relative;z-index:5">
+            <div class="t-sheet">
+              <div class="banner stale-only"><svg class="i"><use href="#i-offline"/></svg>Connexion perdue — reconnexion…</div>
+              <div class="row between">
+                <span class="stack"><span class="eta num live-only">≈ 12 min</span><span class="eta stale-only muted" style="font-size:18px">Arrivée indisponible</span><span class="muted small">Commande R-48K2Q · Chez Tantie Rose</span></span>
+                <span class="pill"><span class="dot"></span>En route</span>
+              </div>
+              <div class="stack" style="gap:6px"><div class="segs"><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="now"></i><i></i></div><span class="small"><b>En cours de livraison</b> <span class="muted">· étape 5 sur 6 · récupérée à 12:41</span></span></div>
+              <div class="card row"><span class="avatar">KA</span><span class="grow stack"><b>Koffi A.</b><span class="muted small num">Moto · 4821 HJ 01</span></span><button type="button" class="call" aria-label="Appeler le livreur"><svg class="i"><use href="#i-phone"/></svg></button></div>
+              <div class="card row between"><span class="stack"><b>Code de livraison</b><span class="muted small">À donner au livreur à son arrivée</span></span><span class="code num" aria-label="Code 4 8 2 7"><span>4</span><span>8</span><span>2</span><span>7</span></span></div>
+            </div>
+          </div>
+        </div></div>
+        <figcaption><b>Suivi de livraison</b><span>C-09 · position, ETA, livreur, code</span></figcaption>
+        <button type="button" class="demo-btn" id="stale-toggle" data-stale-toggle aria-pressed="false">Simuler une coupure réseau</button>
+      </figure>
+
+      <!-- C-08 Colis étape 3/4 -->
+      <figure>
+        <div class="phone"><div class="screen">
+          <div class="notch"></div>
+          <div class="sb"><span class="num">9:41</span><span class="sys"><svg viewBox="0 0 17 11"><use href="#sb-sig"/></svg><svg viewBox="0 0 25 11"><use href="#sb-bat"/></svg></span></div>
+          <div class="bar"><button type="button" class="icon-btn" aria-label="Étape précédente"><svg class="i"><use href="#i-back"/></svg></button><span class="grow row" style="justify-content:center"><span class="dots"><i></i><i></i><i class="on"></i><i></i></span></span><span class="muted small num" style="width:38px;text-align:right;font-weight:700">3/4</span></div>
+          <div class="scroll"><div class="pad" style="gap:14px">
+            <div class="stack"><h3 class="h-disp">Votre colis</h3><span class="muted">Ces informations aident le livreur à remettre le colis.</span></div>
+            <div class="field"><label>Destinataire</label><div class="input"><svg class="i"><use href="#i-user"/></svg>Awa Koné</div></div>
+            <div class="field"><label>Téléphone du destinataire</label><div class="input num"><span class="cc">+225</span>05 44 18 31 08</div></div>
+            <div class="field"><label>Type de colis</label>
+              <div class="types"><span class="type">Documents<span>Enveloppe</span></span><span class="type on">Petit colis<span>≤ 5 kg</span></span><span class="type">Colis moyen<span>≤ 15 kg</span></span></div>
+            </div>
+            <div class="field"><label>Description</label><div class="input">Sac de vêtements</div></div>
+            <div class="check"><span class="box"><svg class="i"><use href="#i-check"/></svg></span><span>Mon colis respecte la liste des objets autorisés. <span class="link">Voir la liste</span></span></div>
+            <button type="button" class="btn primary">Voir le prix</button>
+          </div></div>
+        </div></div>
+        <figcaption><b>Demande de colis</b><span>C-08 · étape 3 sur 4, formulaire court</span></figcaption>
+      </figure>
+
+      <!-- C-11 Détail + annulation -->
+      <figure>
+        <div class="phone"><div class="screen" data-cancel>
+          <div class="notch"></div>
+          <div class="sb"><span class="num">9:41</span><span class="sys"><svg viewBox="0 0 17 11"><use href="#sb-sig"/></svg><svg viewBox="0 0 25 11"><use href="#sb-bat"/></svg></span></div>
+          <div class="bar"><button type="button" class="icon-btn" aria-label="Retour"><svg class="i"><use href="#i-back"/></svg></button><h4>Ma commande</h4><span class="spacer"></span></div>
+          <div class="scroll"><div class="pad">
+            <div class="row between">
+              <span class="stack"><span class="h-title">Commande R-51P7D</span><span class="muted small">Aujourd'hui, 12:31</span></span>
+              <span class="pill warn live-only">En attente</span><span class="pill danger cancelled-note">Annulée</span>
+            </div>
+            <div class="mini-steps">
+              <div class="on"><span class="c"><svg class="i"><use href="#i-clock"/></svg></span>Envoyée</div>
+              <div><span class="c"><svg class="i"><use href="#i-check"/></svg></span>Acceptée</div>
+              <div><span class="c"><svg class="i"><use href="#i-moto"/></svg></span>En route</div>
+              <div><span class="c"><svg class="i"><use href="#i-home"/></svg></span>Livrée</div>
+            </div>
+            <div class="card row"><span class="thumb ph terra"><span class="plate dish-garba"></span></span><span class="grow stack"><b>Garba</b><span class="muted small">Maquis Le Baobab</span><span class="num" style="font-weight:800">2 × 1 000 F</span></span></div>
+            <div class="card" style="padding:2px 14px">
+              <div class="list-row"><span class="ico-tile"><svg class="i"><use href="#i-pin"/></svg></span><span class="grow stack"><span class="muted small">Adresse</span><b>Angré, face à la station-service</b></span></div>
+              <div class="list-row"><span class="ico-tile"><svg class="i"><use href="#i-cash"/></svg></span><span class="grow stack"><span class="muted small">Paiement</span><b>Espèces à la livraison</b></span></div>
+            </div>
+            <div class="banner cancelled-note" style="background:var(--danger-soft);color:var(--danger)"><svg class="i"><use href="#i-check"/></svg>Commande annulée. Vous ne serez pas débité.</div>
+            <button type="button" class="btn outline live-only" style="color:var(--danger)" data-open-sheet>Annuler la commande</button>
+            <button type="button" class="btn soft cancelled-note" data-restore>Rejouer la démo</button>
+          </div></div>
+          <div class="veil" data-sheet>
+            <div class="sheet" role="dialog" aria-label="Annuler la commande">
+              <span class="grip"></span>
+              <span class="warn-ico"><svg class="i"><use href="#i-trash"/></svg></span>
+              <span class="h-title">Annuler la commande ?</span>
+              <p class="muted">Le restaurant n'a pas encore accepté. Vous ne serez pas débité.</p>
+              <div class="item row"><span class="thumb ph terra" style="width:40px;height:40px;border-radius:12px"><span class="plate dish-garba" style="--s:58px"></span></span><span class="grow stack"><b>2 × Garba</b><span class="muted small">Maquis Le Baobab</span></span><b class="num">3 000 F</b></div>
+              <div class="two"><button type="button" class="btn soft" data-close-sheet>Garder ma commande</button><button type="button" class="btn danger" data-confirm-cancel>Oui, annuler</button></div>
+            </div>
+          </div>
+        </div></div>
+        <figcaption><b>Annulation</b><span>C-11 · la conséquence est expliquée avant l'action</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ===================== LIVREUR ===================== -->
+  <section class="app-sec" id="livreur">
+    <div class="sec-head">
+      <h2>App Livreur</h2>
+      <p>Un interrupteur pour être en ligne, des offres claires en 45 secondes, une confirmation par code à la remise.</p>
+    </div>
+    <div class="screens">
+
+      <!-- L-03 Tableau de bord -->
+      <figure>
+        <div class="phone"><div class="screen">
+          <div class="notch"></div>
+          <div class="sb"><span class="num">9:41</span><span class="sys"><svg viewBox="0 0 17 11"><use href="#sb-sig"/></svg><svg viewBox="0 0 25 11"><use href="#sb-bat"/></svg></span></div>
+          <div class="scroll"><div class="pad">
+            <div class="row"><span class="avatar">KA</span><span class="grow stack"><span class="muted small">Bonjour</span><b style="font-size:15px">Koffi Aka</b></span><span class="pill"><svg class="i" style="width:12px;height:12px"><use href="#i-check"/></svg>Compte approuvé</span></div>
+            <button type="button" class="online on" id="online-switch" data-online aria-pressed="true">
+              <span class="row between"><span class="state" data-online-label>En ligne</span><span class="sw"><i></i></span></span>
+              <span class="muted small" data-online-sub>Vous recevez des missions autour de Cocody. Votre position est partagée tant que vous êtes en ligne.</span>
+            </button>
+            <div class="kpis">
+              <div class="kpi"><b class="num">6 600 F</b><span>Gains du jour</span></div>
+              <div class="kpi"><b class="num">6</b><span>Missions livrées</span></div>
+              <div class="kpi warn"><b class="num">17 500 F</b><span>Espèces à reverser</span></div>
+            </div>
+            <div class="row between"><span class="h-sub">Dernières missions</span><span class="link">Historique</span></div>
+            <div class="card" style="padding:2px 14px">
+              <div class="list-row"><span class="ico-tile"><svg class="i"><use href="#i-bag"/></svg></span><span class="grow stack"><b>Repas · Plateau → Cocody</b><span class="muted small">Livrée à 11:42</span></span><b class="num" style="color:var(--success)">+1 100 F</b></div>
+              <div class="list-row"><span class="ico-tile"><svg class="i"><use href="#i-box"/></svg></span><span class="grow stack"><b>Colis · Marcory → Treichville</b><span class="muted small">Livré à 10:58</span></span><b class="num" style="color:var(--success)">+1 300 F</b></div>
+            </div>
+          </div></div>
+          <nav class="nav" aria-label="Navigation livreur">
+            <span class="active"><span class="ni"><svg class="i"><use href="#i-home"/></svg></span>Accueil</span>
+            <span><span class="ni"><svg class="i"><use href="#i-clock"/></svg></span>Historique</span>
+            <span><span class="ni"><svg class="i"><use href="#i-user"/></svg></span>Profil</span>
+          </nav>
+        </div></div>
+        <figcaption><b>Tableau de bord</b><span>L-03 · touchez l'interrupteur pour passer hors ligne</span></figcaption>
+      </figure>
+
+      <!-- L-04 Offre -->
+      <figure>
+        <div class="phone"><div class="screen" data-offer>
+          <div class="notch"></div>
+          <div class="sb"><span class="num">9:41</span><span class="sys"><svg viewBox="0 0 17 11"><use href="#sb-sig"/></svg><svg viewBox="0 0 25 11"><use href="#sb-bat"/></svg></span></div>
+          <div class="scroll">
+            <div class="offer offer-view">
+              <div class="row between"><span class="pill"><svg class="i" style="width:12px;height:12px"><use href="#i-bag"/></svg>Nouvelle mission · Repas</span><span class="muted small num">4,2 km au total</span></div>
+              <div class="ringbox">
+                <svg viewBox="0 0 120 120" aria-hidden="true"><circle class="track" cx="60" cy="60" r="52" fill="none" stroke-width="9"/><circle class="run" data-ring cx="60" cy="60" r="52" fill="none" stroke-width="9"/></svg>
+                <span class="secs"><span><b class="num" data-secs>38</b><span>secondes</span></span></span>
+              </div>
+              <div class="gain"><span class="muted small">Votre gain</span><b class="num">+1 100 F</b></div>
+              <div class="card route">
+                <div class="pt"><span class="bullet"></span><span class="stack"><span class="muted small">Retrait · Chez Tantie Rose</span><b>Cocody, face à la station-service</b></span><span class="muted small num">0,8 km</span></div>
+                <span class="line"></span>
+                <div class="pt to"><span class="bullet"></span><span class="stack"><span class="muted small">Livraison · Aïcha</span><b>Riviera 2, derrière la pharmacie centrale</b></span><span class="muted small num">3,4 km</span></div>
+              </div>
+              <div class="cash"><svg class="i"><use href="#i-cash"/></svg>Espèces à encaisser · <span class="num">8 800 F</span></div>
+              <div class="two"><button type="button" class="btn outline" data-decline>Refuser</button><button type="button" class="btn primary" data-accept>Accepter</button></div>
+            </div>
+            <div class="offer accepted-view" style="padding-top:60px;text-align:center">
+              <span class="done-ico"><svg class="i"><use href="#i-check"/></svg></span>
+              <span class="h-title">Mission acceptée</span>
+              <span class="muted">Direction Chez Tantie Rose, à 0,8 km. Le client est prévenu.</span>
+              <button type="button" class="btn primary"><svg class="i"><use href="#i-nav"/></svg>Ouvrir l'itinéraire</button>
+              <button type="button" class="btn soft" data-replay>Rejouer la démo</button>
+            </div>
+            <div class="offer declined-view" style="padding-top:80px;text-align:center">
+              <span class="h-title">Offre refusée</span>
+              <span class="muted">Elle est proposée à un autre livreur. Restez en ligne pour la prochaine.</span>
+            </div>
+          </div>
+        </div></div>
+        <figcaption><b>Nouvelle demande</b><span>L-04 · compte à rebours, gain, trajet, espèces</span></figcaption>
+      </figure>
+
+      <!-- L-07 Code -->
+      <figure>
+        <div class="phone"><div class="screen" data-otp>
+          <div class="notch"></div>
+          <div class="sb"><span class="num">9:41</span><span class="sys"><svg viewBox="0 0 17 11"><use href="#sb-sig"/></svg><svg viewBox="0 0 25 11"><use href="#sb-bat"/></svg></span></div>
+          <div class="bar"><button type="button" class="icon-btn" aria-label="Retour"><svg class="i"><use href="#i-back"/></svg></button><h4>Livraison R-48K2Q</h4><span class="spacer"></span></div>
+          <div class="scroll">
+            <div class="pad otp-entry" style="gap:14px">
+              <div class="stack" style="text-align:center"><span class="h-title">Demandez le code au client</span><span class="muted small">Aïcha · Riviera 2, derrière la pharmacie centrale</span></div>
+              <div class="otp-boxes num" data-boxes><span></span><span></span><span></span><span></span></div>
+              <div class="otp-msg" data-otp-msg>5 essais possibles</div>
+              <div class="keypad" data-keypad>
+                <button type="button" class="num">1</button><button type="button" class="num">2</button><button type="button" class="num">3</button>
+                <button type="button" class="num">4</button><button type="button" class="num">5</button><button type="button" class="num">6</button>
+                <button type="button" class="num">7</button><button type="button" class="num">8</button><button type="button" class="num">9</button>
+                <span class="k-empty"></span><button type="button" class="num">0</button><button type="button" class="k-del" data-del aria-label="Effacer"><svg class="i"><use href="#i-back"/></svg></button>
+              </div>
+              <span class="link" style="text-align:center">Le client n'a pas de code ? Appeler le support</span>
+            </div>
+            <div class="pad otp-done" style="gap:14px;padding-top:24px;text-align:center">
+              <span class="done-ico"><svg class="i"><use href="#i-check"/></svg></span>
+              <span class="h-title">Livraison confirmée à <span class="num" data-done-time>12:47</span></span>
+              <div class="card otp-cash-ask">
+                <div class="cash"><svg class="i"><use href="#i-cash"/></svg>Encaissez <span class="num">8 800 F</span> auprès du client</div>
+                <button type="button" class="btn primary" data-cashed>J'ai reçu 8 800 F</button>
+              </div>
+              <div class="card otp-cashed row" style="text-align:left"><span class="ico-tile"><svg class="i"><use href="#i-check"/></svg></span><span class="grow stack"><b>Encaissement enregistré</b><span class="muted small">À reverser : <span class="num">26 300 F</span> · gain <span class="num">+1 100 F</span></span></span></div>
+              <button type="button" class="btn soft" data-otp-replay>Rejouer la démo</button>
+            </div>
+          </div>
+        </div></div>
+        <figcaption><b>Confirmation par code</b><span>L-07 · code de démo : 4827 (essayez un code faux)</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ===================== RESTAURANT ===================== -->
+  <section class="app-sec" id="restaurant">
+    <div class="sec-head">
+      <h2>Espace Restaurant</h2>
+      <p>Sur tablette Android au comptoir : les nouvelles commandes sonnent jusqu'à ce qu'on y réponde, chaque statut se change en un toucher.</p>
+    </div>
+    <figure style="width:100%">
+      <div class="tablet"><div class="t-screen" data-board>
+        <nav class="rail" aria-label="Navigation restaurant">
+          <span class="active"><svg class="i"><use href="#i-list"/></svg>Commandes</span>
+          <span><svg class="i"><use href="#i-menu"/></svg>Menu</span>
+          <span><svg class="i"><use href="#i-clock"/></svg>Historique</span>
+          <span><svg class="i"><use href="#i-store"/></svg>Profil</span>
+        </nav>
+        <div class="t-main">
+          <div class="t-head">
+            <span class="stack"><span class="h-title">Chez Tantie Rose</span><span class="muted small">Samedi 18 octobre · ouvert jusqu'à 23:00</span></span>
+            <span class="row" style="flex-wrap:wrap"><span class="pill warn"><svg class="i" style="width:13px;height:13px"><use href="#i-sound"/></svg>Alerte sonore active</span><span class="pill"><span class="dot"></span>Ouvert</span><button type="button" class="chip">Fermer temporairement</button></span>
+          </div>
+          <div class="board">
+            <div class="col" data-col="new">
+              <div class="col-h"><span>Nouvelles</span><span class="count num" data-count>1</span></div>
+              <div class="ocard new" data-card>
+                <div class="row between"><b class="num">R-48K2Q · 12:31</b><span class="pill warn num" data-board-timer>09:12</span></div>
+                <ul><li>1 × Attiéké poisson braisé</li><li>1 × Poulet braisé + alloco</li></ul>
+                <span class="muted small">Sous-total <span class="num">7 500 F</span> · Orange Money · payée</span>
+                <div class="acts"><button type="button" class="btn outline" data-act="refuse">Refuser</button><button type="button" class="btn primary" data-act="accept">Accepter</button></div>
+                <div class="motifs"><span class="small muted" style="width:100%">Motif du refus :</span><button type="button" data-act="motif">Produit indisponible</button><button type="button" data-act="motif">Fermeture</button><button type="button" data-act="motif">Trop de commandes</button></div>
+              </div>
+            </div>
+            <div class="col" data-col="prep">
+              <div class="col-h"><span>En préparation</span><span class="count num" data-count>2</span></div>
+              <div class="ocard" data-card>
+                <div class="row between"><b class="num">R-47TQ3 · 12:18</b><span class="pill">Livreur assigné</span></div>
+                <ul><li>2 × Garba</li><li>1 × Bissap 50 cl</li></ul>
+                <span class="muted small">Moussa D. · moto · arrive dans 6 min</span>
+                <div class="acts one"><button type="button" class="btn ink" data-act="ready">Prête</button></div>
+              </div>
+              <div class="ocard" data-card>
+                <div class="row between"><b class="num">R-47ZK8 · 12:24</b><span class="pill warn">Recherche de livreur</span></div>
+                <ul><li>1 × Kedjenou de poulet</li></ul>
+                <span class="muted small">Espèces à la livraison</span>
+                <div class="acts one"><button type="button" class="btn ink" data-act="ready">Prête</button></div>
+              </div>
+            </div>
+            <div class="col" data-col="ready">
+              <div class="col-h"><span>Prêtes</span><span class="count num" data-count>1</span></div>
+              <div class="ocard" data-card>
+                <div class="row between"><b class="num">R-46MP2 · 12:05</b><span class="pill">Livreur sur place</span></div>
+                <ul><li>3 × Attiéké poisson braisé</li></ul>
+                <span class="muted small">Yao K. · vélo</span>
+                <div class="acts one"><button type="button" class="btn primary" data-act="handover">Remise au livreur</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div></div>
+      <figcaption style="max-width:none"><b>Commandes du restaurant</b><span>R-01 · acceptez ou refusez la nouvelle commande, passez les autres en « Prête » puis « Remise au livreur »</span></figcaption>
+    </figure>
+  </section>
+
+  <footer class="foot">
+    <span>Maquette v1 · 18 octobre 2026 · nom de l'app provisoire.</span>
+    <span>Références : design system (docs/design/design-system.md), fiches écran (docs/product/screens.md), user stories (docs/product/user-stories.md).</span>
+  </footer>
+</div>
+
+<div class="toast" data-toast hidden></div>
+
+<script>
+(() => {
+  const root = document.documentElement;
+  const fmt = n => n.toLocaleString('fr-FR').replace(/[  ]/g, ' ') + ' F';
+  const pad2 = n => String(n).padStart(2, '0');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Thème */
+  const themeBtns = document.querySelectorAll('[data-theme-set]');
+  const applyTheme = v => {
+    if (v === 'system') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', v);
+    themeBtns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.themeSet === v)));
+    try { localStorage.setItem('tchopi-theme', v); } catch (e) {}
+  };
+  let savedTheme = 'system';
+  try { savedTheme = localStorage.getItem('tchopi-theme') || 'system'; } catch (e) {}
+  applyTheme(savedTheme);
+  themeBtns.forEach(b => b.addEventListener('click', () => applyTheme(b.dataset.themeSet)));
+
+  /* Toast */
+  const toast = document.querySelector('[data-toast]');
+  let toastTimer;
+  const say = msg => { toast.textContent = msg; toast.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { toast.hidden = true; }, 2600); };
+
+  /* Panier */
+  const menu = document.querySelector('[data-menu]');
+  const cart = { attieke: 1, poulet: 1 };
+  const bar = menu.querySelector('[data-cartbar]');
+  const renderCart = () => {
+    let count = 0, total = 0;
+    menu.querySelectorAll('[data-item]').forEach(row => {
+      const q = cart[row.dataset.item] || 0;
+      count += q; total += q * Number(row.dataset.price);
+      row.querySelector('[data-qty]').textContent = q;
+      row.classList.toggle('in-cart', q > 0);
+    });
+    bar.hidden = count === 0;
+    menu.querySelector('[data-cart-count]').textContent = count + (count > 1 ? ' articles' : ' article');
+    menu.querySelector('[data-cart-total]').textContent = fmt(total);
+  };
+  menu.addEventListener('click', e => {
+    const b = e.target.closest('[data-step]');
+    if (!b) return;
+    const id = b.closest('[data-item]').dataset.item;
+    cart[id] = Math.max(0, (cart[id] || 0) + Number(b.dataset.step));
+    renderCart();
+  });
+  renderCart();
+
+  /* Paiement : compte à rebours */
+  const momo = document.querySelector('[data-momo-timer]');
+  let momoLeft = 14 * 60 + 32;
+  setInterval(() => { momoLeft = momoLeft > 0 ? momoLeft - 1 : 15 * 60; momo.textContent = pad2(Math.floor(momoLeft / 60)) + ':' + pad2(momoLeft % 60); }, 1000);
+
+  /* Suivi : coupure réseau */
+  const trk = document.querySelector('[data-tracking]');
+  const staleBtn = document.querySelector('[data-stale-toggle]');
+  staleBtn.addEventListener('click', () => {
+    const on = trk.classList.toggle('is-stale');
+    staleBtn.setAttribute('aria-pressed', String(on));
+    staleBtn.textContent = on ? 'Rétablir la connexion' : 'Simuler une coupure réseau';
+  });
+
+  /* Annulation */
+  const cancel = document.querySelector('[data-cancel]');
+  const sheet = cancel.querySelector('[data-sheet]');
+  cancel.querySelector('[data-open-sheet]').addEventListener('click', () => { sheet.hidden = false; });
+  cancel.querySelector('[data-close-sheet]').addEventListener('click', () => { sheet.hidden = true; });
+  cancel.querySelector('[data-confirm-cancel]').addEventListener('click', () => { sheet.hidden = true; cancel.classList.add('is-cancelled'); });
+  cancel.querySelector('[data-restore]').addEventListener('click', () => { cancel.classList.remove('is-cancelled'); sheet.hidden = false; });
+
+  /* Livreur : en ligne */
+  const sw = document.querySelector('[data-online]');
+  sw.addEventListener('click', () => {
+    const on = sw.classList.toggle('on');
+    sw.setAttribute('aria-pressed', String(on));
+    sw.querySelector('[data-online-label]').textContent = on ? 'En ligne' : 'Hors ligne';
+    sw.querySelector('[data-online-sub]').textContent = on
+      ? 'Vous recevez des missions autour de Cocody. Votre position est partagée tant que vous êtes en ligne.'
+      : 'Vous ne recevez pas de missions. Votre position n’est plus partagée.';
+  });
+
+  /* Livreur : offre */
+  const offer = document.querySelector('[data-offer]');
+  const ring = offer.querySelector('[data-ring]');
+  const secs = offer.querySelector('[data-secs]');
+  const C = 2 * Math.PI * 52;
+  ring.style.strokeDasharray = C;
+  let left = 38, offerTimer = null;
+  const drawRing = () => { secs.textContent = left; ring.style.strokeDashoffset = C * (1 - left / 45); };
+  const startOffer = (from) => {
+    offer.classList.remove('is-accepted', 'is-declined');
+    left = from; drawRing(); clearInterval(offerTimer);
+    offerTimer = setInterval(() => { left = left > 0 ? left - 1 : 45; drawRing(); }, 1000);
+  };
+  offer.querySelector('[data-accept]').addEventListener('click', () => { clearInterval(offerTimer); offer.classList.add('is-accepted'); });
+  offer.querySelector('[data-decline]').addEventListener('click', () => { clearInterval(offerTimer); offer.classList.add('is-declined'); setTimeout(() => startOffer(45), 2500); });
+  offer.querySelector('[data-replay]').addEventListener('click', () => startOffer(45));
+  if (reduced) ring.style.transition = 'none';
+  startOffer(38);
+
+  /* Livreur : code de livraison */
+  const otp = document.querySelector('[data-otp]');
+  const boxes = otp.querySelector('[data-boxes]');
+  const msg = otp.querySelector('[data-otp-msg]');
+  let code = '', tries = 5, locked = false;
+  const drawCode = () => boxes.querySelectorAll('span').forEach((s, i) => { s.textContent = code[i] || ''; s.classList.toggle('filled', i < code.length); });
+  const resetOtp = () => { code = ''; tries = 5; locked = false; otp.classList.remove('is-done', 'is-cashed'); boxes.classList.remove('err'); msg.className = 'otp-msg'; msg.textContent = '5 essais possibles'; drawCode(); };
+  otp.querySelector('[data-keypad]').addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (!b || locked) return;
+    if (b.hasAttribute('data-del')) { code = code.slice(0, -1); boxes.classList.remove('err'); drawCode(); return; }
+    if (code.length >= 4) return;
+    code += b.textContent.trim(); drawCode();
+    if (code.length < 4) return;
+    if (code === '4827') {
+      const now = new Date();
+      otp.querySelector('[data-done-time]').textContent = pad2(now.getHours()) + ':' + pad2(now.getMinutes());
+      otp.classList.add('is-done');
+      return;
+    }
+    tries -= 1;
+    boxes.classList.add('err');
+    if (!reduced) { boxes.classList.remove('shake'); void boxes.offsetWidth; boxes.classList.add('shake'); }
+    msg.className = 'otp-msg err';
+    if (tries === 0) { locked = true; msg.textContent = 'Saisie bloquée. Le support est prévenu.'; return; }
+    msg.textContent = 'Code incorrect · ' + tries + (tries > 1 ? ' essais restants' : ' essai restant');
+    setTimeout(() => { code = ''; boxes.classList.remove('err'); drawCode(); }, 650);
+  });
+  otp.querySelector('[data-cashed]').addEventListener('click', () => otp.classList.add('is-cashed'));
+  otp.querySelector('[data-otp-replay]').addEventListener('click', resetOtp);
+
+  /* Restaurant : tableau des commandes */
+  const board = document.querySelector('[data-board]');
+  const col = name => board.querySelector('[data-col="' + name + '"]');
+  const recount = () => board.querySelectorAll('[data-col]').forEach(c => { c.querySelector('[data-count]').textContent = c.querySelectorAll('[data-card]').length; });
+  const timerEl = board.querySelector('[data-board-timer]');
+  let respondLeft = 9 * 60 + 12;
+  const boardTimer = setInterval(() => {
+    if (!timerEl.isConnected || !timerEl.closest('[data-col="new"]')) { clearInterval(boardTimer); return; }
+    respondLeft = Math.max(0, respondLeft - 1);
+    timerEl.textContent = pad2(Math.floor(respondLeft / 60)) + ':' + pad2(respondLeft % 60);
+  }, 1000);
+  board.addEventListener('click', e => {
+    const b = e.target.closest('[data-act]');
+    if (!b) return;
+    const card = b.closest('[data-card]');
+    const act = b.dataset.act;
+    if (act === 'refuse') { card.classList.add('asking'); return; }
+    if (act === 'motif') { card.remove(); recount(); say('Commande refusée : ' + b.textContent.toLowerCase() + '. Le client est prévenu.'); return; }
+    if (act === 'accept') {
+      card.classList.remove('new');
+      card.querySelector('[data-board-timer]').outerHTML = '<span class="pill warn">Recherche de livreur</span>';
+      card.querySelector('.acts').outerHTML = '<div class="acts one"><button type="button" class="btn ink" data-act="ready">Prête</button></div>';
+      card.querySelector('.motifs').remove();
+      col('prep').appendChild(card); recount(); say('Commande acceptée et passée en préparation. Le client est prévenu.'); return;
+    }
+    if (act === 'ready') {
+      card.querySelector('.acts').outerHTML = '<div class="acts one"><button type="button" class="btn primary" data-act="handover">Remise au livreur</button></div>';
+      col('ready').appendChild(card); recount(); say('Commande prête. Le livreur est prévenu.'); return;
+    }
+    if (act === 'handover') { card.remove(); recount(); say('Remise confirmée : commande récupérée.'); }
+  });
+})();
+</script>
