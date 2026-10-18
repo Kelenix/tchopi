@@ -29,7 +29,6 @@ class CourierStatusScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.courierStatusTitle),
-        backgroundColor: tokens.background,
         actions: [
           IconButton(
             tooltip: l10n.accountTitle,

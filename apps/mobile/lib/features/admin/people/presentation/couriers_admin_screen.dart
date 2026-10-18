@@ -50,8 +50,9 @@ class _CourierList extends ConsumerWidget {
     final tokens = context.tokens;
     final text = Theme.of(context).textTheme;
     return switch (ref.watch(adminCouriersProvider(status))) {
-      AsyncData(:final value) when value.isEmpty => Center(
-        child: Text(l10n.couriersEmpty),
+      AsyncData(:final value) when value.isEmpty => EmptyState(
+        icon: Icons.two_wheeler,
+        title: l10n.couriersEmpty,
       ),
       AsyncData(:final value) => RefreshIndicator(
         onRefresh: () => ref.refresh(adminCouriersProvider(status).future),

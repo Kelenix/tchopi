@@ -81,11 +81,15 @@ void main() {
   testWidgets('accueil : prénom, adresse de livraison, restaurants', (
     tester,
   ) async {
+    tester.view
+      ..physicalSize = const Size(800, 2400)
+      ..devicePixelRatio = 2;
+    addTearDown(tester.view.reset);
     await tester.pumpWidget(app(const ClientHomeScreen()));
     await tester.pumpAndSettle();
 
     expect(find.text('Bonjour Awa'), findsOneWidget);
-    expect(find.text('Maison · Riviera 2'), findsOneWidget);
+    expect(find.text('Riviera 2 · Maison'), findsOneWidget);
     expect(find.text('Repas'), findsOneWidget);
     expect(find.text('Maquis Chez Tante'), findsOneWidget);
     expect(find.text('Ivoirien · Cocody'), findsOneWidget);

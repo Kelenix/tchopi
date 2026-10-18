@@ -16,14 +16,10 @@ class AddressesScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final tokens = context.tokens;
     final addresses = ref.watch(addressesProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.addressesTitle),
-        backgroundColor: tokens.background,
-      ),
+      appBar: AppBar(title: Text(l10n.addressesTitle)),
       floatingActionButton: (addresses.value?.isNotEmpty ?? false)
           ? FloatingActionButton.extended(
               onPressed: () => context.push(AddressEditorRoute.path),
@@ -184,40 +180,11 @@ class _EmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final tokens = context.tokens;
-    final text = Theme.of(context).textTheme;
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(Space.xxl),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CircleAvatar(
-              radius: 36,
-              backgroundColor: tokens.primarySoft,
-              child: Icon(
-                Icons.add_location_alt_outlined,
-                size: 34,
-                color: tokens.primary,
-              ),
-            ),
-            const SizedBox(height: Space.xl),
-            Text(
-              l10n.addressesEmpty,
-              style: text.titleLarge,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: Space.sm),
-            Text(
-              l10n.addressesEmptyBody,
-              style: text.bodyMedium!.copyWith(color: tokens.muted),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: Space.xxl),
-            FilledButton(onPressed: onAdd, child: Text(l10n.addressAdd)),
-          ],
-        ),
-      ),
+    return EmptyState(
+      icon: Icons.add_location_alt_outlined,
+      title: l10n.addressesEmpty,
+      body: l10n.addressesEmptyBody,
+      action: FilledButton(onPressed: onAdd, child: Text(l10n.addressAdd)),
     );
   }
 }
@@ -229,26 +196,13 @@ class _ErrorState extends StatelessWidget {
   final VoidCallback onRetry;
 
   @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(Space.xxl),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.cloud_off_outlined,
-              size: 40,
-              color: context.tokens.muted,
-            ),
-            const SizedBox(height: Space.lg),
-            Text(message, textAlign: TextAlign.center),
-            const SizedBox(height: Space.lg),
-            OutlinedButton(onPressed: onRetry, child: Text(l10n.actionRetry)),
-          ],
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => EmptyState(
+    danger: true,
+    icon: Icons.cloud_off_outlined,
+    title: message,
+    action: OutlinedButton(
+      onPressed: onRetry,
+      child: Text(AppLocalizations.of(context).actionRetry),
+    ),
+  );
 }

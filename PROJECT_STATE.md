@@ -42,7 +42,7 @@ Flutter 3.41.9 · Dart 3.11.5 · Supabase CLI 2.116.0 · Docker 29.8.2 · Java 2
 | Inc-2 | Zones + tarifs (admin), adresses client | ADR-01 à 07 | §2.2, §5.6 | M | ✅ |
 | Inc-3 | Profils livreurs, validation admin, gestion utilisateurs | COU-01 à 04, ADM-02 | §2.3, §6.D | M | ✅ |
 | Inc-4 | Restaurants et catalogue | RES-01 à 05 | §3.1, §6.C | M | ✅ |
-| Inc-5 | Commande de repas (client + restaurant) | ORD-01 à 13 | §3.1, §6.A | L | ✅ (ORD-03 reporté) |
+| Inc-5 | Commande de repas (client + restaurant) | ORD-01 à 13 | §3.1, §6.A | L | ✅ |
 | Inc-6 | Livraison de colis | PAR-01 à 05 | §3.2 | M | ⬜ |
 | Inc-7 | En ligne, attribution, supervision, paramètres | COU-05, DIS-01 à 04, ADM-03, ADM-05 | §4.1 | L | ⬜ |
 | Inc-8 | Mission livreur, code de livraison, échecs | MIS-01 à 10 | §4.2, §4.5 | L | ⬜ |
@@ -86,6 +86,10 @@ validation de la maquette → code des écrans à partir de l'Inc-1. Registre de
 - voir `docs/manual-tasks.md` (priorité : compte marchand de paiement, à démarrer tôt)
 
 ## Journal de session (résumé court, le plus récent en haut)
+
+- 2026-10-18 — Refonte de structure (ADR-021) avant l'Inc-6 : barres du haut, accueil maquette, navigation basse
+  Client + Paiements, recherche (ORD-03), espace Restaurant enrichi, profil, états vides. Preuves : analyse 0 problème ;
+  35 + 22 tests Flutter ; vérifié dans Chrome (accueil, paiements, suivi, profil, restaurant).
 
 - 2026-10-18 — Inc-5 (branche feat/inc-5-commandes, ADR-020) : commandes, devis et création serveur, machine à états,
   refus auto (pg_cron), temps réel ; panier, validation, suivi, historique ; écran Commandes du restaurant.

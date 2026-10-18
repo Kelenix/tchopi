@@ -41,12 +41,10 @@ class AdminScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final tokens = context.tokens;
     final section = adminSections.firstWhere((s) => s.path == current);
     return Scaffold(
       appBar: AppBar(
         title: Text(section.label(l10n)),
-        backgroundColor: tokens.background,
         bottom: bottom,
         actions: [
           IconButton(

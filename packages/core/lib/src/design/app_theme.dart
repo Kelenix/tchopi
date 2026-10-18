@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'tokens.dart';
 
@@ -69,13 +70,21 @@ abstract final class AppTheme {
           TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
         },
       ),
+      // Barre du haut blanche, séparée du contenu par un filet ; légère ombre quand le contenu défile dessous.
       appBarTheme: AppBarTheme(
-        backgroundColor: t.background,
+        backgroundColor: t.surface,
         foregroundColor: t.ink,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
-        scrolledUnderElevation: 0,
+        scrolledUnderElevation: 2,
+        shadowColor: t.ink.withValues(alpha: 0.12),
+        shape: Border(bottom: BorderSide(color: t.border)),
         centerTitle: false,
-        titleSpacing: Space.sm,
+        toolbarHeight: 64,
+        titleSpacing: Space.lg,
+        systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
+          statusBarColor: Colors.transparent,
+        ),
         titleTextStyle: text.titleLarge!.copyWith(fontWeight: FontWeight.w800),
       ),
       actionIconTheme: ActionIconThemeData(
@@ -187,9 +196,11 @@ abstract final class AppTheme {
       ),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: t.surface,
+        surfaceTintColor: Colors.transparent,
+        shadowColor: t.ink,
         indicatorColor: t.primarySoft,
-        elevation: 0,
-        height: 68,
+        elevation: 8,
+        height: 72,
         labelTextStyle: WidgetStatePropertyAll(
           text.bodySmall!.copyWith(fontWeight: FontWeight.w600),
         ),

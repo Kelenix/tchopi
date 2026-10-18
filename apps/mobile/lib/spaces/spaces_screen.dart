@@ -46,10 +46,7 @@ class SpacesScreen extends ConsumerWidget {
     );
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.spacesTitle),
-        backgroundColor: tokens.background,
-      ),
+      appBar: AppBar(title: Text(l10n.spacesTitle)),
       body: ListView(
         padding: const EdgeInsets.all(Space.screen),
         children: [

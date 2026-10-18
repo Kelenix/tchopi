@@ -156,7 +156,6 @@ class _RestaurantFormScreenState extends ConsumerState<RestaurantFormScreen> {
               ? l10n.restaurantNewTitle
               : l10n.restaurantEditTitle,
         ),
-        backgroundColor: tokens.background,
       ),
       body: Form(
         key: _form,

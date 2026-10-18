@@ -28,8 +28,9 @@ class ZonesScreen extends ConsumerWidget {
         label: Text(l10n.zoneAdd),
       ),
       body: switch (zones) {
-        AsyncData(:final value) when value.isEmpty => Center(
-          child: Text(l10n.zonesEmpty),
+        AsyncData(:final value) when value.isEmpty => EmptyState(
+          icon: Icons.radar,
+          title: l10n.zonesEmpty,
         ),
         AsyncData(:final value) => ListView(
           padding: const EdgeInsets.fromLTRB(

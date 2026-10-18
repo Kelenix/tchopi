@@ -43,8 +43,9 @@ class _UsersAdminScreenState extends ConsumerState<UsersAdminScreen> {
           ),
           Expanded(
             child: switch (users) {
-              AsyncData(:final value) when value.isEmpty => Center(
-                child: Text(l10n.usersEmpty),
+              AsyncData(:final value) when value.isEmpty => EmptyState(
+                icon: Icons.group_outlined,
+                title: l10n.usersEmpty,
               ),
               AsyncData(:final value) => ListView.separated(
                 padding: const EdgeInsets.fromLTRB(

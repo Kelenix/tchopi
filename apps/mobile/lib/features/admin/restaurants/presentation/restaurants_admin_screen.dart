@@ -28,8 +28,9 @@ class RestaurantsAdminScreen extends ConsumerWidget {
         label: Text(l10n.restaurantAdd),
       ),
       body: switch (restaurants) {
-        AsyncData(:final value) when value.isEmpty => Center(
-          child: Text(l10n.restaurantsEmpty),
+        AsyncData(:final value) when value.isEmpty => EmptyState(
+          icon: Icons.storefront_outlined,
+          title: l10n.restaurantsEmpty,
         ),
         AsyncData(:final value) => ListView(
           padding: const EdgeInsets.fromLTRB(

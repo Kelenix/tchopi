@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../client/client_nav_bar.dart';
 import '../orders_providers.dart';
 import 'order_detail_screen.dart';
 import 'order_widgets.dart';
@@ -12,43 +13,22 @@ import 'order_widgets.dart';
 class OrdersScreen extends ConsumerWidget {
   const OrdersScreen({super.key});
 
-  static const path = '/orders';
+  static const path = ClientNavBar.ordersPath;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final tokens = context.tokens;
     final text = Theme.of(context).textTheme;
     final orders = ref.watch(myOrdersProvider);
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.ordersTitle)),
+      bottomNavigationBar: const ClientNavBar(current: 1),
       body: switch (orders) {
-        AsyncData(:final value) when value.isEmpty => Center(
-          child: Padding(
-            padding: const EdgeInsets.all(Space.xxl),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CircleAvatar(
-                  radius: 32,
-                  backgroundColor: tokens.primarySoft,
-                  child: Icon(
-                    Icons.receipt_long_outlined,
-                    color: tokens.primary,
-                  ),
-                ),
-                const SizedBox(height: Space.lg),
-                Text(l10n.ordersEmpty, style: text.titleLarge),
-                const SizedBox(height: Space.xs),
-                Text(
-                  l10n.ordersEmptyBody,
-                  textAlign: TextAlign.center,
-                  style: text.bodyMedium!.copyWith(color: tokens.muted),
-                ),
-              ],
-            ),
-          ),
+        AsyncData(:final value) when value.isEmpty => EmptyState(
+          icon: Icons.receipt_long_outlined,
+          title: l10n.ordersEmpty,
+          body: l10n.ordersEmptyBody,
         ),
         AsyncData(:final value) => RefreshIndicator(
           onRefresh: () => ref.refresh(myOrdersProvider.future),

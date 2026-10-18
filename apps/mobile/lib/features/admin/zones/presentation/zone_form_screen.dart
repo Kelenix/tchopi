@@ -123,7 +123,6 @@ class _ZoneFormScreenState extends ConsumerState<ZoneFormScreen> {
         title: Text(
           widget.zone == null ? l10n.zoneNewTitle : l10n.zoneEditTitle,
         ),
-        backgroundColor: tokens.background,
       ),
       body: Form(
         key: _form,

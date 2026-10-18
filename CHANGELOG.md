@@ -4,6 +4,14 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · versions [S
 
 ## [Non publié]
 
+### Modifié (interface, ADR-021)
+- Barre du haut visible partout (blanche, filet, ombre au défilement) ; accueil client conforme à la maquette :
+  salutation et cloche, carte d'adresse, grande carte photo de la commande en cours avec progression, tuiles Repas /
+  Colis illustrées, recherche et filtres par cuisine (ORD-03).
+- Navigation basse Client : Accueil, Commandes, bouton central « + », Paiements (nouvel écran), Profil.
+- Espace Restaurant : photo, nom et état d'ouverture dans la barre du haut, carte « Aujourd'hui » ; en-tête de profil.
+- États vides illustrés et cohérents dans tous les espaces.
+
 ### Ajouté (Inc-5)
 - Commande de repas : panier (un restaurant, conservé), validation avec devis serveur (frais selon la distance), paiement
   en espèces, commande unique même en cas de double envoi, suivi en direct et chronologie, annulation avant acceptation,

@@ -17,6 +17,7 @@ export 'src/config/env.dart';
 export 'src/couriers/models.dart';
 export 'src/design/app_theme.dart';
 export 'src/design/tokens.dart';
+export 'src/design/widgets.dart';
 export 'src/orders/models.dart';
 export 'src/places/models.dart';
 export 'src/places/places_providers.dart';

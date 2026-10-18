@@ -352,11 +352,11 @@
       }
     }
   },
-  "homeHeadline": "Qu'est-ce qui vous ferait plaisir ?",
+  "homeHeadline": "Que voulez-vous aujourd'hui ?",
   "homeServiceFood": "Repas",
-  "homeServiceFoodBody": "Les restaurants d'Abidjan",
+  "homeServiceFoodBody": "Restaurants ouverts près de vous",
   "homeServiceParcel": "Colis",
-  "homeServiceParcelBody": "Un envoi en ville",
+  "homeServiceParcelBody": "Envoyez d'un point à un autre",
   "homeSoon": "Bientôt",
   "homeRestaurants": "Restaurants près de vous",
   "homeRestaurantsEmpty": "Aucun restaurant n'est encore disponible dans votre zone.",
@@ -470,9 +470,9 @@
   "ordersNew": "Nouvelles",
   "ordersInProgress": "En cours",
   "ordersDone": "Terminées",
-  "ordersNewEmpty": "Aucune nouvelle commande. Elles apparaissent ici en direct.",
-  "ordersInProgressEmpty": "Aucune commande en cours.",
-  "ordersDoneEmpty": "Aucune commande terminée aujourd'hui.",
+  "ordersNewEmpty": "Aucune nouvelle commande",
+  "ordersInProgressEmpty": "Aucune commande en cours",
+  "ordersDoneEmpty": "Aucune commande terminée aujourd'hui",
   "orderAccept": "Accepter",
   "orderReject": "Refuser",
   "orderStartPreparing": "Lancer la préparation",
@@ -507,5 +507,46 @@
   "orderStatusDelivered": "Livrée",
   "orderStatusRejected": "Refusée",
   "orderStatusCancelled": "Annulée",
-  "orderStatusFailed": "Échec de livraison"
+  "orderStatusFailed": "Échec de livraison",
+  "homeSearchHint": "Rechercher un restaurant ou une cuisine",
+  "homeAllCuisines": "Tous",
+  "homeNoMatch": "Aucun restaurant ne correspond à votre recherche.",
+  "navHome": "Accueil",
+  "navOrders": "Commandes",
+  "navAccount": "Profil",
+  "navPayments": "Paiements",
+  "notificationsTooltip": "Notifications",
+  "orderStep": "Étape {step} sur {total}",
+  "@orderStep": {
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "newOrderTitle": "Que voulez-vous faire ?",
+  "newOrderFood": "Commander un repas",
+  "newOrderFoodBody": "Les restaurants ouverts près de vous",
+  "newOrderParcel": "Envoyer un colis",
+  "newOrderParcelBody": "D'un point à un autre, en ville",
+  "paymentsTitle": "Paiements",
+  "paymentsMethods": "Moyens de paiement",
+  "paymentsHistory": "Historique",
+  "paymentsEmpty": "Aucun paiement pour le moment",
+  "paymentsEmptyBody": "Vos paiements de commandes apparaîtront ici.",
+  "paymentDue": "À payer à la livraison",
+  "paymentDone": "Payé",
+  "paymentNone": "Non facturé",
+  "ordersNewEmptyBody": "Elles apparaissent ici en direct, avec une alerte.",
+  "ordersTodayCount": "{count, plural, =0{Aucune commande aujourd'hui} =1{1 commande aujourd'hui} other{{count} commandes aujourd'hui}}",
+  "@ordersTodayCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

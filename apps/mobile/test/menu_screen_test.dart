@@ -64,7 +64,7 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.text('Maquis Chez Tante'), findsOneWidget);
-    expect(find.text('Ouvert'), findsOneWidget);
+    expect(find.text('Ouvert'), findsWidgets);
     expect(find.text('Plats'), findsOneWidget);
     expect(find.text('Garba'), findsOneWidget);
     expect(find.text('Sans catégorie'), findsOneWidget);

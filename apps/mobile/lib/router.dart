@@ -11,6 +11,7 @@ import 'features/client/addresses/presentation/address_editor_screen.dart';
 import 'features/client/addresses/presentation/addresses_screen.dart';
 import 'features/client/home/client_home_screen.dart';
 import 'features/client/home/restaurant_detail_screen.dart';
+import 'features/client/payments/payments_screen.dart';
 import 'features/courier/profile/presentation/courier_profile_screen.dart';
 import 'features/courier/profile/presentation/courier_status_screen.dart';
 import 'features/admin/restaurants/presentation/restaurant_form_screen.dart';
@@ -84,6 +85,10 @@ GoRouter router(Ref ref) => buildAppRouter(
       builder: (_, _) => const CheckoutScreen(),
     ),
     GoRoute(path: OrdersScreen.path, builder: (_, _) => const OrdersScreen()),
+    GoRoute(
+      path: PaymentsScreen.path,
+      builder: (_, _) => const PaymentsScreen(),
+    ),
     GoRoute(
       path: OrderDetailScreen.path,
       builder: (_, state) =>

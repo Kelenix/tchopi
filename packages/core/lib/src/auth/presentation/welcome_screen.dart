@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../design/tokens.dart';
+import '../../design/widgets.dart';
 
 class WelcomeFeature {
   const WelcomeFeature(this.icon, this.label);
@@ -88,10 +89,7 @@ class WelcomeScreen extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  _Wordmark(
-                                    color: tokens.ink,
-                                    accent: tokens.success,
-                                  ),
+                                  const BrandWordmark(),
                                   const SizedBox(height: Space.xxl),
                                   Text(headline, style: text.displaySmall),
                                   const SizedBox(height: Space.md),
@@ -116,34 +114,6 @@ class WelcomeScreen extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _Wordmark extends StatelessWidget {
-  const _Wordmark({required this.color, required this.accent});
-
-  final Color color;
-  final Color accent;
-
-  @override
-  Widget build(BuildContext context) {
-    final style = Theme.of(context).textTheme.titleLarge!.copyWith(
-      color: color,
-      fontWeight: FontWeight.w800,
-      letterSpacing: -0.6,
-    );
-    return Text.rich(
-      TextSpan(
-        text: AppLocalizations.of(context).appBrand,
-        children: [
-          TextSpan(
-            text: '.',
-            style: TextStyle(color: accent),
-          ),
-        ],
-      ),
-      style: style,
     );
   }
 }

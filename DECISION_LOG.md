@@ -6,6 +6,20 @@
 
 ---
 
+## ADR-021 — Structure d'interface commune (retour utilisateur)
+
+- **Date** : 2026-10-18
+- **Statut** : Accepté
+- **Décideur** : Claude (rôle : ui-ux-designer), d'après la maquette validée (C-01)
+- **Contexte** : Barres du haut invisibles (même couleur que le fond), accueil sans barre, espaces vides.
+- **Décision** : barre du haut blanche avec filet dans le thème (tous les écrans d'un coup) ; accueil client
+  repris de la maquette ; navigation basse Client à 5 entrées avec bouton central « + » (repas ; colis à l'Inc-6) et écran
+  Paiements (moyens disponibles, paiements des commandes) ; composants partagés `EmptyState`, `SectionHeader`,
+  `BrandWordmark` dans `core`. La cloche ouvre les commandes en attendant les notifications (Inc-9).
+- **Impact** : design (fort), technique (faible).
+
+---
+
 ## ADR-020 — Commande de repas : choix de mise en œuvre (Inc-5)
 
 - **Date** : 2026-10-18

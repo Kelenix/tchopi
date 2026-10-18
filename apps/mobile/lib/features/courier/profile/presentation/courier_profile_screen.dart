@@ -117,7 +117,6 @@ class _CourierProfileScreenState extends ConsumerState<CourierProfileScreen> {
               ? l10n.courierProfileTitle
               : l10n.courierProfileEditTitle,
         ),
-        backgroundColor: tokens.background,
         actions: [
           IconButton(
             tooltip: l10n.accountTitle,

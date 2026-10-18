@@ -91,44 +91,59 @@ class AccountScreen extends ConsumerWidget {
     );
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.accountTitle),
-        backgroundColor: tokens.background,
-      ),
+      appBar: AppBar(title: Text(l10n.accountTitle)),
       body: ListView(
         padding: const EdgeInsets.all(Space.screen),
         children: [
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(Space.lg),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 26,
-                    backgroundColor: tokens.primarySoft,
-                    child: Text(
-                      '${profile?.firstName?.characters.first ?? ''}${profile?.lastName?.characters.first ?? ''}',
-                      style: text.titleMedium!.copyWith(color: tokens.primary),
-                    ),
-                  ),
-                  const SizedBox(width: Space.lg),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${profile?.firstName ?? ''} ${profile?.lastName ?? ''}',
-                          style: text.titleMedium,
-                        ),
-                        Text(
-                          '${profile?.phone ?? ''} · ${profile?.city ?? ''}',
-                          style: text.bodySmall!.copyWith(color: tokens.muted),
-                        ),
-                      ],
-                    ),
+          // En-tête de profil : initiales sur pastille verte, nom, téléphone et ville.
+          Container(
+            padding: const EdgeInsets.all(Space.xl),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(Radii.card),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  tokens.primary,
+                  Color.alphaBlend(
+                    tokens.ink.withValues(alpha: 0.35),
+                    tokens.primary,
                   ),
                 ],
               ),
+            ),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 32,
+                  backgroundColor: tokens.surface,
+                  child: Text(
+                    '${profile?.firstName?.characters.first ?? ''}${profile?.lastName?.characters.first ?? ''}',
+                    style: text.titleLarge!.copyWith(color: tokens.primary),
+                  ),
+                ),
+                const SizedBox(width: Space.lg),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${profile?.firstName ?? ''} ${profile?.lastName ?? ''}',
+                        style: text.titleLarge!.copyWith(
+                          color: tokens.onPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        '${profile?.phone ?? ''} · ${profile?.city ?? ''}',
+                        style: text.bodySmall!.copyWith(
+                          color: tokens.onPrimary.withValues(alpha: 0.8),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
           const SizedBox(height: Space.lg),

@@ -910,19 +910,19 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get homeHeadline => 'Qu\'est-ce qui vous ferait plaisir ?';
+  String get homeHeadline => 'Que voulez-vous aujourd\'hui ?';
 
   @override
   String get homeServiceFood => 'Repas';
 
   @override
-  String get homeServiceFoodBody => 'Les restaurants d\'Abidjan';
+  String get homeServiceFoodBody => 'Restaurants ouverts près de vous';
 
   @override
   String get homeServiceParcel => 'Colis';
 
   @override
-  String get homeServiceParcelBody => 'Un envoi en ville';
+  String get homeServiceParcelBody => 'Envoyez d\'un point à un autre';
 
   @override
   String get homeSoon => 'Bientôt';
@@ -1136,14 +1136,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get ordersDone => 'Terminées';
 
   @override
-  String get ordersNewEmpty =>
-      'Aucune nouvelle commande. Elles apparaissent ici en direct.';
+  String get ordersNewEmpty => 'Aucune nouvelle commande';
 
   @override
-  String get ordersInProgressEmpty => 'Aucune commande en cours.';
+  String get ordersInProgressEmpty => 'Aucune commande en cours';
 
   @override
-  String get ordersDoneEmpty => 'Aucune commande terminée aujourd\'hui.';
+  String get ordersDoneEmpty => 'Aucune commande terminée aujourd\'hui';
 
   @override
   String get orderAccept => 'Accepter';
@@ -1230,4 +1229,89 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get orderStatusFailed => 'Échec de livraison';
+
+  @override
+  String get homeSearchHint => 'Rechercher un restaurant ou une cuisine';
+
+  @override
+  String get homeAllCuisines => 'Tous';
+
+  @override
+  String get homeNoMatch => 'Aucun restaurant ne correspond à votre recherche.';
+
+  @override
+  String get navHome => 'Accueil';
+
+  @override
+  String get navOrders => 'Commandes';
+
+  @override
+  String get navAccount => 'Profil';
+
+  @override
+  String get navPayments => 'Paiements';
+
+  @override
+  String get notificationsTooltip => 'Notifications';
+
+  @override
+  String orderStep(int step, int total) {
+    return 'Étape $step sur $total';
+  }
+
+  @override
+  String get newOrderTitle => 'Que voulez-vous faire ?';
+
+  @override
+  String get newOrderFood => 'Commander un repas';
+
+  @override
+  String get newOrderFoodBody => 'Les restaurants ouverts près de vous';
+
+  @override
+  String get newOrderParcel => 'Envoyer un colis';
+
+  @override
+  String get newOrderParcelBody => 'D\'un point à un autre, en ville';
+
+  @override
+  String get paymentsTitle => 'Paiements';
+
+  @override
+  String get paymentsMethods => 'Moyens de paiement';
+
+  @override
+  String get paymentsHistory => 'Historique';
+
+  @override
+  String get paymentsEmpty => 'Aucun paiement pour le moment';
+
+  @override
+  String get paymentsEmptyBody =>
+      'Vos paiements de commandes apparaîtront ici.';
+
+  @override
+  String get paymentDue => 'À payer à la livraison';
+
+  @override
+  String get paymentDone => 'Payé';
+
+  @override
+  String get paymentNone => 'Non facturé';
+
+  @override
+  String get ordersNewEmptyBody =>
+      'Elles apparaissent ici en direct, avec une alerte.';
+
+  @override
+  String ordersTodayCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count commandes aujourd\'hui',
+      one: '1 commande aujourd\'hui',
+      zero: 'Aucune commande aujourd\'hui',
+    );
+    return '$_temp0';
+  }
 }

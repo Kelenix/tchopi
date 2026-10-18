@@ -169,7 +169,6 @@ class _ProductEditorScreenState extends ConsumerState<ProductEditorScreen> {
         title: Text(
           widget.product == null ? l10n.productNewTitle : l10n.productEditTitle,
         ),
-        backgroundColor: tokens.background,
       ),
       body: Form(
         key: _form,

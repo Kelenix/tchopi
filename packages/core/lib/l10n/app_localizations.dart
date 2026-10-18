@@ -1777,7 +1777,7 @@ abstract class AppLocalizations {
   /// No description provided for @homeHeadline.
   ///
   /// In fr, this message translates to:
-  /// **'Qu\'est-ce qui vous ferait plaisir ?'**
+  /// **'Que voulez-vous aujourd\'hui ?'**
   String get homeHeadline;
 
   /// No description provided for @homeServiceFood.
@@ -1789,7 +1789,7 @@ abstract class AppLocalizations {
   /// No description provided for @homeServiceFoodBody.
   ///
   /// In fr, this message translates to:
-  /// **'Les restaurants d\'Abidjan'**
+  /// **'Restaurants ouverts près de vous'**
   String get homeServiceFoodBody;
 
   /// No description provided for @homeServiceParcel.
@@ -1801,7 +1801,7 @@ abstract class AppLocalizations {
   /// No description provided for @homeServiceParcelBody.
   ///
   /// In fr, this message translates to:
-  /// **'Un envoi en ville'**
+  /// **'Envoyez d\'un point à un autre'**
   String get homeServiceParcelBody;
 
   /// No description provided for @homeSoon.
@@ -2173,19 +2173,19 @@ abstract class AppLocalizations {
   /// No description provided for @ordersNewEmpty.
   ///
   /// In fr, this message translates to:
-  /// **'Aucune nouvelle commande. Elles apparaissent ici en direct.'**
+  /// **'Aucune nouvelle commande'**
   String get ordersNewEmpty;
 
   /// No description provided for @ordersInProgressEmpty.
   ///
   /// In fr, this message translates to:
-  /// **'Aucune commande en cours.'**
+  /// **'Aucune commande en cours'**
   String get ordersInProgressEmpty;
 
   /// No description provided for @ordersDoneEmpty.
   ///
   /// In fr, this message translates to:
-  /// **'Aucune commande terminée aujourd\'hui.'**
+  /// **'Aucune commande terminée aujourd\'hui'**
   String get ordersDoneEmpty;
 
   /// No description provided for @orderAccept.
@@ -2355,6 +2355,150 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Échec de livraison'**
   String get orderStatusFailed;
+
+  /// No description provided for @homeSearchHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rechercher un restaurant ou une cuisine'**
+  String get homeSearchHint;
+
+  /// No description provided for @homeAllCuisines.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tous'**
+  String get homeAllCuisines;
+
+  /// No description provided for @homeNoMatch.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun restaurant ne correspond à votre recherche.'**
+  String get homeNoMatch;
+
+  /// No description provided for @navHome.
+  ///
+  /// In fr, this message translates to:
+  /// **'Accueil'**
+  String get navHome;
+
+  /// No description provided for @navOrders.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commandes'**
+  String get navOrders;
+
+  /// No description provided for @navAccount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Profil'**
+  String get navAccount;
+
+  /// No description provided for @navPayments.
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiements'**
+  String get navPayments;
+
+  /// No description provided for @notificationsTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Notifications'**
+  String get notificationsTooltip;
+
+  /// No description provided for @orderStep.
+  ///
+  /// In fr, this message translates to:
+  /// **'Étape {step} sur {total}'**
+  String orderStep(int step, int total);
+
+  /// No description provided for @newOrderTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Que voulez-vous faire ?'**
+  String get newOrderTitle;
+
+  /// No description provided for @newOrderFood.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commander un repas'**
+  String get newOrderFood;
+
+  /// No description provided for @newOrderFoodBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les restaurants ouverts près de vous'**
+  String get newOrderFoodBody;
+
+  /// No description provided for @newOrderParcel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer un colis'**
+  String get newOrderParcel;
+
+  /// No description provided for @newOrderParcelBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'D\'un point à un autre, en ville'**
+  String get newOrderParcelBody;
+
+  /// No description provided for @paymentsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiements'**
+  String get paymentsTitle;
+
+  /// No description provided for @paymentsMethods.
+  ///
+  /// In fr, this message translates to:
+  /// **'Moyens de paiement'**
+  String get paymentsMethods;
+
+  /// No description provided for @paymentsHistory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Historique'**
+  String get paymentsHistory;
+
+  /// No description provided for @paymentsEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun paiement pour le moment'**
+  String get paymentsEmpty;
+
+  /// No description provided for @paymentsEmptyBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vos paiements de commandes apparaîtront ici.'**
+  String get paymentsEmptyBody;
+
+  /// No description provided for @paymentDue.
+  ///
+  /// In fr, this message translates to:
+  /// **'À payer à la livraison'**
+  String get paymentDue;
+
+  /// No description provided for @paymentDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Payé'**
+  String get paymentDone;
+
+  /// No description provided for @paymentNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Non facturé'**
+  String get paymentNone;
+
+  /// No description provided for @ordersNewEmptyBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Elles apparaissent ici en direct, avec une alerte.'**
+  String get ordersNewEmptyBody;
+
+  /// No description provided for @ordersTodayCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucune commande aujourd\'hui} =1{1 commande aujourd\'hui} other{{count} commandes aujourd\'hui}}'**
+  String ordersTodayCount(int count);
 }
 
 class _AppLocalizationsDelegate

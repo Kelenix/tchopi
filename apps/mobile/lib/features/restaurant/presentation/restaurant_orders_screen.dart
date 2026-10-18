@@ -152,6 +152,12 @@ class _Body extends StatelessWidget {
       ),
     ];
     final (_, empty, shown) = groups[tab];
+    const emptyIcons = [
+      Icons.notifications_none_rounded,
+      Icons.soup_kitchen_outlined,
+      Icons.task_alt_rounded,
+    ];
+    final emptyBodies = [l10n.ordersNewEmptyBody, null, null];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -213,17 +219,10 @@ class _Body extends StatelessWidget {
         ),
         Expanded(
           child: shown.isEmpty
-              ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(Space.xxl),
-                    child: Text(
-                      empty,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodyMedium!.copyWith(color: tokens.muted),
-                    ),
-                  ),
+              ? EmptyState(
+                  icon: emptyIcons[tab],
+                  title: empty,
+                  body: emptyBodies[tab],
                 )
               : ListView.separated(
                   padding: const EdgeInsets.fromLTRB(
@@ -254,35 +253,76 @@ class _DaySummary extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final tokens = context.tokens;
     final text = Theme.of(context).textTheme;
-    final counted = orders.where(
-      (o) =>
-          o.status != OrderStatus.rejected && o.status != OrderStatus.cancelled,
-    );
+    final counted = orders
+        .where(
+          (o) =>
+              o.status != OrderStatus.rejected &&
+              o.status != OrderStatus.cancelled,
+        )
+        .toList();
     final sales = counted.fold(0, (sum, o) => sum + o.subtotal);
     final commission = counted.fold(0, (sum, o) => sum + o.commissionAmount);
-    Widget figure(String label, int amount, {bool strong = false}) => Expanded(
+    final onPrimary = tokens.onPrimary;
+    Widget figure(String label, int amount) => Expanded(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            formatMoney(amount),
-            style: text.titleMedium!.copyWith(
-              color: strong ? tokens.primary : tokens.ink,
+            label,
+            style: text.bodySmall!.copyWith(
+              color: onPrimary.withValues(alpha: 0.75),
             ),
           ),
-          Text(label, style: text.bodySmall!.copyWith(color: tokens.muted)),
+          const SizedBox(height: 2),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              formatMoney(amount),
+              style: text.titleMedium!.copyWith(color: onPrimary),
+            ),
+          ),
         ],
       ),
     );
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: Space.md),
-        child: Row(
-          children: [
-            figure(l10n.todaySales, sales),
-            figure(l10n.todayCommission, commission),
-            figure(l10n.todayNet, sales - commission, strong: true),
+    return Container(
+      padding: const EdgeInsets.all(Space.lg),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(Radii.card),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            tokens.primary,
+            Color.alphaBlend(
+              tokens.ink.withValues(alpha: 0.35),
+              tokens.primary,
+            ),
           ],
         ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.today_rounded, size: 18, color: onPrimary),
+              const SizedBox(width: Space.sm),
+              Text(
+                l10n.ordersTodayCount(counted.length),
+                style: text.labelLarge!.copyWith(color: onPrimary),
+              ),
+            ],
+          ),
+          const SizedBox(height: Space.md),
+          Row(
+            children: [
+              figure(l10n.todaySales, sales),
+              figure(l10n.todayCommission, commission),
+              figure(l10n.todayNet, sales - commission),
+            ],
+          ),
+        ],
       ),
     );
   }

@@ -156,37 +156,10 @@ class _EmptyMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final tokens = context.tokens;
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(Space.xxl),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CircleAvatar(
-              radius: 36,
-              backgroundColor: tokens.primarySoft,
-              child: Icon(
-                Icons.restaurant_menu,
-                size: 32,
-                color: tokens.primary,
-              ),
-            ),
-            const SizedBox(height: Space.xl),
-            Text(
-              l10n.menuEmpty,
-              style: Theme.of(context).textTheme.titleLarge,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: Space.sm),
-            Text(
-              l10n.menuEmptyBody,
-              style: TextStyle(color: tokens.muted),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
+    return EmptyState(
+      icon: Icons.restaurant_menu,
+      title: l10n.menuEmpty,
+      body: l10n.menuEmptyBody,
     );
   }
 }
