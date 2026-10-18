@@ -23,6 +23,8 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · versions [S
 - Départ et arrivée à moins de 100 m refusés (`same_location`), avec invitation à déplacer l'épingle.
 
 ### Corrigé
+- Compte supprimé ou session refusée par le serveur : « Votre session a expiré… Reconnectez-vous » avec un bouton
+  « Se reconnecter », au lieu de « Pas de connexion internet » et d'un « Réessayer » inutile.
 - Distances et taux affichés avec une virgule (« 0,5 km », « 12,5 % ») au lieu d'un point.
 - Texte d'annulation et libellé « Espèces » propres aux colis (ils parlaient du restaurant et de la livraison).
 

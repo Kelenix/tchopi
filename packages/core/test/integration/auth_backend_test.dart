@@ -115,6 +115,13 @@ void main() {
 
       await profiles.deleteAccount();
       await expectLater(
+        profiles.fetch(userId),
+        throwsA(
+          isA<AppFailure>().having((f) => f.code, 'code', 'session_expired'),
+        ),
+        reason: 'compte supprimé : se reconnecter, pas « réseau »',
+      );
+      await expectLater(
         auth.signIn(id, 'nouveaumdp2'),
         throwsA(isA<AppFailure>()),
       );

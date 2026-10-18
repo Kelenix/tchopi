@@ -28,6 +28,18 @@ void main() {
     );
   });
 
+  test('session refusée ou compte supprimé : se reconnecter', () {
+    for (final code in ['session_not_found', 'user_not_found', 'bad_jwt']) {
+      expect(toFailure(AuthException('x', code: code)).code, 'session_expired');
+    }
+    expect(
+      toFailure(
+        const PostgrestException(message: 'JWT', code: 'PGRST301'),
+      ).code,
+      'session_expired',
+    );
+  });
+
   test('les coupures réseau sont reconnues', () {
     expect(toFailure(const SocketException('hors ligne')).code, 'network');
     expect(toFailure(AuthRetryableFetchException()).code, 'network');

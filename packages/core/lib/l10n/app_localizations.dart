@@ -3296,6 +3296,18 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Toutes les zones'**
   String get supervisionAllZones;
+
+  /// No description provided for @failureSessionExpired.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre session a expiré ou ce compte n\'existe plus. Reconnectez-vous pour continuer.'**
+  String get failureSessionExpired;
+
+  /// No description provided for @accountSignInAgain.
+  ///
+  /// In fr, this message translates to:
+  /// **'Se reconnecter'**
+  String get accountSignInAgain;
 }
 
 class _AppLocalizationsDelegate

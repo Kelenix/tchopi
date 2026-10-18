@@ -5,44 +5,64 @@ import '../../../l10n/app_localizations.dart';
 import '../../design/tokens.dart';
 import '../application/auth_controllers.dart';
 import '../application/auth_providers.dart';
+import '../domain/app_failure.dart';
+import 'widgets/auth_form_scaffold.dart';
 
-/// Chargement du compte après connexion ; en cas d'échec, permet de réessayer ou de se déconnecter.
+/// Chargement du compte après connexion ; en cas d'échec, la cause exacte (réseau, session expirée…)
+/// et, selon le cas, réessayer ou se reconnecter.
 class AccountLoadingScreen extends ConsumerWidget {
   const AccountLoadingScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final failed =
-        ref.watch(currentProfileProvider).hasError ||
-        ref.watch(accountRolesProvider).hasError;
+    final error =
+        ref.watch(currentProfileProvider).error ??
+        ref.watch(accountRolesProvider).error;
+    // Réessayer ne sert à rien sur une session refusée : seule la reconnexion répare.
+    final expired =
+        error is AppFailure && error.code == AppFailure.sessionExpired.code;
     return _StatusScaffold(
-      icon: failed ? Icons.cloud_off_outlined : null,
-      title: failed ? l10n.loadingAccountError : l10n.loadingAccount,
-      body: failed ? l10n.failureNetwork : null,
-      actions: failed
-          ? [
-              FilledButton(
-                onPressed: () => ref
-                  ..invalidate(currentProfileProvider)
-                  ..invalidate(accountRolesProvider),
-                child: Text(l10n.actionRetry),
-              ),
-              _SignOutButton(),
-            ]
-          : const [],
+      icon: error == null
+          ? null
+          : expired
+          ? Icons.lock_clock_outlined
+          : Icons.cloud_off_outlined,
+      title: error == null ? l10n.loadingAccount : l10n.loadingAccountError,
+      body: error == null ? null : failureMessage(l10n, error),
+      actions: [
+        if (error != null && !expired)
+          FilledButton(
+            onPressed: () => ref
+              ..invalidate(currentProfileProvider)
+              ..invalidate(accountRolesProvider),
+            child: Text(l10n.actionRetry),
+          ),
+        if (error != null)
+          _SignOutButton(
+            label: expired ? l10n.accountSignInAgain : l10n.accountSignOut,
+            primary: expired,
+          ),
+      ],
     );
   }
 }
 
 class _SignOutButton extends ConsumerWidget {
+  const _SignOutButton({required this.label, required this.primary});
+
+  final String label;
+  final bool primary;
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) => OutlinedButton(
-    onPressed: () => ref
+  Widget build(BuildContext context, WidgetRef ref) {
+    void signOut() => ref
         .read(formSubmissionProvider('status').notifier)
-        .run(ref.read(authFlowsProvider).signOut),
-    child: Text(AppLocalizations.of(context).accountSignOut),
-  );
+        .run(ref.read(authFlowsProvider).signOut);
+    return primary
+        ? FilledButton(onPressed: signOut, child: Text(label))
+        : OutlinedButton(onPressed: signOut, child: Text(label));
+  }
 }
 
 class _StatusScaffold extends StatelessWidget {

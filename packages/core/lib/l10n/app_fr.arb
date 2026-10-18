@@ -796,5 +796,7 @@
   "adminOrderPlatform": "Part de la plateforme",
   "adminOrderAmounts": "Montants",
   "supervisionAllStatuses": "Tous les statuts",
-  "supervisionAllZones": "Toutes les zones"
+  "supervisionAllZones": "Toutes les zones",
+  "failureSessionExpired": "Votre session a expiré ou ce compte n'existe plus. Reconnectez-vous pour continuer.",
+  "accountSignInAgain": "Se reconnecter"
 }

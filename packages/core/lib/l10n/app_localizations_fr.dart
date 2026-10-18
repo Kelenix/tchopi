@@ -1769,4 +1769,11 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get supervisionAllZones => 'Toutes les zones';
+
+  @override
+  String get failureSessionExpired =>
+      'Votre session a expiré ou ce compte n\'existe plus. Reconnectez-vous pour continuer.';
+
+  @override
+  String get accountSignInAgain => 'Se reconnecter';
 }

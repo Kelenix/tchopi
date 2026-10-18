@@ -87,6 +87,11 @@ validation de la maquette → code des écrans à partir de l'Inc-1. Registre de
 
 ## Journal de session (résumé court, le plus récent en haut)
 
+- 2026-10-18 — Correctif (branche feat/inc-7-attribution) : au chargement du compte, une session refusée ou un compte
+  supprimé n'est plus présenté comme une coupure réseau (message exact, « Se reconnecter »). Constaté dans le
+  navigateur après une réinitialisation de la base locale. Preuves : analyse 0 problème ; 39 + 34 tests Flutter ;
+  pgTAP 147/147 ; 3 + 7 tests d'intégration réels (dont compte supprimé → « session expirée »).
+
 - 2026-10-18 — Inc-7 (branche feat/inc-7-attribution, ADR-023) : paramètres de la plateforme, mise en ligne et
   position des livreurs, offres de 45 s au plus proche, refus / expiration → suivant, alerte 10 min et annulation
   30 min sans livreur (tâche toutes les 10 s), attribution manuelle ; plus de commande sans livreur en ligne ;

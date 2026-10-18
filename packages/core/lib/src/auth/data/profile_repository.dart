@@ -11,12 +11,14 @@ class ProfileRepository {
 
   static const _columns = 'id, first_name, last_name, phone, city';
 
+  /// Sans profil, le compte a été supprimé depuis la connexion (le profil naît avec le compte).
   Future<Profile> fetch(String userId) => guardCall(() async {
     final row = await _client
         .from('profiles')
         .select(_columns)
         .eq('id', userId)
-        .single();
+        .maybeSingle();
+    if (row == null) throw AppFailure.sessionExpired;
     return Profile.fromJson(row);
   });
 

@@ -9,6 +9,7 @@ String failureMessage(AppLocalizations l10n, Object? error) {
   final code = error is AppFailure ? error.code : 'unknown';
   return switch (code) {
     'network' => l10n.failureNetwork,
+    'session_expired' => l10n.failureSessionExpired,
     'invalid_credentials' => l10n.failureInvalidCredentials,
     'user_already_exists' => l10n.failureUserExists,
     'code_invalid' => l10n.failureCodeInvalid,

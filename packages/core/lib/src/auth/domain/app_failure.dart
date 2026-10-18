@@ -13,6 +13,9 @@ class AppFailure implements Exception {
   static const network = AppFailure('network');
   static const unknown = AppFailure('unknown');
 
+  /// Session refusée par le serveur ou compte supprimé depuis la connexion : il faut se reconnecter.
+  static const sessionExpired = AppFailure('session_expired');
+
   @override
   String toString() => 'AppFailure($code)';
 }
@@ -31,7 +34,15 @@ const _authCodes = {
   'user_banned': 'account_suspended',
   'email_not_confirmed': 'not_confirmed',
   'phone_not_confirmed': 'not_confirmed',
+  'session_not_found': 'session_expired',
+  'session_expired': 'session_expired',
+  'refresh_token_not_found': 'session_expired',
+  'user_not_found': 'session_expired',
+  'bad_jwt': 'session_expired',
 };
+
+/// Jeton refusé par l'API (invalide, expiré, réclamations illisibles).
+const _jwtCodes = {'PGRST301', 'PGRST303'};
 
 /// Convertit toute erreur d'accès au serveur en [AppFailure] ; aucun détail technique n'atteint l'écran.
 AppFailure toFailure(Object error) => switch (error) {
@@ -43,6 +54,8 @@ AppFailure toFailure(Object error) => switch (error) {
   AuthException(:final code) => AppFailure(_authCodes[code] ?? 'unknown'),
   PostgrestException(:final code, :final message) when code == 'P0001' =>
     AppFailure(message),
+  PostgrestException(:final code) when _jwtCodes.contains(code) =>
+    AppFailure.sessionExpired,
   FunctionException(:final details) => AppFailure(
     details is Map && details['code'] is String
         ? details['code'] as String
