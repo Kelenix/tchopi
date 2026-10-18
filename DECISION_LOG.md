@@ -6,6 +6,57 @@
 
 ---
 
+## ADR-019 — Thème clair imposé, cartes OpenStreetMap, accueil client (refonte visuelle)
+
+- **Date** : 2026-10-18
+- **Statut** : Accepté
+- **Décideur** : Claude (rôle : ui-ux-designer / flutter-engineer), à la suite du retour de l'utilisateur
+- **Contexte** : L'app suivait le thème sombre du téléphone (fond vert très foncé, jamais demandé) ; la carte Google
+  restait vide sans clé (une bande grise) ; l'espace Client s'ouvrait sur la liste d'adresses. Jugé « ridicule ».
+- **Décision** :
+  - **Thème clair seul**, quel que soit le réglage du téléphone ; jetons sombres supprimés. Écran de bienvenue clair.
+  - **Cartes `flutter_map` + tuiles OpenStreetMap** au lieu de Google Maps : la carte s'affiche partout (Android, web)
+    sans clé ni compte de facturation. URL des tuiles configurable (`MAP_TILES_URL`) ; serveurs publics d'OpenStreetMap
+    en développement seulement, fournisseur ou tuiles auto-hébergées en production (tâche manuelle §7).
+  - Éditeur d'adresse : carte en haut, épingle fixe qui se soulève pendant le déplacement, formulaire en feuille arrondie.
+  - **Accueil client** (C-01) : adresse de livraison, services Repas / Colis, restaurants (ouverts d'abord) ; fiche
+    restaurant (C-03) : photo, indicateurs, menu par catégorie, produits indisponibles grisés. Le panier arrive à l'Inc-5.
+  - Sans photo, couvertures et produits affichent un motif teinté (vert, ambre ou rose selon le restaurant).
+  - Restaurants de démonstration dans `supabase/seed.sql` (local uniquement), photos générées par l'utilisateur
+    (`supabase/seed-media/`, bucket déclaré dans `config.toml`). Bienvenue : grande photo de plats + fondu clair.
+- **Alternatives écartées** : garder Google Maps (clé et facturation obligatoires, rien d'affiché sans elles) ; thème sombre
+  corrigé (non demandé ; à reconsidérer plus tard sur demande) ; CARTO (demande désormais une clé).
+- **Conséquences** : un fournisseur de tuiles est à choisir avant la publication ; les liens « Voir sur une carte » de
+  l'admin (zones, restaurants) ouvrent encore Google Maps dans le navigateur, ce qui ne demande pas de clé.
+- **Impact** : produit / design (fort), technique (moyen).
+
+---
+
+## ADR-018 — Restaurants et catalogue (Inc-4)
+
+- **Date** : 2026-10-18
+- **Statut** : Accepté
+- **Décideur** : Claude (rôle : backend-engineer / security-engineer)
+- **Contexte** : Stories RES-01 à RES-05 ; un restaurant est créé par l'équipe puis tenu par ses gérants.
+- **Décision** :
+  - Création et réglages sensibles (zone, position, commission, activation) par l'admin seulement, via
+    `admin_save_restaurant` (journalisée) ; le gérant ne modifie que présentation, type de cuisine, photo,
+    téléphone, temps de préparation et fermeture temporaire (droits par colonne).
+  - Gérants invités par email ou numéro (`admin_invite_member`) : reliés tout de suite si le compte existe,
+    sinon dès que l'identifiant est vérifié (déclencheur sur les comptes). Espace Restaurant ouvert aux gérants.
+  - Ouverture calculée par le serveur (`is_open`) selon les horaires dans le fuseau de la zone et la fermeture
+    temporaire.
+  - Produits archivés au lieu d'être supprimés (les commandes y feront référence) ; prix entiers en XOF.
+  - Photos (couverture, produits) dans un bucket public `media` : images de vitrine, non sensibles ;
+    écriture réservée aux gérants du restaurant et aux admins.
+  - Un gérant gère un restaurant au MVP (le premier de ses accès).
+- **Alternatives écartées** : création libre par les restaurants (risque de faux restaurants) ; photos privées
+  (liens signés inutiles pour des images de vitrine, et plus lents).
+- **Conséquences** : la commission ne peut pas être modifiée par le restaurant ; l'historique reste intact.
+- **Impact** : métier / sécurité (moyen).
+
+---
+
 ## ADR-017 — Livreurs et administration des comptes (Inc-3)
 
 - **Date** : 2026-10-18

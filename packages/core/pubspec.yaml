@@ -47,3 +47,4 @@ flutter:
           weight: 800
   assets:
     - assets/fonts/OFL.txt
+    - assets/images/welcome-hero.jpg

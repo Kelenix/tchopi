@@ -50,6 +50,19 @@ Règle mot de passe (serveur) : 8 caractères minimum, lettres et chiffres.
 | `POST /functions/v1/admin-users` | admin | `{ action: "suspend" ou "reactivate", user_id, reason }` ou `{ action: "update_login", user_id, email ou phone }` |
 | `POST /rest/v1/rpc/my_roles` | connecté | `{ is_admin, courier_status }` |
 
+## Restaurants et catalogue — Inc-4
+
+| Ressource / action | Accès | Description |
+|--------------------|-------|-------------|
+| `GET /rest/v1/restaurants?select=*,is_open` | connecté | Restaurants actifs (admin et gérants : tous les leurs) ; `is_open` calculé par le serveur |
+| `PATCH /rest/v1/restaurants` | gérant | Champs : `description`, `category`, `cover_path`, `phone`, `prep_time_min`, `is_temporarily_closed` |
+| `POST /rest/v1/rpc/save_opening_hours` | gérant, admin | `{ p_restaurant_id, p_hours: [{ weekday 1–7, opens_at, closes_at }] }` (remplace tout) |
+| `categories`, `products` (écriture) | gérant, admin | Pas de suppression de produit : `archived_at` ; les clients ne voient pas les produits archivés |
+| Storage `media/restaurants/<id>/…` | lecture publique ; écriture gérant, admin | Couverture et photos produits (2 Mo max) |
+| `POST /rest/v1/rpc/admin_save_restaurant` | admin | `{ p_id (null = création), p_zone_id, p_name, p_description, p_category, p_phone, p_latitude, p_longitude, p_district, p_landmark, p_commission_rate, p_is_active }` → identifiant |
+| `POST /rest/v1/rpc/admin_invite_member` / `admin_remove_member` | admin | `{ p_restaurant_id, p_email ou p_phone }` / `{ p_member_id }` |
+| `POST /rest/v1/rpc/my_roles` | connecté | `{ is_admin, courier_status, restaurant_ids }` |
+
 ## Codes d'erreur stables
 
 | Code | Signification |

@@ -36,6 +36,8 @@ abstract class AccountRoles with _$AccountRoles {
     @Default(false) bool isAdmin,
     // Statut du profil livreur ; absent tant que le compte n'a pas demandé à devenir livreur.
     CourierStatus? courierStatus,
+    // Restaurants dont le compte est gérant (espace Restaurant).
+    @Default(<String>[]) List<String> restaurantIds,
   }) = _AccountRoles;
 
   factory AccountRoles.fromJson(Map<String, dynamic> json) =>

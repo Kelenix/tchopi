@@ -30,23 +30,18 @@ void main() {
     await tester.pumpWidget(welcomeApp(theme));
   }
 
-  for (final (name, theme) in [
-    ('clair', AppTheme.light),
-    ('sombre', AppTheme.dark),
-  ]) {
-    testWidgets(
-      'affiche la promesse et les atouts sans débordement — thème $name',
-      (tester) async {
-        await pumpSmallScreen(tester, theme);
+  testWidgets('affiche la promesse et les atouts sans débordement', (
+    tester,
+  ) async {
+    await pumpSmallScreen(tester, AppTheme.light);
+    await tester.pumpAndSettle();
 
-        expect(
-          find.text('Vos plats et vos colis, livrés dans tout Abidjan.'),
-          findsOneWidget,
-        );
-        expect(find.text('Suivi en direct'), findsOneWidget);
-        expect(find.textContaining('tchopi'), findsOneWidget);
-        expect(tester.takeException(), isNull);
-      },
+    expect(
+      find.text('Vos plats et vos colis, livrés dans tout Abidjan.'),
+      findsOneWidget,
     );
-  }
+    expect(find.text('Suivi en direct'), findsOneWidget);
+    expect(find.textContaining('tchopi'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 }

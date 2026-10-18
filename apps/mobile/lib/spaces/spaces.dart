@@ -4,16 +4,18 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../features/admin/zones/presentation/zones_screen.dart';
-import '../features/client/addresses/presentation/addresses_screen.dart';
+import '../features/client/home/client_home_screen.dart';
 import '../features/courier/profile/presentation/courier_profile_screen.dart';
 import '../features/courier/profile/presentation/courier_status_screen.dart';
+import '../features/restaurant/presentation/menu_screen.dart';
 
 part 'spaces.g.dart';
 
-/// Espaces de l'app (ADR-016). L'espace Restaurant arrive avec l'Inc-4.
+/// Espaces de l'app (ADR-016).
 enum AppSpace {
-  client(Icons.shopping_bag_outlined, AddressesScreen.path),
+  client(Icons.shopping_bag_outlined, ClientHomeScreen.path),
   courier(Icons.two_wheeler, CourierStatusScreen.path),
+  restaurant(Icons.storefront_outlined, MenuScreen.path),
   admin(Icons.admin_panel_settings_outlined, ZonesScreen.path);
 
   const AppSpace(this.icon, this.home);
@@ -26,12 +28,14 @@ enum AppSpace {
   String label(AppLocalizations l10n) => switch (this) {
     client => l10n.spaceClient,
     courier => l10n.spaceCourier,
+    restaurant => l10n.spaceRestaurant,
     admin => l10n.spaceAdmin,
   };
 
   String description(AppLocalizations l10n) => switch (this) {
     client => l10n.spaceClientBody,
     courier => l10n.spaceCourierBody,
+    restaurant => l10n.spaceRestaurantBody,
     admin => l10n.spaceAdminBody,
   };
 }
@@ -40,6 +44,7 @@ enum AppSpace {
 List<AppSpace> availableSpaces(AccountRoles roles) => [
   AppSpace.client,
   if (roles.courierStatus != null) AppSpace.courier,
+  if (roles.restaurantIds.isNotEmpty) AppSpace.restaurant,
   if (roles.isAdmin) AppSpace.admin,
 ];
 
@@ -53,6 +58,9 @@ String spaceHome(AccountRoles roles, AppSpace? lastUsed) =>
 /// Garde des écrans propres à un espace (le serveur reste seul juge des données, via la RLS).
 String? guardSpaces(String location, AccountRoles roles) {
   if (location.startsWith('/admin') && !roles.isAdmin) return SpaceRoutes.entry;
+  if (location.startsWith('/restaurant') && roles.restaurantIds.isEmpty) {
+    return SpaceRoutes.entry;
+  }
   // Sans profil livreur, l'espace Livreur commence par l'inscription (« Devenir livreur », COU-01).
   if (location == CourierStatusScreen.path && roles.courierStatus == null) {
     return CourierProfileScreen.path;

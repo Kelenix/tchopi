@@ -329,15 +329,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get addressMyPosition => 'Ma position';
 
   @override
-  String get mapUnavailable =>
-      'Carte non configurée sur cet appareil. Utilisez « Ma position » pour placer l\'adresse.';
-
-  @override
-  String mapPosition(String lat, String lng) {
-    return 'Position : $lat, $lng';
-  }
-
-  @override
   String get fieldLabel => 'Libellé';
 
   @override
@@ -706,4 +697,266 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get spaceBecomeCourierBody =>
       'Livrez à Abidjan à votre rythme. Votre profil est validé par l\'équipe.';
+
+  @override
+  String get spaceRestaurant => 'Restaurant';
+
+  @override
+  String get spaceRestaurantBody =>
+      'Mon menu, mes horaires, puis les commandes reçues.';
+
+  @override
+  String get restaurantMenu => 'Menu';
+
+  @override
+  String get restaurantProfile => 'Profil et horaires';
+
+  @override
+  String get menuEmpty => 'Ajoutez votre premier produit';
+
+  @override
+  String get menuEmptyBody =>
+      'Les clients voient votre menu dès qu\'un produit est disponible.';
+
+  @override
+  String get productAdd => 'Ajouter un produit';
+
+  @override
+  String get productNewTitle => 'Nouveau produit';
+
+  @override
+  String get productEditTitle => 'Modifier le produit';
+
+  @override
+  String get fieldProductName => 'Nom du produit';
+
+  @override
+  String get fieldDescription => 'Description';
+
+  @override
+  String get fieldPrice => 'Prix (F CFA)';
+
+  @override
+  String get fieldCategory => 'Catégorie';
+
+  @override
+  String get categoryNew => 'Nouvelle catégorie';
+
+  @override
+  String get categoryNone => 'Sans catégorie';
+
+  @override
+  String get productAvailable => 'Disponible';
+
+  @override
+  String get productUnavailable => 'Indisponible';
+
+  @override
+  String get productArchive => 'Retirer du menu';
+
+  @override
+  String get productArchiveTitle => 'Retirer ce produit du menu ?';
+
+  @override
+  String get productArchiveBody =>
+      'Il disparaît pour les clients ; les commandes passées le gardent.';
+
+  @override
+  String get productSaved => 'Produit enregistré.';
+
+  @override
+  String get productPhoto => 'Photo du produit';
+
+  @override
+  String get photoChange => 'Changer la photo';
+
+  @override
+  String get fieldCategoryName => 'Nom de la catégorie';
+
+  @override
+  String get restaurantOpenNow => 'Ouvert';
+
+  @override
+  String get restaurantClosedNow => 'Fermé';
+
+  @override
+  String get restaurantTemporarilyClosed => 'Fermé temporairement';
+
+  @override
+  String get restaurantTemporarilyClosedBody =>
+      'Ferme le restaurant tout de suite, quels que soient les horaires.';
+
+  @override
+  String get fieldPrepTime => 'Temps de préparation moyen (min)';
+
+  @override
+  String get fieldRestaurantCategory => 'Type de cuisine';
+
+  @override
+  String get fieldCommission => 'Commission (%)';
+
+  @override
+  String commissionReadOnly(String rate) {
+    return 'Commission : $rate % (fixée par l\'équipe)';
+  }
+
+  @override
+  String get coverPhoto => 'Photo de couverture';
+
+  @override
+  String get openingHours => 'Horaires d\'ouverture';
+
+  @override
+  String get hoursAdd => 'Ajouter une plage';
+
+  @override
+  String get hoursClosedDay => 'Fermé';
+
+  @override
+  String get hoursInvalid =>
+      'L\'heure de fermeture doit suivre l\'heure d\'ouverture.';
+
+  @override
+  String get restaurantSaved => 'Restaurant enregistré.';
+
+  @override
+  String get weekday1 => 'Lundi';
+
+  @override
+  String get weekday2 => 'Mardi';
+
+  @override
+  String get weekday3 => 'Mercredi';
+
+  @override
+  String get weekday4 => 'Jeudi';
+
+  @override
+  String get weekday5 => 'Vendredi';
+
+  @override
+  String get weekday6 => 'Samedi';
+
+  @override
+  String get weekday7 => 'Dimanche';
+
+  @override
+  String get adminRestaurants => 'Restaurants';
+
+  @override
+  String get restaurantsEmpty => 'Aucun restaurant pour le moment';
+
+  @override
+  String get restaurantAdd => 'Ajouter un restaurant';
+
+  @override
+  String get restaurantNewTitle => 'Nouveau restaurant';
+
+  @override
+  String get restaurantEditTitle => 'Modifier le restaurant';
+
+  @override
+  String get fieldRestaurantName => 'Nom du restaurant';
+
+  @override
+  String get restaurantActive => 'Visible par les clients';
+
+  @override
+  String get restaurantInactive => 'Désactivé';
+
+  @override
+  String get managersTitle => 'Gérants';
+
+  @override
+  String get managersEmpty => 'Aucun gérant';
+
+  @override
+  String get managerInvite => 'Inviter un gérant';
+
+  @override
+  String get managerInviteField => 'Email ou numéro du gérant';
+
+  @override
+  String get managerPending => 'Invitation en attente d\'inscription';
+
+  @override
+  String get managerLinked => 'Compte relié';
+
+  @override
+  String get managerRemove => 'Retirer';
+
+  @override
+  String get managersSaveFirst =>
+      'Enregistrez le restaurant pour inviter ses gérants.';
+
+  @override
+  String get fieldRestaurantZone => 'Zone';
+
+  @override
+  String get fieldLatitude => 'Latitude';
+
+  @override
+  String get fieldLongitude => 'Longitude';
+
+  @override
+  String get restaurantViewOnMap => 'Voir l\'emplacement sur une carte';
+
+  @override
+  String get homeGreetingAnonymous => 'Bonjour';
+
+  @override
+  String homeGreeting(String name) {
+    return 'Bonjour $name';
+  }
+
+  @override
+  String get homeHeadline => 'Qu\'est-ce qui vous ferait plaisir ?';
+
+  @override
+  String get homeServiceFood => 'Repas';
+
+  @override
+  String get homeServiceFoodBody => 'Les restaurants d\'Abidjan';
+
+  @override
+  String get homeServiceParcel => 'Colis';
+
+  @override
+  String get homeServiceParcelBody => 'Un envoi en ville';
+
+  @override
+  String get homeSoon => 'Bientôt';
+
+  @override
+  String get homeRestaurants => 'Restaurants près de vous';
+
+  @override
+  String get homeRestaurantsEmpty =>
+      'Aucun restaurant n\'est encore disponible dans votre zone.';
+
+  @override
+  String get homeDeliverTo => 'Livrer à';
+
+  @override
+  String get homeNoAddress => 'Ajouter une adresse';
+
+  @override
+  String restaurantPrepRange(int min, int max) {
+    return '$min–$max min';
+  }
+
+  @override
+  String get restaurantMenuSoon => 'Le menu de ce restaurant arrive bientôt.';
+
+  @override
+  String get restaurantOrderSoon => 'La commande en ligne ouvre très bientôt.';
+
+  @override
+  String get menuOther => 'Autres';
+
+  @override
+  String get factPrep => 'Préparation';
+
+  @override
+  String get factNow => 'Maintenant';
 }

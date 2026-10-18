@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../l10n/app_localizations.dart';
-import '../../design/dish_art.dart';
 import '../../design/tokens.dart';
 
 class WelcomeFeature {
@@ -13,89 +12,108 @@ class WelcomeFeature {
   final String label;
 }
 
-/// Écran S-01 : illustration plein écran, promesse de l'app, atouts, puis inscription ou connexion.
+/// Écran S-01 : grande photo de plats, promesse de l'app, puis inscription ou connexion.
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({
     super.key,
     required this.headline,
     required this.subtitle,
     required this.features,
-    this.dish = Dish.attieke,
   });
 
   final String headline;
   final String subtitle;
   final List<WelcomeFeature> features;
-  final Dish dish;
 
   @override
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
-    const onPhoto = PhotoOverlay.foreground;
+    final tokens = context.tokens;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.light,
+      value: SystemUiOverlayStyle.dark,
       child: Scaffold(
-        body: Stack(
-          fit: StackFit.expand,
-          children: [
-            DishArt(
-              dish: dish,
-              plateAlignment: const Alignment(0.75, -0.55),
-              plateScale: 0.62,
-            ),
-            const DecoratedBox(
-              decoration: BoxDecoration(gradient: PhotoOverlay.scrim),
-            ),
-            // Collé en bas ; défile seulement si le texte agrandi ne tient pas (petits écrans).
-            LayoutBuilder(
-              builder: (context, constraints) => SingleChildScrollView(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                  child: IntrinsicHeight(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(
-                            Space.xxl,
-                            0,
-                            Space.xxl,
-                            Space.huge,
+        backgroundColor: tokens.background,
+        body: LayoutBuilder(
+          builder: (context, constraints) => SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: IntrinsicHeight(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          // La photo passe sous les coins arrondis de la feuille du bas.
+                          Positioned(
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: -Radii.sheet,
+                            child: Image.asset(
+                              'assets/images/welcome-hero.jpg',
+                              package: 'core',
+                              fit: BoxFit.cover,
+                              alignment: Alignment.bottomCenter,
+                            ),
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _Wordmark(
-                                color: onPhoto,
-                                accent: context.tokens.progress,
-                              ),
-                              const SizedBox(height: Space.md),
-                              Text(
-                                headline,
-                                style: text.displaySmall!.copyWith(
-                                  color: onPhoto,
+                          // Fondu clair qui garde le texte lisible au-dessus des plats.
+                          Positioned.fill(
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  stops: const [0, 0.35, 0.6],
+                                  colors: [
+                                    tokens.background,
+                                    tokens.background.withValues(alpha: 0.85),
+                                    tokens.background.withValues(alpha: 0),
+                                  ],
                                 ),
                               ),
-                              const SizedBox(height: Space.sm),
-                              Text(
-                                subtitle,
-                                style: text.bodyMedium!.copyWith(
-                                  color: onPhoto.withValues(alpha: 0.85),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
-                        _FeaturesSheet(features: features),
-                      ],
+                          SafeArea(
+                            bottom: false,
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                Space.xxl,
+                                Space.lg,
+                                Space.xxl,
+                                Space.xxxl,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _Wordmark(
+                                    color: tokens.ink,
+                                    accent: tokens.success,
+                                  ),
+                                  const SizedBox(height: Space.xxl),
+                                  Text(headline, style: text.displaySmall),
+                                  const SizedBox(height: Space.md),
+                                  Text(
+                                    subtitle,
+                                    style: text.bodyLarge!.copyWith(
+                                      color: tokens.ink,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
+                    _FeaturesSheet(features: features),
+                  ],
                 ),
               ),
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -130,6 +148,29 @@ class _Wordmark extends StatelessWidget {
   }
 }
 
+class _IconTile extends StatelessWidget {
+  const _IconTile({
+    required this.icon,
+    required this.background,
+    required this.color,
+  });
+
+  final IconData icon;
+  final Color background;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    width: 44,
+    height: 44,
+    decoration: BoxDecoration(
+      color: background,
+      borderRadius: BorderRadius.circular(Radii.chip),
+    ),
+    child: Icon(icon, color: color),
+  );
+}
+
 class _FeaturesSheet extends StatelessWidget {
   const _FeaturesSheet({required this.features});
 
@@ -138,8 +179,9 @@ class _FeaturesSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tokens = context.tokens;
+    final l10n = AppLocalizations.of(context);
     final label = Theme.of(context).textTheme.bodySmall!.copyWith(
-      color: tokens.muted,
+      color: tokens.ink,
       fontWeight: FontWeight.w600,
     );
 
@@ -154,7 +196,7 @@ class _FeaturesSheet extends StatelessWidget {
         Space.xl,
         Space.xxl,
         Space.xl,
-        Space.xxl,
+        Space.lg,
       ),
       child: SafeArea(
         top: false,
@@ -168,14 +210,10 @@ class _FeaturesSheet extends StatelessWidget {
                   Expanded(
                     child: Column(
                       children: [
-                        CircleAvatar(
-                          radius: 20,
-                          backgroundColor: tokens.primarySoft,
-                          child: Icon(
-                            feature.icon,
-                            size: 20,
-                            color: tokens.primary,
-                          ),
+                        _IconTile(
+                          icon: feature.icon,
+                          background: tokens.primarySoft,
+                          color: tokens.primary,
                         ),
                         const SizedBox(height: Space.sm),
                         Text(
@@ -189,14 +227,16 @@ class _FeaturesSheet extends StatelessWidget {
               ],
             ),
             const SizedBox(height: Space.xxl),
-            FilledButton(
+            FilledButton.icon(
               onPressed: () => context.push('/sign-up'),
-              child: Text(AppLocalizations.of(context).actionCreateAccount),
+              iconAlignment: IconAlignment.end,
+              icon: const Icon(Icons.arrow_forward_rounded),
+              label: Text(l10n.actionCreateAccount),
             ),
             const SizedBox(height: Space.sm),
             OutlinedButton(
               onPressed: () => context.push('/sign-in'),
-              child: Text(AppLocalizations.of(context).actionSignIn),
+              child: Text(l10n.actionSignIn),
             ),
           ],
         ),

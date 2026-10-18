@@ -1,9 +1,11 @@
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:latlong2/latlong.dart';
 
+import '../../../../shared/pin_map.dart';
 import '../application/addresses_providers.dart';
 import '../data/location_service.dart';
 
@@ -22,16 +24,16 @@ class AddressEditorScreen extends ConsumerStatefulWidget {
 class _AddressEditorScreenState extends ConsumerState<AddressEditorScreen> {
   // Centre d'Abidjan, utilisé tant qu'aucune zone n'est chargée.
   static const _fallback = LatLng(5.3364, -4.0267);
-  static const _zoom = 17.0;
 
   final _form = GlobalKey<FormState>();
+  final _map = MapController();
   late final TextEditingController _district, _landmark, _instructions;
   late String _label;
-  LatLng? _position;
-  GoogleMapController? _map;
+
+  /// Point désigné par l'épingle ; c'est lui qui est enregistré.
+  late LatLng _position;
   bool _locating = false;
   bool _saving = false;
-  bool _positionMissing = false;
   Object? _error;
 
   @override
@@ -42,9 +44,12 @@ class _AddressEditorScreenState extends ConsumerState<AddressEditorScreen> {
     _landmark = TextEditingController(text: address?.landmark);
     _instructions = TextEditingController(text: address?.instructions);
     _label = address?.label ?? 'Maison';
-    if (address != null) {
-      _position = LatLng(address.latitude, address.longitude);
-    }
+    final zone = ref.read(activeZonesProvider).value?.firstOrNull;
+    _position = address != null
+        ? LatLng(address.latitude, address.longitude)
+        : zone != null
+        ? LatLng(zone.centerLat, zone.centerLng)
+        : _fallback;
   }
 
   @override
@@ -52,16 +57,8 @@ class _AddressEditorScreenState extends ConsumerState<AddressEditorScreen> {
     for (final controller in [_district, _landmark, _instructions]) {
       controller.dispose();
     }
-    _map?.dispose();
+    _map.dispose();
     super.dispose();
-  }
-
-  LatLng get _initialTarget {
-    final zones = ref.read(activeZonesProvider).value;
-    return _position ??
-        (zones == null || zones.isEmpty
-            ? _fallback
-            : LatLng(zones.first.centerLat, zones.first.centerLng));
   }
 
   Future<void> _useMyPosition() async {
@@ -84,7 +81,8 @@ class _AddressEditorScreenState extends ConsumerState<AddressEditorScreen> {
     setState(() => _locating = false);
     switch (result) {
       case LocationFound(:final latitude, :final longitude, :final isPrecise):
-        _moveTo(LatLng(latitude, longitude));
+        _position = LatLng(latitude, longitude);
+        _map.move(_position, PinMap.zoom);
         if (!isPrecise) {
           messenger.showSnackBar(
             SnackBar(content: Text(l10n.locationLowAccuracy)),
@@ -115,22 +113,8 @@ class _AddressEditorScreenState extends ConsumerState<AddressEditorScreen> {
     }
   }
 
-  void _moveTo(LatLng target) {
-    setState(() {
-      _position = target;
-      _positionMissing = false;
-    });
-    _map?.animateCamera(CameraUpdate.newLatLngZoom(target, _zoom));
-  }
-
   Future<void> _save() async {
     if (!_form.currentState!.validate()) return;
-    // Sans carte, la position ne peut venir que du GPS : pas d'enregistrement au centre de la zone par défaut.
-    final position = _position ?? (Env.mapsEnabled ? _initialTarget : null);
-    if (position == null) {
-      setState(() => _positionMissing = true);
-      return;
-    }
     final messenger = ScaffoldMessenger.of(context);
     final saved = AppLocalizations.of(context).addressSaved;
     setState(() {
@@ -147,8 +131,8 @@ class _AddressEditorScreenState extends ConsumerState<AddressEditorScreen> {
               district: _district.text,
               landmark: _landmark.text,
               instructions: _instructions.text,
-              latitude: position.latitude,
-              longitude: position.longitude,
+              latitude: _position.latitude,
+              longitude: _position.longitude,
             ),
           );
       if (!mounted) return;
@@ -169,209 +153,194 @@ class _AddressEditorScreenState extends ConsumerState<AddressEditorScreen> {
     String? required(String? value) =>
         (value?.trim().isEmpty ?? true) ? l10n.errorRequired : null;
     final labels = {
-      'Maison': l10n.labelHome,
-      'Bureau': l10n.labelWork,
-      'Autre': l10n.labelOther,
+      'Maison': (l10n.labelHome, Icons.home_outlined),
+      'Bureau': (l10n.labelWork, Icons.work_outline),
+      'Autre': (l10n.labelOther, Icons.place_outlined),
     };
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          widget.address == null ? l10n.addressNewTitle : l10n.addressEditTitle,
-        ),
-        backgroundColor: tokens.background,
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 300,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Positioned.fill(
-                    child: _MapArea(
-                      initialTarget: _initialTarget,
-                      onCreated: (c) => _map = c,
-                      onMoved: (target) => _position = target,
-                      position: _position,
-                    ),
-                  ),
-                  // L'épingle reste au centre ; sa pointe désigne la position enregistrée.
-                  IgnorePointer(
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 40),
-                      child: Icon(
-                        Icons.location_on,
-                        size: 44,
-                        color: tokens.primary,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    right: Space.md,
-                    bottom: Space.md,
-                    child: FloatingActionButton.extended(
-                      heroTag: null,
-                      onPressed: _locating ? null : _useMyPosition,
-                      icon: _locating
-                          ? const SizedBox.square(
-                              dimension: 18,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
-                          : const Icon(Icons.my_location),
-                      label: Text(l10n.addressMyPosition),
-                    ),
-                  ),
-                ],
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          // La carte occupe le haut ; la feuille du formulaire la recouvre de ses coins arrondis.
+          final mapHeight = (constraints.maxHeight * 0.42).clamp(200.0, 380.0);
+          return Stack(
+            children: [
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                height: mapHeight + Radii.sheet,
+                child: PinMap(
+                  controller: _map,
+                  initialCenter: _position,
+                  onMoved: (target) => _position = target,
+                ),
               ),
-            ),
-            Expanded(
-              child: Form(
-                key: _form,
-                child: ListView(
-                  padding: const EdgeInsets.all(Space.screen),
-                  children: [
-                    Text(
-                      l10n.addressMoveMap,
-                      style: text.bodySmall!.copyWith(color: tokens.muted),
+              const Positioned(
+                top: 0,
+                left: 0,
+                child: SafeArea(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: Space.sm),
+                    child: RoundBackButton(),
+                  ),
+                ),
+              ),
+              Positioned(
+                right: Space.lg,
+                top: mapHeight - 56 - Space.lg,
+                child: FloatingActionButton.extended(
+                  heroTag: null,
+                  backgroundColor: tokens.surface,
+                  foregroundColor: tokens.ink,
+                  onPressed: _locating ? null : _useMyPosition,
+                  icon: _locating
+                      ? const SizedBox.square(
+                          dimension: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : Icon(Icons.my_location, color: tokens.primary),
+                  label: Text(l10n.addressMyPosition),
+                ),
+              ),
+              Positioned.fill(
+                top: mapHeight,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: tokens.surface,
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(Radii.sheet),
                     ),
-                    const SizedBox(height: Space.lg),
-                    Wrap(
-                      spacing: Space.sm,
+                  ),
+                  child: SafeArea(
+                    top: false,
+                    child: Column(
                       children: [
-                        for (final MapEntry(:key, :value) in labels.entries)
-                          ChoiceChip(
-                            label: Text(value),
-                            selected: _label == key,
-                            onSelected: (_) => setState(() => _label = key),
+                        Expanded(
+                          child: Form(
+                            key: _form,
+                            child: ListView(
+                              padding: const EdgeInsets.fromLTRB(
+                                Space.screen,
+                                Space.xxl,
+                                Space.screen,
+                                Space.lg,
+                              ),
+                              children: [
+                                Text(
+                                  widget.address == null
+                                      ? l10n.addressNewTitle
+                                      : l10n.addressEditTitle,
+                                  style: text.headlineMedium,
+                                ),
+                                const SizedBox(height: Space.xs),
+                                Text(
+                                  l10n.addressMoveMap,
+                                  style: text.bodyMedium!.copyWith(
+                                    color: tokens.muted,
+                                  ),
+                                ),
+                                const SizedBox(height: Space.xl),
+                                Wrap(
+                                  spacing: Space.sm,
+                                  children: [
+                                    for (final MapEntry(
+                                          :key,
+                                          value: (label, icon),
+                                        )
+                                        in labels.entries)
+                                      ChoiceChip(
+                                        avatar: Icon(
+                                          icon,
+                                          size: 18,
+                                          color: _label == key
+                                              ? tokens.onInk
+                                              : tokens.ink,
+                                        ),
+                                        label: Text(label),
+                                        selected: _label == key,
+                                        onSelected: (_) =>
+                                            setState(() => _label = key),
+                                      ),
+                                  ],
+                                ),
+                                const SizedBox(height: Space.xl),
+                                TextFormField(
+                                  controller: _district,
+                                  textCapitalization: TextCapitalization.words,
+                                  decoration: InputDecoration(
+                                    labelText: l10n.fieldDistrict,
+                                    prefixIcon: const Icon(
+                                      Icons.location_city_outlined,
+                                    ),
+                                  ),
+                                  validator: required,
+                                ),
+                                const SizedBox(height: Space.md),
+                                TextFormField(
+                                  controller: _landmark,
+                                  textCapitalization:
+                                      TextCapitalization.sentences,
+                                  decoration: InputDecoration(
+                                    labelText: l10n.fieldLandmark,
+                                    hintText: l10n.fieldLandmarkHint,
+                                    prefixIcon: const Icon(Icons.flag_outlined),
+                                  ),
+                                  validator: required,
+                                ),
+                                const SizedBox(height: Space.md),
+                                TextFormField(
+                                  controller: _instructions,
+                                  textCapitalization:
+                                      TextCapitalization.sentences,
+                                  maxLines: 2,
+                                  minLines: 1,
+                                  decoration: InputDecoration(
+                                    labelText: l10n.fieldInstructions,
+                                    hintText: l10n.fieldInstructionsHint,
+                                    prefixIcon: const Icon(Icons.notes_rounded),
+                                  ),
+                                ),
+                                if (_error != null) ...[
+                                  const SizedBox(height: Space.lg),
+                                  Text(
+                                    failureMessage(l10n, _error),
+                                    style: text.labelLarge!.copyWith(
+                                      color: tokens.danger,
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
                           ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                            Space.screen,
+                            0,
+                            Space.screen,
+                            Space.lg,
+                          ),
+                          child: FilledButton(
+                            onPressed: _saving ? null : _save,
+                            child: _saving
+                                ? const SizedBox.square(
+                                    dimension: 22,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2.5,
+                                    ),
+                                  )
+                                : Text(l10n.actionSave),
+                          ),
+                        ),
                       ],
                     ),
-                    const SizedBox(height: Space.lg),
-                    TextFormField(
-                      controller: _district,
-                      textCapitalization: TextCapitalization.words,
-                      decoration: InputDecoration(
-                        labelText: l10n.fieldDistrict,
-                      ),
-                      validator: required,
-                    ),
-                    const SizedBox(height: Space.lg),
-                    TextFormField(
-                      controller: _landmark,
-                      textCapitalization: TextCapitalization.sentences,
-                      decoration: InputDecoration(
-                        labelText: l10n.fieldLandmark,
-                        hintText: l10n.fieldLandmarkHint,
-                      ),
-                      validator: required,
-                    ),
-                    const SizedBox(height: Space.lg),
-                    TextFormField(
-                      controller: _instructions,
-                      textCapitalization: TextCapitalization.sentences,
-                      maxLines: 2,
-                      decoration: InputDecoration(
-                        labelText: l10n.fieldInstructions,
-                        hintText: l10n.fieldInstructionsHint,
-                      ),
-                    ),
-                    if (_positionMissing) ...[
-                      const SizedBox(height: Space.lg),
-                      Text(
-                        l10n.mapUnavailable,
-                        style: text.labelLarge!.copyWith(color: tokens.danger),
-                      ),
-                    ],
-                    if (_error != null) ...[
-                      const SizedBox(height: Space.lg),
-                      Text(
-                        failureMessage(l10n, _error),
-                        style: text.labelLarge!.copyWith(color: tokens.danger),
-                      ),
-                    ],
-                  ],
+                  ),
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                Space.screen,
-                0,
-                Space.screen,
-                Space.lg,
-              ),
-              child: FilledButton(
-                onPressed: _saving ? null : _save,
-                child: _saving
-                    ? const SizedBox.square(
-                        dimension: 22,
-                        child: CircularProgressIndicator(strokeWidth: 2.5),
-                      )
-                    : Text(l10n.actionSave),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// Carte Google si une clé est configurée ; sinon un emplacement qui affiche la position choisie par GPS.
-class _MapArea extends StatelessWidget {
-  const _MapArea({
-    required this.initialTarget,
-    required this.onCreated,
-    required this.onMoved,
-    required this.position,
-  });
-
-  final LatLng initialTarget;
-  final ValueChanged<GoogleMapController> onCreated;
-  final ValueChanged<LatLng> onMoved;
-  final LatLng? position;
-
-  @override
-  Widget build(BuildContext context) {
-    if (Env.mapsEnabled) {
-      return GoogleMap(
-        initialCameraPosition: CameraPosition(target: initialTarget, zoom: 17),
-        onMapCreated: onCreated,
-        onCameraMove: (camera) => onMoved(camera.target),
-        myLocationButtonEnabled: false,
-        zoomControlsEnabled: false,
-        mapToolbarEnabled: false,
-      );
-    }
-    final l10n = AppLocalizations.of(context);
-    final tokens = context.tokens;
-    final current = position;
-    return ColoredBox(
-      color: tokens.surfaceAlt,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(Space.xxl, Space.lg, Space.xxl, 96),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Text(
-              l10n.mapUnavailable,
-              textAlign: TextAlign.center,
-              style: TextStyle(color: tokens.muted),
-            ),
-            if (current != null) ...[
-              const SizedBox(height: Space.sm),
-              Text(
-                l10n.mapPosition(
-                  current.latitude.toStringAsFixed(5),
-                  current.longitude.toStringAsFixed(5),
-                ),
-                style: Theme.of(context).textTheme.labelLarge,
               ),
             ],
-          ],
-        ),
+          );
+        },
       ),
     );
   }

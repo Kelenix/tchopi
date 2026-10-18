@@ -8,7 +8,7 @@
 - **Phase courante** : 4 — Implémentation · Inc-0 (socle) livré, sauf déploiement VPS (accès non fourni)
 - **Dernière mise à jour** : 2026-10-18
 - **Santé** : 🟢 OK · accès VPS et dépôt GitHub non fournis
-- **Prochaine action** : commit de la réorganisation + Inc-3 → Inc-4 (restaurants et catalogue)
+- **Prochaine action** : ton avis sur la refonte visuelle, puis commit de l'Inc-4 + refonte (sur demande) → Inc-5 (commande de repas)
 - **Plan de référence** : `docs/plan-de-realisation.md` · Design : `docs/design/design-system.md`
 - **Maquette** : `docs/design/maquette.html` — https://claude.ai/artifact/9GyaG6F34CkTe1qQpsy1cP (privée)
 
@@ -25,7 +25,7 @@ Flutter 3.41.9 · Dart 3.11.5 · Supabase CLI 2.116.0 · Docker 29.8.2 · Java 2
 | 1 — Définition produit      | ✅ fait | `docs/product/user-stories.md` (60 stories), `docs/product/screens.md` (45 fiches) |
 | 2 — Planification           | ✅ fait | Backlog, jalons, chemin critique ci-dessous ; risques : plan §10 |
 | 3 — Architecture & design   | ✅ fait | Architecture, conception, données, design system ; maquette v1 validée |
-| 4 — Implémentation          | 🔄 en cours | Inc-0 à Inc-3 livrés ; app unique (ADR-016) |
+| 4 — Implémentation          | 🔄 en cours | Inc-0 à Inc-4 livrés ; app unique (ADR-016) |
 | 5 — Qualité & performance   | ⬜ à faire | Scénarios S1–S6 |
 | 6 — Publication (stores)    | ⬜ à faire | |
 | 7 — Documentation           | ⬜ à faire | |
@@ -40,8 +40,8 @@ Flutter 3.41.9 · Dart 3.11.5 · Supabase CLI 2.116.0 · Docker 29.8.2 · Java 2
 | Inc-0 | Socle : monorepo, design system, l10n, navigation, Supabase local, CI, VPS + déploiement auto | TRV-02, TRV-03, TRV-04, TRV-06 | §7.A, D-1, D-4 | L | ✅ (VPS ⏸️ accès) |
 | Inc-1 | Authentification email / téléphone, profils, rôles, suppression de compte | AUTH-01 à 09 | §2.1, D-3 | L | ✅ |
 | Inc-2 | Zones + tarifs (admin), adresses client | ADR-01 à 07 | §2.2, §5.6 | M | ✅ |
-| Inc-3 | Profils livreurs, validation admin, gestion utilisateurs | COU-01 à 04, ADM-02 | §2.3, §6.D | M | ✅ (non commité) |
-| Inc-4 | Restaurants et catalogue | RES-01 à 05 | §3.1, §6.C | M | ⬜ |
+| Inc-3 | Profils livreurs, validation admin, gestion utilisateurs | COU-01 à 04, ADM-02 | §2.3, §6.D | M | ✅ |
+| Inc-4 | Restaurants et catalogue | RES-01 à 05 | §3.1, §6.C | M | ✅ (non commité) |
 | Inc-5 | Commande de repas (client + restaurant) | ORD-01 à 13 | §3.1, §6.A | L | ⬜ |
 | Inc-6 | Livraison de colis | PAR-01 à 05 | §3.2 | M | ⬜ |
 | Inc-7 | En ligne, attribution, supervision, paramètres | COU-05, DIS-01 à 04, ADM-03, ADM-05 | §4.1 | L | ⬜ |
@@ -86,6 +86,21 @@ validation de la maquette → code des écrans à partir de l'Inc-1. Registre de
 - voir `docs/manual-tasks.md` (priorité : compte marchand de paiement, à démarrer tôt)
 
 ## Journal de session (résumé court, le plus récent en haut)
+
+- 2026-10-18 — Refonte visuelle après retour utilisateur (ADR-019) : thème clair imposé, bienvenue claire, carte
+  OpenStreetMap (flutter_map) avec épingle animée, accueil client et fiche restaurant, motifs teintés sans photo,
+  restaurants de démonstration (seed local). Bug corrigé : tris inversés (Supabase trie en décroissant par défaut).
+  Preuves : analyse 0 problème ; 35 + 15 tests Flutter verts ; pgTAP vert ; parcours vérifié dans Chrome au format téléphone
+  (inscription par téléphone, accueil, fiche restaurant, carte réelle, adresse enregistrée dans la zone).
+  Non vérifié : affichage sur appareil Android.
+  Puis photos intégrées (bienvenue, 3 couvertures, 9 produits), vérifiées dans Chrome.
+
+- 2026-10-18 — Inc-4 : restaurants (création et commission par l'admin, gérants invités par email ou numéro),
+  espace Restaurant (menu, catégories, produits avec photo, disponibilité, archivage, profil, horaires, fermeture
+  temporaire), écran admin Restaurants. Exécution par l'utilisateur sous Windows PowerShell : scripts `run.ps1`,
+  `check.ps1`, `dev-admin.ps1`, README réécrit sans `&&`, lancement conseillé dans Chrome (aucun appareil Android
+  branché). Preuves : `check.ps1` vert (analyse 0 problème ; 59 tests Flutter ; pgTAP 70/70) ; 7 tests d'intégration
+  réels dont restaurants. Non vérifié : affichage à l'écran (lancement local arrêté à la demande de l'utilisateur).
 
 - 2026-10-18 — Réorganisation en **une seule app** `apps/mobile` avec espaces par rôle (ADR-016), puis Inc-3 : profil
   livreur (zone, moyen de transport, photo privée), statut, validation / refus / suspension par l'admin, gestion des

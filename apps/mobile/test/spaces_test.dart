@@ -37,6 +37,14 @@ void main() {
     expect(guardSpaces('/admin/zones', admin), isNull);
   });
 
+  test('espace Restaurant réservé aux gérants', () {
+    const manager = AccountRoles(restaurantIds: ['r1']);
+    expect(availableSpaces(manager), [AppSpace.client, AppSpace.restaurant]);
+    expect(spaceHome(manager, AppSpace.restaurant), AppSpace.restaurant.home);
+    expect(guardSpaces('/restaurant/menu', client), SpaceRoutes.entry);
+    expect(guardSpaces('/restaurant/menu', manager), isNull);
+  });
+
   test('espace Livreur sans profil : inscription livreur', () {
     expect(
       guardSpaces(CourierStatusScreen.path, client),

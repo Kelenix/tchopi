@@ -123,6 +123,13 @@ file_size_limit = "50MiB"
 # allowed_mime_types = ["image/png", "image/jpeg"]
 # objects_path = "./images"
 
+# Photos de démonstration (local) : envoyées dans le bucket « media » à chaque démarrage / db reset.
+[storage.buckets.media]
+public = true
+file_size_limit = "2MiB"
+allowed_mime_types = ["image/jpeg", "image/png", "image/webp"]
+objects_path = "./seed-media/media"
+
 # Allow connections via S3 compatible clients
 [storage.s3_protocol]
 enabled = true

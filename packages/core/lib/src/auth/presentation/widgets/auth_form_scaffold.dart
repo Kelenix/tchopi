@@ -59,8 +59,8 @@ class AuthFormScaffold extends StatelessWidget {
     final tokens = context.tokens;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: tokens.background,
-        surfaceTintColor: tokens.background,
+        automaticallyImplyLeading: false,
+        leading: Navigator.canPop(context) ? const RoundBackButton() : null,
       ),
       body: SafeArea(
         child: Column(
@@ -74,7 +74,7 @@ class AuthFormScaffold extends StatelessWidget {
                   Space.xxl,
                 ),
                 children: [
-                  Text(title, style: text.headlineMedium),
+                  Text(title, style: text.displaySmall),
                   const SizedBox(height: Space.sm),
                   Text(
                     subtitle,
@@ -120,6 +120,36 @@ class AuthFormScaffold extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Bouton retour rond et clair, posé sur le fond ou sur une carte.
+class RoundBackButton extends StatelessWidget {
+  const RoundBackButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final tokens = context.tokens;
+    return Padding(
+      padding: const EdgeInsets.only(left: Space.md),
+      child: Center(
+        child: Material(
+          color: tokens.surface,
+          shape: CircleBorder(side: BorderSide(color: tokens.border)),
+          child: InkWell(
+            customBorder: const CircleBorder(),
+            onTap: () => Navigator.maybePop(context),
+            child: Tooltip(
+              message: MaterialLocalizations.of(context).backButtonTooltip,
+              child: const SizedBox.square(
+                dimension: 44,
+                child: Icon(Icons.arrow_back_rounded, size: 22),
+              ),
+            ),
+          ),
         ),
       ),
     );

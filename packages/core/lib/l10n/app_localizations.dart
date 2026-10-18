@@ -676,18 +676,6 @@ abstract class AppLocalizations {
   /// **'Ma position'**
   String get addressMyPosition;
 
-  /// No description provided for @mapUnavailable.
-  ///
-  /// In fr, this message translates to:
-  /// **'Carte non configurée sur cet appareil. Utilisez « Ma position » pour placer l\'adresse.'**
-  String get mapUnavailable;
-
-  /// No description provided for @mapPosition.
-  ///
-  /// In fr, this message translates to:
-  /// **'Position : {lat}, {lng}'**
-  String mapPosition(String lat, String lng);
-
   /// No description provided for @fieldLabel.
   ///
   /// In fr, this message translates to:
@@ -1383,6 +1371,504 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Livrez à Abidjan à votre rythme. Votre profil est validé par l\'équipe.'**
   String get spaceBecomeCourierBody;
+
+  /// No description provided for @spaceRestaurant.
+  ///
+  /// In fr, this message translates to:
+  /// **'Restaurant'**
+  String get spaceRestaurant;
+
+  /// No description provided for @spaceRestaurantBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mon menu, mes horaires, puis les commandes reçues.'**
+  String get spaceRestaurantBody;
+
+  /// No description provided for @restaurantMenu.
+  ///
+  /// In fr, this message translates to:
+  /// **'Menu'**
+  String get restaurantMenu;
+
+  /// No description provided for @restaurantProfile.
+  ///
+  /// In fr, this message translates to:
+  /// **'Profil et horaires'**
+  String get restaurantProfile;
+
+  /// No description provided for @menuEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoutez votre premier produit'**
+  String get menuEmpty;
+
+  /// No description provided for @menuEmptyBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les clients voient votre menu dès qu\'un produit est disponible.'**
+  String get menuEmptyBody;
+
+  /// No description provided for @productAdd.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter un produit'**
+  String get productAdd;
+
+  /// No description provided for @productNewTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau produit'**
+  String get productNewTitle;
+
+  /// No description provided for @productEditTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier le produit'**
+  String get productEditTitle;
+
+  /// No description provided for @fieldProductName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom du produit'**
+  String get fieldProductName;
+
+  /// No description provided for @fieldDescription.
+  ///
+  /// In fr, this message translates to:
+  /// **'Description'**
+  String get fieldDescription;
+
+  /// No description provided for @fieldPrice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix (F CFA)'**
+  String get fieldPrice;
+
+  /// No description provided for @fieldCategory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Catégorie'**
+  String get fieldCategory;
+
+  /// No description provided for @categoryNew.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle catégorie'**
+  String get categoryNew;
+
+  /// No description provided for @categoryNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sans catégorie'**
+  String get categoryNone;
+
+  /// No description provided for @productAvailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Disponible'**
+  String get productAvailable;
+
+  /// No description provided for @productUnavailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Indisponible'**
+  String get productUnavailable;
+
+  /// No description provided for @productArchive.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer du menu'**
+  String get productArchive;
+
+  /// No description provided for @productArchiveTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer ce produit du menu ?'**
+  String get productArchiveTitle;
+
+  /// No description provided for @productArchiveBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Il disparaît pour les clients ; les commandes passées le gardent.'**
+  String get productArchiveBody;
+
+  /// No description provided for @productSaved.
+  ///
+  /// In fr, this message translates to:
+  /// **'Produit enregistré.'**
+  String get productSaved;
+
+  /// No description provided for @productPhoto.
+  ///
+  /// In fr, this message translates to:
+  /// **'Photo du produit'**
+  String get productPhoto;
+
+  /// No description provided for @photoChange.
+  ///
+  /// In fr, this message translates to:
+  /// **'Changer la photo'**
+  String get photoChange;
+
+  /// No description provided for @fieldCategoryName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom de la catégorie'**
+  String get fieldCategoryName;
+
+  /// No description provided for @restaurantOpenNow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvert'**
+  String get restaurantOpenNow;
+
+  /// No description provided for @restaurantClosedNow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fermé'**
+  String get restaurantClosedNow;
+
+  /// No description provided for @restaurantTemporarilyClosed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fermé temporairement'**
+  String get restaurantTemporarilyClosed;
+
+  /// No description provided for @restaurantTemporarilyClosedBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ferme le restaurant tout de suite, quels que soient les horaires.'**
+  String get restaurantTemporarilyClosedBody;
+
+  /// No description provided for @fieldPrepTime.
+  ///
+  /// In fr, this message translates to:
+  /// **'Temps de préparation moyen (min)'**
+  String get fieldPrepTime;
+
+  /// No description provided for @fieldRestaurantCategory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Type de cuisine'**
+  String get fieldRestaurantCategory;
+
+  /// No description provided for @fieldCommission.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commission (%)'**
+  String get fieldCommission;
+
+  /// No description provided for @commissionReadOnly.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commission : {rate} % (fixée par l\'équipe)'**
+  String commissionReadOnly(String rate);
+
+  /// No description provided for @coverPhoto.
+  ///
+  /// In fr, this message translates to:
+  /// **'Photo de couverture'**
+  String get coverPhoto;
+
+  /// No description provided for @openingHours.
+  ///
+  /// In fr, this message translates to:
+  /// **'Horaires d\'ouverture'**
+  String get openingHours;
+
+  /// No description provided for @hoursAdd.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter une plage'**
+  String get hoursAdd;
+
+  /// No description provided for @hoursClosedDay.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fermé'**
+  String get hoursClosedDay;
+
+  /// No description provided for @hoursInvalid.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'heure de fermeture doit suivre l\'heure d\'ouverture.'**
+  String get hoursInvalid;
+
+  /// No description provided for @restaurantSaved.
+  ///
+  /// In fr, this message translates to:
+  /// **'Restaurant enregistré.'**
+  String get restaurantSaved;
+
+  /// No description provided for @weekday1.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lundi'**
+  String get weekday1;
+
+  /// No description provided for @weekday2.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mardi'**
+  String get weekday2;
+
+  /// No description provided for @weekday3.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mercredi'**
+  String get weekday3;
+
+  /// No description provided for @weekday4.
+  ///
+  /// In fr, this message translates to:
+  /// **'Jeudi'**
+  String get weekday4;
+
+  /// No description provided for @weekday5.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vendredi'**
+  String get weekday5;
+
+  /// No description provided for @weekday6.
+  ///
+  /// In fr, this message translates to:
+  /// **'Samedi'**
+  String get weekday6;
+
+  /// No description provided for @weekday7.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dimanche'**
+  String get weekday7;
+
+  /// No description provided for @adminRestaurants.
+  ///
+  /// In fr, this message translates to:
+  /// **'Restaurants'**
+  String get adminRestaurants;
+
+  /// No description provided for @restaurantsEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun restaurant pour le moment'**
+  String get restaurantsEmpty;
+
+  /// No description provided for @restaurantAdd.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter un restaurant'**
+  String get restaurantAdd;
+
+  /// No description provided for @restaurantNewTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau restaurant'**
+  String get restaurantNewTitle;
+
+  /// No description provided for @restaurantEditTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier le restaurant'**
+  String get restaurantEditTitle;
+
+  /// No description provided for @fieldRestaurantName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom du restaurant'**
+  String get fieldRestaurantName;
+
+  /// No description provided for @restaurantActive.
+  ///
+  /// In fr, this message translates to:
+  /// **'Visible par les clients'**
+  String get restaurantActive;
+
+  /// No description provided for @restaurantInactive.
+  ///
+  /// In fr, this message translates to:
+  /// **'Désactivé'**
+  String get restaurantInactive;
+
+  /// No description provided for @managersTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Gérants'**
+  String get managersTitle;
+
+  /// No description provided for @managersEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun gérant'**
+  String get managersEmpty;
+
+  /// No description provided for @managerInvite.
+  ///
+  /// In fr, this message translates to:
+  /// **'Inviter un gérant'**
+  String get managerInvite;
+
+  /// No description provided for @managerInviteField.
+  ///
+  /// In fr, this message translates to:
+  /// **'Email ou numéro du gérant'**
+  String get managerInviteField;
+
+  /// No description provided for @managerPending.
+  ///
+  /// In fr, this message translates to:
+  /// **'Invitation en attente d\'inscription'**
+  String get managerPending;
+
+  /// No description provided for @managerLinked.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compte relié'**
+  String get managerLinked;
+
+  /// No description provided for @managerRemove.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer'**
+  String get managerRemove;
+
+  /// No description provided for @managersSaveFirst.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrez le restaurant pour inviter ses gérants.'**
+  String get managersSaveFirst;
+
+  /// No description provided for @fieldRestaurantZone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Zone'**
+  String get fieldRestaurantZone;
+
+  /// No description provided for @fieldLatitude.
+  ///
+  /// In fr, this message translates to:
+  /// **'Latitude'**
+  String get fieldLatitude;
+
+  /// No description provided for @fieldLongitude.
+  ///
+  /// In fr, this message translates to:
+  /// **'Longitude'**
+  String get fieldLongitude;
+
+  /// No description provided for @restaurantViewOnMap.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir l\'emplacement sur une carte'**
+  String get restaurantViewOnMap;
+
+  /// No description provided for @homeGreetingAnonymous.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bonjour'**
+  String get homeGreetingAnonymous;
+
+  /// No description provided for @homeGreeting.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bonjour {name}'**
+  String homeGreeting(String name);
+
+  /// No description provided for @homeHeadline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Qu\'est-ce qui vous ferait plaisir ?'**
+  String get homeHeadline;
+
+  /// No description provided for @homeServiceFood.
+  ///
+  /// In fr, this message translates to:
+  /// **'Repas'**
+  String get homeServiceFood;
+
+  /// No description provided for @homeServiceFoodBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les restaurants d\'Abidjan'**
+  String get homeServiceFoodBody;
+
+  /// No description provided for @homeServiceParcel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Colis'**
+  String get homeServiceParcel;
+
+  /// No description provided for @homeServiceParcelBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un envoi en ville'**
+  String get homeServiceParcelBody;
+
+  /// No description provided for @homeSoon.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bientôt'**
+  String get homeSoon;
+
+  /// No description provided for @homeRestaurants.
+  ///
+  /// In fr, this message translates to:
+  /// **'Restaurants près de vous'**
+  String get homeRestaurants;
+
+  /// No description provided for @homeRestaurantsEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun restaurant n\'est encore disponible dans votre zone.'**
+  String get homeRestaurantsEmpty;
+
+  /// No description provided for @homeDeliverTo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livrer à'**
+  String get homeDeliverTo;
+
+  /// No description provided for @homeNoAddress.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter une adresse'**
+  String get homeNoAddress;
+
+  /// No description provided for @restaurantPrepRange.
+  ///
+  /// In fr, this message translates to:
+  /// **'{min}–{max} min'**
+  String restaurantPrepRange(int min, int max);
+
+  /// No description provided for @restaurantMenuSoon.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le menu de ce restaurant arrive bientôt.'**
+  String get restaurantMenuSoon;
+
+  /// No description provided for @restaurantOrderSoon.
+  ///
+  /// In fr, this message translates to:
+  /// **'La commande en ligne ouvre très bientôt.'**
+  String get restaurantOrderSoon;
+
+  /// No description provided for @menuOther.
+  ///
+  /// In fr, this message translates to:
+  /// **'Autres'**
+  String get menuOther;
+
+  /// No description provided for @factPrep.
+  ///
+  /// In fr, this message translates to:
+  /// **'Préparation'**
+  String get factPrep;
+
+  /// No description provided for @factNow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Maintenant'**
+  String get factNow;
 }
 
 class _AppLocalizationsDelegate

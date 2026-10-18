@@ -291,7 +291,8 @@ as String?,
 mixin _$AccountRoles {
 
  bool get isAdmin;// Statut du profil livreur ; absent tant que le compte n'a pas demandé à devenir livreur.
- CourierStatus? get courierStatus;
+ CourierStatus? get courierStatus;// Restaurants dont le compte est gérant (espace Restaurant).
+ List<String> get restaurantIds;
 /// Create a copy of AccountRoles
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -304,16 +305,16 @@ $AccountRolesCopyWith<AccountRoles> get copyWith => _$AccountRolesCopyWithImpl<A
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AccountRoles&&(identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin)&&(identical(other.courierStatus, courierStatus) || other.courierStatus == courierStatus));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AccountRoles&&(identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin)&&(identical(other.courierStatus, courierStatus) || other.courierStatus == courierStatus)&&const DeepCollectionEquality().equals(other.restaurantIds, restaurantIds));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,isAdmin,courierStatus);
+int get hashCode => Object.hash(runtimeType,isAdmin,courierStatus,const DeepCollectionEquality().hash(restaurantIds));
 
 @override
 String toString() {
-  return 'AccountRoles(isAdmin: $isAdmin, courierStatus: $courierStatus)';
+  return 'AccountRoles(isAdmin: $isAdmin, courierStatus: $courierStatus, restaurantIds: $restaurantIds)';
 }
 
 
@@ -324,7 +325,7 @@ abstract mixin class $AccountRolesCopyWith<$Res>  {
   factory $AccountRolesCopyWith(AccountRoles value, $Res Function(AccountRoles) _then) = _$AccountRolesCopyWithImpl;
 @useResult
 $Res call({
- bool isAdmin, CourierStatus? courierStatus
+ bool isAdmin, CourierStatus? courierStatus, List<String> restaurantIds
 });
 
 
@@ -341,11 +342,12 @@ class _$AccountRolesCopyWithImpl<$Res>
 
 /// Create a copy of AccountRoles
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isAdmin = null,Object? courierStatus = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isAdmin = null,Object? courierStatus = freezed,Object? restaurantIds = null,}) {
   return _then(_self.copyWith(
 isAdmin: null == isAdmin ? _self.isAdmin : isAdmin // ignore: cast_nullable_to_non_nullable
 as bool,courierStatus: freezed == courierStatus ? _self.courierStatus : courierStatus // ignore: cast_nullable_to_non_nullable
-as CourierStatus?,
+as CourierStatus?,restaurantIds: null == restaurantIds ? _self.restaurantIds : restaurantIds // ignore: cast_nullable_to_non_nullable
+as List<String>,
   ));
 }
 
@@ -430,10 +432,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isAdmin,  CourierStatus? courierStatus)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isAdmin,  CourierStatus? courierStatus,  List<String> restaurantIds)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AccountRoles() when $default != null:
-return $default(_that.isAdmin,_that.courierStatus);case _:
+return $default(_that.isAdmin,_that.courierStatus,_that.restaurantIds);case _:
   return orElse();
 
 }
@@ -451,10 +453,10 @@ return $default(_that.isAdmin,_that.courierStatus);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isAdmin,  CourierStatus? courierStatus)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isAdmin,  CourierStatus? courierStatus,  List<String> restaurantIds)  $default,) {final _that = this;
 switch (_that) {
 case _AccountRoles():
-return $default(_that.isAdmin,_that.courierStatus);case _:
+return $default(_that.isAdmin,_that.courierStatus,_that.restaurantIds);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -471,10 +473,10 @@ return $default(_that.isAdmin,_that.courierStatus);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isAdmin,  CourierStatus? courierStatus)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isAdmin,  CourierStatus? courierStatus,  List<String> restaurantIds)?  $default,) {final _that = this;
 switch (_that) {
 case _AccountRoles() when $default != null:
-return $default(_that.isAdmin,_that.courierStatus);case _:
+return $default(_that.isAdmin,_that.courierStatus,_that.restaurantIds);case _:
   return null;
 
 }
@@ -486,12 +488,21 @@ return $default(_that.isAdmin,_that.courierStatus);case _:
 @JsonSerializable()
 
 class _AccountRoles implements AccountRoles {
-  const _AccountRoles({this.isAdmin = false, this.courierStatus});
+  const _AccountRoles({this.isAdmin = false, this.courierStatus, final  List<String> restaurantIds = const <String>[]}): _restaurantIds = restaurantIds;
   factory _AccountRoles.fromJson(Map<String, dynamic> json) => _$AccountRolesFromJson(json);
 
 @override@JsonKey() final  bool isAdmin;
 // Statut du profil livreur ; absent tant que le compte n'a pas demandé à devenir livreur.
 @override final  CourierStatus? courierStatus;
+// Restaurants dont le compte est gérant (espace Restaurant).
+ final  List<String> _restaurantIds;
+// Restaurants dont le compte est gérant (espace Restaurant).
+@override@JsonKey() List<String> get restaurantIds {
+  if (_restaurantIds is EqualUnmodifiableListView) return _restaurantIds;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_restaurantIds);
+}
+
 
 /// Create a copy of AccountRoles
 /// with the given fields replaced by the non-null parameter values.
@@ -506,16 +517,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AccountRoles&&(identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin)&&(identical(other.courierStatus, courierStatus) || other.courierStatus == courierStatus));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AccountRoles&&(identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin)&&(identical(other.courierStatus, courierStatus) || other.courierStatus == courierStatus)&&const DeepCollectionEquality().equals(other._restaurantIds, _restaurantIds));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,isAdmin,courierStatus);
+int get hashCode => Object.hash(runtimeType,isAdmin,courierStatus,const DeepCollectionEquality().hash(_restaurantIds));
 
 @override
 String toString() {
-  return 'AccountRoles(isAdmin: $isAdmin, courierStatus: $courierStatus)';
+  return 'AccountRoles(isAdmin: $isAdmin, courierStatus: $courierStatus, restaurantIds: $restaurantIds)';
 }
 
 
@@ -526,7 +537,7 @@ abstract mixin class _$AccountRolesCopyWith<$Res> implements $AccountRolesCopyWi
   factory _$AccountRolesCopyWith(_AccountRoles value, $Res Function(_AccountRoles) _then) = __$AccountRolesCopyWithImpl;
 @override @useResult
 $Res call({
- bool isAdmin, CourierStatus? courierStatus
+ bool isAdmin, CourierStatus? courierStatus, List<String> restaurantIds
 });
 
 
@@ -543,11 +554,12 @@ class __$AccountRolesCopyWithImpl<$Res>
 
 /// Create a copy of AccountRoles
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isAdmin = null,Object? courierStatus = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isAdmin = null,Object? courierStatus = freezed,Object? restaurantIds = null,}) {
   return _then(_AccountRoles(
 isAdmin: null == isAdmin ? _self.isAdmin : isAdmin // ignore: cast_nullable_to_non_nullable
 as bool,courierStatus: freezed == courierStatus ? _self.courierStatus : courierStatus // ignore: cast_nullable_to_non_nullable
-as CourierStatus?,
+as CourierStatus?,restaurantIds: null == restaurantIds ? _self._restaurantIds : restaurantIds // ignore: cast_nullable_to_non_nullable
+as List<String>,
   ));
 }
 

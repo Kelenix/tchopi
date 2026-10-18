@@ -121,18 +121,6 @@
   "addressSaved": "Adresse enregistrée.",
   "addressMoveMap": "Déplacez la carte pour placer l'épingle sur votre entrée.",
   "addressMyPosition": "Ma position",
-  "mapUnavailable": "Carte non configurée sur cet appareil. Utilisez « Ma position » pour placer l'adresse.",
-  "mapPosition": "Position : {lat}, {lng}",
-  "@mapPosition": {
-    "placeholders": {
-      "lat": {
-        "type": "String"
-      },
-      "lng": {
-        "type": "String"
-      }
-    }
-  },
   "fieldLabel": "Libellé",
   "labelHome": "Maison",
   "labelWork": "Bureau",
@@ -282,5 +270,112 @@
   "spaceAdmin": "Administration",
   "spaceAdminBody": "Zones et tarifs, livreurs, utilisateurs.",
   "spaceBecomeCourier": "Devenir livreur",
-  "spaceBecomeCourierBody": "Livrez à Abidjan à votre rythme. Votre profil est validé par l'équipe."
+  "spaceBecomeCourierBody": "Livrez à Abidjan à votre rythme. Votre profil est validé par l'équipe.",
+  "spaceRestaurant": "Restaurant",
+  "spaceRestaurantBody": "Mon menu, mes horaires, puis les commandes reçues.",
+  "restaurantMenu": "Menu",
+  "restaurantProfile": "Profil et horaires",
+  "menuEmpty": "Ajoutez votre premier produit",
+  "menuEmptyBody": "Les clients voient votre menu dès qu'un produit est disponible.",
+  "productAdd": "Ajouter un produit",
+  "productNewTitle": "Nouveau produit",
+  "productEditTitle": "Modifier le produit",
+  "fieldProductName": "Nom du produit",
+  "fieldDescription": "Description",
+  "fieldPrice": "Prix (F CFA)",
+  "fieldCategory": "Catégorie",
+  "categoryNew": "Nouvelle catégorie",
+  "categoryNone": "Sans catégorie",
+  "productAvailable": "Disponible",
+  "productUnavailable": "Indisponible",
+  "productArchive": "Retirer du menu",
+  "productArchiveTitle": "Retirer ce produit du menu ?",
+  "productArchiveBody": "Il disparaît pour les clients ; les commandes passées le gardent.",
+  "productSaved": "Produit enregistré.",
+  "productPhoto": "Photo du produit",
+  "photoChange": "Changer la photo",
+  "fieldCategoryName": "Nom de la catégorie",
+  "restaurantOpenNow": "Ouvert",
+  "restaurantClosedNow": "Fermé",
+  "restaurantTemporarilyClosed": "Fermé temporairement",
+  "restaurantTemporarilyClosedBody": "Ferme le restaurant tout de suite, quels que soient les horaires.",
+  "fieldPrepTime": "Temps de préparation moyen (min)",
+  "fieldRestaurantCategory": "Type de cuisine",
+  "fieldCommission": "Commission (%)",
+  "commissionReadOnly": "Commission : {rate} % (fixée par l'équipe)",
+  "@commissionReadOnly": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "coverPhoto": "Photo de couverture",
+  "openingHours": "Horaires d'ouverture",
+  "hoursAdd": "Ajouter une plage",
+  "hoursClosedDay": "Fermé",
+  "hoursInvalid": "L'heure de fermeture doit suivre l'heure d'ouverture.",
+  "restaurantSaved": "Restaurant enregistré.",
+  "weekday1": "Lundi",
+  "weekday2": "Mardi",
+  "weekday3": "Mercredi",
+  "weekday4": "Jeudi",
+  "weekday5": "Vendredi",
+  "weekday6": "Samedi",
+  "weekday7": "Dimanche",
+  "adminRestaurants": "Restaurants",
+  "restaurantsEmpty": "Aucun restaurant pour le moment",
+  "restaurantAdd": "Ajouter un restaurant",
+  "restaurantNewTitle": "Nouveau restaurant",
+  "restaurantEditTitle": "Modifier le restaurant",
+  "fieldRestaurantName": "Nom du restaurant",
+  "restaurantActive": "Visible par les clients",
+  "restaurantInactive": "Désactivé",
+  "managersTitle": "Gérants",
+  "managersEmpty": "Aucun gérant",
+  "managerInvite": "Inviter un gérant",
+  "managerInviteField": "Email ou numéro du gérant",
+  "managerPending": "Invitation en attente d'inscription",
+  "managerLinked": "Compte relié",
+  "managerRemove": "Retirer",
+  "managersSaveFirst": "Enregistrez le restaurant pour inviter ses gérants.",
+  "fieldRestaurantZone": "Zone",
+  "fieldLatitude": "Latitude",
+  "fieldLongitude": "Longitude",
+  "restaurantViewOnMap": "Voir l'emplacement sur une carte",
+  "homeGreetingAnonymous": "Bonjour",
+  "homeGreeting": "Bonjour {name}",
+  "@homeGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "homeHeadline": "Qu'est-ce qui vous ferait plaisir ?",
+  "homeServiceFood": "Repas",
+  "homeServiceFoodBody": "Les restaurants d'Abidjan",
+  "homeServiceParcel": "Colis",
+  "homeServiceParcelBody": "Un envoi en ville",
+  "homeSoon": "Bientôt",
+  "homeRestaurants": "Restaurants près de vous",
+  "homeRestaurantsEmpty": "Aucun restaurant n'est encore disponible dans votre zone.",
+  "homeDeliverTo": "Livrer à",
+  "homeNoAddress": "Ajouter une adresse",
+  "restaurantPrepRange": "{min}–{max} min",
+  "@restaurantPrepRange": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "restaurantMenuSoon": "Le menu de ce restaurant arrive bientôt.",
+  "restaurantOrderSoon": "La commande en ligne ouvre très bientôt.",
+  "menuOther": "Autres",
+  "factPrep": "Préparation",
+  "factNow": "Maintenant"
 }

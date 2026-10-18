@@ -23,13 +23,6 @@ class AddressesScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(l10n.addressesTitle),
         backgroundColor: tokens.background,
-        actions: [
-          IconButton(
-            tooltip: l10n.accountTitle,
-            icon: const Icon(Icons.person_outline),
-            onPressed: () => context.push(AppRoutes.account),
-          ),
-        ],
       ),
       floatingActionButton: (addresses.value?.isNotEmpty ?? false)
           ? FloatingActionButton.extended(

@@ -9,8 +9,15 @@ import 'features/admin/zones/presentation/zone_form_screen.dart';
 import 'features/admin/zones/presentation/zones_screen.dart';
 import 'features/client/addresses/presentation/address_editor_screen.dart';
 import 'features/client/addresses/presentation/addresses_screen.dart';
+import 'features/client/home/client_home_screen.dart';
+import 'features/client/home/restaurant_detail_screen.dart';
 import 'features/courier/profile/presentation/courier_profile_screen.dart';
 import 'features/courier/profile/presentation/courier_status_screen.dart';
+import 'features/admin/restaurants/presentation/restaurant_form_screen.dart';
+import 'features/admin/restaurants/presentation/restaurants_admin_screen.dart';
+import 'features/restaurant/presentation/menu_screen.dart';
+import 'features/restaurant/presentation/product_editor_screen.dart';
+import 'features/restaurant/presentation/restaurant_profile_screen.dart';
 import 'spaces/spaces.dart';
 import 'spaces/spaces_screen.dart';
 
@@ -44,6 +51,17 @@ GoRouter router(Ref ref) => buildAppRouter(
     GoRoute(path: SpacesScreen.path, builder: (_, _) => const SpacesScreen()),
     // Espace Client
     GoRoute(
+      path: ClientHomeScreen.path,
+      builder: (_, _) => const ClientHomeScreen(),
+    ),
+    GoRoute(
+      path: RestaurantDetailScreen.path,
+      builder: (_, state) => RestaurantDetailScreen(
+        restaurantId: state.pathParameters['id']!,
+        preview: state.extra as Restaurant?,
+      ),
+    ),
+    GoRoute(
       path: AddressesScreen.path,
       builder: (_, _) => const AddressesScreen(),
     ),
@@ -61,11 +79,31 @@ GoRouter router(Ref ref) => buildAppRouter(
       path: CourierProfileScreen.path,
       builder: (_, _) => const CourierProfileScreen(),
     ),
+    // Espace Restaurant
+    GoRoute(path: MenuScreen.path, builder: (_, _) => const MenuScreen()),
+    GoRoute(
+      path: ProductEditorScreen.path,
+      builder: (_, state) =>
+          ProductEditorScreen(product: state.extra as Product?),
+    ),
+    GoRoute(
+      path: RestaurantProfileScreen.path,
+      builder: (_, _) => const RestaurantProfileScreen(),
+    ),
     // Espace Admin
     GoRoute(path: ZonesScreen.path, builder: (_, _) => const ZonesScreen()),
     GoRoute(
       path: ZonesScreen.editPath,
       builder: (_, state) => ZoneFormScreen(zone: state.extra as Zone?),
+    ),
+    GoRoute(
+      path: RestaurantsAdminScreen.path,
+      builder: (_, _) => const RestaurantsAdminScreen(),
+    ),
+    GoRoute(
+      path: RestaurantsAdminScreen.editPath,
+      builder: (_, state) =>
+          RestaurantFormScreen(restaurant: state.extra as Restaurant?),
     ),
     GoRoute(
       path: CouriersAdminScreen.path,

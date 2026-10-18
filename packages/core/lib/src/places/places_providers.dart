@@ -19,7 +19,7 @@ Future<List<Zone>> activeZones(Ref ref) async {
           'id, name, city, country_code, currency, timezone, center_lat, center_lng, radius_m, is_active',
         )
         .eq('is_active', true)
-        .order('city'),
+        .order('city', ascending: true),
   );
   return rows.map(Zone.fromJson).toList();
 }

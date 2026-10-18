@@ -13,8 +13,8 @@ class AdminZoneRepository {
     final rows = await _client
         .from('zones')
         .select()
-        .order('city')
-        .order('name');
+        .order('city', ascending: true)
+        .order('name', ascending: true);
     return rows.map(Zone.fromJson).toList();
   });
 

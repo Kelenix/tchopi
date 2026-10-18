@@ -1,29 +1,29 @@
 # Design system
 
 > Phase 3 (rôle : UI/UX Designer). **Valeurs définitives** (elles remplacent la proposition de `direction.md` §3).
-> Implémentation : `packages/core/lib/src/design/` — `ThemeData` Material 3 clair et sombre + extension de thème `AppTokens`.
+> Implémentation : `packages/core/lib/src/design/` — `ThemeData` Material 3 **clair uniquement** (ADR-019) + extension de thème `AppTokens`.
 > Aucune couleur, taille ou durée en dur dans les écrans. Maquette : `docs/design/maquette.html`.
 
 ## 1. Couleurs
 
-| Jeton | Clair | Sombre | Usage |
-|-------|-------|--------|-------|
-| `background` | `#F5F6F3` | `#0C110E` | Fond des écrans |
-| `surface` | `#FFFFFF` | `#151B17` | Cartes, feuilles, barres |
-| `surfaceAlt` | `#EEF1EC` | `#1E2621` | Champs, pastilles, tuiles d'icône |
-| `border` | `#E4E7E2` | `#2A332D` | Séparateurs, contours |
-| `ink` | `#0F1412` | `#EEF2EE` | Texte principal ; bouton pilule secondaire |
-| `onInk` | `#FFFFFF` | `#0F1412` | Texte sur `ink` |
-| `muted` | `#646B78` | `#9AA39C` | Texte secondaire (AA sur `surface` et `background`) |
-| `primary` | `#0B5D3B` | `#3DD68C` | Action principale, éléments actifs |
-| `onPrimary` | `#FFFFFF` | `#06281A` | Texte sur `primary` (≥ 7:1) |
-| `primarySoft` | `#E3F1E9` | `#173326` | Fond d'élément actif, pastilles de statut |
-| `success` | `#16A34A` | `#4ADE80` | Réussite, montants encaissés, action centrale |
-| `progress` | `#22C55E` | `#22C55E` | Remplissage des barres (jamais de texte dessus) |
-| `warning` | `#9A4A07` | `#FBBF24` | En attente, alertes |
-| `warningSoft` | `#FCEFD9` | `#33270F` | Fond des pastilles « en attente » |
-| `danger` | `#C81E1E` | `#F87171` | Annulation, erreurs, montants remboursés |
-| `dangerSoft` | `#FDE7E7` | `#3A1717` | Fond des pastilles et feuilles d'annulation |
+| Jeton | Valeur | Usage |
+|-------|--------|-------|
+| `background` | `#F5F6F3` | Fond des écrans |
+| `surface` | `#FFFFFF` | Cartes, feuilles, barres |
+| `surfaceAlt` | `#EEF1EC` | Champs, pastilles, tuiles d'icône |
+| `border` | `#E4E7E2` | Séparateurs, contours |
+| `ink` | `#0F1412` | Texte principal ; bouton pilule secondaire |
+| `onInk` | `#FFFFFF` | Texte sur `ink` |
+| `muted` | `#646B78` | Texte secondaire (AA sur `surface` et `background`) |
+| `primary` | `#0B5D3B` | Action principale, éléments actifs |
+| `onPrimary` | `#FFFFFF` | Texte sur `primary` (≥ 7:1) |
+| `primarySoft` | `#E3F1E9` | Fond d'élément actif, pastilles de statut |
+| `success` | `#16A34A` | Réussite, montants encaissés, action centrale |
+| `progress` | `#22C55E` | Remplissage des barres (jamais de texte dessus) |
+| `warning` | `#9A4A07` | En attente, alertes |
+| `warningSoft` | `#FCEFD9` | Fond des pastilles « en attente » |
+| `danger` | `#C81E1E` | Annulation, erreurs, montants remboursés |
+| `dangerSoft` | `#FDE7E7` | Fond des pastilles et feuilles d'annulation |
 
 Les contrastes texte / fond de ce tableau sont vérifiés automatiquement (`packages/core/test/design/tokens_test.dart`).
 
@@ -49,8 +49,7 @@ casse de mise en page ; au-delà, défilement).
 
 - Espacements : `4 · 8 · 12 · 16 · 20 · 24 · 32 · 40`. Marge latérale d'écran : 20.
 - Rayons : `chip 12` · `field 16` · `card 24` · `sheet 28` · `pill 999`.
-- Élévation : une ombre douce unique pour les cartes flottantes (y 8, flou 24, noir 6 % ; en sombre : contour `border`
-  au lieu de l'ombre). Pas de flou d'arrière-plan.
+- Élévation : une ombre douce unique pour les cartes flottantes (y 8, flou 24, noir 6 %). Pas de flou d'arrière-plan.
 - Zones tactiles ≥ 48 dp ; boutons principaux hauteur 56, pleine largeur en bas d'écran.
 
 ## 4. Mouvement

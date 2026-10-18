@@ -29,12 +29,18 @@ _AccountRoles _$AccountRolesFromJson(Map<String, dynamic> json) =>
         _$CourierStatusEnumMap,
         json['courier_status'],
       ),
+      restaurantIds:
+          (json['restaurant_ids'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const <String>[],
     );
 
 Map<String, dynamic> _$AccountRolesToJson(_AccountRoles instance) =>
     <String, dynamic>{
       'is_admin': instance.isAdmin,
       'courier_status': _$CourierStatusEnumMap[instance.courierStatus],
+      'restaurant_ids': instance.restaurantIds,
     };
 
 const _$CourierStatusEnumMap = {

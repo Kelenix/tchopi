@@ -13,10 +13,7 @@ double contrast(Color a, Color b) {
 void main() {
   const aaText = 4.5;
 
-  for (final (name, t) in [
-    ('clair', AppTokens.light),
-    ('sombre', AppTokens.dark),
-  ]) {
+  for (final (name, t) in [('clair', AppTokens.light)]) {
     group('Thème $name — contrastes AA du texte', () {
       final pairs = {
         'texte principal / fond': (t.ink, t.background),
@@ -42,9 +39,7 @@ void main() {
     });
   }
 
-  test('les deux thèmes exposent leurs jetons', () {
+  test('le thème expose ses jetons', () {
     expect(AppTheme.light.extension<AppTokens>(), AppTokens.light);
-    expect(AppTheme.dark.extension<AppTokens>(), AppTokens.dark);
-    expect(AppTheme.dark.brightness, Brightness.dark);
   });
 }

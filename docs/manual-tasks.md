@@ -64,17 +64,17 @@
 - **Coût** : par code envoyé, variable selon le pays et le fournisseur.
 - **Vérification** : un SMS est reçu et la connexion aboutit.
 
-## 7. Créer les clés Google Maps
-- **Pourquoi** : cartes (adresses, colis, suivi) — Inc-2.
-- **Quand** : Inc-2.
-- **Étapes** : 1. Google Cloud Console → nouveau projet → activer « Maps SDK for Android » (et iOS / JavaScript si besoin).
-  2. Activer un compte de facturation (requis même pour l'usage gratuit). 3. Créer une clé par app, **restreinte** au nom de package
-  et à l'empreinte de signature (Android) ou au domaine (web).
-- **Coût** : SDK mobile gratuit ; carte web admin dans le quota gratuit.
-- **Dans le projet** : ajouter `MAPS_API_KEY=…` dans `apps/mobile/android/local.properties` (fichier non versionné), puis
-  lancer l'app avec `--dart-define=GOOGLE_MAPS_ENABLED=true` en plus de `--dart-define-from-file`. Sans clé, l'éditeur
-  d'adresse fonctionne avec le GPS seul et affiche un emplacement à la place de la carte.
-- **Vérification** : la carte s'affiche dans l'écran « Nouvelle adresse ».
+## 7. Choisir le fournisseur de fond de carte (avant la publication)
+- **Pourquoi** : les cartes (adresses, colis, suivi) utilisent des tuiles OpenStreetMap (ADR-019). En développement, l'app
+  lit les serveurs publics d'OpenStreetMap, dont la politique d'usage interdit le trafic d'une app publiée.
+- **Quand** : avant les tests réels à grande échelle et la publication (phase 6).
+- **Étapes** : 1. Choisir un fournisseur de tuiles OpenStreetMap (ex. MapTiler, Stadia Maps) **ou** héberger ses propres
+  tuiles sur le VPS. 2. Récupérer l'URL des tuiles (`…/{z}/{x}/{y}.png`), avec sa clé si le fournisseur en demande une
+  (clé publique, restreinte au domaine / à l'app chez le fournisseur). 3. L'ajouter dans `env/prod.json` :
+  `"MAP_TILES_URL": "https://…/{z}/{x}/{y}.png"`.
+- **Coût** : offres gratuites limitées, puis payantes selon le trafic ; l'hébergement sur le VPS évite l'abonnement mais
+  demande de l'espace disque et de la maintenance.
+- **Vérification** : la carte s'affiche dans l'écran « Nouvelle adresse » de la version de production.
 
 ## 8. Créer le projet Firebase (notifications push)
 - **Pourquoi** : notifications client, livreur, restaurant — Inc-9.
