@@ -12,6 +12,7 @@ import 'features/client/addresses/presentation/addresses_screen.dart';
 import 'features/client/home/client_home_screen.dart';
 import 'features/client/home/restaurant_detail_screen.dart';
 import 'features/client/payments/payments_screen.dart';
+import 'features/parcels/parcel_request_screen.dart';
 import 'features/courier/profile/presentation/courier_profile_screen.dart';
 import 'features/courier/profile/presentation/courier_status_screen.dart';
 import 'features/admin/restaurants/presentation/restaurant_form_screen.dart';
@@ -88,6 +89,10 @@ GoRouter router(Ref ref) => buildAppRouter(
     GoRoute(
       path: PaymentsScreen.path,
       builder: (_, _) => const PaymentsScreen(),
+    ),
+    GoRoute(
+      path: ParcelRequestScreen.path,
+      builder: (_, _) => const ParcelRequestScreen(),
     ),
     GoRoute(
       path: OrderDetailScreen.path,

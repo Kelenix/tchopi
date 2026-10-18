@@ -47,3 +47,11 @@ Future<FoodQuote?> cartQuote(Ref ref, String addressId) async {
   if (cart == null) return null;
   return ref.watch(orderRepositoryProvider).quote(cart, addressId);
 }
+
+@riverpod
+Future<List<ParcelType>> parcelTypes(Ref ref) =>
+    ref.watch(orderRepositoryProvider).parcelTypes();
+
+@riverpod
+Future<String?> deliveryCode(Ref ref, String orderId) =>
+    ref.watch(orderRepositoryProvider).deliveryCode(orderId);

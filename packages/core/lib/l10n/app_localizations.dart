@@ -2499,6 +2499,269 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'{count, plural, =0{Aucune commande aujourd\'hui} =1{1 commande aujourd\'hui} other{{count} commandes aujourd\'hui}}'**
   String ordersTodayCount(int count);
+
+  /// No description provided for @parcelTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer un colis'**
+  String get parcelTitle;
+
+  /// No description provided for @parcelStepPickup.
+  ///
+  /// In fr, this message translates to:
+  /// **'Départ'**
+  String get parcelStepPickup;
+
+  /// No description provided for @parcelStepPickupBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'D\'où part le colis ?'**
+  String get parcelStepPickupBody;
+
+  /// No description provided for @parcelStepDropoff.
+  ///
+  /// In fr, this message translates to:
+  /// **'Arrivée'**
+  String get parcelStepDropoff;
+
+  /// No description provided for @parcelStepDropoffBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Où faut-il le livrer ?'**
+  String get parcelStepDropoffBody;
+
+  /// No description provided for @parcelStepDetails.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le colis'**
+  String get parcelStepDetails;
+
+  /// No description provided for @parcelStepDetailsBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le destinataire et le contenu.'**
+  String get parcelStepDetailsBody;
+
+  /// No description provided for @parcelStepSummary.
+  ///
+  /// In fr, this message translates to:
+  /// **'Récapitulatif'**
+  String get parcelStepSummary;
+
+  /// No description provided for @parcelStepSummaryBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vérifiez avant de confirmer.'**
+  String get parcelStepSummaryBody;
+
+  /// No description provided for @parcelOtherPoint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Autre point sur la carte'**
+  String get parcelOtherPoint;
+
+  /// No description provided for @parcelRecipientName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom du destinataire'**
+  String get parcelRecipientName;
+
+  /// No description provided for @parcelRecipientPhone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Téléphone du destinataire'**
+  String get parcelRecipientPhone;
+
+  /// No description provided for @parcelType.
+  ///
+  /// In fr, this message translates to:
+  /// **'Type de colis'**
+  String get parcelType;
+
+  /// No description provided for @parcelDescription.
+  ///
+  /// In fr, this message translates to:
+  /// **'Que contient le colis ?'**
+  String get parcelDescription;
+
+  /// No description provided for @parcelRulesAccept.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mon colis respecte la liste des objets autorisés'**
+  String get parcelRulesAccept;
+
+  /// No description provided for @parcelRulesView.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir la liste'**
+  String get parcelRulesView;
+
+  /// No description provided for @parcelRulesTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Objets interdits'**
+  String get parcelRulesTitle;
+
+  /// No description provided for @parcelRulesBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'• Argent liquide, bijoux et objets de valeur\n• Armes, munitions, produits explosifs ou inflammables\n• Drogues et médicaments sans ordonnance\n• Animaux vivants\n• Aliments périssables mal emballés\n• Tout objet illégal en Côte d\'Ivoire'**
+  String get parcelRulesBody;
+
+  /// No description provided for @parcelRulesRequired.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cochez la case pour continuer.'**
+  String get parcelRulesRequired;
+
+  /// No description provided for @parcelDistance.
+  ///
+  /// In fr, this message translates to:
+  /// **'Distance de référence'**
+  String get parcelDistance;
+
+  /// No description provided for @parcelDistanceValue.
+  ///
+  /// In fr, this message translates to:
+  /// **'{km} km'**
+  String parcelDistanceValue(String km);
+
+  /// No description provided for @parcelPayCash.
+  ///
+  /// In fr, this message translates to:
+  /// **'À payer au livreur à la récupération'**
+  String get parcelPayCash;
+
+  /// No description provided for @parcelPaymentCash.
+  ///
+  /// In fr, this message translates to:
+  /// **'Espèces'**
+  String get parcelPaymentCash;
+
+  /// No description provided for @parcelCancelBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre colis n\'a pas encore été récupéré : rien ne vous sera facturé.'**
+  String get parcelCancelBody;
+
+  /// No description provided for @parcelConfirm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confirmer · {total}'**
+  String parcelConfirm(String total);
+
+  /// No description provided for @parcelOrderTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Colis vers {district}'**
+  String parcelOrderTitle(String district);
+
+  /// No description provided for @failureDifferentZones.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les livraisons entre villes ne sont pas disponibles.'**
+  String get failureDifferentZones;
+
+  /// No description provided for @failureSameLocation.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le point d\'arrivée est trop proche du départ : déplacez l\'épingle sur la carte.'**
+  String get failureSameLocation;
+
+  /// No description provided for @failureRulesNotAccepted.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confirmez que votre colis respecte la liste des objets autorisés.'**
+  String get failureRulesNotAccepted;
+
+  /// No description provided for @failureInvalidRecipient.
+  ///
+  /// In fr, this message translates to:
+  /// **'Numéro du destinataire invalide.'**
+  String get failureInvalidRecipient;
+
+  /// No description provided for @failureInvalidAddress.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quartier et point de repère sont obligatoires.'**
+  String get failureInvalidAddress;
+
+  /// No description provided for @failureAlreadyPickedUp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le colis a déjà été récupéré. Contactez le support.'**
+  String get failureAlreadyPickedUp;
+
+  /// No description provided for @deliveryCodeTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code de livraison'**
+  String get deliveryCodeTitle;
+
+  /// No description provided for @deliveryCodeFoodBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'À donner au livreur à la livraison.'**
+  String get deliveryCodeFoodBody;
+
+  /// No description provided for @deliveryCodeParcelBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'À transmettre au destinataire : il le donnera au livreur.'**
+  String get deliveryCodeParcelBody;
+
+  /// No description provided for @deliveryCodeShare.
+  ///
+  /// In fr, this message translates to:
+  /// **'Partager au destinataire'**
+  String get deliveryCodeShare;
+
+  /// No description provided for @shareWhatsApp.
+  ///
+  /// In fr, this message translates to:
+  /// **'WhatsApp'**
+  String get shareWhatsApp;
+
+  /// No description provided for @shareSms.
+  ///
+  /// In fr, this message translates to:
+  /// **'SMS'**
+  String get shareSms;
+
+  /// No description provided for @deliveryCodeMessage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tchopi : un colis arrive pour vous ({number}), de {from} à {to}. Code à donner au livreur : {code}.'**
+  String deliveryCodeMessage(
+    String number,
+    String from,
+    String to,
+    String code,
+  );
+
+  /// No description provided for @orderParcelTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Colis'**
+  String get orderParcelTitle;
+
+  /// No description provided for @orderPickupTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Départ'**
+  String get orderPickupTitle;
+
+  /// No description provided for @orderDropoffTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Arrivée'**
+  String get orderDropoffTitle;
+
+  /// No description provided for @orderRecipient.
+  ///
+  /// In fr, this message translates to:
+  /// **'Destinataire'**
+  String get orderRecipient;
 }
 
 class _AppLocalizationsDelegate

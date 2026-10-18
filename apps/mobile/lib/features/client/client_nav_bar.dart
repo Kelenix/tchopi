@@ -13,6 +13,7 @@ class ClientNavBar extends ConsumerWidget {
   static const homePath = '/home';
   static const ordersPath = '/orders';
   static const paymentsPath = '/payments';
+  static const parcelPath = '/parcel/new';
 
   /// 0 = Accueil, 1 = Commandes, 2 = Paiements.
   final int current;
@@ -24,11 +25,9 @@ class ClientNavBar extends ConsumerWidget {
       required IconData icon,
       required String title,
       required String body,
-      VoidCallback? onTap,
-      String? badge,
+      required VoidCallback onTap,
     }) => Card(
       child: ListTile(
-        enabled: onTap != null,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: Space.lg,
           vertical: Space.sm,
@@ -40,9 +39,7 @@ class ClientNavBar extends ConsumerWidget {
         ),
         title: Text(title),
         subtitle: Text(body),
-        trailing: badge == null
-            ? const Icon(Icons.chevron_right_rounded)
-            : Text(badge, style: TextStyle(color: tokens.muted)),
+        trailing: const Icon(Icons.chevron_right_rounded),
         onTap: onTap,
       ),
     );
@@ -79,7 +76,10 @@ class ClientNavBar extends ConsumerWidget {
                 icon: Icons.inventory_2_outlined,
                 title: l10n.newOrderParcel,
                 body: l10n.newOrderParcelBody,
-                badge: l10n.homeSoon,
+                onTap: () {
+                  Navigator.pop(sheet);
+                  context.push(parcelPath);
+                },
               ),
             ],
           ),

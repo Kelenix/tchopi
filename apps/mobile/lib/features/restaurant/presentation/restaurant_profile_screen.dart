@@ -220,7 +220,7 @@ class _ProfileFormState extends ConsumerState<_ProfileForm> {
             style: text.bodyMedium!.copyWith(color: tokens.muted),
           ),
           Text(
-            l10n.commissionReadOnly(r.commissionRate.toStringAsFixed(1)),
+            l10n.commissionReadOnly(formatDecimal(r.commissionRate)),
             style: text.bodySmall!.copyWith(color: tokens.muted),
           ),
           const SizedBox(height: Space.lg),

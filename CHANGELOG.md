@@ -4,6 +4,15 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · versions [S
 
 ## [Non publié]
 
+### Ajouté (Inc-6)
+- Livraison de colis : demande en 4 étapes (départ, arrivée, colis, récapitulatif), devis serveur, demande unique,
+  code de livraison à 4 chiffres partageable (WhatsApp, SMS), annulation avant récupération (ADR-022).
+- Départ et arrivée à moins de 100 m refusés (`same_location`), avec invitation à déplacer l'épingle.
+
+### Corrigé
+- Distances et taux affichés avec une virgule (« 0,5 km », « 12,5 % ») au lieu d'un point.
+- Texte d'annulation et libellé « Espèces » propres aux colis (ils parlaient du restaurant et de la livraison).
+
 ### Modifié (interface, ADR-021)
 - Barre du haut visible partout (blanche, filet, ombre au défilement) ; accueil client conforme à la maquette :
   salutation et cloche, carte d'adresse, grande carte photo de la commande en cours avec progression, tuiles Repas /

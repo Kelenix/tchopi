@@ -56,7 +56,7 @@ class ZonesScreen extends ConsumerWidget {
                     ),
                     title: Text(zone.name, style: text.titleMedium),
                     subtitle: Text(
-                      '${zone.city} · ${l10n.zoneRadius((zone.radiusM / 1000).toStringAsFixed(1))}'
+                      '${zone.city} · ${l10n.zoneRadius(formatDecimal(zone.radiusM / 1000))}'
                       '${zone.isActive ? '' : ' · ${l10n.zoneInactive}'}',
                       style: text.bodySmall!.copyWith(color: tokens.muted),
                     ),

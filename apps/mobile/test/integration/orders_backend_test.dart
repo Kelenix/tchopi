@@ -125,7 +125,7 @@ void main() {
 
   tearDownAll(() async {
     await service.from('addresses').delete().eq('id', addressId);
-    await service.from('orders').delete().eq('restaurant_id', restaurantId);
+    await service.from('orders').delete().eq('customer_id', ids['client']!);
     await service.from('restaurants').delete().eq('id', restaurantId);
     for (final id in ids.values) {
       await service.auth.admin.deleteUser(id);
@@ -195,6 +195,58 @@ void main() {
 
       await clientClient.dispose();
       await managerClient.dispose();
+    },
+  );
+
+  test(
+    'le client envoie un colis : devis, demande unique, code de livraison',
+    () async {
+      final clientClient = await signedIn('client');
+      final client = OrderRepository(clientClient);
+      final type = (await client.parcelTypes()).firstWhere(
+        (t) => t.code == 'small',
+      );
+      const pickup = ParcelPoint(
+        lat: 5.37,
+        lng: -3.95,
+        district: 'Riviera 2',
+        landmark: 'Pharmacie',
+      );
+      const dropoff = ParcelPoint(
+        lat: 5.32,
+        lng: -4.02,
+        district: 'Plateau',
+        landmark: 'Tour A',
+        instructions: 'Accueil',
+      );
+      final quote = await client.quoteParcel(pickup, dropoff, type.id);
+      expect(quote.deliveryFee, greaterThan(0));
+
+      Future<Order> place() => client.placeParcel(
+        pickup: pickup,
+        dropoff: dropoff,
+        recipientName: 'Koffi',
+        recipientPhone: '+2250700000022',
+        parcelTypeId: type.id,
+        description: 'Documents',
+        rulesAccepted: true,
+        expectedTotal: quote.total,
+        idempotencyKey: '00000000-0000-4000-9000-$stamp'.substring(0, 36),
+      );
+      final first = await place();
+      expect(
+        (await place()).id,
+        first.id,
+        reason: 'double envoi : une seule demande',
+      );
+      expect(first.type, OrderType.parcel);
+      expect(first.status, OrderStatus.searchingCourier);
+      expect(first.number, startsWith('C-'));
+      expect(await client.deliveryCode(first.id), matches(RegExp(r'^\d{4}$')));
+
+      await client.cancel(first.id);
+      expect((await client.fetch(first.id)).status, OrderStatus.cancelled);
+      await clientClient.dispose();
     },
   );
 }

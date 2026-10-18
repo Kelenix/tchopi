@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 
 import '../../orders/orders_providers.dart';
 import '../../orders/presentation/order_detail_screen.dart';
+import '../../orders/presentation/order_widgets.dart';
 import '../client_nav_bar.dart';
 
 /// C-12 : paiements — moyens disponibles et paiements des commandes (Mobile Money et carte : Inc-11 / 12).
@@ -110,7 +111,7 @@ class _PaymentRow extends StatelessWidget {
         child: Icon(Icons.payments_outlined, color: tokens.ink),
       ),
       title: Text(
-        order.pickupName,
+        order.title(l10n),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),

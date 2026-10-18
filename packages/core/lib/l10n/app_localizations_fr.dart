@@ -1314,4 +1314,155 @@ class AppLocalizationsFr extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get parcelTitle => 'Envoyer un colis';
+
+  @override
+  String get parcelStepPickup => 'Départ';
+
+  @override
+  String get parcelStepPickupBody => 'D\'où part le colis ?';
+
+  @override
+  String get parcelStepDropoff => 'Arrivée';
+
+  @override
+  String get parcelStepDropoffBody => 'Où faut-il le livrer ?';
+
+  @override
+  String get parcelStepDetails => 'Le colis';
+
+  @override
+  String get parcelStepDetailsBody => 'Le destinataire et le contenu.';
+
+  @override
+  String get parcelStepSummary => 'Récapitulatif';
+
+  @override
+  String get parcelStepSummaryBody => 'Vérifiez avant de confirmer.';
+
+  @override
+  String get parcelOtherPoint => 'Autre point sur la carte';
+
+  @override
+  String get parcelRecipientName => 'Nom du destinataire';
+
+  @override
+  String get parcelRecipientPhone => 'Téléphone du destinataire';
+
+  @override
+  String get parcelType => 'Type de colis';
+
+  @override
+  String get parcelDescription => 'Que contient le colis ?';
+
+  @override
+  String get parcelRulesAccept =>
+      'Mon colis respecte la liste des objets autorisés';
+
+  @override
+  String get parcelRulesView => 'Voir la liste';
+
+  @override
+  String get parcelRulesTitle => 'Objets interdits';
+
+  @override
+  String get parcelRulesBody =>
+      '• Argent liquide, bijoux et objets de valeur\n• Armes, munitions, produits explosifs ou inflammables\n• Drogues et médicaments sans ordonnance\n• Animaux vivants\n• Aliments périssables mal emballés\n• Tout objet illégal en Côte d\'Ivoire';
+
+  @override
+  String get parcelRulesRequired => 'Cochez la case pour continuer.';
+
+  @override
+  String get parcelDistance => 'Distance de référence';
+
+  @override
+  String parcelDistanceValue(String km) {
+    return '$km km';
+  }
+
+  @override
+  String get parcelPayCash => 'À payer au livreur à la récupération';
+
+  @override
+  String get parcelPaymentCash => 'Espèces';
+
+  @override
+  String get parcelCancelBody =>
+      'Votre colis n\'a pas encore été récupéré : rien ne vous sera facturé.';
+
+  @override
+  String parcelConfirm(String total) {
+    return 'Confirmer · $total';
+  }
+
+  @override
+  String parcelOrderTitle(String district) {
+    return 'Colis vers $district';
+  }
+
+  @override
+  String get failureDifferentZones =>
+      'Les livraisons entre villes ne sont pas disponibles.';
+
+  @override
+  String get failureSameLocation =>
+      'Le point d\'arrivée est trop proche du départ : déplacez l\'épingle sur la carte.';
+
+  @override
+  String get failureRulesNotAccepted =>
+      'Confirmez que votre colis respecte la liste des objets autorisés.';
+
+  @override
+  String get failureInvalidRecipient => 'Numéro du destinataire invalide.';
+
+  @override
+  String get failureInvalidAddress =>
+      'Quartier et point de repère sont obligatoires.';
+
+  @override
+  String get failureAlreadyPickedUp =>
+      'Le colis a déjà été récupéré. Contactez le support.';
+
+  @override
+  String get deliveryCodeTitle => 'Code de livraison';
+
+  @override
+  String get deliveryCodeFoodBody => 'À donner au livreur à la livraison.';
+
+  @override
+  String get deliveryCodeParcelBody =>
+      'À transmettre au destinataire : il le donnera au livreur.';
+
+  @override
+  String get deliveryCodeShare => 'Partager au destinataire';
+
+  @override
+  String get shareWhatsApp => 'WhatsApp';
+
+  @override
+  String get shareSms => 'SMS';
+
+  @override
+  String deliveryCodeMessage(
+    String number,
+    String from,
+    String to,
+    String code,
+  ) {
+    return 'Tchopi : un colis arrive pour vous ($number), de $from à $to. Code à donner au livreur : $code.';
+  }
+
+  @override
+  String get orderParcelTitle => 'Colis';
+
+  @override
+  String get orderPickupTitle => 'Départ';
+
+  @override
+  String get orderDropoffTitle => 'Arrivée';
+
+  @override
+  String get orderRecipient => 'Destinataire';
 }

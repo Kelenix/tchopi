@@ -9,6 +9,7 @@ import '../../orders/orders_providers.dart';
 import '../../orders/presentation/checkout_screen.dart';
 import '../../orders/presentation/order_detail_screen.dart';
 import '../../orders/presentation/order_widgets.dart';
+import '../../parcels/parcel_request_screen.dart';
 import '../addresses/application/addresses_providers.dart';
 import '../addresses/presentation/addresses_screen.dart';
 import '../client_nav_bar.dart';
@@ -178,7 +179,7 @@ class _ClientHomeScreenState extends ConsumerState<ClientHomeScreen> {
                             ),
                             title: l10n.homeServiceParcel,
                             body: l10n.homeServiceParcelBody,
-                            badge: l10n.homeSoon,
+                            onTap: () => context.push(ParcelRequestScreen.path),
                           ),
                         ),
                       ],
@@ -406,14 +407,12 @@ class _ServiceCard extends StatelessWidget {
     required this.art,
     required this.title,
     required this.body,
-    this.badge,
     this.onTap,
   });
 
   final Widget art;
   final String title;
   final String body;
-  final String? badge;
   final VoidCallback? onTap;
 
   @override
@@ -430,33 +429,7 @@ class _ServiceCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(Radii.field),
-                child: SizedBox(
-                  height: 88,
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      art,
-                      if (badge != null)
-                        Positioned(
-                          right: Space.sm,
-                          top: Space.sm,
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              color: tokens.surface,
-                              borderRadius: BorderRadius.circular(Radii.chip),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: Space.sm,
-                                vertical: 2,
-                              ),
-                              child: Text(badge!, style: text.labelLarge),
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
+                child: SizedBox(height: 88, child: art),
               ),
               const SizedBox(height: Space.md),
               Text(title, style: text.titleMedium),
@@ -612,6 +585,16 @@ class _ActiveOrders extends ConsumerWidget {
 class _OrderHero extends ConsumerWidget {
   const _OrderHero({required this.order});
 
+  /// Étapes d'un colis : confirmée, puis recherche, livreur, récupéré, en route, livré.
+  static const _parcelSteps = [
+    OrderStatus.awaitingPayment,
+    OrderStatus.searchingCourier,
+    OrderStatus.courierAssigned,
+    OrderStatus.pickedUp,
+    OrderStatus.inTransit,
+    OrderStatus.delivered,
+  ];
+
   /// Étapes d'une commande de repas, de l'envoi à la livraison.
   static const _steps = [
     OrderStatus.pending,
@@ -634,7 +617,10 @@ class _OrderHero extends ConsumerWidget {
     final cover = restaurantId == null
         ? null
         : ref.watch(catalogRestaurantProvider(restaurantId)).value?.coverPath;
-    final step = order.status == OrderStatus.pickedUp
+    final parcel = order.type == OrderType.parcel;
+    final step = parcel
+        ? _parcelSteps.indexOf(order.status).clamp(0, 5) + 1
+        : order.status == OrderStatus.pickedUp
         ? 5
         : _steps.indexOf(order.status) + 1;
 
@@ -646,7 +632,11 @@ class _OrderHero extends ConsumerWidget {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              MediaImage(path: cover, seed: restaurantId ?? ''),
+              MediaImage(
+                path: cover,
+                seed: restaurantId ?? order.id,
+                icon: parcel ? Icons.inventory_2_outlined : null,
+              ),
               // Voile sombre : texte blanc lisible sur toute photo.
               const DecoratedBox(
                 decoration: BoxDecoration(
@@ -680,7 +670,7 @@ class _OrderHero extends ConsumerWidget {
                     ),
                     const Spacer(),
                     Text(
-                      order.pickupName,
+                      order.title(l10n),
                       style: text.bodySmall!.copyWith(
                         color: onPhoto.withValues(alpha: 0.85),
                       ),

@@ -434,7 +434,7 @@ class _SimulatorState extends ConsumerState<_Simulator> {
         if (result != null)
           Text(
             l10n.simulatorResult(
-              (result.distanceM / 1000).toStringAsFixed(1),
+              formatDecimal(result.distanceM / 1000),
               formatMoney(result.deliveryFee, currency: widget.zone.currency),
               formatMoney(
                 result.courierEarning,

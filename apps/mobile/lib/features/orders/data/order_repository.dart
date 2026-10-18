@@ -131,4 +131,73 @@ class OrderRepository {
           },
         ),
       );
+
+  // Colis (Inc-6)
+
+  Future<List<ParcelType>> parcelTypes() => guardCall(() async {
+    final rows = await _client
+        .from('parcel_types')
+        .select('id, code, label, max_weight_kg')
+        .eq('is_active', true)
+        .order('position', ascending: true);
+    return rows.map(ParcelType.fromJson).toList();
+  });
+
+  Future<FoodQuote> quoteParcel(
+    ParcelPoint pickup,
+    ParcelPoint dropoff,
+    String parcelTypeId,
+  ) => guardCall(() async {
+    final json = await _client.rpc<Map<String, dynamic>>(
+      'quote_parcel',
+      params: {
+        'p_pickup_lat': pickup.lat,
+        'p_pickup_lng': pickup.lng,
+        'p_dropoff_lat': dropoff.lat,
+        'p_dropoff_lng': dropoff.lng,
+        'p_parcel_type_id': parcelTypeId,
+      },
+    );
+    return FoodQuote.fromJson(json);
+  });
+
+  /// La même [idempotencyKey] rend la demande déjà créée.
+  Future<Order> placeParcel({
+    required ParcelPoint pickup,
+    required ParcelPoint dropoff,
+    required String recipientName,
+    required String recipientPhone,
+    required String parcelTypeId,
+    required String description,
+    required bool rulesAccepted,
+    required int expectedTotal,
+    required String idempotencyKey,
+  }) => guardCall(() async {
+    final row = await _client.rpc<Map<String, dynamic>>(
+      'place_parcel_order',
+      params: {
+        'p_pickup': pickup.toApi(),
+        'p_dropoff': dropoff.toApi(),
+        'p_recipient_name': recipientName.trim(),
+        'p_recipient_phone': recipientPhone,
+        'p_parcel_type_id': parcelTypeId,
+        'p_description': description.trim(),
+        'p_rules_accepted': rulesAccepted,
+        'p_payment_method': PaymentMethod.cash.wireName,
+        'p_expected_total': expectedTotal,
+        'p_idempotency_key': idempotencyKey,
+      },
+    );
+    return Order.fromJson(row);
+  });
+
+  /// Code de livraison (lisible uniquement par le client de la commande).
+  Future<String?> deliveryCode(String orderId) => guardCall(() async {
+    final row = await _client
+        .from('delivery_codes')
+        .select('code')
+        .eq('order_id', orderId)
+        .maybeSingle();
+    return row?['code'] as String?;
+  });
 }

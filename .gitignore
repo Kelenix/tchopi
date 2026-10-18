@@ -15,6 +15,7 @@ Thumbs.db
 
 # Assistant : réglages locaux
 .claude/settings.local.json
+.claude/launch.json
 
 # Images sources générées (lourdes) ; les versions optimisées sont dans supabase/seed-media/media
 supabase/seed-media/originaux/

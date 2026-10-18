@@ -558,3 +558,111 @@ final class CartQuoteFamily extends $Family
   @override
   String toString() => r'cartQuoteProvider';
 }
+
+@ProviderFor(parcelTypes)
+final parcelTypesProvider = ParcelTypesProvider._();
+
+final class ParcelTypesProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<ParcelType>>,
+          List<ParcelType>,
+          FutureOr<List<ParcelType>>
+        >
+    with $FutureModifier<List<ParcelType>>, $FutureProvider<List<ParcelType>> {
+  ParcelTypesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'parcelTypesProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$parcelTypesHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<ParcelType>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<ParcelType>> create(Ref ref) {
+    return parcelTypes(ref);
+  }
+}
+
+String _$parcelTypesHash() => r'21195b721d2b7ba8905bdab226980165b5a8f293';
+
+@ProviderFor(deliveryCode)
+final deliveryCodeProvider = DeliveryCodeFamily._();
+
+final class DeliveryCodeProvider
+    extends $FunctionalProvider<AsyncValue<String?>, String?, FutureOr<String?>>
+    with $FutureModifier<String?>, $FutureProvider<String?> {
+  DeliveryCodeProvider._({
+    required DeliveryCodeFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'deliveryCodeProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$deliveryCodeHash();
+
+  @override
+  String toString() {
+    return r'deliveryCodeProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<String?> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<String?> create(Ref ref) {
+    final argument = this.argument as String;
+    return deliveryCode(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is DeliveryCodeProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$deliveryCodeHash() => r'23d556bfbfca6aae4c25a627a1f74de8d501e29d';
+
+final class DeliveryCodeFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<String?>, String> {
+  DeliveryCodeFamily._()
+    : super(
+        retry: null,
+        name: r'deliveryCodeProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  DeliveryCodeProvider call(String orderId) =>
+      DeliveryCodeProvider._(argument: orderId, from: this);
+
+  @override
+  String toString() => r'deliveryCodeProvider';
+}

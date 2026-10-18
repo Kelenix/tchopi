@@ -31,6 +31,12 @@ String failureMessage(AppLocalizations l10n, Object? error) {
     'payment_unavailable' => l10n.failurePaymentUnavailable,
     'already_accepted' => l10n.failureAlreadyAccepted,
     'invalid_transition' => l10n.failureInvalidTransition,
+    'different_zones' => l10n.failureDifferentZones,
+    'same_location' => l10n.failureSameLocation,
+    'rules_not_accepted' => l10n.failureRulesNotAccepted,
+    'invalid_recipient' => l10n.failureInvalidRecipient,
+    'invalid_address' => l10n.failureInvalidAddress,
+    'already_picked_up' => l10n.failureAlreadyPickedUp,
     _ => l10n.failureUnknown,
   };
 }

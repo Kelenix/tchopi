@@ -41,6 +41,8 @@ enum OrderStatus {
   };
 }
 
+enum OrderType { food, parcel }
+
 enum PaymentMethod {
   cash,
   @JsonValue('mobile_money')
@@ -56,10 +58,15 @@ abstract class Order with _$Order {
   const factory Order({
     required String id,
     required String number,
+    @Default(OrderType.food) OrderType type,
     required OrderStatus status,
     String? restaurantId,
+    String? parcelTypeId,
+    String? parcelDescription,
     required String pickupName,
     String? pickupPhone,
+    @Default('') String pickupDistrict,
+    @Default('') String pickupLandmark,
     required String recipientName,
     String? recipientPhone,
     required String dropoffDistrict,
@@ -134,4 +141,40 @@ abstract class QuoteIssue with _$QuoteIssue {
 
   factory QuoteIssue.fromJson(Map<String, dynamic> json) =>
       _$QuoteIssueFromJson(json);
+}
+
+/// Type de colis proposé (PAR-01) : libellé, poids maximal, moyens de transport capables de le porter.
+@freezed
+abstract class ParcelType with _$ParcelType {
+  const factory ParcelType({
+    required String id,
+    required String code,
+    required String label,
+    required double maxWeightKg,
+  }) = _ParcelType;
+
+  factory ParcelType.fromJson(Map<String, dynamic> json) =>
+      _$ParcelTypeFromJson(json);
+}
+
+/// Point de retrait ou de livraison d'un colis : position, quartier, repère, instructions.
+@freezed
+abstract class ParcelPoint with _$ParcelPoint {
+  const ParcelPoint._();
+
+  const factory ParcelPoint({
+    required double lat,
+    required double lng,
+    required String district,
+    required String landmark,
+    String? instructions,
+  }) = _ParcelPoint;
+
+  Map<String, Object?> toApi() => {
+    'lat': lat,
+    'lng': lng,
+    'district': district.trim(),
+    'landmark': landmark.trim(),
+    'instructions': instructions?.trim(),
+  };
 }

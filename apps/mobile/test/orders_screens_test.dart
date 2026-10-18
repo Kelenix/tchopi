@@ -227,4 +227,47 @@ void main() {
     await tester.pump();
     expect(find.text('Nouvelle commande !'), findsNothing);
   });
+
+  parcelTests();
+}
+
+void parcelTests() {
+  testWidgets('colis : trajet, code de livraison à partager, annulation', (
+    tester,
+  ) async {
+    tall(tester);
+    final parcel = order('o2', OrderStatus.searchingCourier).copyWith(
+      type: OrderType.parcel,
+      number: 'C-7K2P9',
+      pickupDistrict: 'Cocody',
+      pickupLandmark: 'Pharmacie',
+      dropoffDistrict: 'Plateau',
+      recipientName: 'Koffi',
+      recipientPhone: '+2250700000022',
+      subtotal: 0,
+      total: 500,
+      items: const [],
+    );
+    await tester.pumpWidget(
+      app(const OrderDetailScreen(orderId: 'o2'), [
+        orderProvider('o2').overrideWith((ref) async => parcel),
+        orderStatusProvider(
+          'o2',
+        ).overrideWith((ref) => Stream.value(OrderStatus.searchingCourier)),
+        orderEventsProvider('o2').overrideWith((ref) async => const []),
+        deliveryCodeProvider('o2').overrideWith((ref) async => '4821'),
+      ]),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Commande C-7K2P9'), findsOneWidget);
+    expect(find.text('Cocody → Plateau'), findsOneWidget);
+    expect(find.text('Code de livraison'), findsOneWidget);
+    expect(find.text('4 8 2 1'), findsOneWidget);
+    expect(find.text('Partager au destinataire'), findsOneWidget);
+    expect(find.text('Koffi'), findsOneWidget);
+    expect(find.text('Annuler la commande'), findsOneWidget);
+    final error = tester.takeException();
+    expect(error, isNull, reason: '$error');
+  });
 }

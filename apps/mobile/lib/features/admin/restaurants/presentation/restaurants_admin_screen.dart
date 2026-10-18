@@ -60,7 +60,7 @@ class RestaurantsAdminScreen extends ConsumerWidget {
                     subtitle: Text(
                       [
                         restaurant.district,
-                        '${restaurant.commissionRate.toStringAsFixed(1)} %',
+                        '${formatDecimal(restaurant.commissionRate)} %',
                         restaurant.isActive
                             ? (restaurant.isOpen
                                   ? l10n.restaurantOpenNow

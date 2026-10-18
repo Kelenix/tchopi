@@ -8,7 +8,7 @@
 - **Phase courante** : 4 — Implémentation · Inc-0 (socle) livré, sauf déploiement VPS (accès non fourni)
 - **Dernière mise à jour** : 2026-10-18
 - **Santé** : 🟢 OK · accès VPS et dépôt GitHub non fournis
-- **Prochaine action** : Inc-6 (livraison de colis)
+- **Prochaine action** : Inc-7 (en ligne, attribution, supervision, paramètres)
 - **Plan de référence** : `docs/plan-de-realisation.md` · Design : `docs/design/design-system.md`
 - **Maquette** : `docs/design/maquette.html` — https://claude.ai/artifact/9GyaG6F34CkTe1qQpsy1cP (privée)
 
@@ -43,7 +43,7 @@ Flutter 3.41.9 · Dart 3.11.5 · Supabase CLI 2.116.0 · Docker 29.8.2 · Java 2
 | Inc-3 | Profils livreurs, validation admin, gestion utilisateurs | COU-01 à 04, ADM-02 | §2.3, §6.D | M | ✅ |
 | Inc-4 | Restaurants et catalogue | RES-01 à 05 | §3.1, §6.C | M | ✅ |
 | Inc-5 | Commande de repas (client + restaurant) | ORD-01 à 13 | §3.1, §6.A | L | ✅ |
-| Inc-6 | Livraison de colis | PAR-01 à 05 | §3.2 | M | ⬜ |
+| Inc-6 | Livraison de colis | PAR-01 à 05 | §3.2 | M | ✅ |
 | Inc-7 | En ligne, attribution, supervision, paramètres | COU-05, DIS-01 à 04, ADM-03, ADM-05 | §4.1 | L | ⬜ |
 | Inc-8 | Mission livreur, code de livraison, échecs | MIS-01 à 10 | §4.2, §4.5 | L | ⬜ |
 | Inc-9 | Suivi temps réel, chronologie, notifications | TRK-01 à 03, NOT-01 à 04 | §4.3, §4.4, §4.6 | L | ⬜ |
@@ -86,6 +86,14 @@ validation de la maquette → code des écrans à partir de l'Inc-1. Registre de
 - voir `docs/manual-tasks.md` (priorité : compte marchand de paiement, à démarrer tôt)
 
 ## Journal de session (résumé court, le plus récent en haut)
+
+- 2026-10-18 — Inc-6 (branche feat/inc-6-colis, ADR-022) : types de colis, devis et demande serveur, codes de
+  livraison (aussi pour les repas), annulation colis ; écran 4 étapes, suivi avec code et partage. Vérifié dans le
+  navigateur (format téléphone) : 4 étapes, liste des objets interdits, case obligatoire, devis 800 F, demande C-BL87T
+  créée avec code, annulation. Corrigé à cette occasion : départ = arrivée accepté (refusé sous 100 m), décimales
+  « 0.5 km », textes d'annulation et d'espèces des colis. Preuves : analyse 0 problème ; 36 + 23 tests Flutter ;
+  pgTAP 109/109 ; 3 + 6 tests d'intégration verts. Reporté à l'Inc-7 : types selon les moyens de transport disponibles,
+  refus sans livreur en ligne, retrait de l'offre à l'annulation.
 
 - 2026-10-18 — Refonte de structure (ADR-021) avant l'Inc-6 : barres du haut, accueil maquette, navigation basse
   Client + Paiements, recherche (ORD-03), espace Restaurant enrichi, profil, états vides. Preuves : analyse 0 problème ;

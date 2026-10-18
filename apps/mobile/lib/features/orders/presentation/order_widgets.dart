@@ -2,6 +2,13 @@ import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+extension OrderTitle on Order {
+  /// « Le Grill du Plateau » pour un repas, « Colis vers Cocody » pour un colis.
+  String title(AppLocalizations l10n) => type == OrderType.parcel
+      ? l10n.parcelOrderTitle(dropoffDistrict)
+      : pickupName;
+}
+
 extension OrderStatusLabel on OrderStatus {
   String label(AppLocalizations l10n) => switch (this) {
     OrderStatus.awaitingPayment => l10n.orderStatusAwaitingPayment,

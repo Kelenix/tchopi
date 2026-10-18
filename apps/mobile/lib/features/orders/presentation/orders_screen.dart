@@ -100,7 +100,12 @@ class OrderTile extends StatelessWidget {
               CircleAvatar(
                 radius: 22,
                 backgroundColor: tokens.surfaceAlt,
-                child: Icon(Icons.restaurant_rounded, color: tokens.ink),
+                child: Icon(
+                  order.type == OrderType.parcel
+                      ? Icons.inventory_2_outlined
+                      : Icons.restaurant_rounded,
+                  color: tokens.ink,
+                ),
               ),
               const SizedBox(width: Space.md),
               Expanded(
@@ -108,7 +113,7 @@ class OrderTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      order.pickupName,
+                      order.title(AppLocalizations.of(context)),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: text.titleMedium,

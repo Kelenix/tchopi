@@ -548,5 +548,85 @@
         "type": "int"
       }
     }
-  }
+  },
+  "parcelTitle": "Envoyer un colis",
+  "parcelStepPickup": "Départ",
+  "parcelStepPickupBody": "D'où part le colis ?",
+  "parcelStepDropoff": "Arrivée",
+  "parcelStepDropoffBody": "Où faut-il le livrer ?",
+  "parcelStepDetails": "Le colis",
+  "parcelStepDetailsBody": "Le destinataire et le contenu.",
+  "parcelStepSummary": "Récapitulatif",
+  "parcelStepSummaryBody": "Vérifiez avant de confirmer.",
+  "parcelOtherPoint": "Autre point sur la carte",
+  "parcelRecipientName": "Nom du destinataire",
+  "parcelRecipientPhone": "Téléphone du destinataire",
+  "parcelType": "Type de colis",
+  "parcelDescription": "Que contient le colis ?",
+  "parcelRulesAccept": "Mon colis respecte la liste des objets autorisés",
+  "parcelRulesView": "Voir la liste",
+  "parcelRulesTitle": "Objets interdits",
+  "parcelRulesBody": "• Argent liquide, bijoux et objets de valeur\n• Armes, munitions, produits explosifs ou inflammables\n• Drogues et médicaments sans ordonnance\n• Animaux vivants\n• Aliments périssables mal emballés\n• Tout objet illégal en Côte d'Ivoire",
+  "parcelRulesRequired": "Cochez la case pour continuer.",
+  "parcelDistance": "Distance de référence",
+  "parcelDistanceValue": "{km} km",
+  "@parcelDistanceValue": {
+    "placeholders": {
+      "km": {
+        "type": "String"
+      }
+    }
+  },
+  "parcelPayCash": "À payer au livreur à la récupération",
+  "parcelPaymentCash": "Espèces",
+  "parcelCancelBody": "Votre colis n'a pas encore été récupéré : rien ne vous sera facturé.",
+  "parcelConfirm": "Confirmer · {total}",
+  "@parcelConfirm": {
+    "placeholders": {
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "parcelOrderTitle": "Colis vers {district}",
+  "@parcelOrderTitle": {
+    "placeholders": {
+      "district": {
+        "type": "String"
+      }
+    }
+  },
+  "failureDifferentZones": "Les livraisons entre villes ne sont pas disponibles.",
+  "failureSameLocation": "Le point d'arrivée est trop proche du départ : déplacez l'épingle sur la carte.",
+  "failureRulesNotAccepted": "Confirmez que votre colis respecte la liste des objets autorisés.",
+  "failureInvalidRecipient": "Numéro du destinataire invalide.",
+  "failureInvalidAddress": "Quartier et point de repère sont obligatoires.",
+  "failureAlreadyPickedUp": "Le colis a déjà été récupéré. Contactez le support.",
+  "deliveryCodeTitle": "Code de livraison",
+  "deliveryCodeFoodBody": "À donner au livreur à la livraison.",
+  "deliveryCodeParcelBody": "À transmettre au destinataire : il le donnera au livreur.",
+  "deliveryCodeShare": "Partager au destinataire",
+  "shareWhatsApp": "WhatsApp",
+  "shareSms": "SMS",
+  "deliveryCodeMessage": "Tchopi : un colis arrive pour vous ({number}), de {from} à {to}. Code à donner au livreur : {code}.",
+  "@deliveryCodeMessage": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "orderParcelTitle": "Colis",
+  "orderPickupTitle": "Départ",
+  "orderDropoffTitle": "Arrivée",
+  "orderRecipient": "Destinataire"
 }

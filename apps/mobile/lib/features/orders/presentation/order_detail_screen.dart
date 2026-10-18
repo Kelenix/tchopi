@@ -2,6 +2,7 @@ import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../orders_providers.dart';
 import 'order_widgets.dart';
@@ -15,14 +16,14 @@ class OrderDetailScreen extends ConsumerWidget {
 
   final String orderId;
 
-  Future<void> _cancel(BuildContext context, WidgetRef ref) async {
+  Future<void> _cancel(BuildContext context, WidgetRef ref, bool parcel) async {
     final l10n = AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
     final confirmed = await showConfirmSheet(
       context,
       icon: Icons.cancel_outlined,
       title: l10n.orderCancelTitle,
-      body: l10n.orderCancelBody,
+      body: parcel ? l10n.parcelCancelBody : l10n.orderCancelBody,
       confirmLabel: l10n.orderCancel,
       destructive: true,
     );
@@ -57,6 +58,11 @@ class OrderDetailScreen extends ConsumerWidget {
       body: switch (order) {
         AsyncData(value: final o) => () {
           final status = live ?? o.status;
+          final parcel = o.type == OrderType.parcel;
+          final cancellable = parcel
+              ? status == OrderStatus.searchingCourier ||
+                    status == OrderStatus.courierAssigned
+              : status == OrderStatus.pending;
           return ListView(
             padding: const EdgeInsets.fromLTRB(
               Space.screen,
@@ -72,24 +78,48 @@ class OrderDetailScreen extends ConsumerWidget {
                 const SizedBox(height: Space.sm),
                 _Timeline(events: events),
               ],
+              if (!status.isClosed) ...[
+                const SizedBox(height: Space.lg),
+                _DeliveryCode(order: o),
+              ],
               const SizedBox(height: Space.xxl),
-              Text(l10n.orderItemsTitle, style: text.titleMedium),
+              Text(
+                parcel ? l10n.orderParcelTitle : l10n.orderItemsTitle,
+                style: text.titleMedium,
+              ),
               const SizedBox(height: Space.sm),
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(Space.lg),
                   child: Column(
                     children: [
-                      for (final item in o.items)
-                        AmountRow(
-                          label: '${item.quantity} × ${item.name}',
-                          value: formatMoney(item.lineTotal),
+                      if (parcel) ...[
+                        ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          leading: const Icon(Icons.person_outline_rounded),
+                          title: Text(o.recipientName),
+                          subtitle: Text(
+                            '${l10n.orderRecipient} · ${o.recipientPhone ?? ''}',
+                          ),
                         ),
+                        if (o.parcelDescription case final d? when d.isNotEmpty)
+                          ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            leading: const Icon(Icons.inventory_2_outlined),
+                            title: Text(d),
+                          ),
+                      ] else ...[
+                        for (final item in o.items)
+                          AmountRow(
+                            label: '${item.quantity} × ${item.name}',
+                            value: formatMoney(item.lineTotal),
+                          ),
+                        AmountRow(
+                          label: l10n.checkoutSubtotal,
+                          value: formatMoney(o.subtotal),
+                        ),
+                      ],
                       const Divider(height: Space.xl),
-                      AmountRow(
-                        label: l10n.checkoutSubtotal,
-                        value: formatMoney(o.subtotal),
-                      ),
                       AmountRow(
                         label: l10n.checkoutDeliveryFee,
                         value: formatMoney(o.deliveryFee),
@@ -109,26 +139,41 @@ class OrderDetailScreen extends ConsumerWidget {
               Card(
                 child: Column(
                   children: [
+                    if (parcel)
+                      ListTile(
+                        leading: Icon(Icons.trip_origin, color: tokens.ink),
+                        title: Text(o.pickupDistrict),
+                        subtitle: Text(o.pickupLandmark),
+                      ),
                     ListTile(
-                      leading: const Icon(Icons.place_outlined),
+                      leading: Icon(
+                        Icons.place_outlined,
+                        color: tokens.primary,
+                      ),
                       title: Text(o.dropoffDistrict),
                       subtitle: Text(o.dropoffLandmark),
                     ),
                     ListTile(
                       leading: const Icon(Icons.payments_outlined),
-                      title: Text(l10n.paymentCash),
-                      subtitle: Text(formatMoney(o.total)),
+                      title: Text(
+                        parcel ? l10n.parcelPaymentCash : l10n.paymentCash,
+                      ),
+                      subtitle: Text(
+                        parcel
+                            ? '${formatMoney(o.total)} · ${l10n.parcelPayCash}'
+                            : formatMoney(o.total),
+                      ),
                     ),
                   ],
                 ),
               ),
-              if (status == OrderStatus.pending) ...[
+              if (cancellable) ...[
                 const SizedBox(height: Space.xxl),
                 OutlinedButton(
                   style: OutlinedButton.styleFrom(
                     foregroundColor: tokens.danger,
                   ),
-                  onPressed: () => _cancel(context, ref),
+                  onPressed: () => _cancel(context, ref, parcel),
                   child: Text(l10n.orderCancel),
                 ),
               ],
@@ -171,7 +216,11 @@ class _StatusHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(
-            failed ? Icons.cancel_outlined : Icons.restaurant_rounded,
+            failed
+                ? Icons.cancel_outlined
+                : order.type == OrderType.parcel
+                ? Icons.inventory_2_outlined
+                : Icons.restaurant_rounded,
             color: failed ? tokens.danger : tokens.primary,
             size: 32,
           ),
@@ -183,7 +232,12 @@ class _StatusHeader extends StatelessWidget {
             ),
           ),
           const SizedBox(height: Space.xs),
-          Text(order.pickupName, style: text.bodyLarge),
+          Text(
+            order.type == OrderType.parcel
+                ? '${order.pickupDistrict} → ${order.dropoffDistrict}'
+                : order.pickupName,
+            style: text.bodyLarge,
+          ),
           if (failed && reason != null) ...[
             const SizedBox(height: Space.sm),
             Text(
@@ -255,6 +309,109 @@ class _Timeline extends StatelessWidget {
                   ],
                 ),
               ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Code de livraison bien visible ; pour un colis, partage au destinataire (WhatsApp, SMS) — PAR-04.
+class _DeliveryCode extends ConsumerWidget {
+  const _DeliveryCode({required this.order});
+
+  final Order order;
+
+  Future<void> _share(BuildContext context, String code) async {
+    final l10n = AppLocalizations.of(context);
+    final message = l10n.deliveryCodeMessage(
+      order.number,
+      order.pickupDistrict,
+      order.dropoffDistrict,
+      code,
+    );
+    final phone = order.recipientPhone?.replaceAll('+', '') ?? '';
+    final target = await showModalBottomSheet<Uri>(
+      context: context,
+      builder: (sheet) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.chat_outlined),
+              title: Text(l10n.shareWhatsApp),
+              onTap: () => Navigator.pop(
+                sheet,
+                Uri.https('wa.me', '/$phone', {'text': message}),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.sms_outlined),
+              title: Text(l10n.shareSms),
+              onTap: () => Navigator.pop(
+                sheet,
+                Uri(
+                  scheme: 'sms',
+                  path: order.recipientPhone,
+                  queryParameters: {'body': message},
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (target != null) await launchUrl(target);
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final tokens = context.tokens;
+    final text = Theme.of(context).textTheme;
+    final code = ref.watch(deliveryCodeProvider(order.id)).value;
+    if (code == null) return const SizedBox.shrink();
+    final parcel = order.type == OrderType.parcel;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(Space.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.lock_outline_rounded, color: tokens.primary),
+                const SizedBox(width: Space.sm),
+                Expanded(
+                  child: Text(
+                    l10n.deliveryCodeTitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: text.titleMedium,
+                  ),
+                ),
+                Text(
+                  code.split('').join(' '),
+                  style: text.headlineMedium!.copyWith(
+                    color: tokens.primary,
+                    letterSpacing: 4,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: Space.xs),
+            Text(
+              parcel ? l10n.deliveryCodeParcelBody : l10n.deliveryCodeFoodBody,
+              style: text.bodySmall!.copyWith(color: tokens.muted),
+            ),
+            if (parcel) ...[
+              const SizedBox(height: Space.md),
+              FilledButton.tonalIcon(
+                onPressed: () => _share(context, code),
+                icon: const Icon(Icons.share_outlined),
+                label: Text(l10n.deliveryCodeShare),
+              ),
+            ],
           ],
         ),
       ),

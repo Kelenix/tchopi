@@ -11,4 +11,10 @@ void main() {
   test('autre devise : code affiché', () {
     expect(formatMoney(2500, currency: 'GHS'), '2 500 GHS');
   });
+
+  test('décimale française à un chiffre', () {
+    expect(formatDecimal(0.5), '0,5');
+    expect(formatDecimal(12), '12,0');
+    expect(formatDecimal(1234.56), '1 234,6');
+  });
 }

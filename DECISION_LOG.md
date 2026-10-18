@@ -6,6 +6,26 @@
 
 ---
 
+## ADR-022 — Livraison de colis : choix de mise en œuvre (Inc-6)
+
+- **Date** : 2026-10-18
+- **Statut** : Accepté
+- **Décideur** : Claude (rôle : backend-engineer / flutter-engineer)
+- **Contexte** : Stories PAR-01 à PAR-05 ; attribution des livreurs à l'Inc-7, paiements en ligne aux Inc-11 / 12.
+- **Décision** :
+  - Une demande de colis est une `orders` de type `parcel` (même suivi, même chronologie que les repas) ; types de
+    colis en table (`parcel_types`, gérés par l'admin) ; devis et création côté serveur, comme les repas (ADR-020).
+  - Départ et arrivée dans **la même zone** (`different_zones` sinon) et à **100 m au moins** l'un de l'autre
+    (`same_location`) : la carte d'arrivée part du point de départ, l'oubli de la déplacer est le cas le plus probable.
+  - Code de livraison à 4 chiffres créé pour **toute** commande (repas compris, MIS-06), lisible seulement par le
+    client et l'admin ; partage par la feuille de partage du téléphone (WhatsApp, SMS…).
+  - Espèces seulement, payées au livreur **à la récupération** ; annulation par le client jusqu'à la récupération.
+- **Reporté à l'Inc-7** : types proposés selon les moyens de transport des livreurs disponibles (PAR-01), refus sans
+  livreur en ligne (PAR-03), retrait de l'offre ou de la mission à l'annulation (PAR-05).
+- **Impact** : métier (moyen).
+
+---
+
 ## ADR-021 — Structure d'interface commune (retour utilisateur)
 
 - **Date** : 2026-10-18

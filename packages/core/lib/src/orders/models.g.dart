@@ -9,10 +9,15 @@ part of 'models.dart';
 _Order _$OrderFromJson(Map<String, dynamic> json) => _Order(
   id: json['id'] as String,
   number: json['number'] as String,
+  type: $enumDecodeNullable(_$OrderTypeEnumMap, json['type']) ?? OrderType.food,
   status: $enumDecode(_$OrderStatusEnumMap, json['status']),
   restaurantId: json['restaurant_id'] as String?,
+  parcelTypeId: json['parcel_type_id'] as String?,
+  parcelDescription: json['parcel_description'] as String?,
   pickupName: json['pickup_name'] as String,
   pickupPhone: json['pickup_phone'] as String?,
+  pickupDistrict: json['pickup_district'] as String? ?? '',
+  pickupLandmark: json['pickup_landmark'] as String? ?? '',
   recipientName: json['recipient_name'] as String,
   recipientPhone: json['recipient_phone'] as String?,
   dropoffDistrict: json['dropoff_district'] as String,
@@ -36,10 +41,15 @@ _Order _$OrderFromJson(Map<String, dynamic> json) => _Order(
 Map<String, dynamic> _$OrderToJson(_Order instance) => <String, dynamic>{
   'id': instance.id,
   'number': instance.number,
+  'type': _$OrderTypeEnumMap[instance.type]!,
   'status': _$OrderStatusEnumMap[instance.status]!,
   'restaurant_id': instance.restaurantId,
+  'parcel_type_id': instance.parcelTypeId,
+  'parcel_description': instance.parcelDescription,
   'pickup_name': instance.pickupName,
   'pickup_phone': instance.pickupPhone,
+  'pickup_district': instance.pickupDistrict,
+  'pickup_landmark': instance.pickupLandmark,
   'recipient_name': instance.recipientName,
   'recipient_phone': instance.recipientPhone,
   'dropoff_district': instance.dropoffDistrict,
@@ -55,6 +65,8 @@ Map<String, dynamic> _$OrderToJson(_Order instance) => <String, dynamic>{
   'close_reason': instance.closeReason,
   'order_items': instance.items,
 };
+
+const _$OrderTypeEnumMap = {OrderType.food: 'food', OrderType.parcel: 'parcel'};
 
 const _$OrderStatusEnumMap = {
   OrderStatus.awaitingPayment: 'awaiting_payment',
@@ -144,4 +156,19 @@ Map<String, dynamic> _$QuoteIssueToJson(_QuoteIssue instance) =>
       'issue': instance.issue,
       'product_id': instance.productId,
       'name': instance.name,
+    };
+
+_ParcelType _$ParcelTypeFromJson(Map<String, dynamic> json) => _ParcelType(
+  id: json['id'] as String,
+  code: json['code'] as String,
+  label: json['label'] as String,
+  maxWeightKg: (json['max_weight_kg'] as num).toDouble(),
+);
+
+Map<String, dynamic> _$ParcelTypeToJson(_ParcelType instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'code': instance.code,
+      'label': instance.label,
+      'max_weight_kg': instance.maxWeightKg,
     };
