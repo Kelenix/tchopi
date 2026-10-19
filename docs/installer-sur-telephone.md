@@ -4,10 +4,10 @@ Deux façons de faire, selon ce que vous voulez tester.
 
 | | A — Tout de suite, à la maison | B — En conditions réelles, avant la mise en ligne |
 |---|---|---|
-| Serveur | Supabase local de votre PC | VPS (tâche manuelle n° 2) |
+| Serveur | Supabase local de votre PC | VPS (`docs/deployer-sur-vps.md`) |
 | Le téléphone doit être | sur le même Wi-Fi que le PC (PC allumé, Supabase démarré) | connecté à Internet (Wi-Fi ou 4G) |
 | Testeurs | vous, sur 1 ou 2 téléphones + le PC | vous, des livreurs et des restaurants partenaires |
-| Installation | `.\phone.ps1` (câble USB) ou fichier APK | Google Play « Test interne » |
+| Installation | `.\phone.ps1` (câble USB) ou fichier APK | `.\phone.ps1 -Vps` (APK), puis Google Play « Test interne » |
 
 iPhone : plus tard (Android d'abord, D-6) ; il faudra un Mac et TestFlight.
 
@@ -107,15 +107,11 @@ Détails des comptes de test : `docs/donnees-de-test.md`.
 ## B. Tester en conditions réelles (avant la mise en ligne)
 
 Pour des livreurs qui roulent en 4G, des restaurants partenaires et plusieurs testeurs, le serveur doit être
-en ligne. Ce qu'il faut de votre côté :
+en ligne :
 
-1. **VPS + nom de domaine** (tâche manuelle n° 2) → Claude installe Supabase, applique la base et les fonctions,
-   et crée la configuration `env/staging.json`.
-2. **Compte Google Play Console** (tâche n° 11, 25 $ une fois) → Claude compile l'app signée ; vous l'envoyez en
-   **Test interne** (jusqu'à 100 testeurs invités par email, installation depuis le Play Store, mises à jour
-   automatiques).
-3. Recommandé avant d'inviter des testeurs : projet Firebase (n° 8) pour les notifications, fournisseur de
-   tuiles de carte (n° 7), envoi des SMS (n° 6) ou connexion par email (n° 5).
+1. **VPS + nom de domaine** : suivre `docs/deployer-sur-vps.md` (`.\vps.ps1`, puis `.\phone.ps1 -Vps`).
+2. Plus tard, **Google Play Console** (tâche n° 11, 25 $ une fois) : app signée envoyée en **Test interne**
+   (jusqu'à 100 testeurs invités par email, mises à jour automatiques).
 
 ---
 

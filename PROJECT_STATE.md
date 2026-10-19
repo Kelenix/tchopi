@@ -5,9 +5,9 @@
 
 ## Snapshot
 
-- **Phase courante** : 5 — Qualité & performance faite · Inc-12 (Stripe) en attente des clés · déploiement VPS : accès non fourni
+- **Phase courante** : 5 — Qualité & performance faite · Inc-12 (Stripe) en attente des clés · back-end en ligne sur https://api.tchopi.com (VPS partagé, ADR-031) ; app web sur tchopi.com et Play Store à venir
 - **Dernière mise à jour** : 2026-10-19
-- **Santé** : 🟢 OK · accès VPS et dépôt GitHub non fournis
+- **Santé** : 🟢 OK · serveur en ligne ; inscriptions réservées aux numéros autorisés (pas encore de SMS)
 - **Prochaine action** : phase 6 (publication : signature, fiche Play Store) ; Inc-12 (carte Stripe) — bloqué par les clés de test Stripe (tâche manuelle n° 1) ; essai réel de nyole dès réception de vos clés de test
 - **Plan de référence** : `docs/plan-de-realisation.md` · Design : `docs/design/design-system.md`
 - **Maquette** : `docs/design/maquette.html` — https://claude.ai/artifact/9GyaG6F34CkTe1qQpsy1cP (privée)
@@ -79,13 +79,20 @@ validation de la maquette → code des écrans à partir de l'Inc-1. Registre de
 
 ## Blocages
 
-- Accès VPS + domaine non fournis → déploiement automatique non construit (sera fait et testé dès l'accès).
+- Déploiement continu (GitHub Actions) à ajouter ; copie des sauvegardes hors du VPS manuelle (`docs/deployer-sur-vps.md` § 6).
 
 ## Tâches manuelles utilisateur en attente
 
 - voir `docs/manual-tasks.md` (priorité : compte marchand de paiement, à démarrer tôt)
 
 ## Journal de session (résumé court, le plus récent en haut)
+
+- 2026-10-19 — Back-end déployé sur le VPS (ADR-031) : https://api.tchopi.com (nginx de l'hôte + certbot), Supabase
+  officiel figé `self-hosted/v0.8.3` allégé (7 conteneurs `tchopi-*`, ~660 Mo), pilote fermé (numéros autorisés avec
+  code, pas de SMS), sauvegardes quotidiennes ; outils `vps.ps1` (PC, une clé SSH par PC) + `infra/server.sh` ; APK de
+  test `phone.ps1 -Vps` ; message clair si l'envoi du SMS échoue. Testé d'abord dans Docker sur le PC (inscription
+  autorisée / refusée, admin, fonctions, temps réel, fichiers, Studio à la demande, pg_dump, redéploiement sans
+  rejeu). Sur le VPS : 14 migrations, 7 services sains, API joignable en HTTPS, autres sites du serveur intacts.
 
 - 2026-10-19 — Phase 5 (ADR-030) : APK arm64 22,5 Mo (< 25) ; photos décodées à la taille affichée et en cache
   disque ; 9 index de clés étrangères ; tests petit écran + police 130 % (7 écrans, aucun débordement) ; charge

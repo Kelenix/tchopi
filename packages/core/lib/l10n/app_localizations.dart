@@ -550,6 +550,12 @@ abstract class AppLocalizations {
   /// **'Trop de tentatives. Patientez une minute avant de réessayer.'**
   String get failureRateLimited;
 
+  /// No description provided for @failureSmsFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Impossible d\'envoyer le code par SMS à ce numéro. Vérifiez-le, ou demandez à l\'administrateur de l\'autoriser.'**
+  String get failureSmsFailed;
+
   /// No description provided for @failureWeakPassword.
   ///
   /// In fr, this message translates to:

@@ -1,0 +1,60 @@
+# Surcharges Tchopi du Supabase auto-hébergé (ajoutées à COMPOSE_FILE par server.sh). VPS partagé avec d'autres
+# sites : pile allégée (comme les autres projets du serveur), conteneurs préfixés « tchopi- », ports sur 127.0.0.1.
+services:
+  # Passerelle de l'API, derrière le nginx de l'hôte (infra/nginx.conf). Port 8010 : 8000 est déjà pris.
+  api-gw:
+    container_name: tchopi-gateway
+    ports: !override
+      - "127.0.0.1:8010:8000"
+    depends_on: !reset {}
+
+  # Studio (et postgres-meta qu'il utilise) seulement à la demande : vps.ps1 studio.
+  studio:
+    container_name: tchopi-studio
+    profiles: [studio]
+  meta:
+    container_name: tchopi-meta
+    profiles: [studio]
+  # Inutiles ici : pooler (aucun accès direct à la base depuis l'extérieur), transformation d'images (non utilisée).
+  supavisor:
+    profiles: [off]
+  imgproxy:
+    profiles: [off]
+  storage:
+    container_name: tchopi-storage
+    depends_on: !override
+      db:
+        condition: service_healthy
+      rest:
+        condition: service_started
+    environment:
+      ENABLE_IMAGE_TRANSFORMATION: "false"
+
+  db:
+    container_name: tchopi-db
+  rest:
+    container_name: tchopi-rest
+  functions:
+    container_name: tchopi-functions
+    environment:
+      NYOLE_API_URL: ${NYOLE_API_URL}
+      NYOLE_SECRET_KEY: ${NYOLE_SECRET_KEY}
+      NYOLE_RETURN_URL: ${NYOLE_RETURN_URL}
+      FCM_SERVICE_ACCOUNT: ${FCM_SERVICE_ACCOUNT}
+
+  auth:
+    container_name: tchopi-auth
+    environment:
+      # Pas encore de fournisseur SMS (tâche manuelle 6) : seuls les numéros de SMS_TEST_OTP peuvent s'inscrire.
+      GOTRUE_SMS_PROVIDER: twilio
+      GOTRUE_SMS_TWILIO_ACCOUNT_SID: sans-envoi
+      GOTRUE_SMS_TWILIO_AUTH_TOKEN: sans-envoi
+      GOTRUE_SMS_TWILIO_MESSAGE_SERVICE_SID: sans-envoi
+      GOTRUE_SMS_TEST_OTP: ${SMS_TEST_OTP}
+      GOTRUE_SMS_OTP_EXP: 600
+      GOTRUE_SMS_OTP_LENGTH: 6
+      GOTRUE_SMS_MAX_FREQUENCY: 5s
+      GOTRUE_SMS_TEMPLATE: "Tchopi : votre code est {{ .Code }}. Il expire dans 10 minutes."
+      # Même règle qu'en local (supabase/config.toml) : 8 caractères, lettres et chiffres.
+      GOTRUE_PASSWORD_MIN_LENGTH: 8
+      GOTRUE_PASSWORD_REQUIRED_CHARACTERS: abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ:0123456789

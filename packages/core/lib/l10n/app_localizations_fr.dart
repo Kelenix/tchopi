@@ -258,6 +258,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Trop de tentatives. Patientez une minute avant de réessayer.';
 
   @override
+  String get failureSmsFailed =>
+      'Impossible d\'envoyer le code par SMS à ce numéro. Vérifiez-le, ou demandez à l\'administrateur de l\'autoriser.';
+
+  @override
   String get failureWeakPassword =>
       'Mot de passe trop faible : 8 caractères minimum, avec des lettres et des chiffres.';
 

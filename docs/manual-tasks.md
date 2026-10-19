@@ -34,9 +34,9 @@
 - **Étapes** :
   1. Offre VPS avec **8 Go de RAM** recommandés (4 Go minimum), centre de données en **Europe** (le plus proche de l'Afrique de l'Ouest).
   2. Système : **Ubuntu 24.04 LTS** (le modèle Hostinger « Supabase » convient aussi).
-  3. Ajouter la **clé SSH publique** que Claude générera sur votre PC (hPanel → VPS → Paramètres → Clés SSH). Aucun mot de passe à partager.
-  4. Communiquer l'**adresse IP** du VPS.
-  5. Chez votre registraire, créer l'enregistrement DNS `A` : `api.<votre-domaine>` → IP du VPS.
+  3. Chez votre registraire, créer l'enregistrement DNS `A` : `api.<votre-domaine>` → IP du VPS.
+  4. Sur le PC : `.\vps.ps1 cle <IP>`, enregistrer la **clé SSH** affichée sur le VPS (hPanel → VPS → Console web),
+     puis `.\vps.ps1 installer api.<votre-domaine>`. Aucun mot de passe à partager. Détails : `docs/deployer-sur-vps.md`.
 - **Coût** : votre offre VPS actuelle ; domaine ≈ 10 $/an si vous n'en avez pas.
 - **Vérification** : `https://api.<votre-domaine>` répond avec un certificat valide.
 
@@ -131,6 +131,7 @@
 ## 12. Créer le premier administrateur
 - **Pourquoi** : l'admin crée ensuite les restaurants et valide les livreurs.
 - **Quand** : après le premier déploiement sur le VPS (Inc-3).
-- **Étapes** : Claude fournira une commande à exécuter avec votre email ou votre numéro.
+- **Étapes** : `.\vps.ps1 testeur <numéro> <code>`, inscription dans l'app avec ce numéro, puis `.\vps.ps1 admin <numéro>`
+  (`docs/deployer-sur-vps.md` § 3).
 - **Coût** : gratuit.
 - **Vérification** : connexion au back-office avec l'espace Admin visible.

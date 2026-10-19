@@ -73,7 +73,8 @@ Windows PowerShell n'accepte pas `&&` : une commande par ligne, ou les scripts c
    L'admin suit tout dans Admin → Commandes en cours. Le client est un troisième compte (ex. `07 00 00 00 03`).
 
 **Sur ton téléphone Android** (sans câble une fois installé, même Wi-Fi que le PC) : `.\phone.ps1` — voir
-[docs/installer-sur-telephone.md](docs/installer-sur-telephone.md).
+[docs/installer-sur-telephone.md](docs/installer-sur-telephone.md). **Partout (4G)**, serveur sur le VPS : `.\vps.ps1`
+puis `.\phone.ps1 -Vps` — voir [docs/deployer-sur-vps.md](docs/deployer-sur-vps.md).
 
 En local, trois restaurants de démonstration et leurs menus sont créés par `supabase/seed.sql` (à chaque
 `supabase db reset`). La carte utilise les tuiles OpenStreetMap, sans clé (voir `docs/manual-tasks.md` §7 pour la production).

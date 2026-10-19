@@ -18,7 +18,7 @@ flowchart LR
     WEB["Future app web"]
   end
   subgraph VPS["VPS Hostinger (Docker)"]
-    PX["Proxy HTTPS<br/>Caddy"]
+    PX["Proxy HTTPS<br/>nginx de l'hôte"]
     KG["Passerelle Supabase<br/>Kong"]
     AU["Auth (GoTrue)"]
     PR["REST + actions (PostgREST)"]
@@ -56,7 +56,7 @@ food-delive/
 │   ├── functions/       # Edge Functions (TypeScript / Deno)
 │   ├── tests/           # pgTAP : RLS, machine à états, attribution, montants
 │   └── seed.sql         # données de développement
-├── infra/               # VPS : compose (surcharges), Caddyfile, sauvegardes, déploiement
+├── infra/               # VPS : compose (surcharges), site nginx, installation, déploiement, sauvegardes
 ├── docs/                # produit, design, architecture, API, exploitation
 └── .github/workflows/   # CI / CD
 ```
@@ -149,9 +149,9 @@ avec notification permanente (déclaration Play Console du service au premier pl
 
 ## 8. Hébergement (VPS) et livraison continue
 
-- **Pile** : Supabase auto-hébergé (`docker compose`, images aux versions figées) + **Caddy** (HTTPS automatique)
-  devant Kong. Ports publics : 80 / 443 (et 22 pour SSH par clé). Postgres et Studio non exposés ; Studio par tunnel SSH.
-- **Domaines** : `api.<domaine>` → API Supabase. La future app web aura son propre sous-domaine, ajouté aux origines CORS.
+- **Pile** : Supabase auto-hébergé allégé (`docker compose`, images aux versions figées) + **nginx de l'hôte** et certbot (HTTPS)
+  devant la passerelle (Envoy, 127.0.0.1:8010). VPS partagé : ports publics 80 / 443 / 22 ; Postgres et Studio non exposés ; Studio à la demande par tunnel SSH (ADR-031).
+- **Domaines** : `api.tchopi.com` → API Supabase ; `tchopi.com` → app web (SaaS), ajoutée aux origines CORS.
 - **Sauvegardes** : `pg_dump` quotidien + archive des fichiers Storage, chiffrés, copiés hors du VPS, rétention 14 jours ;
   restauration testée en phase 5 et documentée (`docs/operations.md`).
 - **CI (chaque push / PR)** : `dart analyze` et `flutter test` (4 paquets) · pile Supabase dans le runner → migrations

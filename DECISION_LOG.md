@@ -6,6 +6,40 @@
 
 ---
 
+## ADR-031 — Déploiement sur le VPS : pilote fermé, piloté depuis le PC
+
+- **Date** : 2026-10-19
+- **Statut** : Accepté (met en œuvre ADR-009)
+- **Décideur** : Claude (rôle : release / security), à la demande de l'utilisateur (utiliser l'APK partout)
+- **Contexte** : L'utilisateur veut utiliser l'app hors de chez lui avant d'avoir un fournisseur SMS, un SMTP ou
+  Firebase. Le VPS (Hostinger KVM 1 : 1 vCPU, 4 Go, swap 2 Go) est **partagé** avec d'autres sites : nginx de l'hôte
+  sur 80/443 (certbot), ports 3000-3003, 3100-3101, 5432, 5433, 8000 pris, ufw déjà limité à 22/80/443, deux autres
+  projets en Supabase allégé (sans Studio ni pooler).
+- **Décision** :
+  - Supabase installé par le script officiel (`setup.sh`), version figée `self-hosted/v0.8.3` (Postgres 17, passerelle
+    Envoy) ; secrets générés sur le VPS, jamais copiés sur le PC (sauf la clé publique `anon` → `env/prod.json`).
+  - **Pile allégée** (`infra/compose.yml`) : sans pooler ni imgproxy (inutiles ici) ; Studio et postgres-meta en profil,
+    démarrés seulement par `vps.ps1 studio` (tunnel SSH). Projet `tchopi`, conteneurs `tchopi-*`, passerelle sur
+    `127.0.0.1:8010`.
+  - **nginx de l'hôte** (`infra/nginx.conf`, convention des autres sites) + certbot : seuls les chemins de l'API sont
+    publics sur `api.tchopi.com` ; `tchopi.com` reste pour l'app web. Pare-feu et SSH du serveur non modifiés.
+  - **Pilote fermé** : fournisseur SMS factice (comme en local) + `SMS_TEST_OTP` ; seuls les numéros autorisés
+    (`vps.ps1 testeur`, un code par numéro) peuvent s'inscrire. Inscription email désactivée tant que le SMTP manque.
+  - `vps.ps1` (PC) → `infra/server.sh` (VPS) : installation, sauvegardes quotidiennes 14 jours, déploiement de la
+    version **commitée** (`git archive`), migrations appliquées une seule fois (table
+    `supabase_migrations.schema_migrations`, comme la CLI), fonctions copiées avec une import map commune (le routeur
+    officiel n'en lit qu'une), testeurs, admin, Studio. Une clé SSH par PC ; `vps.ps1 config` recrée `env/prod.json`.
+    APK de test : `phone.ps1 -Vps`.
+- **Alternatives écartées** : Caddy (80/443 déjà tenus par nginx) ; pile officielle complète (mémoire du VPS
+  partagé) ; confirmation automatique des inscriptions (n'importe qui pourrait prendre le numéro d'un autre) ; Studio
+  public derrière un mot de passe (surface d'attaque) ; déploiement continu GitHub Actions tout de suite (secrets SSH
+  dans GitHub ; à ajouter une fois le premier déploiement manuel validé).
+- **Conséquences** : chaque testeur doit être autorisé ; copie des sauvegardes hors du VPS manuelle pour l'instant ;
+  restent à faire : déploiement continu, supervision externe, SMTP / SMS / Firebase (tâches 5, 6, 8).
+- **Impact** : exploitation / sécurité (élevé).
+
+---
+
 ## ADR-030 — Phase 5 : cache des photos, index, charge sans k6
 
 - **Date** : 2026-10-19

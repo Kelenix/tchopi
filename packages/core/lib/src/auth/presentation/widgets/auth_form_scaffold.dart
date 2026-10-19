@@ -16,6 +16,7 @@ String failureMessage(AppLocalizations l10n, Object? error) {
     'user_already_exists' => l10n.failureUserExists,
     'code_invalid' => l10n.failureCodeInvalid,
     'rate_limited' => l10n.failureRateLimited,
+    'sms_failed' => l10n.failureSmsFailed,
     'weak_password' => l10n.failureWeakPassword,
     'same_password' => l10n.failureSamePassword,
     'account_suspended' => l10n.failureSuspended,
