@@ -81,6 +81,9 @@ switch ($Action) {
   'ci' {
     # Clé réservée à GitHub Actions (jamais celle de ce PC), autorisée sur le VPS ; adresse et empreinte du VPS et clé
     # privée enregistrées comme secrets du dépôt (gh connecté), puis premier déploiement.
+    if (-not (ssh -G tchopi | Select-String '^hostname \d')) {
+      Fail "ce PC n'a pas encore accès au VPS : d'abord .\vps.ps1 cle <IP du VPS> (docs/deployer-sur-vps.md § 1)"
+    }
     $key = Join-Path $env:TEMP 'tchopi-github'
     Remove-Item "$key", "$key.pub" -ErrorAction SilentlyContinue
     Start-Process ssh-keygen -ArgumentList "-q -t ed25519 -N `"`" -C tchopi-github -f `"$key`"" -NoNewWindow -Wait
