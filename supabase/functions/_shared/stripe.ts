@@ -1,4 +1,4 @@
-// Client Stripe (carte bancaire, ADR-031) : sessions Checkout hébergées (3-D Secure compris), statut faisant foi,
+// Client Stripe (carte bancaire, ADR-034) : sessions Checkout hébergées (3-D Secure compris), statut faisant foi,
 // remboursements. Clés (STRIPE_SECRET_KEY « sk_test_… » / « sk_live_… », STRIPE_WEBHOOK_SECRET « whsec_… »)
 // uniquement côté serveur ; PAYMENT_RETURN_URL : page affichée après le paiement (fonction payments-return).
 import type { Provider } from './payments.ts';

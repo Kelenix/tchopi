@@ -36,10 +36,12 @@ install_supabase() {
 ############
 # Numéros autorisés à s'inscrire sans SMS réel, avec leur code : 225XXXXXXXXXX:123456,... (vps.ps1 testeur)
 SMS_TEST_OTP=
-# Secrets des fonctions serveur : Mobile Money (nyole), notifications (compte de service Firebase)
+# Secrets des fonctions serveur : Mobile Money (nyole), carte (Stripe), notifications (compte de service Firebase)
 NYOLE_API_URL=https://app.nyole.com/api
 NYOLE_SECRET_KEY=
 NYOLE_RETURN_URL=
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_SECRET=
 FCM_SERVICE_ACCOUNT=
 EOF
   fi
@@ -95,6 +97,12 @@ deploy() {
     > volumes/functions/deno.tmp
   mv volumes/functions/deno.tmp volumes/functions/deno.jsonc
   docker compose restart functions
+  # Remboursements par carte (ADR-034) : la tâche planifiée de la base appelle payments-refund avec la clé de service.
+  key=$(grep "^SERVICE_ROLE_KEY=" .env | cut -d= -f2-)
+  sql -c "select vault.create_secret('http://kong:8000/functions/v1/payments-refund', 'refund_function_url')
+    where not exists (select 1 from vault.secrets where name = 'refund_function_url')"
+  sql -c "select vault.create_secret('$key', 'refund_function_key')
+    where not exists (select 1 from vault.secrets where name = 'refund_function_key')"
   # Applique aussi les changements du .env et attend que tous les services soient en bonne santé.
   sh run.sh start
 }

@@ -11,7 +11,16 @@
 - **Pourquoi** : encaisser cartes (Stripe, Inc-12) et Mobile Money (Inc-11). La vérification d'entreprise (KYC) peut prendre plusieurs semaines.
 - **Quand** : maintenant.
 - **Étapes** :
-  1. **Stripe** : compte au nom de votre société (pays compatible) ; activer les paiements par carte ; récupérer les **clés de test**.
+  1. **Stripe** (cartes, ADR-034) : compte au nom de votre société (pays compatible) ; activer les paiements par carte.
+     - **Essai local** : dans `supabase/functions/.env`, `STRIPE_API_URL=https://api.stripe.com`,
+       `STRIPE_SECRET_KEY=sk_test_…` ; webhook avec la Stripe CLI (`stripe listen --forward-to
+       http://127.0.0.1:54321/functions/v1/payments-webhook-stripe`), dont le secret `whsec_…` va dans
+       `STRIPE_WEBHOOK_SECRET` ; puis `supabase stop` et `supabase start`. Carte de test Stripe : 4242 4242 4242 4242.
+     - **Serveur** : dans le `.env` du VPS (`/opt/tchopi/supabase/.env`), `STRIPE_SECRET_KEY` (`sk_live_…` après
+       vérification) et `STRIPE_WEBHOOK_SECRET` ; dans le tableau de bord Stripe → Développeurs → Webhooks, URL
+       `https://api.tchopi.com/functions/v1/payments-webhook-stripe`, événements `checkout.session.completed` et
+       `checkout.session.expired` ; puis `.ps.ps1 deployer`.
+     - Activer « Carte bancaire » dans Admin → Paramètres. Les remboursements par carte sont automatiques.
   2. **Mobile Money — nyole** (retenu, ADR-028) : dans https://app.nyole.com/developer, vérifier que votre compte
      affiche des **clés API** (la doc nyole indique que les comptes ouverts après le 17/10/2026 passent par LinkAfr,
      Griotia ou Wapilot : si vous n'avez pas de clés, contactez nyole). Ensuite :

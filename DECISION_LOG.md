@@ -6,6 +6,38 @@
 
 ---
 
+## ADR-034 — Carte bancaire par Stripe Checkout, remboursements automatiques (Inc-12)
+
+- **Date** : 2026-10-19
+- **Statut** : Accepté
+- **Décideur** : Claude (rôles : backend-engineer, flutter-engineer, security-engineer)
+- **Contexte** : Story PAY-04 (D-5 : cartes via Stripe, société dans un pays compatible). Le plan prévoyait la feuille
+  de paiement native ; ADR-027 avait reporté le remboursement automatique des cartes à cet incrément.
+- **Décision** :
+  - **Stripe Checkout (page hébergée)** plutôt que la feuille native (SDK `flutter_stripe`) : 3-D Secure, refus et
+    nouvel essai gérés par Stripe sur sa page, aucun SDK dans l'app (APK sous 25 Mo), fonctionne aussi en web.
+    Montant en francs CFA (devise sans décimales chez Stripe), carte uniquement.
+  - **Même circuit que Mobile Money** : couche commune aux fournisseurs dans les Edge Functions (`payments.ts`,
+    `signature.ts`) ; `begin_online_payment` remplace `begin_mobile_money` ; webhook `payments-webhook-stripe`
+    (signature HMAC, 5 min) puis statut **relu chez Stripe** avant toute écriture ; panneau de paiement commun dans
+    l'app.
+  - **Expiration** : session Stripe de 30 min (minimum imposé), arrondie aux 10 min pour qu'un double envoi garde
+    la même clé d'idempotence ; la commande, elle, s'annule après le délai réglé (15 min) : un paiement tardif est
+    remboursé automatiquement.
+  - **Remboursement automatique des cartes** : dès qu'une commande payée par carte est « à rembourser » (annulation,
+    refus, décision de l'admin), la tâche planifiée appelle `payments-refund` (clé de service dans le coffre de la
+    base) ; Stripe rembourse tout, une seule fois (idempotence) ; nouvel essai après 10 min en cas d'échec.
+    Mobile Money reste remboursé à la main (nyole n'a pas d'API de remboursement).
+  - Page `payments-return` affichée après le paiement : le client revient dans l'app, qui suit le statut en direct.
+- **Alternatives écartées** : feuille native `flutter_stripe` (SDK lourd, configuration Android, pas de web) ;
+  remboursement déclenché par l'admin seulement (délai pour le client) ; expiration de la session Stripe à
+  l'annulation de la commande (appel serveur supplémentaire pour un cas couvert par le remboursement).
+- **Conséquences** : clés `STRIPE_SECRET_KEY` et `STRIPE_WEBHOOK_SECRET` à saisir sur le serveur ; webhook Stripe à
+  déclarer (tâche manuelle n° 1) ; frais Stripe supportés par la plateforme, comme ceux de nyole.
+- **Impact** : financier (moyen), technique (moyen), réversible.
+
+---
+
 ## ADR-033 — Données de départ et carte moderne gratuite
 
 - **Date** : 2026-10-19

@@ -1,4 +1,4 @@
--- Carte bancaire par Stripe (Inc-12, PAY-04 ; ADR-031). Même circuit que Mobile Money (ADR-028) : page de paiement
+-- Carte bancaire par Stripe (Inc-12, PAY-04 ; ADR-034). Même circuit que Mobile Money (ADR-028) : page de paiement
 -- hébergée par Stripe (3-D Secure compris), commande transmise après confirmation vérifiée auprès de Stripe ;
 -- remboursements automatiques des paiements par carte (ADR-027).
 

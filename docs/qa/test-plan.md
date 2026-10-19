@@ -22,6 +22,7 @@
 | S1 — commande de repas de bout en bout | intégration `orders_backend_test` (commande, réception en direct, acceptation, attribution, offre acceptée) ; pgTAP `orders`, `dispatch`, `missions` (récupération, code, livraison) |
 | S2 — colis avec code de livraison | intégration `orders_backend_test` (devis, demande unique, code) ; pgTAP `parcels`, `missions` (code, essais limités) |
 | S3 — Mobile Money | intégration `mobile_money_test` (page nyole, refus, nouvel essai, confirmation signée) ; pgTAP `mobile_money` |
+| Carte (PAY-04) | intégration `card_payment_test` (page Stripe, webhook signé, confirmation relue, annulation remboursée automatiquement) ; pgTAP `card_payments` |
 | S4 — espèces | pgTAP `payments`, `missions` (encaissement, registre, versement) |
 | S5 — aucun livreur | pgTAP `dispatch` (refus sans livreur en ligne, alerte 10 min, annulation 30 min) ; widget « toujours sans livreur » |
 | S6 — annulation et remboursement | intégration `orders_backend_test` (remboursement décidé par l'admin) ; pgTAP `refunds` |
@@ -29,5 +30,5 @@
 ## Non couvert automatiquement (à vérifier à la main)
 
 - Réception réelle des notifications push (projet Firebase à créer, tâche manuelle n° 8).
-- Vraie API nyole (clés de test à fournir, tâche n° 1) ; carte bancaire (Inc-12).
+- Vraies API nyole et Stripe (clés de test à fournir, tâche n° 1).
 - Position du livreur écran éteint sur un vrai téléphone, fluidité mesurée sur téléphone (`docs/performance.md`).

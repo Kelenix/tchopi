@@ -5,10 +5,10 @@
 
 ## Snapshot
 
-- **Phase courante** : 5 — Qualité & performance faite · Inc-12 (Stripe) en attente des clés · back-end en ligne sur https://api.tchopi.com (VPS partagé, ADR-031) ; app web sur tchopi.com et Play Store à venir
+- **Phase courante** : 5 — Qualité & performance faite · Inc-12 (carte Stripe) livré, à brancher sur vos clés · back-end en ligne sur https://api.tchopi.com (VPS partagé, ADR-031) ; app web sur tchopi.com et Play Store à venir
 - **Dernière mise à jour** : 2026-10-19
 - **Santé** : 🟢 OK · serveur en ligne ; inscriptions réservées aux numéros autorisés (pas encore de SMS)
-- **Prochaine action** : phase 6 (publication : signature, fiche Play Store) ; Inc-12 (carte Stripe) — bloqué par les clés de test Stripe (tâche manuelle n° 1) ; essai réel de nyole dès réception de vos clés de test
+- **Prochaine action** : phase 6 (publication : signature, fiche Play Store) ; essais réels Stripe et nyole dès réception de vos clés de test (tâche manuelle n° 1)
 - **Plan de référence** : `docs/plan-de-realisation.md` · Design : `docs/design/design-system.md`
 - **Maquette** : `docs/design/maquette.html` — https://claude.ai/artifact/9GyaG6F34CkTe1qQpsy1cP (privée)
 
@@ -25,7 +25,7 @@ Flutter 3.41.9 · Dart 3.11.5 · Supabase CLI 2.116.0 · Docker 29.8.2 · Java 2
 | 1 — Définition produit      | ✅ fait | `docs/product/user-stories.md` (60 stories), `docs/product/screens.md` (45 fiches) |
 | 2 — Planification           | ✅ fait | Backlog, jalons, chemin critique ci-dessous ; risques : plan §10 |
 | 3 — Architecture & design   | ✅ fait | Architecture, conception, données, design system ; maquette v1 validée |
-| 4 — Implémentation          | 🔄 en cours | Inc-0 à Inc-11 et Inc-13 livrés ; reste Inc-12 (carte Stripe) |
+| 4 — Implémentation          | ✅ fait | Inc-0 à Inc-13 livrés (paiements réels : clés à fournir) |
 | 5 — Qualité & performance   | ✅ fait | `docs/performance.md`, `docs/qa/` ; reste la mesure de fluidité sur votre téléphone |
 | 6 — Publication (stores)    | ⬜ à faire | |
 | 7 — Documentation           | ⬜ à faire | |
@@ -49,7 +49,7 @@ Flutter 3.41.9 · Dart 3.11.5 · Supabase CLI 2.116.0 · Docker 29.8.2 · Java 2
 | Inc-9 | Suivi temps réel, chronologie, notifications | TRK-01 à 03, NOT-01 à 04 | §4.3, §4.4, §4.6 | L | ✅ (push : Firebase à créer) |
 | Inc-10 | Espèces, transactions, montants séparés | PAY-01, PAY-02, PAY-06, TRX-01 | §5.3, §5.4, §5.6 | M | ✅ |
 | Inc-11 | Mobile Money | PAY-03, PAY-05 | §5.1 | L | ✅ nyole (essai réel : clés de test à fournir) |
-| Inc-12 | Carte bancaire Stripe | PAY-04 | §5.2 | M | ⬜ |
+| Inc-12 | Carte bancaire Stripe | PAY-04 | §5.2 | M | ✅ Stripe Checkout (essai réel : clés de test à fournir) |
 | Inc-13 | Annulations, remboursements, reçus, transactions admin, statistiques | TRX-02, TRX-03, ADM-04, ADM-06 | §5.5, §6.D | M | ✅ (remboursements auto : Inc-11 / 12) |
 
 TRV-01, TRV-05 et TRV-07 (réseau, erreurs, API documentée) s'appliquent à chaque incrément.
@@ -86,6 +86,16 @@ validation de la maquette → code des écrans à partir de l'Inc-1. Registre de
 - voir `docs/manual-tasks.md` (priorité : compte marchand de paiement, à démarrer tôt)
 
 ## Journal de session (résumé court, le plus récent en haut)
+
+- 2026-10-19 — Inc-12 (branche feat/inc-12-carte, ADR-034) : carte par Stripe Checkout (page hébergée, 3-D Secure),
+  même circuit que Mobile Money (couche commune aux fournisseurs), webhook signé + statut relu chez Stripe,
+  remboursement automatique des paiements par carte (tâche planifiée → payments-refund), page de retour, carte
+  activable par l'admin. Vérifié dans le navigateur avec un Stripe simulé : activation admin, commande R-SV2ZJ par
+  carte, page de paiement (2 525 XOF), retour, commande transmise, annulation → « Remboursement effectué » en direct.
+  Corrigé à cette occasion : « rien ne vous sera facturé » affiché en annulant une commande déjà payée. Puis fusion
+  de main (app à la racine, serveur en ligne) : migration carte renumérotée 20261019160000. Preuves :
+  `check.ps1 -Integration` vert (analyse 0 ; 43 + 64 tests Flutter ; pgTAP 261/261 ; intégration 3 + 10). Non
+  vérifié : vraie API Stripe (clés de test à fournir), déploiement sur le VPS (`.ps.ps1 deployer`).
 
 - 2026-10-19 — ADR-033 : zone d'Abidjan et tarifs par migration (déployée), restaurants de démonstration en ligne
   (`vps.ps1 demo` : 3 restaurants, 9 plats, 12 photos) ; carte moderne OpenFreeMap (repli OpenStreetMap), rendu

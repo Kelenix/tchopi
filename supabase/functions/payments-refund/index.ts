@@ -1,4 +1,4 @@
-// Remboursements par carte (TRX-03, ADR-031) : appelée par la base (tâche planifiée) quand un paiement Stripe est
+// Remboursements par carte (TRX-03, ADR-034) : appelée par la base (tâche planifiée) quand un paiement Stripe est
 // « à rembourser ». Stripe rembourse le paiement entier, une seule fois (clé d'idempotence) ; un échec laisse le
 // remboursement en attente : nouvel essai 10 min plus tard, ou remboursement manuel par l'admin.
 import { createClient } from '@supabase/supabase-js';
