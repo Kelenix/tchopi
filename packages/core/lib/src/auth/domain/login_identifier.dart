@@ -2,6 +2,9 @@ import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 
 enum IdentifierKind { email, phone }
 
+/// Modes d'inscription actifs sur le serveur : email si l'envoi d'emails est configuré, téléphone si les SMS le sont.
+typedef LoginMethods = ({bool email, bool phone});
+
 /// Identifiant de connexion normalisé : email en minuscules ou numéro mobile au format E.164.
 class LoginIdentifier {
   const LoginIdentifier.email(String email)

@@ -6,6 +6,89 @@
 
 ---
 
+## ADR-033 — Données de départ et carte moderne gratuite
+
+- **Date** : 2026-10-19
+- **Statut** : Accepté (demande utilisateur ; complète ADR-019)
+- **Décideur** : Utilisateur (restaurants de démonstration en ligne ; pas de service payant pour la carte « pour le
+  moment ») ; mise en œuvre Claude (rôle : database-architect / flutter-engineer)
+- **Contexte** : Le serveur en ligne était vide (aucune ville : profil et adresses impossibles) et la carte OpenStreetMap
+  classique jugée « vide, vieille, pas moderne ». Google Maps exige un compte Google Cloud avec carte bancaire (web
+  payant au-delà de 10 000 affichages par mois) ; CARTO exige désormais une clé.
+- **Décision** :
+  - Migration `20261019150000_default_zone` : zone « Abidjan — agglomération » et tarifs de départ sur tous les serveurs
+    (modifiables dans l'Administration).
+  - Restaurants de démonstration dans `supabase/demo.sql` (seed local, puis `vps.ps1 demo` sur le serveur, photos dans
+    le bucket « media ») ; supprimables depuis l'Administration avant l'ouverture au public.
+  - Carte : style vectoriel **OpenFreeMap « liberty »** (gratuit, sans clé ni compte, usage commercial permis) via
+    `vector_map_tiles` 9 (bêta, la version stable ne gère pas `latlong2` 0.10) ; repli automatique sur les tuiles
+    OpenStreetMap si le style ne se charge pas. Fond commun `lib/shared/map_tiles.dart` pour les trois cartes.
+- **Alternatives écartées** : Google Maps maintenant (compte de facturation refusé pour l'instant, tâche 7) ; CARTO
+  (clé obligatoire) ; MapLibre natif (refonte des trois cartes et des tests).
+- **Conséquences** : rendu vectoriel calculé par l'app (à surveiller sur les téléphones d'entrée de gamme) ;
+  dépendance bêta à revoir à la sortie de la version stable.
+- **Impact** : produit / design (fort), technique (moyen).
+
+---
+
+## ADR-032 — App à la racine du dépôt, serveur en ligne par défaut
+
+- **Date** : 2026-10-19
+- **Statut** : Accepté (demande utilisateur ; remplace, dans ADR-031, `env/prod.json`, `vps.ps1 config`, `run.ps1`
+  et `phone.ps1`)
+- **Décideur** : Utilisateur ; mise en œuvre Claude (rôle : mobile-architect / flutter-engineer)
+- **Contexte** : Le back-end est en ligne (https://api.tchopi.com). L'utilisateur veut un `flutter run` normal, à la
+  racine, sans script ni fichier de configuration ; le dossier `apps/mobile` (hérité des 3 apps d'origine, ADR-016)
+  n'a plus de raison d'être avec une seule app.
+- **Décision** :
+  - L'app est à la racine (`lib/`, `test/`, `android/`, `ios/`, `web/`, paquet `tchopi`), racine de l'espace de
+    travail Dart avec `packages/core`.
+  - `Env` (packages/core) a pour valeurs par défaut l'URL du serveur en ligne et sa clé `anon` (publique par
+    conception : présente dans toute app publiée ; la sécurité repose sur la RLS). Supabase du PC :
+    `--dart-define-from-file=env/local.json`.
+  - Supprimés : `run.ps1`, `phone.ps1`, `docs/installer-sur-telephone.md` (mode Wi-Fi), `vps.ps1 config`.
+- **Alternatives écartées** : garder `apps/mobile` avec des scripts de lancement (jugé incompréhensible par
+  l'utilisateur) ; Supabase du PC par défaut (le développement courant se fait sur le serveur en ligne).
+- **Conséquences** : une réinstallation complète du serveur impose de reporter la nouvelle clé `anon` dans `env.dart` ;
+  les tests contre le serveur en ligne créent de vraies données (comptes de test à nettoyer avant la production).
+- **Impact** : technique (moyen), expérience de développement (fort).
+
+---
+
+## ADR-031 — Déploiement sur le VPS : pilote fermé, piloté depuis le PC
+
+- **Date** : 2026-10-19
+- **Statut** : Accepté (met en œuvre ADR-009)
+- **Décideur** : Claude (rôle : release / security), à la demande de l'utilisateur (utiliser l'APK partout)
+- **Contexte** : L'utilisateur veut utiliser l'app hors de chez lui avant d'avoir un fournisseur SMS, un SMTP ou
+  Firebase. Le VPS (Hostinger KVM 1 : 1 vCPU, 4 Go, swap 2 Go) est **partagé** avec d'autres sites : nginx de l'hôte
+  sur 80/443 (certbot), ports 3000-3003, 3100-3101, 5432, 5433, 8000 pris, ufw déjà limité à 22/80/443, deux autres
+  projets en Supabase allégé (sans Studio ni pooler).
+- **Décision** :
+  - Supabase installé par le script officiel (`setup.sh`), version figée `self-hosted/v0.8.3` (Postgres 17, passerelle
+    Envoy) ; secrets générés sur le VPS, jamais copiés sur le PC (sauf la clé publique `anon` → `env/prod.json`).
+  - **Pile allégée** (`infra/compose.yml`) : sans pooler ni imgproxy (inutiles ici) ; Studio et postgres-meta en profil,
+    démarrés seulement par `vps.ps1 studio` (tunnel SSH). Projet `tchopi`, conteneurs `tchopi-*`, passerelle sur
+    `127.0.0.1:8010`.
+  - **nginx de l'hôte** (`infra/nginx.conf`, convention des autres sites) + certbot : seuls les chemins de l'API sont
+    publics sur `api.tchopi.com` ; `tchopi.com` reste pour l'app web. Pare-feu et SSH du serveur non modifiés.
+  - **Pilote fermé** : fournisseur SMS factice (comme en local) + `SMS_TEST_OTP` ; seuls les numéros autorisés
+    (`vps.ps1 testeur`, un code par numéro) peuvent s'inscrire. Inscription email désactivée tant que le SMTP manque.
+  - `vps.ps1` (PC) → `infra/server.sh` (VPS) : installation, sauvegardes quotidiennes 14 jours, déploiement de la
+    version **commitée** (`git archive`), migrations appliquées une seule fois (table
+    `supabase_migrations.schema_migrations`, comme la CLI), fonctions copiées avec une import map commune (le routeur
+    officiel n'en lit qu'une), testeurs, admin, Studio. Une clé SSH par PC ; `vps.ps1 config` recrée `env/prod.json`.
+    `run.ps1` et `phone.ps1` reliés par défaut au serveur en ligne (`-Local` : Supabase du PC).
+- **Alternatives écartées** : Caddy (80/443 déjà tenus par nginx) ; pile officielle complète (mémoire du VPS
+  partagé) ; confirmation automatique des inscriptions (n'importe qui pourrait prendre le numéro d'un autre) ; Studio
+  public derrière un mot de passe (surface d'attaque) ; déploiement continu GitHub Actions tout de suite (secrets SSH
+  dans GitHub ; à ajouter une fois le premier déploiement manuel validé).
+- **Conséquences** : chaque testeur doit être autorisé ; copie des sauvegardes hors du VPS manuelle pour l'instant ;
+  restent à faire : déploiement continu, supervision externe, SMTP / SMS / Firebase (tâches 5, 6, 8).
+- **Impact** : exploitation / sécurité (élevé).
+
+---
+
 ## ADR-030 — Phase 5 : cache des photos, index, charge sans k6
 
 - **Date** : 2026-10-19

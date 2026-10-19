@@ -23,6 +23,14 @@ void main() {
       'account_suspended',
     );
     expect(
+      toFailure(const AuthException('x', code: 'sms_send_failed')).code,
+      'sms_failed',
+    );
+    expect(
+      toFailure(const AuthException('x', code: 'email_provider_disabled')).code,
+      'email_disabled',
+    );
+    expect(
       toFailure(const AuthException('x', code: 'inconnu')).code,
       'unknown',
     );

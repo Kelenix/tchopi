@@ -1,89 +1,62 @@
-# MVP Livraison — repas et colis (Abidjan)
+# Tchopi — livraison de repas et de colis (Abidjan)
 
-Une application Flutter (un espace par rôle) et un back-end Supabase :
+Une application Flutter (un espace par rôle) et un back-end Supabase en ligne :
 
-| Dossier | Application | Plateformes |
-|---------|-------------|-------------|
-| `apps/mobile` | App unique : espaces Client, Livreur, Restaurant (Inc-4), Admin — menu « Changer d'espace » | Android (iOS prêt), navigateur pour l'admin |
+| Dossier | Contenu | Plateformes |
+|---------|---------|-------------|
+| `lib/`, `android/`, `ios/`, `web/` | L'app : espaces Client, Livreur, Restaurant, Admin — menu « Changer d'espace » | Android (iOS prêt), navigateur |
 | `packages/core` | Code partagé : design system, textes, Supabase, écrans communs | — |
-| `supabase/` | Base de données : migrations, règles d'accès (RLS), tests pgTAP | — |
+| `supabase/` | Base de données : migrations, règles d'accès (RLS), fonctions serveur, tests pgTAP | — |
+| `infra/`, `vps.ps1` | Serveur en ligne https://api.tchopi.com (VPS) — `docs/deployer-sur-vps.md` | — |
 
-Nom de l'app provisoire : « Tchopi ». Documentation : `docs/` (plan, produit, architecture, données, design).
-État d'avancement : `PROJECT_STATE.md`.
+Documentation : `docs/` (plan, produit, architecture, données, design). État d'avancement : `PROJECT_STATE.md`.
 
-## Prérequis
+## Lancer l'application
 
-- Flutter **3.41.9** (Dart 3.11) — `flutter --version`
-- Chrome (le plus simple pour tester), ou Android SDK avec un téléphone / émulateur
-- Docker Desktop **démarré** (pile Supabase locale)
-- Supabase CLI ≥ 2.116 — `supabase --version`
+Prérequis : Flutter **3.41** (`flutter --version`), puis une fois `flutter pub get`. L'app utilise directement le
+serveur en ligne (https://api.tchopi.com) : aucune configuration.
 
-## Installation
+| Pour… | Commande |
+|-------|----------|
+| Lancer sur le téléphone branché en USB (ou un émulateur) | `flutter run` |
+| Lancer dans le navigateur | `flutter run -d chrome` |
+| Créer l'APK à envoyer sur un téléphone | `flutter build apk --release` |
 
-```powershell
-flutter pub get
-```
+- **Téléphone, la première fois** : Paramètres → À propos du téléphone → appuyer 7 fois sur « Numéro de build » ;
+  Options pour les développeurs → activer **Débogage USB** ; brancher, accepter « Autoriser le débogage USB ».
+  `flutter devices` doit afficher le téléphone.
+- **APK** : `build\app\outputs\flutter-apk\app-release.apk`, à envoyer (WhatsApp, Google Drive…) ; sur le téléphone,
+  autoriser « Installer des applis inconnues ».
+- **Comptes** : pas encore de SMS réel ; un numéro doit être autorisé avant l'inscription :
+  `.\vps.ps1 testeur +225XXXXXXXXXX <code à 6 chiffres>` (`docs/deployer-sur-vps.md`).
 
-Activer les contrôles Git (format avant commit, analyse avant envoi) :
+## Développer avec le Supabase du PC (facultatif)
 
-```powershell
-git config core.hooksPath .githooks
-```
+Pour tester des changements de la base sans toucher au serveur en ligne. Docker Desktop **démarré** et Supabase CLI
+≥ 2.116 (`supabase --version`).
 
-Le code généré (Riverpod, textes français) est versionné : l'app se lance directement après `pub get`.
-Après une modification d'un fichier `@riverpod`, d'un modèle ou de `packages/core/lib/l10n/app_fr.arb`, `.\check.ps1` régénère tout.
-
-## Lancer en local (PowerShell, depuis la racine du projet)
-
-Toutes les commandes se tapent dans PowerShell, dans le dossier du projet (`C:\PROJECT PERSO\food-delive`).
-Windows PowerShell n'accepte pas `&&` : une commande par ligne, ou les scripts ci-dessous.
-
-1. Démarrer Supabase (Docker Desktop ouvert ; la première fois, quelques minutes) :
+1. Démarrer Supabase (la première fois, quelques minutes) : `supabase start`
+2. Créer `env/local.json` à partir de `env/example.json` et y coller la clé `anon` (ou `Publishable`) affichée par
+   `supabase status`. Copier `supabase/functions/.env.example` vers `supabase/functions/.env` (paiement Mobile Money
+   simulé), puis relancer `supabase stop` et `supabase start`.
+3. Lancer l'app reliée à ce Supabase :
    ```powershell
-   supabase start
+   flutter run -d chrome --dart-define-from-file=env/local.json
    ```
-2. Créer `env/local.json` à partir de `env/example.json` et y coller la clé `anon` (ou `Publishable`) affichée par `supabase status`.
-   Copier `supabase/functions/.env.example` vers `supabase/functions/.env` (paiement Mobile Money simulé en local),
-   puis relancer `supabase stop` et `supabase start`.
-3. Lancer l'app **dans Chrome** (aucun téléphone nécessaire) :
-   ```powershell
-   .\run.ps1 -d chrome
-   ```
-   Sur un téléphone Android branché en USB (débogage USB activé) ou un émulateur ouvert :
-   ```powershell
-   adb reverse tcp:54321 tcp:54321
-   .\run.ps1
-   ```
-   `adb devices` doit lister l'appareil ; sinon « no devices/emulators found ».
-4. Créer un compte (aucun compte n'existe au départ) : « Créer un compte », numéro `07 00 00 00 01`
-   (ou `07 00 00 00 02`), un mot de passe de ton choix (8 caractères, lettres et chiffres), puis le code SMS
-   `123456`. Ensuite, se connecter avec ce numéro et ce mot de passe. Les emails locaux
-   (codes de vérification) sont visibles sur http://127.0.0.1:54324, la base sur http://127.0.0.1:54323.
-5. Devenir admin (espace Admin : zones, livreurs, utilisateurs, restaurants) :
-   ```powershell
-   .\dev-admin.ps1 +2250700000001
-   ```
-   puis se déconnecter / reconnecter. Ce compte n'ouvre plus que l'Administration (jamais proposée dans
-   « Changer d'espace ») : commander et livrer se font avec d'autres comptes. L'espace Restaurant apparaît pour un
-   compte invité comme gérant par l'admin.
-6. Commander exige **un livreur en ligne** dans la zone (sinon « Aucun livreur disponible ») : avec un second
-   compte (`07 00 00 00 02`) ouvert dans une fenêtre de navigation privée, espace Livreur → « Devenir livreur »,
-   validation par l'admin (Admin → Livreurs), puis interrupteur « En ligne » (autoriser la localisation).
-   Garder cette fenêtre ouverte : la position part toutes les 30 s et les offres s'y affichent en plein écran.
-   L'admin suit tout dans Admin → Commandes en cours. Le client est un troisième compte (ex. `07 00 00 00 03`).
+   Sur un téléphone branché : `adb reverse tcp:54321 tcp:54321`, puis la même commande sans `-d chrome`.
+4. Comptes : `.\dev-accounts.ps1` (identifiants : `docs/donnees-de-test.md`), ou « Créer un compte » avec un numéro
+   `07 00 00 00 01` à `09` et le code SMS `123456`. Admin : `.\dev-admin.ps1 +2250700000001`, puis se reconnecter.
+   Emails locaux : http://127.0.0.1:54324 ; base : http://127.0.0.1:54323.
+5. Commander exige **un livreur en ligne** dans la zone : un second compte, espace Livreur → « Devenir livreur »,
+   validation par l'admin (Admin → Livreurs), puis interrupteur « En ligne ».
 
-**Sur ton téléphone Android** (sans câble une fois installé, même Wi-Fi que le PC) : `.\phone.ps1` — voir
-[docs/installer-sur-telephone.md](docs/installer-sur-telephone.md).
+Trois restaurants de démonstration sont créés par `supabase/seed.sql` (à chaque `supabase db reset`).
 
-En local, trois restaurants de démonstration et leurs menus sont créés par `supabase/seed.sql` (à chaque
-`supabase db reset`). La carte utilise les tuiles OpenStreetMap, sans clé (voir `docs/manual-tasks.md` §7 pour la production).
+Activer les contrôles Git (format avant commit) : `git config core.hooksPath .githooks`. Si PowerShell refuse les
+scripts : `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
 
-Si PowerShell refuse d'exécuter les scripts (« l'exécution de scripts est désactivée ») :
-```powershell
-Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
-```
-
-Sans `env/local.json`, l'app s'arrête au démarrage avec le message « Configuration manquante ».
+Le code généré (Riverpod, textes français) est versionné. Après une modification d'un fichier `@riverpod`, d'un modèle
+ou de `packages/core/lib/l10n/app_fr.arb`, `.\check.ps1` régénère tout.
 
 ## Vérifier (mêmes contrôles que la CI)
 
@@ -92,28 +65,31 @@ Sans `env/local.json`, l'app s'arrête au démarrage avec le message « Configur
 ```
 
 Enchaîne code généré, `flutter analyze`, tests Flutter et tests de la base (pgTAP), et s'arrête à la première erreur.
-Attention : les tests de la base **vident la base locale** (refaire l'étape 5 ensuite).
+Attention : les tests de la base **vident la base locale** du PC (refaire l'étape 4 ensuite).
 Options : `-SkipDb` (sans Docker), `-Integration` (ajoute les tests réels contre Supabase local).
 
 ## Structure du code Flutter
 
 ```
+lib/
+├── main.dart            # démarrage de l'app
+├── router.dart          # navigation (go_router)
+├── spaces/              # espaces par rôle et « Changer d'espace »
+├── features/            # client, livreur, restaurant, admin, commandes, colis
+└── shared/              # cartes, médias, notifications, dialogues
 packages/core/lib/
 ├── core.dart            # API publique du package
 ├── l10n/                # textes français (app_fr.arb) + code généré
 └── src/
     ├── app/             # racine commune (thèmes, langue), démarrage
-    ├── auth/            # écrans communs d'accès (bienvenue…)
-    ├── config/          # configuration injectée au build
-    ├── design/          # jetons, thème clair, composants partagés
+    ├── auth/            # écrans communs d'accès
+    ├── config/          # adresse du serveur et clés publiques (env.dart)
+    ├── design/          # jetons, thème, composants partagés
     └── supabase/        # initialisation, session dans le stockage sécurisé
-apps/<app>/lib/
-├── main.dart            # démarrage de l'app
-└── router.dart          # navigation (go_router)
 ```
 
 ## Sécurité
 
-- Les apps ne contiennent que l'URL et la clé publique Supabase ; toute règle d'accès est appliquée par la base (RLS).
+- L'app ne contient que l'URL et la clé publique `anon` de Supabase ; toute règle d'accès est appliquée par la base (RLS).
 - La session est stockée dans le Keystore Android / Keychain iOS.
-- HTTP en clair autorisé uniquement dans les builds de débogage (Supabase local) ; production en HTTPS.
+- HTTP en clair autorisé uniquement dans les builds de débogage (Supabase local) ; serveur en ligne en HTTPS.

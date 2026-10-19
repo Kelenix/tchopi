@@ -13,7 +13,7 @@ import '../domain/models.dart';
 import 'widgets/auth_form_scaffold.dart';
 import 'widgets/form_fields.dart';
 
-/// S-02 : inscription par email ou par téléphone (si un fournisseur SMS est configuré).
+/// S-02 : inscription par email ou par téléphone, selon les modes actifs sur le serveur.
 class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({super.key});
 
@@ -34,9 +34,17 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     super.dispose();
   }
 
+  /// Le mode choisi, ou le seul actif sur le serveur.
+  IdentifierKind get _activeKind =>
+      switch (ref.read(loginMethodsProvider).value) {
+        (email: false, phone: true) => IdentifierKind.phone,
+        (email: true, phone: false) => IdentifierKind.email,
+        _ => _kind,
+      };
+
   LoginIdentifier? get _parsed {
     final value = _identifier.text;
-    return _kind == IdentifierKind.email
+    return _activeKind == IdentifierKind.email
         ? (isValidEmail(value)
               ? LoginIdentifier.email(value.trim().toLowerCase())
               : null)
@@ -63,7 +71,8 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final submission = ref.watch(formSubmissionProvider('sign-up'));
-    final phoneEnabled = ref.watch(phoneAuthEnabledProvider).value ?? false;
+    final methods = ref.watch(loginMethodsProvider).value;
+    final kind = _activeKind;
 
     return AuthFormScaffold(
       title: l10n.signUpTitle,
@@ -83,7 +92,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                if (phoneEnabled) ...[
+                if (methods == (email: true, phone: true)) ...[
                   SegmentedButton<IdentifierKind>(
                     segments: [
                       ButtonSegment(
@@ -104,7 +113,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   ),
                   const SizedBox(height: Space.lg),
                 ],
-                if (_kind == IdentifierKind.email)
+                if (kind == IdentifierKind.email)
                   TextFormField(
                     controller: _identifier,
                     keyboardType: TextInputType.emailAddress,

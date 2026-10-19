@@ -32,10 +32,10 @@ Le Play Store distribue un « app bundle » : le téléchargement réel est plus
 
 ## Mesurer sur votre téléphone (démarrage et fluidité)
 
-Téléphone branché en USB, débogage autorisé, depuis `apps\mobile` :
+Téléphone branché en USB, débogage autorisé, depuis la racine du projet :
 
 ```powershell
-flutter run --profile --dart-define-from-file=..\..\env\phone.json
+flutter run --profile
 ```
 
 Puis, dans le terminal, touche `v` : DevTools s'ouvre (onglet Performance : images en rouge = > 16 ms).

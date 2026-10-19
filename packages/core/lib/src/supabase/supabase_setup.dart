@@ -8,7 +8,6 @@ import 'secure_session_storage.dart';
 part 'supabase_setup.g.dart';
 
 Future<void> initSupabase() async {
-  Env.ensureConfigured();
   await Supabase.initialize(
     url: Env.supabaseUrl,
     // Supabase auto-hébergé : la clé « anon » sert de clé publique.

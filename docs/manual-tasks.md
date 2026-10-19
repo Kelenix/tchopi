@@ -34,9 +34,9 @@
 - **Étapes** :
   1. Offre VPS avec **8 Go de RAM** recommandés (4 Go minimum), centre de données en **Europe** (le plus proche de l'Afrique de l'Ouest).
   2. Système : **Ubuntu 24.04 LTS** (le modèle Hostinger « Supabase » convient aussi).
-  3. Ajouter la **clé SSH publique** que Claude générera sur votre PC (hPanel → VPS → Paramètres → Clés SSH). Aucun mot de passe à partager.
-  4. Communiquer l'**adresse IP** du VPS.
-  5. Chez votre registraire, créer l'enregistrement DNS `A` : `api.<votre-domaine>` → IP du VPS.
+  3. Chez votre registraire, créer l'enregistrement DNS `A` : `api.<votre-domaine>` → IP du VPS.
+  4. Sur le PC : `.\vps.ps1 cle <IP>`, enregistrer la **clé SSH** affichée sur le VPS (hPanel → VPS → Console web),
+     puis `.\vps.ps1 installer api.<votre-domaine>`. Aucun mot de passe à partager. Détails : `docs/deployer-sur-vps.md`.
 - **Coût** : votre offre VPS actuelle ; domaine ≈ 10 $/an si vous n'en avez pas.
 - **Vérification** : `https://api.<votre-domaine>` répond avec un certificat valide.
 
@@ -73,17 +73,16 @@
 - **Coût** : par code envoyé, variable selon le pays et le fournisseur.
 - **Vérification** : un SMS est reçu et la connexion aboutit.
 
-## 7. Choisir le fournisseur de fond de carte (avant la publication)
-- **Pourquoi** : les cartes (adresses, colis, suivi) utilisent des tuiles OpenStreetMap (ADR-019). En développement, l'app
-  lit les serveurs publics d'OpenStreetMap, dont la politique d'usage interdit le trafic d'une app publiée.
-- **Quand** : avant les tests réels à grande échelle et la publication (phase 6).
-- **Étapes** : 1. Choisir un fournisseur de tuiles OpenStreetMap (ex. MapTiler, Stadia Maps) **ou** héberger ses propres
-  tuiles sur le VPS. 2. Récupérer l'URL des tuiles (`…/{z}/{x}/{y}.png`), avec sa clé si le fournisseur en demande une
-  (clé publique, restreinte au domaine / à l'app chez le fournisseur). 3. L'ajouter dans `env/prod.json` :
-  `"MAP_TILES_URL": "https://…/{z}/{x}/{y}.png"`.
-- **Coût** : offres gratuites limitées, puis payantes selon le trafic ; l'hébergement sur le VPS évite l'abonnement mais
-  demande de l'espace disque et de la maintenance.
-- **Vérification** : la carte s'affiche dans l'écran « Nouvelle adresse » de la version de production.
+## 7. Fond de carte : passer à Google Maps (facultatif, plus tard)
+- **Aujourd'hui** : carte moderne OpenFreeMap (ADR-033), gratuite sans limite, sans clé ni compte : rien à faire.
+- **Pourquoi changer** : Google Maps affiche davantage de commerces et de lieux à Abidjan.
+- **Quand** : seulement si vous acceptez un compte Google Cloud avec carte bancaire.
+- **Étapes** : 1. Créer un projet sur https://console.cloud.google.com et un compte de facturation. 2. Activer « Maps SDK
+  for Android », « Maps SDK for iOS » et « Maps JavaScript API ». 3. Créer une clé API, restreinte à l'app
+  `com.tchopi.mobile` (Android / iOS) et aux sites `tchopi.com` (web). 4. La communiquer à Claude, qui adapte les cartes.
+- **Coût** : cartes gratuites sur Android et iOS ; version navigateur gratuite jusqu'à 10 000 affichages par mois, puis
+  payante.
+- **Vérification** : la carte Google s'affiche dans l'écran « Nouvelle adresse ».
 
 ## 8. Créer le projet Firebase (notifications push)
 - **Pourquoi** : notifications client, livreur, restaurant — Inc-9.
@@ -131,6 +130,7 @@
 ## 12. Créer le premier administrateur
 - **Pourquoi** : l'admin crée ensuite les restaurants et valide les livreurs.
 - **Quand** : après le premier déploiement sur le VPS (Inc-3).
-- **Étapes** : Claude fournira une commande à exécuter avec votre email ou votre numéro.
+- **Étapes** : `.\vps.ps1 testeur <numéro> <code>`, inscription dans l'app avec ce numéro, puis `.\vps.ps1 admin <numéro>`
+  (`docs/deployer-sur-vps.md` § 3).
 - **Coût** : gratuit.
 - **Vérification** : connexion au back-office avec l'espace Admin visible.

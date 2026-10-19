@@ -1,8 +1,11 @@
 # Architecture
 
-> **Mise à jour 2026-10-18 (ADR-016)** : une seule app `apps/mobile` remplace `apps/client`, `apps/courier` et
+> **Mise à jour 2026-10-18 (ADR-016)** : une seule app remplace `apps/client`, `apps/courier` et
 > `apps/backoffice` ; ses espaces (Client, Livreur, Restaurant, Admin) suivent les rôles du compte. Le reste de ce
 > document s'applique tel quel à l'app unique.
+>
+> **Mise à jour 2026-10-19 (ADR-032)** : l'app est à la racine du dépôt (`lib/`, `android/`, `ios/`, `web/`, à côté de
+> `packages/core`) et appelle par défaut le serveur en ligne `https://api.tchopi.com` : `flutter run` suffit.
 >
 > Phase 3 (rôle : Mobile Architect). Décisions : `DECISION_LOG.md` (ADR-001 à ADR-011). Conception détaillée des flux :
 > `docs/system-design.md`. Base de données : `docs/data-model.md`. Design : `docs/design/design-system.md`.
@@ -18,7 +21,7 @@ flowchart LR
     WEB["Future app web"]
   end
   subgraph VPS["VPS Hostinger (Docker)"]
-    PX["Proxy HTTPS<br/>Caddy"]
+    PX["Proxy HTTPS<br/>nginx de l'hôte"]
     KG["Passerelle Supabase<br/>Kong"]
     AU["Auth (GoTrue)"]
     PR["REST + actions (PostgREST)"]
@@ -43,11 +46,9 @@ Toutes les règles de l'INTAKE §7.C vivent dans Postgres (ADR-003) et sont donc
 ## 2. Dépôt (monorepo, workspace Dart)
 
 ```
-food-delive/
-├── apps/
-│   ├── client/          # app Client (Android, iOS)
-│   ├── courier/         # app Livreur (Android, iOS)
-│   └── backoffice/      # Restaurant + Admin (Android, web)
+tchopi/
+├── lib/, test/          # l'app (espaces Client, Livreur, Restaurant, Admin) et ses tests
+├── android/, ios/, web/ # plateformes
 ├── packages/
 │   └── core/            # code partagé (design system, connexion, compte, Supabase)
 ├── supabase/
@@ -56,7 +57,7 @@ food-delive/
 │   ├── functions/       # Edge Functions (TypeScript / Deno)
 │   ├── tests/           # pgTAP : RLS, machine à états, attribution, montants
 │   └── seed.sql         # données de développement
-├── infra/               # VPS : compose (surcharges), Caddyfile, sauvegardes, déploiement
+├── infra/               # VPS : compose (surcharges), site nginx, installation, déploiement, sauvegardes
 ├── docs/                # produit, design, architecture, API, exploitation
 └── .github/workflows/   # CI / CD
 ```
@@ -120,7 +121,7 @@ Repositories **concrets** (pas d'interface abstraite tant qu'une seule implémen
 - Les apps reçoivent leur configuration par `--dart-define-from-file=env/<env>.json` (fichiers ignorés par git ;
   `env/example.json` versionné) : `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `STRIPE_PUBLISHABLE_KEY`. Ce sont des clés
   **publiques** par conception ; la sécurité repose sur la RLS.
-- Fond de carte : URL de tuiles `MAP_TILES_URL` (OpenStreetMap par défaut en développement, fournisseur choisi en production — ADR-019) ; aucune clé dans le binaire.
+- Fond de carte : style vectoriel OpenFreeMap `MAP_STYLE_URL` (gratuit, sans clé — ADR-033), repli automatique sur les tuiles OpenStreetMap si le style ne se charge pas.
 - **Aucun secret dans les apps** : clé `service_role`, clés secrètes Stripe / Mobile Money, compte de service Firebase,
   identifiants SMTP / SMS restent dans le `.env` du VPS et les secrets des Edge Functions.
 - Session : stockage sécurisé (`flutter_secure_storage` → Android Keystore / iOS Keychain) branché sur `supabase_flutter`.
@@ -132,7 +133,7 @@ Repositories **concrets** (pas d'interface abstraite tant qu'une seule implémen
 | Backend | `supabase_flutter` | — | — |
 | État / navigation / modèles | `flutter_riverpod`, `riverpod_annotation`, `go_router`, `freezed`, `json_serializable` | — | — |
 | Session sécurisée | `flutter_secure_storage` | — | — |
-| Cartes | `flutter_map` + `latlong2` (tuiles OpenStreetMap, ADR-019) | — | — |
+| Cartes | `flutter_map` + `latlong2` + `vector_map_tiles` (OpenFreeMap, ADR-019, ADR-033) | — | — |
 | Position | `geolocator` | Localisation « pendant l'utilisation » ; livreur : service au premier plan de type localisation | Client : ajout d'une adresse · Livreur : passage en ligne |
 | Photos | `image_picker` (réduction à 800 px) | Caméra (seulement si « Prendre une photo ») | Profil livreur, produits |
 | Notifications | `firebase_messaging`, `flutter_local_notifications` (canaux et sons) | Notifications (Android 13+) | Après la 1ʳᵉ commande · passage en ligne · 1ʳᵉ connexion restaurant |
@@ -149,9 +150,9 @@ avec notification permanente (déclaration Play Console du service au premier pl
 
 ## 8. Hébergement (VPS) et livraison continue
 
-- **Pile** : Supabase auto-hébergé (`docker compose`, images aux versions figées) + **Caddy** (HTTPS automatique)
-  devant Kong. Ports publics : 80 / 443 (et 22 pour SSH par clé). Postgres et Studio non exposés ; Studio par tunnel SSH.
-- **Domaines** : `api.<domaine>` → API Supabase. La future app web aura son propre sous-domaine, ajouté aux origines CORS.
+- **Pile** : Supabase auto-hébergé allégé (`docker compose`, images aux versions figées) + **nginx de l'hôte** et certbot (HTTPS)
+  devant la passerelle (Envoy, 127.0.0.1:8010). VPS partagé : ports publics 80 / 443 / 22 ; Postgres et Studio non exposés ; Studio à la demande par tunnel SSH (ADR-031).
+- **Domaines** : `api.tchopi.com` → API Supabase ; `tchopi.com` → app web (SaaS), ajoutée aux origines CORS.
 - **Sauvegardes** : `pg_dump` quotidien + archive des fichiers Storage, chiffrés, copiés hors du VPS, rétention 14 jours ;
   restauration testée en phase 5 et documentée (`docs/operations.md`).
 - **CI (chaque push / PR)** : `dart analyze` et `flutter test` (4 paquets) · pile Supabase dans le runner → migrations

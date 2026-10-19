@@ -7,7 +7,7 @@
 
 | Type | Où | Ce qui est couvert | Résultat |
 |------|----|--------------------|----------|
-| Unitaires | `packages/core/test`, `apps/mobile/test` | formats (monnaie, téléphone), identifiants, erreurs, règles d'espaces et de navigation, panier, paiements | ✅ 42 (core) + 61 (app), avec les widgets |
+| Unitaires | `packages/core/test`, `test` | formats (monnaie, téléphone), identifiants, erreurs, règles d'espaces et de navigation, panier, paiements | ✅ 42 (core) + 61 (app), avec les widgets |
 | Widgets | idem | écrans clés : états chargement / vide / erreur, actions, montants serveur | ✅ (compris ci-dessus) |
 | Petits écrans, grande police | `small_screen.dart` + tests « petit écran » | connexion, inscription, accueil, fiche restaurant, validation, suivi, mission : 320 × 568 dp, police + 30 %, aucun débordement | ✅ |
 | Base de données (pgTAP) | `supabase/tests/database` (13 fichiers) | règles métier, transitions de statut, RLS par rôle, attribution, paiements, remboursements | ✅ 246 / 246 |

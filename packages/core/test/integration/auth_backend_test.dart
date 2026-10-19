@@ -149,7 +149,7 @@ void main() {
   test(
     'téléphone : inscription avec un numéro de test et le profil reprend le numéro',
     () async {
-      expect(await auth.isPhoneAuthEnabled(), isTrue);
+      expect((await auth.loginMethods()).phone, isTrue);
       const id = LoginIdentifier.phone('+2250700000001');
       try {
         await auth.signUp(id, 'motdepasse1');
