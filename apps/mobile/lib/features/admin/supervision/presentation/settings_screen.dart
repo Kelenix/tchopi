@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../orders/presentation/order_widgets.dart';
 import '../../admin_scaffold.dart';
+import '../../payments/admin_payments_providers.dart';
 import '../supervision_providers.dart';
 
 /// A-09 : délais de la plateforme et numéro du support (ADM-05) ; bornes identiques à celles de la base.
-/// Moyens de paiement actifs par pays : avec les paiements en ligne (Inc-11).
+/// Moyens de paiement actifs par pays : Mobile Money et carte s'activent une fois intégrés (Inc-11 / 12).
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
@@ -163,6 +165,9 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
                 ? null
                 : l10n.errorPhone,
           ),
+          const SizedBox(height: Space.lg),
+          SectionHeader(title: l10n.settingsPaymentsTitle),
+          const _PaymentOptions(),
           const SizedBox(height: Space.xxl),
           FilledButton(
             onPressed: _saving ? null : _save,
@@ -173,6 +178,54 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
                   )
                 : Text(l10n.actionSave),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PaymentOptions extends ConsumerWidget {
+  const _PaymentOptions();
+
+  Future<void> _toggle(
+    BuildContext context,
+    WidgetRef ref,
+    PaymentOption option,
+    bool enabled,
+  ) async {
+    final l10n = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      await ref
+          .read(adminPaymentsRepositoryProvider)
+          .setOption(option.id, enabled: enabled);
+      ref.invalidate(adminPaymentOptionsProvider);
+    } on AppFailure catch (failure) {
+      messenger.showSnackBar(
+        SnackBar(content: Text(failureMessage(l10n, failure))),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final options = ref.watch(adminPaymentOptionsProvider).value ?? const [];
+    return Card(
+      child: Column(
+        children: [
+          for (final option in options)
+            SwitchListTile(
+              secondary: Icon(paymentIcon(option.method)),
+              title: Text('${option.label} · ${option.countryCode}'),
+              subtitle: option.method == PaymentMethod.cash
+                  ? null
+                  : Text(l10n.paymentSoon),
+              value: option.isEnabled,
+              onChanged: option.method == PaymentMethod.cash
+                  ? (value) => _toggle(context, ref, option, value)
+                  : null,
+            ),
         ],
       ),
     );

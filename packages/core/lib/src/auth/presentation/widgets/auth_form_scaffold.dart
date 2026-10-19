@@ -44,6 +44,7 @@ String failureMessage(AppLocalizations l10n, Object? error) {
     'not_ready' => l10n.failureNotReady,
     'cash_confirmation_required' => l10n.failureCashConfirmation,
     'no_courier' => l10n.failureNoCourierAssigned,
+    'amount_exceeds_due' => l10n.failureAmountExceedsDue,
     'rules_not_accepted' => l10n.failureRulesNotAccepted,
     'invalid_recipient' => l10n.failureInvalidRecipient,
     'invalid_address' => l10n.failureInvalidAddress,

@@ -44,6 +44,33 @@ String closeReasonLabel(AppLocalizations l10n, String reason) {
   return [label, ...rest].join(' · ');
 }
 
+IconData paymentIcon(PaymentMethod method) => switch (method) {
+  PaymentMethod.cash => Icons.payments_outlined,
+  PaymentMethod.mobileMoney => Icons.phone_android_outlined,
+  PaymentMethod.card => Icons.credit_card_outlined,
+};
+
+/// Libellé d'un moyen proposé ; les espèces se paient à la livraison (repas).
+String paymentOptionLabel(AppLocalizations l10n, PaymentOption option) =>
+    option.method == PaymentMethod.cash ? l10n.paymentCash : option.label;
+
+/// Statut lisible d'une transaction ; une commande livrée dont les espèces ne sont pas confirmées est signalée.
+(String, Color) transactionStatus(BuildContext context, PaymentTransaction t) {
+  final l10n = AppLocalizations.of(context);
+  final tokens = context.tokens;
+  return switch (t.status) {
+    TransactionStatus.pending when t.orderStatus == OrderStatus.delivered => (
+      l10n.txDeliveredUnpaid,
+      tokens.danger,
+    ),
+    TransactionStatus.pending => (l10n.txPending, tokens.warning),
+    TransactionStatus.succeeded => (l10n.txSucceeded, tokens.success),
+    TransactionStatus.failed => (l10n.txFailed, tokens.danger),
+    TransactionStatus.cancelled => (l10n.txCancelled, tokens.muted),
+    TransactionStatus.refunded => (l10n.txRefunded, tokens.muted),
+  };
+}
+
 /// « 45 s », « 3 min », « 2 h » : ancienneté d'une position.
 String formatAge(Duration age) => age.inSeconds < 60
     ? '${age.inSeconds} s'

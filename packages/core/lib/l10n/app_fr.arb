@@ -960,5 +960,50 @@
       }
     }
   },
-  "trackingConnectionLost": "Connexion perdue — reconnexion…"
+  "trackingConnectionLost": "Connexion perdue — reconnexion…",
+  "txPending": "En attente",
+  "txSucceeded": "Réussie",
+  "txFailed": "Échouée",
+  "txCancelled": "Annulée",
+  "txRefunded": "Remboursée",
+  "txDeliveredUnpaid": "Livrée · non encaissée",
+  "txEmpty": "Aucune transaction pour l'instant.",
+  "paymentNoneAvailable": "Aucun moyen de paiement n'est disponible pour le moment.",
+  "failureAmountExceedsDue": "Le montant dépasse les espèces dues par ce livreur.",
+  "adminTransactions": "Transactions et espèces",
+  "adminTabTransactions": "Transactions",
+  "adminTabCash": "Espèces",
+  "cashCollectedLabel": "Encaissé : {amount}",
+  "@cashCollectedLabel": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "cashRemittedLabel": "Versé : {amount}",
+  "@cashRemittedLabel": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "cashDueLabel": "Dû",
+  "cashRecord": "Enregistrer un versement",
+  "cashAmount": "Montant versé (F)",
+  "cashReference": "Référence (reçu, note)",
+  "cashRecorded": "Versement enregistré.",
+  "cashEmpty": "Aucune espèce encaissée pour l'instant.",
+  "cashHistory": "Encaissements et versements",
+  "cashEntryCollected": "Encaissement {number}",
+  "@cashEntryCollected": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "cashEntryRemitted": "Versement",
+  "settingsPaymentsTitle": "Moyens de paiement"
 }

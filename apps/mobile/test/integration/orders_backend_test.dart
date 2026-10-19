@@ -6,6 +6,7 @@ import 'dart:io';
 
 import 'package:core/core.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mobile/features/client/payments/data/payment_repository.dart';
 import 'package:mobile/features/courier/missions/data/mission_repository.dart';
 import 'package:mobile/features/orders/cart.dart';
 import 'package:mobile/features/orders/data/order_repository.dart';
@@ -273,6 +274,11 @@ void main() {
 
       await client.cancel(first.id);
       expect((await client.fetch(first.id)).status, OrderStatus.cancelled);
+      // PAY-02 : annulée avant encaissement, la transaction est annulée.
+      final parcelTx = (await PaymentRepository(
+        clientClient,
+      ).mine()).firstWhere((t) => t.orderId == first.id);
+      expect(parcelTx.status, TransactionStatus.cancelled);
       await clientClient.dispose();
     },
   );
@@ -387,6 +393,12 @@ void main() {
       expect(summary.deliveriesToday, 1);
       expect(summary.cashDue, order.total);
       expect((await missions.history()).single.status, OrderStatus.delivered);
+      // TRX-01 : transaction réussie, montant égal au total.
+      final paid = (await PaymentRepository(
+        clientClient,
+      ).mine()).firstWhere((t) => t.orderId == order.id);
+      expect(paid.status, TransactionStatus.succeeded);
+      expect(paid.amount, order.total);
 
       await clientClient.dispose();
       await managerClient.dispose();

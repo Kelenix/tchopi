@@ -4,12 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import '../../orders/orders_providers.dart';
 import '../../orders/presentation/order_detail_screen.dart';
 import '../../orders/presentation/order_widgets.dart';
 import '../client_nav_bar.dart';
+import 'payments_providers.dart';
 
-/// C-12 : paiements — moyens disponibles et paiements des commandes (Mobile Money et carte : Inc-11 / 12).
+/// C-12 : paiements — moyens disponibles et transactions des commandes avec leur statut (PAY-01, TRX-01).
+/// Historique groupé par date et reçus : Inc-13.
 class PaymentsScreen extends ConsumerWidget {
   const PaymentsScreen({super.key});
 
@@ -19,25 +20,14 @@ class PaymentsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final tokens = context.tokens;
-    final orders = ref.watch(myOrdersProvider).value ?? const <Order>[];
-
-    Widget method(IconData icon, String label, {String? badge}) => ListTile(
-      enabled: badge == null,
-      leading: CircleAvatar(
-        backgroundColor: badge == null ? tokens.primarySoft : tokens.surfaceAlt,
-        child: Icon(icon, color: badge == null ? tokens.primary : tokens.muted),
-      ),
-      title: Text(label),
-      trailing: badge == null
-          ? Icon(Icons.check_circle, color: tokens.success)
-          : Text(badge, style: TextStyle(color: tokens.muted)),
-    );
+    final options = ref.watch(paymentOptionsProvider).value ?? const [];
+    final transactions = ref.watch(myTransactionsProvider).value ?? const [];
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.paymentsTitle)),
       bottomNavigationBar: const ClientNavBar(current: 2),
       body: RefreshIndicator(
-        onRefresh: () => ref.refresh(myOrdersProvider.future),
+        onRefresh: () => ref.refresh(myTransactionsProvider.future),
         child: ListView(
           padding: const EdgeInsets.fromLTRB(
             Space.screen,
@@ -50,22 +40,25 @@ class PaymentsScreen extends ConsumerWidget {
             Card(
               child: Column(
                 children: [
-                  method(Icons.payments_outlined, l10n.paymentCash),
-                  method(
-                    Icons.phone_android_outlined,
-                    l10n.paymentMobileMoney,
-                    badge: l10n.paymentSoon,
-                  ),
-                  method(
-                    Icons.credit_card_outlined,
-                    l10n.paymentCard,
-                    badge: l10n.paymentSoon,
-                  ),
+                  if (options.isEmpty)
+                    ListTile(title: Text(l10n.paymentNoneAvailable)),
+                  for (final option in options)
+                    ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: tokens.primarySoft,
+                        child: Icon(
+                          paymentIcon(option.method),
+                          color: tokens.primary,
+                        ),
+                      ),
+                      title: Text(paymentOptionLabel(l10n, option)),
+                      trailing: Icon(Icons.check_circle, color: tokens.success),
+                    ),
                 ],
               ),
             ),
             SectionHeader(title: l10n.paymentsHistory),
-            if (orders.isEmpty)
+            if (transactions.isEmpty)
               EmptyState(
                 icon: Icons.receipt_long_outlined,
                 title: l10n.paymentsEmpty,
@@ -75,7 +68,8 @@ class PaymentsScreen extends ConsumerWidget {
               Card(
                 child: Column(
                   children: [
-                    for (final order in orders) _PaymentRow(order: order),
+                    for (final t in transactions)
+                      _TransactionRow(transaction: t),
                   ],
                 ),
               ),
@@ -86,44 +80,39 @@ class PaymentsScreen extends ConsumerWidget {
   }
 }
 
-class _PaymentRow extends StatelessWidget {
-  const _PaymentRow({required this.order});
+class _TransactionRow extends StatelessWidget {
+  const _TransactionRow({required this.transaction});
 
-  final Order order;
+  final PaymentTransaction transaction;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final tokens = context.tokens;
     final text = Theme.of(context).textTheme;
-    final cancelled =
-        order.status == OrderStatus.rejected ||
-        order.status == OrderStatus.cancelled;
-    final (status, color) = order.status == OrderStatus.delivered
-        ? (l10n.paymentDone, tokens.success)
-        : cancelled
-        ? (l10n.paymentNone, tokens.muted)
-        : (l10n.paymentDue, tokens.warning);
+    final t = transaction;
+    final (status, color) = transactionStatus(context, t);
+    final void_ = t.status == TransactionStatus.cancelled;
     return ListTile(
-      onTap: () => context.push(OrderDetailScreen.location(order.id)),
+      onTap: () => context.push(OrderDetailScreen.location(t.orderId)),
       leading: CircleAvatar(
         backgroundColor: tokens.surfaceAlt,
-        child: Icon(Icons.payments_outlined, color: tokens.ink),
+        child: Icon(paymentIcon(t.method), color: tokens.ink),
       ),
       title: Text(
-        order.title(l10n),
+        l10n.orderNumber(t.orderNumber ?? ''),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
       subtitle: Text(
-        '${DateFormat('d MMM · HH:mm', 'fr').format(order.createdAt.toLocal())} · $status',
+        '${DateFormat('d MMM · HH:mm', 'fr').format(t.createdAt.toLocal())} · $status',
         style: text.bodySmall!.copyWith(color: color),
       ),
       trailing: Text(
-        formatMoney(order.total),
+        formatMoney(t.amount, currency: t.currency),
         style: text.titleMedium!.copyWith(
-          color: cancelled ? tokens.muted : tokens.ink,
-          decoration: cancelled ? TextDecoration.lineThrough : null,
+          color: void_ ? tokens.muted : tokens.ink,
+          decoration: void_ ? TextDecoration.lineThrough : null,
         ),
       ),
     );

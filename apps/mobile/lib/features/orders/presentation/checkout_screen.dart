@@ -6,6 +6,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../client/addresses/application/addresses_providers.dart';
 import '../../client/addresses/presentation/addresses_screen.dart';
+import '../../client/payments/payments_providers.dart';
 import '../cart.dart';
 import '../orders_providers.dart';
 import 'order_detail_screen.dart';
@@ -34,7 +35,12 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       addresses.where((a) => a.isDefault).firstOrNull ??
       addresses.firstOrNull;
 
-  Future<void> _place(Cart cart, Address address, FoodQuote quote) async {
+  Future<void> _place(
+    Cart cart,
+    Address address,
+    FoodQuote quote,
+    PaymentMethod method,
+  ) async {
     setState(() {
       _placing = true;
       _error = null;
@@ -45,7 +51,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           .place(
             cart: cart,
             addressId: address.id!,
-            method: PaymentMethod.cash,
+            method: method,
             expectedTotal: quote.total,
             idempotencyKey: _idempotencyKey,
           );
@@ -114,9 +120,15 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
         ? null
         : ref.watch(cartQuoteProvider(address.id!));
     final ready = quote?.value;
+    final options = ref.watch(paymentOptionsProvider).value ?? const [];
+    final method = chosenPayment(
+      options,
+      ref.watch(preferredPaymentProvider).value,
+    );
     final canOrder =
         cart != null &&
         address != null &&
+        method != null &&
         ready != null &&
         ready.issues.isEmpty &&
         ready.couriersAvailable &&
@@ -240,25 +252,21 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                   const SizedBox(height: Space.xxl),
                   _SectionTitle(l10n.checkoutPayment),
                   Card(
-                    child: Column(
-                      children: [
-                        _PaymentOption(
-                          icon: Icons.payments_outlined,
-                          label: l10n.paymentCash,
-                          selected: true,
-                        ),
-                        _PaymentOption(
-                          icon: Icons.phone_android_outlined,
-                          label: l10n.paymentMobileMoney,
-                          badge: l10n.paymentSoon,
-                        ),
-                        _PaymentOption(
-                          icon: Icons.credit_card_outlined,
-                          label: l10n.paymentCard,
-                          badge: l10n.paymentSoon,
-                        ),
-                      ],
-                    ),
+                    child: options.isEmpty
+                        ? ListTile(title: Text(l10n.paymentNoneAvailable))
+                        : Column(
+                            children: [
+                              for (final option in options)
+                                _PaymentOption(
+                                  icon: paymentIcon(option.method),
+                                  label: paymentOptionLabel(l10n, option),
+                                  selected: option.method == method,
+                                  onTap: () => ref
+                                      .read(preferredPaymentProvider.notifier)
+                                      .select(option.method),
+                                ),
+                            ],
+                          ),
                   ),
                   const SizedBox(height: Space.xxl),
                   _Summary(quote: quote),
@@ -284,7 +292,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                   ],
                   FilledButton(
                     onPressed: canOrder
-                        ? () => _place(cart, address, ready)
+                        ? () => _place(cart, address, ready, method)
                         : null,
                     child: _placing
                         ? const SizedBox.square(
@@ -323,35 +331,25 @@ class _PaymentOption extends StatelessWidget {
   const _PaymentOption({
     required this.icon,
     required this.label,
-    this.selected = false,
-    this.badge,
+    required this.selected,
+    required this.onTap,
   });
 
   final IconData icon;
   final String label;
   final bool selected;
-  final String? badge;
+  final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) {
-    final tokens = context.tokens;
-    return ListTile(
-      enabled: badge == null,
-      leading: Icon(icon),
-      title: Text(label),
-      trailing: badge != null
-          ? Text(
-              badge!,
-              style: Theme.of(
-                context,
-              ).textTheme.labelLarge!.copyWith(color: tokens.muted),
-            )
-          : Icon(
-              selected ? Icons.radio_button_checked : Icons.radio_button_off,
-              color: tokens.primary,
-            ),
-    );
-  }
+  Widget build(BuildContext context) => ListTile(
+    onTap: onTap,
+    leading: Icon(icon),
+    title: Text(label),
+    trailing: Icon(
+      selected ? Icons.radio_button_checked : Icons.radio_button_off,
+      color: context.tokens.primary,
+    ),
+  );
 }
 
 /// Écarts du devis (restaurant fermé, produit indisponible) ; les produits indisponibles se retirent en un geste.

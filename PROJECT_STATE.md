@@ -8,7 +8,7 @@
 - **Phase courante** : 4 — Implémentation · Inc-0 (socle) livré, sauf déploiement VPS (accès non fourni)
 - **Dernière mise à jour** : 2026-10-19
 - **Santé** : 🟢 OK · accès VPS et dépôt GitHub non fournis
-- **Prochaine action** : Inc-10 (espèces, transactions, montants séparés)
+- **Prochaine action** : Inc-11 (Mobile Money) — bloqué par le choix du fournisseur (Paystack ou CinetPay) ; en attendant, Inc-12 (carte Stripe) puis Inc-13
 - **Plan de référence** : `docs/plan-de-realisation.md` · Design : `docs/design/design-system.md`
 - **Maquette** : `docs/design/maquette.html` — https://claude.ai/artifact/9GyaG6F34CkTe1qQpsy1cP (privée)
 
@@ -25,7 +25,7 @@ Flutter 3.41.9 · Dart 3.11.5 · Supabase CLI 2.116.0 · Docker 29.8.2 · Java 2
 | 1 — Définition produit      | ✅ fait | `docs/product/user-stories.md` (60 stories), `docs/product/screens.md` (45 fiches) |
 | 2 — Planification           | ✅ fait | Backlog, jalons, chemin critique ci-dessous ; risques : plan §10 |
 | 3 — Architecture & design   | ✅ fait | Architecture, conception, données, design system ; maquette v1 validée |
-| 4 — Implémentation          | 🔄 en cours | Inc-0 à Inc-9 livrés ; app unique (ADR-016) |
+| 4 — Implémentation          | 🔄 en cours | Inc-0 à Inc-10 livrés ; app unique (ADR-016) |
 | 5 — Qualité & performance   | ⬜ à faire | Scénarios S1–S6 |
 | 6 — Publication (stores)    | ⬜ à faire | |
 | 7 — Documentation           | ⬜ à faire | |
@@ -47,7 +47,7 @@ Flutter 3.41.9 · Dart 3.11.5 · Supabase CLI 2.116.0 · Docker 29.8.2 · Java 2
 | Inc-7 | En ligne, attribution, supervision, paramètres | COU-05, DIS-01 à 04, ADM-03, ADM-05 | §4.1 | L | ✅ |
 | Inc-8 | Mission livreur, code de livraison, échecs | MIS-01 à 10 | §4.2, §4.5 | L | ✅ |
 | Inc-9 | Suivi temps réel, chronologie, notifications | TRK-01 à 03, NOT-01 à 04 | §4.3, §4.4, §4.6 | L | ✅ (push : Firebase à créer) |
-| Inc-10 | Espèces, transactions, montants séparés | PAY-01, PAY-02, PAY-06, TRX-01 | §5.3, §5.4, §5.6 | M | ⬜ |
+| Inc-10 | Espèces, transactions, montants séparés | PAY-01, PAY-02, PAY-06, TRX-01 | §5.3, §5.4, §5.6 | M | ✅ |
 | Inc-11 | Mobile Money | PAY-03, PAY-05 | §5.1 | L | ⬜ |
 | Inc-12 | Carte bancaire Stripe | PAY-04 | §5.2 | M | ⬜ |
 | Inc-13 | Annulations, remboursements, reçus, transactions admin, statistiques | TRX-02, TRX-03, ADM-04, ADM-06 | §5.5, §6.D | M | ⬜ |
@@ -86,6 +86,14 @@ validation de la maquette → code des écrans à partir de l'Inc-1. Registre de
 - voir `docs/manual-tasks.md` (priorité : compte marchand de paiement, à démarrer tôt)
 
 ## Journal de session (résumé court, le plus récent en haut)
+
+- 2026-10-19 — Inc-10 (branche feat/inc-10-especes, ADR-026) : moyens de paiement par pays, transactions (en
+  attente → réussie à l'encaissement, annulée sinon), versements d'espèces par l'admin. Vérifié dans le navigateur :
+  Paiements du client (En attente, Annulée, Réussie), admin Transactions, Espèces (Koffi doit 5 525 F → versement
+  5 000 F → reste 525 F), moyens de paiement « Bientôt ». Corrigé à cette occasion : numéro de commande des
+  transactions lu au mauvais champ (affichait le statut). Non vérifié à l'écran : refus quand aucun moyen n'est actif
+  (couvert par tests). Preuves : analyse 0 problème ; 41 + 49 tests Flutter ; pgTAP 213/213 ; 3 + 7 tests
+  d'intégration réels (transactions réussie et annulée).
 
 - 2026-10-19 — Inc-9 (branche feat/inc-9-suivi, ADR-025) : position et photo du livreur visibles du client pendant
   la commande, estimation d'arrivée, position ancienne grisée, bandeau de connexion perdue, chronologie côté livreur

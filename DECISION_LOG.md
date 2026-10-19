@@ -6,6 +6,30 @@
 
 ---
 
+## ADR-026 — Espèces, transactions, moyens de paiement (Inc-10)
+
+- **Date** : 2026-10-19
+- **Statut** : Accepté
+- **Décideur** : Claude (rôle : backend-engineer / flutter-engineer)
+- **Contexte** : Stories PAY-01, PAY-02, PAY-06, TRX-01, et la partie espèces d'ADM-04 ; Mobile Money et carte aux
+  Inc-11 / 12 (fournisseur Mobile Money encore à choisir).
+- **Décision** :
+  - **Moyens par pays** (`payment_options`) : seuls les moyens activés sont proposés ; toute commande vérifie, en
+    base, qu'un moyen activé existe pour son pays. Mobile Money et carte figurent « Bientôt » et ne peuvent pas être
+    activés tant que leur fournisseur n'est pas intégré (refus serveur). Dernier moyen choisi mémorisé sur l'appareil.
+  - **Transactions** : une par paiement, montant égal au total, au plus une en cours / réussie / remboursée par
+    commande (index unique) ; espèces : en attente dès la commande, réussie à la confirmation d'encaissement (même
+    transaction SQL que le registre des espèces), annulée si la commande est annulée, refusée ou en échec avant ;
+    commandes existantes reconstituées. « Livrée · non encaissée » signalée côté admin et client.
+  - **Espèces** : versements enregistrés par l'admin (montant ≤ dû, référence, journal d'audit) ; solde par
+    livreur = encaissé − versé.
+  - PAY-06 : montants séparés déjà figés depuis l'Inc-5 (vérifiés par contraintes) ; affichage complet côté admin.
+- **Reporté** : filtres, export et marquage « remboursée » des transactions, reçus et historique groupé du client
+  (Inc-13).
+- **Impact** : financier (moyen : traçabilité des espèces), technique (faible).
+
+---
+
 ## ADR-025 — Suivi en temps réel et notifications (Inc-9)
 
 - **Date** : 2026-10-19

@@ -2047,4 +2047,84 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get trackingConnectionLost => 'Connexion perdue — reconnexion…';
+
+  @override
+  String get txPending => 'En attente';
+
+  @override
+  String get txSucceeded => 'Réussie';
+
+  @override
+  String get txFailed => 'Échouée';
+
+  @override
+  String get txCancelled => 'Annulée';
+
+  @override
+  String get txRefunded => 'Remboursée';
+
+  @override
+  String get txDeliveredUnpaid => 'Livrée · non encaissée';
+
+  @override
+  String get txEmpty => 'Aucune transaction pour l\'instant.';
+
+  @override
+  String get paymentNoneAvailable =>
+      'Aucun moyen de paiement n\'est disponible pour le moment.';
+
+  @override
+  String get failureAmountExceedsDue =>
+      'Le montant dépasse les espèces dues par ce livreur.';
+
+  @override
+  String get adminTransactions => 'Transactions et espèces';
+
+  @override
+  String get adminTabTransactions => 'Transactions';
+
+  @override
+  String get adminTabCash => 'Espèces';
+
+  @override
+  String cashCollectedLabel(String amount) {
+    return 'Encaissé : $amount';
+  }
+
+  @override
+  String cashRemittedLabel(String amount) {
+    return 'Versé : $amount';
+  }
+
+  @override
+  String get cashDueLabel => 'Dû';
+
+  @override
+  String get cashRecord => 'Enregistrer un versement';
+
+  @override
+  String get cashAmount => 'Montant versé (F)';
+
+  @override
+  String get cashReference => 'Référence (reçu, note)';
+
+  @override
+  String get cashRecorded => 'Versement enregistré.';
+
+  @override
+  String get cashEmpty => 'Aucune espèce encaissée pour l\'instant.';
+
+  @override
+  String get cashHistory => 'Encaissements et versements';
+
+  @override
+  String cashEntryCollected(String number) {
+    return 'Encaissement $number';
+  }
+
+  @override
+  String get cashEntryRemitted => 'Versement';
+
+  @override
+  String get settingsPaymentsTitle => 'Moyens de paiement';
 }

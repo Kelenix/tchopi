@@ -5,6 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'features/admin/people/presentation/couriers_admin_screen.dart';
 import 'features/admin/people/presentation/users_admin_screen.dart';
+import 'features/admin/payments/presentation/transactions_admin_screen.dart';
 import 'features/admin/supervision/presentation/admin_order_screen.dart';
 import 'features/admin/supervision/presentation/settings_screen.dart';
 import 'features/admin/supervision/presentation/supervision_screen.dart';
@@ -152,6 +153,10 @@ GoRouter router(Ref ref) => buildAppRouter(
     GoRoute(
       path: SettingsScreen.path,
       builder: (_, _) => const SettingsScreen(),
+    ),
+    GoRoute(
+      path: TransactionsAdminScreen.path,
+      builder: (_, _) => const TransactionsAdminScreen(),
     ),
     GoRoute(path: ZonesScreen.path, builder: (_, _) => const ZonesScreen()),
     GoRoute(

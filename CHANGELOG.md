@@ -4,6 +4,14 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · versions [S
 
 ## [Non publié]
 
+### Ajouté (Inc-10, ADR-026)
+- Moyens de paiement par pays, activables par l'admin (Paramètres) ; seuls les moyens actifs sont proposés à la
+  validation, le dernier choisi est retenu ; Mobile Money et carte affichés « Bientôt ».
+- Transactions : une par commande, en attente puis réussie à l'encaissement des espèces, annulée si la commande
+  l'est avant ; écran Paiements du client avec le statut de chaque transaction.
+- Admin : écran « Transactions et espèces » (transactions, « livrée · non encaissée », espèces dues par livreur,
+  historique des encaissements et versements, enregistrement d'un versement).
+
 ### Ajouté (Inc-9, ADR-025)
 - Client : carte du livreur en temps réel sur le suivi, estimation d'arrivée, position ancienne grisée avec son âge,
   photo du livreur, bandeau « Connexion perdue — reconnexion… », rappel si les notifications sont refusées.

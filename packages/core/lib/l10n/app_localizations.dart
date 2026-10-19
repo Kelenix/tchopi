@@ -3776,6 +3776,150 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Connexion perdue — reconnexion…'**
   String get trackingConnectionLost;
+
+  /// No description provided for @txPending.
+  ///
+  /// In fr, this message translates to:
+  /// **'En attente'**
+  String get txPending;
+
+  /// No description provided for @txSucceeded.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réussie'**
+  String get txSucceeded;
+
+  /// No description provided for @txFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Échouée'**
+  String get txFailed;
+
+  /// No description provided for @txCancelled.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annulée'**
+  String get txCancelled;
+
+  /// No description provided for @txRefunded.
+  ///
+  /// In fr, this message translates to:
+  /// **'Remboursée'**
+  String get txRefunded;
+
+  /// No description provided for @txDeliveredUnpaid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livrée · non encaissée'**
+  String get txDeliveredUnpaid;
+
+  /// No description provided for @txEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune transaction pour l\'instant.'**
+  String get txEmpty;
+
+  /// No description provided for @paymentNoneAvailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun moyen de paiement n\'est disponible pour le moment.'**
+  String get paymentNoneAvailable;
+
+  /// No description provided for @failureAmountExceedsDue.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le montant dépasse les espèces dues par ce livreur.'**
+  String get failureAmountExceedsDue;
+
+  /// No description provided for @adminTransactions.
+  ///
+  /// In fr, this message translates to:
+  /// **'Transactions et espèces'**
+  String get adminTransactions;
+
+  /// No description provided for @adminTabTransactions.
+  ///
+  /// In fr, this message translates to:
+  /// **'Transactions'**
+  String get adminTabTransactions;
+
+  /// No description provided for @adminTabCash.
+  ///
+  /// In fr, this message translates to:
+  /// **'Espèces'**
+  String get adminTabCash;
+
+  /// No description provided for @cashCollectedLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Encaissé : {amount}'**
+  String cashCollectedLabel(String amount);
+
+  /// No description provided for @cashRemittedLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Versé : {amount}'**
+  String cashRemittedLabel(String amount);
+
+  /// No description provided for @cashDueLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dû'**
+  String get cashDueLabel;
+
+  /// No description provided for @cashRecord.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer un versement'**
+  String get cashRecord;
+
+  /// No description provided for @cashAmount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Montant versé (F)'**
+  String get cashAmount;
+
+  /// No description provided for @cashReference.
+  ///
+  /// In fr, this message translates to:
+  /// **'Référence (reçu, note)'**
+  String get cashReference;
+
+  /// No description provided for @cashRecorded.
+  ///
+  /// In fr, this message translates to:
+  /// **'Versement enregistré.'**
+  String get cashRecorded;
+
+  /// No description provided for @cashEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune espèce encaissée pour l\'instant.'**
+  String get cashEmpty;
+
+  /// No description provided for @cashHistory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Encaissements et versements'**
+  String get cashHistory;
+
+  /// No description provided for @cashEntryCollected.
+  ///
+  /// In fr, this message translates to:
+  /// **'Encaissement {number}'**
+  String cashEntryCollected(String number);
+
+  /// No description provided for @cashEntryRemitted.
+  ///
+  /// In fr, this message translates to:
+  /// **'Versement'**
+  String get cashEntryRemitted;
+
+  /// No description provided for @settingsPaymentsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Moyens de paiement'**
+  String get settingsPaymentsTitle;
 }
 
 class _AppLocalizationsDelegate

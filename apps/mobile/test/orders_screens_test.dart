@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mobile/features/client/addresses/application/addresses_providers.dart';
+import 'package:mobile/features/client/payments/payments_providers.dart';
 import 'package:mobile/features/orders/cart.dart';
 import 'package:mobile/features/orders/data/order_repository.dart';
 import 'package:mobile/features/orders/orders_providers.dart';
@@ -23,6 +24,20 @@ const cart = Cart(
 class _FakeCart extends CartController {
   @override
   Future<Cart?> build() async => cart;
+}
+
+const cash = PaymentOption(
+  id: 'p1',
+  countryCode: 'CI',
+  method: PaymentMethod.cash,
+  provider: 'cash',
+  label: 'Espèces',
+  isEnabled: true,
+);
+
+class _NoPreference extends PreferredPayment {
+  @override
+  Future<PaymentMethod?> build() async => null;
 }
 
 class _FakeAddresses extends Addresses {
@@ -91,6 +106,8 @@ void main() {
   final base = [
     cartControllerProvider.overrideWith(_FakeCart.new),
     addressesProvider.overrideWith(_FakeAddresses.new),
+    paymentOptionsProvider.overrideWith((ref) async => const [cash]),
+    preferredPaymentProvider.overrideWith(_NoPreference.new),
   ];
 
   testWidgets('validation : montants du devis serveur et bouton Commander', (
@@ -120,6 +137,38 @@ void main() {
       'Commander · ${formatMoney(3500)}',
     );
     expect(tester.widget<FilledButton>(button).onPressed, isNotNull);
+  });
+
+  testWidgets('validation : aucun moyen de paiement actif, pas de commande', (
+    tester,
+  ) async {
+    tall(tester);
+    await tester.pumpWidget(
+      app(const CheckoutScreen(), [
+        cartControllerProvider.overrideWith(_FakeCart.new),
+        addressesProvider.overrideWith(_FakeAddresses.new),
+        preferredPaymentProvider.overrideWith(_NoPreference.new),
+        paymentOptionsProvider.overrideWith((ref) async => const []),
+        cartQuoteProvider('a1').overrideWith(
+          (ref) async => const FoodQuote(
+            subtotal: 3000,
+            deliveryFee: 500,
+            total: 3500,
+            distanceM: 2400,
+          ),
+        ),
+      ]),
+    );
+    await tester.pumpAndSettle();
+    expect(
+      find.text('Aucun moyen de paiement n\'est disponible pour le moment.'),
+      findsOneWidget,
+    );
+    final button = find.widgetWithText(
+      FilledButton,
+      'Commander · ${formatMoney(3500)}',
+    );
+    expect(tester.widget<FilledButton>(button).onPressed, isNull);
   });
 
   testWidgets('validation : un écart bloque la commande et s\'explique', (
