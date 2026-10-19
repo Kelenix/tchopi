@@ -52,7 +52,7 @@ abstract class PaymentTransaction with _$PaymentTransaction {
     /// Mobile Money : refus de l'opérateur (« failed ») ou session annulée (« cancelled »).
     String? failureReason,
 
-    /// Page de paiement nyole à rouvrir pour payer ou réessayer.
+    /// Page de paiement du fournisseur (nyole, Stripe) à rouvrir pour payer ou réessayer.
     String? checkoutUrl,
   }) = _PaymentTransaction;
 

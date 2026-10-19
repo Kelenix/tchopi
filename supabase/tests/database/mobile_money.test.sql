@@ -68,7 +68,7 @@ select pg_temp.place_food('1');
 select is(pg_temp.state('1'), 'awaiting_payment/unpaid/pending', 'en attente du paiement, transaction ouverte');
 select is((select provider from public.transactions where id = pg_temp.tx('1')), 'nyole', 'fournisseur nyole');
 select is(
-  (select (public.begin_mobile_money(pg_temp.order_id('1')))->>'amount')::integer,
+  (select (public.begin_online_payment(pg_temp.order_id('1')))->>'amount')::integer,
   (select total from public.orders where id = pg_temp.order_id('1')),
   'montant de la session = total de la commande'
 );
@@ -76,7 +76,7 @@ select throws_ok($$ select public.apply_payment_status(pg_temp.tx('1'), 'SUCCESS
   '42501', null, 'le client ne confirme jamais lui-même un paiement');
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000f1');
 select is((select count(*)::integer from public.orders), 0, 'le restaurant ne voit pas une commande non payée');
-select throws_ok($$ select public.begin_mobile_money(pg_temp.order_id('1')) $$,
+select throws_ok($$ select public.begin_online_payment(pg_temp.order_id('1')) $$,
   'P0001', 'not_found', 'seul le client paie sa commande');
 
 -- Refus chez l'opérateur, nouvel essai, montant falsifié, puis confirmation (une seule fois).

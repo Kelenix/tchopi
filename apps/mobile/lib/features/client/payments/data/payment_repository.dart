@@ -17,8 +17,9 @@ class PaymentRepository {
     return rows.map(PaymentOption.fromJson).toList();
   });
 
-  /// PAY-03 : ouvre ou rouvre la page de paiement nyole ; `null` si nyole a déjà confirmé le paiement.
-  Future<String?> startMobileMoney(String orderId) => guardCall(() async {
+  /// PAY-03, PAY-04 : ouvre ou rouvre la page de paiement du fournisseur (nyole, Stripe) ; `null` si le paiement
+  /// est déjà confirmé.
+  Future<String?> startOnlinePayment(String orderId) => guardCall(() async {
     final response = await _client.functions.invoke(
       'payments-create',
       body: {'order_id': orderId},

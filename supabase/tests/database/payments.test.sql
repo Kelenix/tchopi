@@ -129,11 +129,15 @@ select pg_temp.as_user('00000000-0000-0000-0000-0000000000a1');
 select is((public.courier_summary()->>'cash_due')::integer, (select amount from total) - 1000,
   'le livreur voit son solde diminuer');
 
--- PAY-01 / ADM-05 : moyens activés par pays ; un moyen non intégré ne s'active pas.
+-- PAY-01 / ADM-05 : moyens activés par pays ; un fournisseur non intégré ne s'active pas.
+reset role;
+insert into public.payment_options (country_code, method, operator, provider, label, is_enabled, position)
+values ('CI', 'mobile_money', 'wave', 'paystack', 'Wave', false, 9);
+set local role authenticated;
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000ad');
 select throws_ok(
-  $$ select public.admin_set_payment_option((select id from public.payment_options where method = 'card'), true) $$,
-  'P0001', 'payment_unavailable', 'carte non intégrée : activation refusée'
+  $$ select public.admin_set_payment_option((select id from public.payment_options where provider = 'paystack'), true) $$,
+  'P0001', 'payment_unavailable', 'fournisseur non intégré : activation refusée'
 );
 select public.admin_set_payment_option((select id from public.payment_options where method = 'cash'), false);
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000c1');

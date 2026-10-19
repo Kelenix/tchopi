@@ -42,6 +42,7 @@ class PaymentChoice extends ConsumerWidget {
                       PaymentMethod.mobileMoney => Text(
                         l10n.paymentMobileMoneyHint,
                       ),
+                      PaymentMethod.card => Text(l10n.paymentCardHint),
                       _ => null,
                     },
                     trailing: Icon(

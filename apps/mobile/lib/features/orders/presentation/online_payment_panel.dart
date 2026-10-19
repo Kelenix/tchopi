@@ -12,22 +12,24 @@ import '../../parcels/parcel_request_screen.dart';
 import '../cart.dart';
 import '../orders_providers.dart';
 import 'checkout_screen.dart';
+import 'order_widgets.dart';
 
-/// PAY-03 : commande en attente d'un paiement Mobile Money — page sécurisée de nyole, statut en direct, nouvel
-/// essai après un refus, changement de moyen. Seule la confirmation de nyole au serveur valide le paiement.
-class MobileMoneyPanel extends ConsumerStatefulWidget {
-  const MobileMoneyPanel({super.key, required this.order});
+/// PAY-03, PAY-04 : commande en attente d'un paiement en ligne — page sécurisée du fournisseur (nyole pour Mobile
+/// Money, Stripe pour la carte), statut en direct, nouvel essai après un refus, changement de moyen. Seule la
+/// confirmation du fournisseur au serveur valide le paiement.
+class OnlinePaymentPanel extends ConsumerStatefulWidget {
+  const OnlinePaymentPanel({super.key, required this.order});
 
   final Order order;
 
   @override
-  ConsumerState<MobileMoneyPanel> createState() => _MobileMoneyPanelState();
+  ConsumerState<OnlinePaymentPanel> createState() => _OnlinePaymentPanelState();
 }
 
-class _MobileMoneyPanelState extends ConsumerState<MobileMoneyPanel> {
+class _OnlinePaymentPanelState extends ConsumerState<OnlinePaymentPanel> {
   bool _busy = false;
 
-  /// Ouvre (ou rouvre) la page de paiement ; [open] faux : vérifie seulement le statut chez nyole.
+  /// Ouvre (ou rouvre) la page de paiement ; [open] faux : vérifie seulement le statut chez le fournisseur.
   Future<void> _pay({bool open = true}) async {
     final l10n = AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
@@ -35,12 +37,14 @@ class _MobileMoneyPanelState extends ConsumerState<MobileMoneyPanel> {
     try {
       final url = await ref
           .read(paymentRepositoryProvider)
-          .startMobileMoney(widget.order.id);
+          .startOnlinePayment(widget.order.id);
       if (url == null) return;
       if (open) {
         await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
       } else {
-        messenger.showSnackBar(SnackBar(content: Text(l10n.momoStillPending)));
+        messenger.showSnackBar(
+          SnackBar(content: Text(l10n.onlineStillPending)),
+        );
       }
     } on AppFailure catch (failure) {
       messenger.showSnackBar(
@@ -58,8 +62,8 @@ class _MobileMoneyPanelState extends ConsumerState<MobileMoneyPanel> {
     final confirmed = await showConfirmSheet(
       context,
       icon: Icons.swap_horiz_rounded,
-      title: l10n.momoChangeMethod,
-      body: l10n.momoChangeBody,
+      title: l10n.onlineChangeMethod,
+      body: l10n.onlineChangeBody,
       confirmLabel: l10n.actionContinue,
     );
     if (!confirmed || !mounted) return;
@@ -109,6 +113,7 @@ class _MobileMoneyPanelState extends ConsumerState<MobileMoneyPanel> {
     final failed = transaction?.status == TransactionStatus.failed;
     final opened = transaction?.checkoutUrl != null;
     final amount = formatMoney(o.total, currency: o.currency);
+    final card = o.paymentMethod == PaymentMethod.card;
 
     return Card(
       color: failed ? tokens.dangerSoft : null,
@@ -119,18 +124,23 @@ class _MobileMoneyPanelState extends ConsumerState<MobileMoneyPanel> {
           children: [
             Row(
               children: [
-                Icon(Icons.phone_android_outlined, color: tokens.primary),
+                Icon(paymentIcon(o.paymentMethod), color: tokens.primary),
                 const SizedBox(width: Space.sm),
-                Expanded(child: Text(l10n.momoTitle, style: text.titleMedium)),
+                Expanded(
+                  child: Text(
+                    card ? l10n.cardTitle : l10n.momoTitle,
+                    style: text.titleMedium,
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: Space.sm),
             Text(
-              failed
-                  ? l10n.momoFailed
-                  : opened
-                  ? l10n.momoWaiting
-                  : l10n.momoBody(amount),
+              switch ((failed, opened)) {
+                (true, _) => card ? l10n.cardFailed : l10n.momoFailed,
+                (_, true) => card ? l10n.cardWaiting : l10n.momoWaiting,
+                _ => card ? l10n.cardBody(amount) : l10n.momoBody(amount),
+              },
               style: text.bodyMedium!.copyWith(
                 color: failed ? tokens.danger : null,
               ),
@@ -138,7 +148,7 @@ class _MobileMoneyPanelState extends ConsumerState<MobileMoneyPanel> {
             if (timeout != null) ...[
               const SizedBox(height: Space.sm),
               Text(
-                l10n.momoDeadline(
+                l10n.onlineDeadline(
                   DateFormat.Hm('fr').format(
                     o.createdAt.toLocal().add(Duration(seconds: timeout)),
                   ),
@@ -156,20 +166,20 @@ class _MobileMoneyPanelState extends ConsumerState<MobileMoneyPanel> {
                     )
                   : Text(
                       failed
-                          ? l10n.momoRetry
+                          ? l10n.onlineRetry
                           : opened
-                          ? l10n.momoResume
-                          : l10n.momoPay(amount),
+                          ? l10n.onlineResume
+                          : l10n.onlinePay(amount),
                     ),
             ),
             if (opened && !failed)
               TextButton(
                 onPressed: _busy ? null : () => _pay(open: false),
-                child: Text(l10n.momoCheck),
+                child: Text(l10n.onlineCheck),
               ),
             TextButton(
               onPressed: _busy ? null : _changeMethod,
-              child: Text(l10n.momoChangeMethod),
+              child: Text(l10n.onlineChangeMethod),
             ),
           ],
         ),

@@ -6,14 +6,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mobile/features/client/payments/data/payment_repository.dart';
 import 'package:mobile/features/client/payments/payments_providers.dart';
 import 'package:mobile/features/client/payments/presentation/payment_choice.dart';
-import 'package:mobile/features/orders/presentation/mobile_money_panel.dart';
+import 'package:mobile/features/orders/presentation/online_payment_panel.dart';
 
 class FakePayments implements PaymentRepository {
   final started = <String>[];
 
-  /// Paiement déjà confirmé chez nyole : aucune page à ouvrir.
+  /// Paiement déjà confirmé chez le fournisseur : aucune page à ouvrir.
   @override
-  Future<String?> startMobileMoney(String orderId) async {
+  Future<String?> startOnlinePayment(String orderId) async {
     started.add(orderId);
     return null;
   }
@@ -43,16 +43,21 @@ final order = Order(
   createdAt: DateTime(2026, 10, 19, 10),
 );
 
-PaymentTransaction tx(TransactionStatus status, {String? url}) =>
-    PaymentTransaction(
-      id: 't1',
-      orderId: 'o1',
-      amount: 2275,
-      method: PaymentMethod.mobileMoney,
-      status: status,
-      createdAt: DateTime(2026, 10, 19, 10),
-      checkoutUrl: url,
-    );
+final cardOrder = order.copyWith(paymentMethod: PaymentMethod.card);
+
+PaymentTransaction tx(
+  TransactionStatus status, {
+  String? url,
+  PaymentMethod method = PaymentMethod.mobileMoney,
+}) => PaymentTransaction(
+  id: 't1',
+  orderId: 'o1',
+  amount: 2275,
+  method: method,
+  status: status,
+  createdAt: DateTime(2026, 10, 19, 10),
+  checkoutUrl: url,
+);
 
 Widget app(Widget child, List<Override> overrides) => ProviderScope(
   overrides: [
@@ -71,7 +76,7 @@ Widget app(Widget child, List<Override> overrides) => ProviderScope(
 void main() {
   testWidgets('PAY-03 : payer, délai affiché', (tester) async {
     await tester.pumpWidget(
-      app(MobileMoneyPanel(order: order), [
+      app(OnlinePaymentPanel(order: order), [
         orderTransactionProvider(
           'o1',
         ).overrideWith((ref) => Stream.value(tx(TransactionStatus.pending))),
@@ -90,7 +95,7 @@ void main() {
   testWidgets('PAY-03 : refus de l\'opérateur, nouvel essai', (tester) async {
     final payments = FakePayments();
     await tester.pumpWidget(
-      app(MobileMoneyPanel(order: order), [
+      app(OnlinePaymentPanel(order: order), [
         paymentRepositoryProvider.overrideWithValue(payments),
         orderTransactionProvider('o1').overrideWith(
           (ref) => Stream.value(
@@ -114,7 +119,7 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      app(MobileMoneyPanel(order: order), [
+      app(OnlinePaymentPanel(order: order), [
         orderTransactionProvider('o1').overrideWith(
           (ref) => Stream.value(
             tx(TransactionStatus.pending, url: 'https://app.nyole.com/c/1'),
@@ -128,7 +133,49 @@ void main() {
     expect(find.text('J\'ai payé : vérifier'), findsOneWidget);
   });
 
-  testWidgets('PAY-01 : colis — espèces au retrait ou Mobile Money', (
+  testWidgets('PAY-04 : carte — page sécurisée Stripe', (tester) async {
+    await tester.pumpWidget(
+      app(OnlinePaymentPanel(order: cardOrder), [
+        orderTransactionProvider('o1').overrideWith(
+          (ref) => Stream.value(
+            tx(TransactionStatus.pending, method: PaymentMethod.card),
+          ),
+        ),
+      ]),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Paiement par carte'), findsOneWidget);
+    expect(find.textContaining('page sécurisée de Stripe'), findsOneWidget);
+    expect(find.byIcon(Icons.credit_card_outlined), findsOneWidget);
+    expect(find.text('Payer ${formatMoney(2275)}'), findsOneWidget);
+  });
+
+  testWidgets('PAY-04 : refus de la banque, réessayer ou changer de moyen', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      app(OnlinePaymentPanel(order: cardOrder), [
+        orderTransactionProvider('o1').overrideWith(
+          (ref) => Stream.value(
+            tx(
+              TransactionStatus.failed,
+              url: 'https://checkout.stripe.com/c/pay/cs_1',
+              method: PaymentMethod.card,
+            ),
+          ),
+        ),
+      ]),
+    );
+    await tester.pumpAndSettle();
+    expect(
+      find.textContaining('Le paiement n\x27a pas abouti'),
+      findsOneWidget,
+    );
+    expect(find.text('Réessayer'), findsOneWidget);
+    expect(find.text('Changer de moyen de paiement'), findsOneWidget);
+  });
+
+  testWidgets('PAY-01 : colis — espèces au retrait, Mobile Money ou carte', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -152,6 +199,14 @@ void main() {
               label: 'Mobile Money',
               isEnabled: true,
             ),
+            PaymentOption(
+              id: 'p3',
+              countryCode: 'CI',
+              method: PaymentMethod.card,
+              provider: 'stripe',
+              label: 'Carte bancaire',
+              isEnabled: true,
+            ),
           ],
         ),
       ]),
@@ -160,6 +215,10 @@ void main() {
     expect(find.text('À payer au livreur à la récupération'), findsOneWidget);
     expect(
       find.text('Orange Money, MTN MoMo, Wave, Moov Money'),
+      findsOneWidget,
+    );
+    expect(
+      find.text('Visa, Mastercard · page sécurisée Stripe'),
       findsOneWidget,
     );
     final checked = tester.widget<Icon>(

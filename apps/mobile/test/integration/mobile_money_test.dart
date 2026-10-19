@@ -249,9 +249,9 @@ void main() {
       final txId = (await transaction()).id;
 
       // Page de paiement : montant de la commande, client prérempli ; double toucher = même session.
-      final page = await payments.startMobileMoney(order.id);
+      final page = await payments.startOnlinePayment(order.id);
       expect(page, 'https://app.nyole.com/checkout/sess_1');
-      expect(await payments.startMobileMoney(order.id), page);
+      expect(await payments.startOnlinePayment(order.id), page);
       expect(requests, hasLength(1));
       expect(requests.single['amount'], order.total);
       expect(requests.single['customer_phone'], '+2250700000044');
@@ -276,7 +276,7 @@ void main() {
       providerStatus = 'FAILED';
       expect(await webhook('payment.failed', txId), 200);
       expect((await transaction()).status, TransactionStatus.failed);
-      expect(await payments.startMobileMoney(order.id), page);
+      expect(await payments.startOnlinePayment(order.id), page);
       expect((await transaction()).status, TransactionStatus.pending);
 
       // Un webhook qui annonce un succès que nyole ne confirme pas ne change rien.
@@ -298,7 +298,7 @@ void main() {
       expect(succeeded.status, TransactionStatus.succeeded);
       expect(succeeded.providerReference, 'CS-TEST');
       await expectLater(
-        payments.startMobileMoney(order.id),
+        payments.startOnlinePayment(order.id),
         throwsA(
           isA<AppFailure>().having((f) => f.code, 'code', 'already_paid'),
         ),

@@ -1008,6 +1008,9 @@ class AppLocalizationsFr extends AppLocalizations {
       'Orange Money, MTN MoMo, Wave, Moov Money';
 
   @override
+  String get paymentCardHint => 'Visa, Mastercard · page sécurisée Stripe';
+
+  @override
   String get momoTitle => 'Paiement Mobile Money';
 
   @override
@@ -1016,7 +1019,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String momoPay(String amount) {
+  String onlinePay(String amount) {
     return 'Payer $amount';
   }
 
@@ -1025,31 +1028,47 @@ class AppLocalizationsFr extends AppLocalizations {
       'Validez le paiement sur votre téléphone. Nous attendons la confirmation de l\'opérateur…';
 
   @override
-  String get momoResume => 'Reprendre le paiement';
+  String get onlineResume => 'Reprendre le paiement';
 
   @override
-  String get momoCheck => 'J\'ai payé : vérifier';
+  String get onlineCheck => 'J\'ai payé : vérifier';
 
   @override
-  String get momoStillPending =>
+  String get onlineStillPending =>
       'Paiement pas encore confirmé. Si vous l\'avez validé, patientez quelques secondes.';
 
   @override
   String get momoFailed => 'Le paiement n\'a pas été validé par l\'opérateur.';
 
   @override
-  String get momoRetry => 'Réessayer';
+  String get cardTitle => 'Paiement par carte';
 
   @override
-  String momoDeadline(String time) {
+  String cardBody(String amount) {
+    return 'Payez $amount sur la page sécurisée de Stripe (Visa, Mastercard ; validation de votre banque si elle la demande), puis revenez ici : la commande part dès que la banque confirme le paiement.';
+  }
+
+  @override
+  String get cardWaiting =>
+      'Terminez le paiement sur la page Stripe. Nous attendons la confirmation de votre banque…';
+
+  @override
+  String get cardFailed =>
+      'Le paiement n\'a pas abouti. Réessayez ou choisissez un autre moyen de paiement.';
+
+  @override
+  String get onlineRetry => 'Réessayer';
+
+  @override
+  String onlineDeadline(String time) {
     return 'Sans paiement d\'ici $time, la commande est annulée.';
   }
 
   @override
-  String get momoChangeMethod => 'Changer de moyen de paiement';
+  String get onlineChangeMethod => 'Changer de moyen de paiement';
 
   @override
-  String get momoChangeBody =>
+  String get onlineChangeBody =>
       'Cette commande non payée sera annulée ; vous retrouverez votre demande pour choisir un autre moyen de paiement.';
 
   @override

@@ -461,7 +461,7 @@ entrypoint = "./functions/push/index.ts"
 
 [functions.payments-create]
 enabled = true
-# Le client est vérifié par la base (begin_mobile_money) avec son propre jeton.
+# Le client est vérifié par la base (begin_online_payment) avec son propre jeton.
 verify_jwt = false
 import_map = "./functions/payments-create/deno.json"
 entrypoint = "./functions/payments-create/index.ts"
@@ -472,6 +472,27 @@ enabled = true
 verify_jwt = false
 import_map = "./functions/payments-webhook-nyole/deno.json"
 entrypoint = "./functions/payments-webhook-nyole/index.ts"
+
+[functions.payments-webhook-stripe]
+enabled = true
+# Appelée par Stripe : authentifiée par la signature HMAC du corps.
+verify_jwt = false
+import_map = "./functions/payments-webhook-stripe/deno.json"
+entrypoint = "./functions/payments-webhook-stripe/index.ts"
+
+[functions.payments-refund]
+enabled = true
+# Appelée par la base avec la clé de service, vérifiée par la fonction.
+verify_jwt = false
+import_map = "./functions/payments-refund/deno.json"
+entrypoint = "./functions/payments-refund/index.ts"
+
+[functions.payments-return]
+enabled = true
+# Page publique affichée après le paiement.
+verify_jwt = false
+import_map = "./functions/payments-return/deno.json"
+entrypoint = "./functions/payments-return/index.ts"
 
 [functions.admin-users]
 enabled = true

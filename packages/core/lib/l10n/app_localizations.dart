@@ -1942,6 +1942,12 @@ abstract class AppLocalizations {
   /// **'Orange Money, MTN MoMo, Wave, Moov Money'**
   String get paymentMobileMoneyHint;
 
+  /// No description provided for @paymentCardHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Visa, Mastercard · page sécurisée Stripe'**
+  String get paymentCardHint;
+
   /// No description provided for @momoTitle.
   ///
   /// In fr, this message translates to:
@@ -1954,11 +1960,11 @@ abstract class AppLocalizations {
   /// **'Payez {amount} sur la page sécurisée de nyole (Orange Money, MTN MoMo, Wave ou Moov Money), puis revenez ici : la commande part dès que l\'opérateur confirme le paiement.'**
   String momoBody(String amount);
 
-  /// No description provided for @momoPay.
+  /// No description provided for @onlinePay.
   ///
   /// In fr, this message translates to:
   /// **'Payer {amount}'**
-  String momoPay(String amount);
+  String onlinePay(String amount);
 
   /// No description provided for @momoWaiting.
   ///
@@ -1966,23 +1972,23 @@ abstract class AppLocalizations {
   /// **'Validez le paiement sur votre téléphone. Nous attendons la confirmation de l\'opérateur…'**
   String get momoWaiting;
 
-  /// No description provided for @momoResume.
+  /// No description provided for @onlineResume.
   ///
   /// In fr, this message translates to:
   /// **'Reprendre le paiement'**
-  String get momoResume;
+  String get onlineResume;
 
-  /// No description provided for @momoCheck.
+  /// No description provided for @onlineCheck.
   ///
   /// In fr, this message translates to:
   /// **'J\'ai payé : vérifier'**
-  String get momoCheck;
+  String get onlineCheck;
 
-  /// No description provided for @momoStillPending.
+  /// No description provided for @onlineStillPending.
   ///
   /// In fr, this message translates to:
   /// **'Paiement pas encore confirmé. Si vous l\'avez validé, patientez quelques secondes.'**
-  String get momoStillPending;
+  String get onlineStillPending;
 
   /// No description provided for @momoFailed.
   ///
@@ -1990,29 +1996,53 @@ abstract class AppLocalizations {
   /// **'Le paiement n\'a pas été validé par l\'opérateur.'**
   String get momoFailed;
 
-  /// No description provided for @momoRetry.
+  /// No description provided for @cardTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement par carte'**
+  String get cardTitle;
+
+  /// No description provided for @cardBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Payez {amount} sur la page sécurisée de Stripe (Visa, Mastercard ; validation de votre banque si elle la demande), puis revenez ici : la commande part dès que la banque confirme le paiement.'**
+  String cardBody(String amount);
+
+  /// No description provided for @cardWaiting.
+  ///
+  /// In fr, this message translates to:
+  /// **'Terminez le paiement sur la page Stripe. Nous attendons la confirmation de votre banque…'**
+  String get cardWaiting;
+
+  /// No description provided for @cardFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le paiement n\'a pas abouti. Réessayez ou choisissez un autre moyen de paiement.'**
+  String get cardFailed;
+
+  /// No description provided for @onlineRetry.
   ///
   /// In fr, this message translates to:
   /// **'Réessayer'**
-  String get momoRetry;
+  String get onlineRetry;
 
-  /// No description provided for @momoDeadline.
+  /// No description provided for @onlineDeadline.
   ///
   /// In fr, this message translates to:
   /// **'Sans paiement d\'ici {time}, la commande est annulée.'**
-  String momoDeadline(String time);
+  String onlineDeadline(String time);
 
-  /// No description provided for @momoChangeMethod.
+  /// No description provided for @onlineChangeMethod.
   ///
   /// In fr, this message translates to:
   /// **'Changer de moyen de paiement'**
-  String get momoChangeMethod;
+  String get onlineChangeMethod;
 
-  /// No description provided for @momoChangeBody.
+  /// No description provided for @onlineChangeBody.
   ///
   /// In fr, this message translates to:
   /// **'Cette commande non payée sera annulée ; vous retrouverez votre demande pour choisir un autre moyen de paiement.'**
-  String get momoChangeBody;
+  String get onlineChangeBody;
 
   /// No description provided for @failurePaymentClosed.
   ///

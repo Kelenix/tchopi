@@ -12,7 +12,7 @@ import '../../../shared/push.dart';
 import '../../courier/profile/courier_providers.dart';
 import '../orders_providers.dart';
 import '../tracking.dart';
-import 'mobile_money_panel.dart';
+import 'online_payment_panel.dart';
 import 'order_widgets.dart';
 
 /// C-08 / C-11 : détail et suivi d'une commande — statut en direct, chronologie, articles, montants (ORD-11, ORD-12).
@@ -99,7 +99,7 @@ class OrderDetailScreen extends ConsumerWidget {
               _StatusHeader(order: o, status: status),
               if (awaitingPayment) ...[
                 const SizedBox(height: Space.lg),
-                MobileMoneyPanel(order: o),
+                OnlinePaymentPanel(order: o),
               ],
               if (!status.isClosed && !awaitingPayment) const _PushPrompt(),
               if (push == PushState.denied && !status.isClosed) ...[

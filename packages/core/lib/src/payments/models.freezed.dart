@@ -300,7 +300,7 @@ as int,
 mixin _$PaymentTransaction {
 
  String get id; String get orderId; int get amount; String get currency; PaymentMethod get method; String? get operator; TransactionStatus get status; DateTime get createdAt; DateTime? get succeededAt;@JsonKey(readValue: _orderField) String? get orderNumber;@JsonKey(readValue: _orderField) OrderStatus? get orderStatus;@JsonKey(readValue: _orderField) String? get orderZoneId;@JsonKey(readValue: _orderField) OrderPaymentStatus? get orderPaymentStatus; String? get providerReference; String? get refundReference;/// Mobile Money : refus de l'opérateur (« failed ») ou session annulée (« cancelled »).
- String? get failureReason;/// Page de paiement nyole à rouvrir pour payer ou réessayer.
+ String? get failureReason;/// Page de paiement du fournisseur (nyole, Stripe) à rouvrir pour payer ou réessayer.
  String? get checkoutUrl;
 /// Create a copy of PaymentTransaction
 /// with the given fields replaced by the non-null parameter values.
@@ -531,7 +531,7 @@ class _PaymentTransaction implements PaymentTransaction {
 @override final  String? refundReference;
 /// Mobile Money : refus de l'opérateur (« failed ») ou session annulée (« cancelled »).
 @override final  String? failureReason;
-/// Page de paiement nyole à rouvrir pour payer ou réessayer.
+/// Page de paiement du fournisseur (nyole, Stripe) à rouvrir pour payer ou réessayer.
 @override final  String? checkoutUrl;
 
 /// Create a copy of PaymentTransaction
