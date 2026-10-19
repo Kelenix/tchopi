@@ -44,6 +44,13 @@ String closeReasonLabel(AppLocalizations l10n, String reason) {
   return [label, ...rest].join(' · ');
 }
 
+/// « 45 s », « 3 min », « 2 h » : ancienneté d'une position.
+String formatAge(Duration age) => age.inSeconds < 60
+    ? '${age.inSeconds} s'
+    : age.inMinutes < 60
+    ? '${age.inMinutes} min'
+    : '${age.inHours} h';
+
 /// Problème signalé par le livreur (MIS-08).
 String problemLabel(AppLocalizations l10n, String kind) => switch (kind) {
   'customer_unreachable' => l10n.problemCustomerUnreachable,

@@ -281,11 +281,8 @@ class _CandidatesSheet extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final tokens = context.tokens;
     final candidates = ref.watch(dispatchCandidatesProvider(orderId));
-    String age(int? seconds) => seconds == null
-        ? '—'
-        : seconds < 60
-        ? '$seconds s'
-        : '${seconds ~/ 60} min';
+    String age(int? seconds) =>
+        seconds == null ? '—' : formatAge(Duration(seconds: seconds));
     return SafeArea(
       child: ConstrainedBox(
         constraints: BoxConstraints(

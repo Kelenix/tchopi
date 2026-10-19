@@ -47,6 +47,7 @@ _CourierInfo _$CourierInfoFromJson(Map<String, dynamic> json) => _CourierInfo(
   phone: json['phone'] as String?,
   vehicleType: $enumDecode(_$VehicleTypeEnumMap, json['vehicle_type']),
   plateNumber: json['plate_number'] as String?,
+  photoPath: json['photo_path'] as String?,
 );
 
 Map<String, dynamic> _$CourierInfoToJson(_CourierInfo instance) =>
@@ -55,6 +56,7 @@ Map<String, dynamic> _$CourierInfoToJson(_CourierInfo instance) =>
       'phone': instance.phone,
       'vehicle_type': _$VehicleTypeEnumMap[instance.vehicleType]!,
       'plate_number': instance.plateNumber,
+      'photo_path': instance.photoPath,
     };
 
 _DeliveryOffer _$DeliveryOfferFromJson(Map<String, dynamic> json) =>
@@ -172,4 +174,18 @@ Map<String, dynamic> _$CodeResultToJson(_CodeResult instance) =>
       'delivered': instance.delivered,
       'attempts_left': instance.attemptsLeft,
       'locked': instance.locked,
+    };
+
+_CourierLocation _$CourierLocationFromJson(Map<String, dynamic> json) =>
+    _CourierLocation(
+      latitude: (json['latitude'] as num).toDouble(),
+      longitude: (json['longitude'] as num).toDouble(),
+      recordedAt: DateTime.parse(json['recorded_at'] as String),
+    );
+
+Map<String, dynamic> _$CourierLocationToJson(_CourierLocation instance) =>
+    <String, dynamic>{
+      'latitude': instance.latitude,
+      'longitude': instance.longitude,
+      'recorded_at': instance.recordedAt.toIso8601String(),
     };

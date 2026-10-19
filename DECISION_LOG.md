@@ -6,6 +6,36 @@
 
 ---
 
+## ADR-025 — Suivi en temps réel et notifications (Inc-9)
+
+- **Date** : 2026-10-19
+- **Statut** : Accepté
+- **Décideur** : Claude (rôle : backend-engineer / flutter-engineer)
+- **Contexte** : Stories TRK-01 à 03, NOT-01 à 04 ; projet Firebase pas encore créé (tâche manuelle n° 8).
+- **Décision** :
+  - **Suivi** : le client lit la position et la photo du livreur de sa commande en cours (RLS), en temps réel ;
+    estimation d'arrivée calculée sur le téléphone (vol d'oiseau × 1,3, vitesse moyenne selon le moyen de
+    transport, passage par le retrait avant récupération) ; au-delà de 60 s, marqueur grisé, âge de la position et
+    estimation « indisponible » (jamais une position ancienne présentée comme actuelle) ; bandeau « Connexion perdue »
+    tant que le temps réel est coupé, rechargement au retour.
+  - **Notifications** : file `notifications` remplie par déclencheur dans la même transaction que l'événement
+    (qui est prévenu de quoi : client à chaque étape utile, livreur de ses offres et missions, restaurant de ses
+    commandes ; jamais l'auteur de l'action) ; la base appelle la fonction `push` (pg_net, adresse et clé dans le
+    coffre) qui envoie par **FCM HTTP v1** (compte de service en secret), oublie les appareils désinscrits et
+    retente les échecs (5 fois, tâche planifiée). Sans compte FCM : notifications marquées `not_configured`.
+  - **App** : Firebase initialisé avec des options passées au build (`FIREBASE_*`, pas de fichier
+    `google-services.json` dans le dépôt) ; autorisation demandée une fois, au premier moment utile, après une
+    explication (suivi d'une commande, passage en ligne, écran des commandes du restaurant) ; rappel discret si
+    refusée ; l'appareil suit le dernier compte connecté et son jeton est révoqué à la déconnexion ; le toucher
+    ouvre l'écran fourni par le serveur. Jetons d'enregistrement FCM conservés (API marquée dépréciée au profit des
+    identifiants d'installation, que l'envoi serveur n'utilise pas encore).
+  - **Navigateur** (restaurant) : bip Web Audio tant que la page est ouverte (NOT-03) ; pas de push web.
+- **Reporté** : notifications de paiement (Inc-11 / 12) ; canal Android dédié « haute importance » (bannière
+  par-dessus les apps) si le canal par défaut ne suffit pas aux livreurs lors des essais réels.
+- **Impact** : technique (moyen), dépendance Firebase (gratuite), RGPD : jetons d'appareil supprimés avec le compte.
+
+---
+
 ## ADR-024 — Mission du livreur, code de livraison, espèces (Inc-8)
 
 - **Date** : 2026-10-19

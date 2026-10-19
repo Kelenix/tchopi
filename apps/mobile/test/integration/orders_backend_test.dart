@@ -331,6 +331,21 @@ void main() {
         (await client.events(order.id)).map((e) => e.kind),
         contains('courier_assigned'),
       );
+      // Suivi (TRK-01) et notifications (NOT-01) : position du livreur visible du client, étapes en file.
+      final position = await client
+          .watchCourier(ids['livreur']!)
+          .firstWhere((p) => p != null)
+          .timeout(const Duration(seconds: 10));
+      expect(position!.isStale(DateTime.now()), isFalse);
+      final notified = await clientClient
+          .from('notifications')
+          .select('kind')
+          .eq('order_id', order.id);
+      expect(
+        notified.map((n) => n['kind']),
+        containsAll(['order_accepted', 'courier_assigned']),
+      );
+
       final mission = await missions
           .watchMission(ids['livreur']!)
           .firstWhere((m) => m != null)

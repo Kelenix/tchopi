@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../shared/alert_sound.dart';
 import '../missions_providers.dart';
 
 /// L-04 : offre de mission en plein écran — gain, trajet, espèces à encaisser, compte à rebours (DIS-02).
-/// Vibration répétée tant que l'offre attend ; le son arrive avec les notifications (Inc-9).
+/// Son et vibration à l'arrivée, vibration répétée tant que l'offre attend ; app fermée : notification (NOT-02).
 class OfferScreen extends ConsumerStatefulWidget {
   const OfferScreen({super.key, required this.offer});
 
@@ -34,7 +35,7 @@ class _OfferScreenState extends ConsumerState<OfferScreen> {
   void initState() {
     super.initState();
     _total = _left.inSeconds > 0 ? _left : const Duration(seconds: 1);
-    SystemSound.play(SystemSoundType.alert);
+    playAlertSound();
     HapticFeedback.heavyImpact();
     _clock = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_outcome != _Outcome.deciding) return;

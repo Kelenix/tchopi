@@ -94,6 +94,14 @@ class OrderRepository {
       })
       .handleError((Object error) => throw toFailure(error));
 
+  /// Position du livreur de ma commande en cours, en temps réel (la RLS la cache ensuite).
+  Stream<CourierLocation?> watchCourier(String courierId) => _client
+      .from('courier_locations')
+      .stream(primaryKey: ['courier_id'])
+      .eq('courier_id', courierId)
+      .map((rows) => rows.isEmpty ? null : CourierLocation.fromJson(rows.first))
+      .handleError((Object error) => throw toFailure(error));
+
   Future<List<OrderEvent>> events(String id) => guardCall(() async {
     final rows = await _client
         .from('order_events')

@@ -6,7 +6,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../../shared/alert_sound.dart';
 import '../../../shared/dialogs.dart';
+import '../../../shared/push.dart';
 import '../../orders/orders_providers.dart';
 import '../../orders/presentation/order_widgets.dart';
 import '../restaurant_providers.dart';
@@ -43,6 +45,15 @@ class _RestaurantOrdersScreenState
       const Duration(seconds: 30),
       (_) => setState(() {}),
     );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        offerPush(
+          context,
+          ref,
+          body: AppLocalizations.of(context).pushRestaurantBody,
+        );
+      }
+    });
   }
 
   @override
@@ -52,23 +63,24 @@ class _RestaurantOrdersScreenState
     super.dispose();
   }
 
-  /// Alerte (vibration) répétée tant qu'une nouvelle commande n'a pas été vue. Le son arrive avec les
-  /// notifications (Inc-9).
+  /// Alerte (son et vibration) répétée tant qu'une nouvelle commande n'a pas été vue (ORD-08, NOT-03).
   void _onOrders(List<Order> orders) {
     final pending = {
       for (final o in orders)
         if (o.status == OrderStatus.pending) o.id,
     };
     final unseen = pending.difference(_seen);
-    if (unseen.length > _unseen.length) HapticFeedback.heavyImpact();
+    if (unseen.length > _unseen.length) _ring();
     setState(() => _unseen = unseen);
     _alert?.cancel();
     if (unseen.isNotEmpty) {
-      _alert = Timer.periodic(
-        const Duration(seconds: 5),
-        (_) => HapticFeedback.heavyImpact(),
-      );
+      _alert = Timer.periodic(const Duration(seconds: 5), (_) => _ring());
     }
+  }
+
+  void _ring() {
+    playAlertSound();
+    HapticFeedback.heavyImpact();
   }
 
   void _acknowledge() {
@@ -428,17 +440,24 @@ class _RestaurantOrderCardState extends ConsumerState<_RestaurantOrderCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              children: [
-                Text(o.number, style: text.titleMedium),
-                const SizedBox(width: Space.sm),
-                Text(
-                  DateFormat.Hm('fr').format(o.createdAt.toLocal()),
-                  style: text.bodySmall!.copyWith(color: tokens.muted),
-                ),
-                const Spacer(),
-                OrderStatusChip(status: o.status),
-              ],
+            // TRK-03 : toucher l'en-tête ouvre la chronologie de la commande.
+            InkWell(
+              onTap: () => showModalBottomSheet<void>(
+                context: context,
+                builder: (_) => _Timeline(orderId: o.id),
+              ),
+              child: Row(
+                children: [
+                  Text(o.number, style: text.titleMedium),
+                  const SizedBox(width: Space.sm),
+                  Text(
+                    DateFormat.Hm('fr').format(o.createdAt.toLocal()),
+                    style: text.bodySmall!.copyWith(color: tokens.muted),
+                  ),
+                  const Spacer(),
+                  OrderStatusChip(status: o.status),
+                ],
+              ),
             ),
             const SizedBox(height: Space.md),
             for (final item in items)
@@ -536,6 +555,35 @@ class _RestaurantOrderCardState extends ConsumerState<_RestaurantOrderCard> {
               ],
               _ => const <Widget>[],
             },
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Timeline extends ConsumerWidget {
+  const _Timeline({required this.orderId});
+
+  final String orderId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final events = ref.watch(orderEventsProvider(orderId)).value ?? const [];
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(
+          Space.screen,
+          0,
+          Space.screen,
+          Space.xl,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SectionHeader(title: l10n.orderTimeline),
+            OrderTimeline(events: events),
           ],
         ),
       ),

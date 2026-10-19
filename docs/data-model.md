@@ -85,7 +85,8 @@ courier_assigned, picked_up, in_transit, delivered, cancelled, failed`. Pour un 
 | `addresses` | `id`, `user_id`, `zone_id`, `city`, `label`, `district`, `landmark`, `instructions`, `location`, `is_default` | Déclencheur : calcule zone et ville, refuse hors zone ; index unique partiel « une seule adresse par défaut » |
 | `couriers` | PK `user_id` ; `zone_id`, `vehicle_type`, `plate_number`, `photo_path`, `status`, `status_reason`, `approved_at`, `is_online`, `online_since` | `check` : immatriculation obligatoire si moto ou voiture |
 | `courier_locations` | PK `courier_id` ; `latitude`, `longitude`, `location` (calculée), `accuracy_m`, `recorded_at` | Une ligne par livreur en ligne (dernière position, effacée hors ligne), index spatial |
-| `push_tokens` | PK `token` ; `user_id`, `app` (`client`, `courier`, `backoffice`), `platform`, `updated_at` | |
+| `push_tokens` | PK `token` ; `user_id`, `platform` (`android`, `ios`, `web`), `updated_at` | Un appareil suit le dernier compte connecté (`register_push_token`) |
+| `notifications` | `id`, `user_id`, `order_id`, `kind`, `title`, `body`, `route`, `created_at`, `sent_at`, `attempts`, `error` | File remplie par déclencheur, envoyée par la fonction `push` (FCM) |
 
 ### Restaurants et catalogue
 

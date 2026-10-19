@@ -1,9 +1,17 @@
+import 'dart:async';
+
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../shared/push.dart';
+import '../../courier/profile/courier_providers.dart';
 import '../orders_providers.dart';
+import '../tracking.dart';
 import 'order_widgets.dart';
 
 /// C-08 / C-11 : détail et suivi d'une commande — statut en direct, chronologie, articles, montants (ORD-11, ORD-12).
@@ -45,7 +53,9 @@ class OrderDetailScreen extends ConsumerWidget {
     final tokens = context.tokens;
     final text = Theme.of(context).textTheme;
     final order = ref.watch(orderProvider(orderId));
-    final live = ref.watch(orderLiveProvider(orderId)).value?.status;
+    final liveState = ref.watch(orderLiveProvider(orderId));
+    final live = liveState.value?.status;
+    final push = ref.watch(pushProvider).value;
     final events = ref.watch(orderEventsProvider(orderId)).value ?? const [];
 
     return Scaffold(
@@ -75,7 +85,27 @@ class OrderDetailScreen extends ConsumerWidget {
               Space.huge,
             ),
             children: [
+              // TRK-02 : le temps réel est coupé ; il reprend seul et l'écran se recharge au retour.
+              if (liveState.hasError) ...[
+                _Notice(
+                  icon: Icons.wifi_off_rounded,
+                  text: l10n.trackingConnectionLost,
+                ),
+                const SizedBox(height: Space.md),
+              ],
               _StatusHeader(order: o, status: status),
+              if (!status.isClosed) const _PushPrompt(),
+              if (push == PushState.denied && !status.isClosed) ...[
+                const SizedBox(height: Space.md),
+                _Notice(
+                  icon: Icons.notifications_off_outlined,
+                  text: l10n.pushReminder,
+                  action: TextButton(
+                    onPressed: Geolocator.openAppSettings,
+                    child: Text(l10n.pushReminderAction),
+                  ),
+                ),
+              ],
               if (stillSearching) ...[
                 const SizedBox(height: Space.lg),
                 _StillSearching(onCancel: () => _cancel(context, ref, parcel)),
@@ -83,6 +113,11 @@ class OrderDetailScreen extends ConsumerWidget {
               if (o.courierInfo case final courier? when !status.isClosed) ...[
                 const SizedBox(height: Space.lg),
                 _CourierCard(courier: courier),
+                const SizedBox(height: Space.sm),
+                _TrackingCard(
+                  order: o.copyWith(status: status),
+                  courier: courier,
+                ),
               ],
               if (events.isNotEmpty) ...[
                 const SizedBox(height: Space.xxl),
@@ -317,16 +352,19 @@ class _StillSearchingState extends State<_StillSearching> {
   }
 }
 
-/// Livreur attribué : prénom, moyen de transport, appel direct.
-class _CourierCard extends StatelessWidget {
+/// Livreur attribué : photo, prénom, moyen de transport, appel direct.
+class _CourierCard extends ConsumerWidget {
   const _CourierCard({required this.courier});
 
   final CourierInfo courier;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final tokens = context.tokens;
+    final photo = courier.photoPath == null
+        ? null
+        : ref.watch(courierPhotoUrlProvider(courier.photoPath!)).value;
     return Card(
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(
@@ -335,6 +373,7 @@ class _CourierCard extends StatelessWidget {
         ),
         leading: CircleAvatar(
           backgroundColor: tokens.primarySoft,
+          foregroundImage: photo == null ? null : NetworkImage(photo),
           child: Icon(Icons.two_wheeler, color: tokens.primary),
         ),
         title: Text(courier.firstName),
@@ -354,6 +393,204 @@ class _CourierCard extends StatelessWidget {
                 onPressed: () =>
                     launchUrl(Uri(scheme: 'tel', path: courier.phone)),
               ),
+      ),
+    );
+  }
+}
+
+/// TRK-01 / TRK-02 : position du livreur, retrait (avant récupération) et destination ; estimation d'arrivée,
+/// remplacée par l'âge de la position quand elle date de plus de 60 s (marqueur grisé).
+class _TrackingCard extends ConsumerStatefulWidget {
+  const _TrackingCard({required this.order, required this.courier});
+
+  final Order order;
+  final CourierInfo courier;
+
+  @override
+  ConsumerState<_TrackingCard> createState() => _TrackingCardState();
+}
+
+class _TrackingCardState extends ConsumerState<_TrackingCard> {
+  // Sans nouvelle position, l'âge et le grisé évoluent quand même.
+  late final Timer _clock;
+
+  @override
+  void initState() {
+    super.initState();
+    _clock = Timer.periodic(
+      const Duration(seconds: 15),
+      (_) => setState(() {}),
+    );
+  }
+
+  @override
+  void dispose() {
+    _clock.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final tokens = context.tokens;
+    final o = widget.order;
+    final location = ref.watch(courierLocationProvider(o.courierId!)).value;
+    if (location == null) return const SizedBox.shrink();
+    final now = DateTime.now();
+    final stale = location.isStale(now);
+    final minutes = arrivalMinutes(
+      o,
+      widget.courier.vehicleType,
+      location,
+      now,
+    );
+    final pickedUp =
+        o.status == OrderStatus.pickedUp || o.status == OrderStatus.inTransit;
+    final courier = LatLng(location.latitude, location.longitude);
+    final pickup = LatLng(o.pickupLat, o.pickupLng);
+    final dropoff = LatLng(o.dropoffLat, o.dropoffLng);
+    Marker pin(LatLng point, IconData icon, Color color) => Marker(
+      point: point,
+      width: 36,
+      height: 36,
+      alignment: Alignment.topCenter,
+      child: Icon(icon, color: color, size: 36),
+    );
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SizedBox(
+            height: 180,
+            child: FlutterMap(
+              key: ValueKey(pickedUp),
+              options: MapOptions(
+                initialCameraFit: CameraFit.coordinates(
+                  coordinates: [courier, dropoff, if (!pickedUp) pickup],
+                  padding: const EdgeInsets.all(40),
+                  maxZoom: 16,
+                ),
+                backgroundColor: tokens.surfaceAlt,
+                interactionOptions: const InteractionOptions(
+                  flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
+                ),
+              ),
+              children: [
+                TileLayer(
+                  urlTemplate: Env.mapTilesUrl,
+                  userAgentPackageName: 'com.tchopi.mobile',
+                ),
+                MarkerLayer(
+                  markers: [
+                    if (!pickedUp)
+                      pin(pickup, Icons.storefront_rounded, tokens.ink),
+                    pin(dropoff, Icons.location_on, tokens.primary),
+                    Marker(
+                      point: courier,
+                      width: 34,
+                      height: 34,
+                      child: CircleAvatar(
+                        backgroundColor: stale ? tokens.muted : tokens.ink,
+                        child: Icon(
+                          Icons.two_wheeler,
+                          size: 18,
+                          color: tokens.onInk,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.all(Space.sm),
+                    child: Text(
+                      '© OpenStreetMap',
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodySmall!.copyWith(color: tokens.muted),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          ListTile(
+            leading: Icon(
+              minutes == null ? Icons.location_disabled : Icons.schedule,
+              color: minutes == null ? tokens.muted : tokens.primary,
+            ),
+            title: Text(
+              minutes == null
+                  ? l10n.trackingEtaUnavailable(
+                      formatAge(now.difference(location.recordedAt)),
+                    )
+                  : l10n.trackingEta(minutes),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// NOT-04 : la première fois qu'une commande est suivie, explication puis demande d'autorisation.
+class _PushPrompt extends ConsumerStatefulWidget {
+  const _PushPrompt();
+
+  @override
+  ConsumerState<_PushPrompt> createState() => _PushPromptState();
+}
+
+class _PushPromptState extends ConsumerState<_PushPrompt> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        offerPush(
+          context,
+          ref,
+          body: AppLocalizations.of(context).pushClientBody,
+        );
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => const SizedBox.shrink();
+}
+
+/// Bandeau d'information discret (connexion perdue, notifications désactivées).
+class _Notice extends StatelessWidget {
+  const _Notice({required this.icon, required this.text, this.action});
+
+  final IconData icon;
+  final String text;
+  final Widget? action;
+
+  @override
+  Widget build(BuildContext context) {
+    final tokens = context.tokens;
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: Space.lg,
+        vertical: Space.sm,
+      ),
+      decoration: BoxDecoration(
+        color: tokens.warningSoft,
+        borderRadius: BorderRadius.circular(Radii.card),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: tokens.warning, size: 20),
+          const SizedBox(width: Space.sm),
+          Expanded(
+            child: Text(text, style: Theme.of(context).textTheme.bodyMedium),
+          ),
+          ?action,
+        ],
       ),
     );
   }

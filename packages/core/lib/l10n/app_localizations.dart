@@ -3716,6 +3716,66 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'L\'équipe est prévenue et décide de la suite avec le client.'**
   String get missionFailedBody;
+
+  /// No description provided for @pushTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Être prévenu'**
+  String get pushTitle;
+
+  /// No description provided for @pushEnable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Activer les notifications'**
+  String get pushEnable;
+
+  /// No description provided for @pushClientBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recevez une notification à chaque étape : commande acceptée, livreur en route, livraison.'**
+  String get pushClientBody;
+
+  /// No description provided for @pushCourierBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recevez les nouvelles missions même quand l\'app est fermée.'**
+  String get pushCourierBody;
+
+  /// No description provided for @pushRestaurantBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recevez les nouvelles commandes même quand l\'app est fermée.'**
+  String get pushRestaurantBody;
+
+  /// No description provided for @pushReminder.
+  ///
+  /// In fr, this message translates to:
+  /// **'Notifications désactivées : vous ne serez pas prévenu des étapes de la commande.'**
+  String get pushReminder;
+
+  /// No description provided for @pushReminderAction.
+  ///
+  /// In fr, this message translates to:
+  /// **'Activer'**
+  String get pushReminderAction;
+
+  /// No description provided for @trackingEta.
+  ///
+  /// In fr, this message translates to:
+  /// **'Arrivée estimée : environ {minutes} min'**
+  String trackingEta(int minutes);
+
+  /// No description provided for @trackingEtaUnavailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Position il y a {age} · estimation indisponible'**
+  String trackingEtaUnavailable(String age);
+
+  /// No description provided for @trackingConnectionLost.
+  ///
+  /// In fr, this message translates to:
+  /// **'Connexion perdue — reconnexion…'**
+  String get trackingConnectionLost;
 }
 
 class _AppLocalizationsDelegate

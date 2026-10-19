@@ -200,6 +200,12 @@ class _MissionScreenState extends ConsumerState<MissionScreen> {
             ),
           ),
         ),
+        if (ref.watch(orderEventsProvider(o.id)).value case final events?
+            when events.isNotEmpty) ...[
+          const SizedBox(height: Space.lg),
+          SectionHeader(title: l10n.orderTimeline),
+          OrderTimeline(events: events),
+        ],
         const SizedBox(height: Space.xl),
         if (!pickedUp)
           FilledButton(

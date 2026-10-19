@@ -167,6 +167,81 @@ final class OrderFamily extends $Family
   String toString() => r'orderProvider';
 }
 
+@ProviderFor(courierLocation)
+final courierLocationProvider = CourierLocationFamily._();
+
+final class CourierLocationProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<CourierLocation?>,
+          CourierLocation?,
+          Stream<CourierLocation?>
+        >
+    with $FutureModifier<CourierLocation?>, $StreamProvider<CourierLocation?> {
+  CourierLocationProvider._({
+    required CourierLocationFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'courierLocationProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$courierLocationHash();
+
+  @override
+  String toString() {
+    return r'courierLocationProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $StreamProviderElement<CourierLocation?> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
+
+  @override
+  Stream<CourierLocation?> create(Ref ref) {
+    final argument = this.argument as String;
+    return courierLocation(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is CourierLocationProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$courierLocationHash() => r'897559e26f41ad0c4bda6f45bb8ef37047789cd8';
+
+final class CourierLocationFamily extends $Family
+    with $FunctionalFamilyOverride<Stream<CourierLocation?>, String> {
+  CourierLocationFamily._()
+    : super(
+        retry: null,
+        name: r'courierLocationProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  CourierLocationProvider call(String courierId) =>
+      CourierLocationProvider._(argument: courierId, from: this);
+
+  @override
+  String toString() => r'courierLocationProvider';
+}
+
 @ProviderFor(orderLive)
 final orderLiveProvider = OrderLiveFamily._();
 

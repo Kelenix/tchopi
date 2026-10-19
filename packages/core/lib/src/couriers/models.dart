@@ -44,6 +44,7 @@ abstract class CourierInfo with _$CourierInfo {
     String? phone,
     required VehicleType vehicleType,
     String? plateNumber,
+    String? photoPath,
   }) = _CourierInfo;
 
   factory CourierInfo.fromJson(Map<String, dynamic> json) =>
@@ -135,4 +136,23 @@ abstract class CodeResult with _$CodeResult {
 
   factory CodeResult.fromJson(Map<String, dynamic> json) =>
       _$CodeResultFromJson(json);
+}
+
+/// Dernière position connue d'un livreur (TRK-01) ; ancienne au-delà de 60 s (TRK-02).
+@freezed
+abstract class CourierLocation with _$CourierLocation {
+  const CourierLocation._();
+
+  const factory CourierLocation({
+    required double latitude,
+    required double longitude,
+    required DateTime recordedAt,
+  }) = _CourierLocation;
+
+  factory CourierLocation.fromJson(Map<String, dynamic> json) =>
+      _$CourierLocationFromJson(json);
+
+  static const freshFor = Duration(seconds: 60);
+
+  bool isStale(DateTime now) => now.difference(recordedAt) > freshFor;
 }

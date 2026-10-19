@@ -13,6 +13,21 @@ abstract final class Env {
     defaultValue: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
   );
 
+  /// Notifications push (ADR-025) : configuration Firebase de l'app, publique par conception. Vide tant que le
+  /// projet Firebase n'est pas créé (docs/manual-tasks.md §8) : les notifications sont alors désactivées.
+  static const firebaseApiKey = String.fromEnvironment('FIREBASE_API_KEY');
+  static const firebaseAppId = String.fromEnvironment('FIREBASE_APP_ID');
+  static const firebaseSenderId = String.fromEnvironment('FIREBASE_SENDER_ID');
+  static const firebaseProjectId = String.fromEnvironment(
+    'FIREBASE_PROJECT_ID',
+  );
+
+  static bool get pushConfigured =>
+      firebaseApiKey.isNotEmpty &&
+      firebaseAppId.isNotEmpty &&
+      firebaseSenderId.isNotEmpty &&
+      firebaseProjectId.isNotEmpty;
+
   /// Échoue au démarrage plutôt qu'au premier appel réseau si la configuration manque.
   static void ensureConfigured() {
     final missing = [

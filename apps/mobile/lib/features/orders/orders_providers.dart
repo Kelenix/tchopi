@@ -22,6 +22,10 @@ Future<Order> order(Ref ref, String id) {
 }
 
 @riverpod
+Stream<CourierLocation?> courierLocation(Ref ref, String courierId) =>
+    ref.watch(orderRepositoryProvider).watchCourier(courierId);
+
+@riverpod
 Stream<OrderLive> orderLive(Ref ref, String id) =>
     ref.watch(orderRepositoryProvider).watchLive(id);
 

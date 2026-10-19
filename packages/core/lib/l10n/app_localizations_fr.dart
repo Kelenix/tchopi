@@ -2009,4 +2009,42 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get missionFailedBody =>
       'L\'équipe est prévenue et décide de la suite avec le client.';
+
+  @override
+  String get pushTitle => 'Être prévenu';
+
+  @override
+  String get pushEnable => 'Activer les notifications';
+
+  @override
+  String get pushClientBody =>
+      'Recevez une notification à chaque étape : commande acceptée, livreur en route, livraison.';
+
+  @override
+  String get pushCourierBody =>
+      'Recevez les nouvelles missions même quand l\'app est fermée.';
+
+  @override
+  String get pushRestaurantBody =>
+      'Recevez les nouvelles commandes même quand l\'app est fermée.';
+
+  @override
+  String get pushReminder =>
+      'Notifications désactivées : vous ne serez pas prévenu des étapes de la commande.';
+
+  @override
+  String get pushReminderAction => 'Activer';
+
+  @override
+  String trackingEta(int minutes) {
+    return 'Arrivée estimée : environ $minutes min';
+  }
+
+  @override
+  String trackingEtaUnavailable(String age) {
+    return 'Position il y a $age · estimation indisponible';
+  }
+
+  @override
+  String get trackingConnectionLost => 'Connexion perdue — reconnexion…';
 }

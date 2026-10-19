@@ -4,6 +4,15 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · versions [S
 
 ## [Non publié]
 
+### Ajouté (Inc-9, ADR-025)
+- Client : carte du livreur en temps réel sur le suivi, estimation d'arrivée, position ancienne grisée avec son âge,
+  photo du livreur, bandeau « Connexion perdue — reconnexion… », rappel si les notifications sont refusées.
+- Notifications push (Firebase) à chaque étape pour le client, offres et missions pour le livreur, nouvelles
+  commandes et annulations pour le restaurant ; autorisation demandée une fois, après explication ; toucher → écran
+  concerné. Actives dès que le projet Firebase est configuré (tâche manuelle n° 8).
+- Restaurant : bip sonore des nouvelles commandes dans le navigateur, chronologie d'une commande (toucher l'en-tête).
+- Livreur : son à l'arrivée d'une offre, chronologie dans l'écran de mission.
+
 ### Ajouté (Inc-8, ADR-024)
 - Livreur : écran de mission (étape, carte, itinéraire Google Maps / Waze, retrait et destination avec appel,
   contenu, espèces) ; « Commande récupérée » (colis en espèces : encaissement confirmé d'abord), « Je pars livrer »,

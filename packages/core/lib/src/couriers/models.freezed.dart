@@ -299,7 +299,7 @@ as bool,
 /// @nodoc
 mixin _$CourierInfo {
 
- String get firstName; String? get phone; VehicleType get vehicleType; String? get plateNumber;
+ String get firstName; String? get phone; VehicleType get vehicleType; String? get plateNumber; String? get photoPath;
 /// Create a copy of CourierInfo
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -312,16 +312,16 @@ $CourierInfoCopyWith<CourierInfo> get copyWith => _$CourierInfoCopyWithImpl<Cour
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CourierInfo&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.vehicleType, vehicleType) || other.vehicleType == vehicleType)&&(identical(other.plateNumber, plateNumber) || other.plateNumber == plateNumber));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CourierInfo&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.vehicleType, vehicleType) || other.vehicleType == vehicleType)&&(identical(other.plateNumber, plateNumber) || other.plateNumber == plateNumber)&&(identical(other.photoPath, photoPath) || other.photoPath == photoPath));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,firstName,phone,vehicleType,plateNumber);
+int get hashCode => Object.hash(runtimeType,firstName,phone,vehicleType,plateNumber,photoPath);
 
 @override
 String toString() {
-  return 'CourierInfo(firstName: $firstName, phone: $phone, vehicleType: $vehicleType, plateNumber: $plateNumber)';
+  return 'CourierInfo(firstName: $firstName, phone: $phone, vehicleType: $vehicleType, plateNumber: $plateNumber, photoPath: $photoPath)';
 }
 
 
@@ -332,7 +332,7 @@ abstract mixin class $CourierInfoCopyWith<$Res>  {
   factory $CourierInfoCopyWith(CourierInfo value, $Res Function(CourierInfo) _then) = _$CourierInfoCopyWithImpl;
 @useResult
 $Res call({
- String firstName, String? phone, VehicleType vehicleType, String? plateNumber
+ String firstName, String? phone, VehicleType vehicleType, String? plateNumber, String? photoPath
 });
 
 
@@ -349,12 +349,13 @@ class _$CourierInfoCopyWithImpl<$Res>
 
 /// Create a copy of CourierInfo
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? firstName = null,Object? phone = freezed,Object? vehicleType = null,Object? plateNumber = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? firstName = null,Object? phone = freezed,Object? vehicleType = null,Object? plateNumber = freezed,Object? photoPath = freezed,}) {
   return _then(_self.copyWith(
 firstName: null == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
 as String,phone: freezed == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
 as String?,vehicleType: null == vehicleType ? _self.vehicleType : vehicleType // ignore: cast_nullable_to_non_nullable
 as VehicleType,plateNumber: freezed == plateNumber ? _self.plateNumber : plateNumber // ignore: cast_nullable_to_non_nullable
+as String?,photoPath: freezed == photoPath ? _self.photoPath : photoPath // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -440,10 +441,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String firstName,  String? phone,  VehicleType vehicleType,  String? plateNumber)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String firstName,  String? phone,  VehicleType vehicleType,  String? plateNumber,  String? photoPath)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CourierInfo() when $default != null:
-return $default(_that.firstName,_that.phone,_that.vehicleType,_that.plateNumber);case _:
+return $default(_that.firstName,_that.phone,_that.vehicleType,_that.plateNumber,_that.photoPath);case _:
   return orElse();
 
 }
@@ -461,10 +462,10 @@ return $default(_that.firstName,_that.phone,_that.vehicleType,_that.plateNumber)
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String firstName,  String? phone,  VehicleType vehicleType,  String? plateNumber)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String firstName,  String? phone,  VehicleType vehicleType,  String? plateNumber,  String? photoPath)  $default,) {final _that = this;
 switch (_that) {
 case _CourierInfo():
-return $default(_that.firstName,_that.phone,_that.vehicleType,_that.plateNumber);case _:
+return $default(_that.firstName,_that.phone,_that.vehicleType,_that.plateNumber,_that.photoPath);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -481,10 +482,10 @@ return $default(_that.firstName,_that.phone,_that.vehicleType,_that.plateNumber)
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String firstName,  String? phone,  VehicleType vehicleType,  String? plateNumber)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String firstName,  String? phone,  VehicleType vehicleType,  String? plateNumber,  String? photoPath)?  $default,) {final _that = this;
 switch (_that) {
 case _CourierInfo() when $default != null:
-return $default(_that.firstName,_that.phone,_that.vehicleType,_that.plateNumber);case _:
+return $default(_that.firstName,_that.phone,_that.vehicleType,_that.plateNumber,_that.photoPath);case _:
   return null;
 
 }
@@ -496,13 +497,14 @@ return $default(_that.firstName,_that.phone,_that.vehicleType,_that.plateNumber)
 @JsonSerializable()
 
 class _CourierInfo implements CourierInfo {
-  const _CourierInfo({required this.firstName, this.phone, required this.vehicleType, this.plateNumber});
+  const _CourierInfo({required this.firstName, this.phone, required this.vehicleType, this.plateNumber, this.photoPath});
   factory _CourierInfo.fromJson(Map<String, dynamic> json) => _$CourierInfoFromJson(json);
 
 @override final  String firstName;
 @override final  String? phone;
 @override final  VehicleType vehicleType;
 @override final  String? plateNumber;
+@override final  String? photoPath;
 
 /// Create a copy of CourierInfo
 /// with the given fields replaced by the non-null parameter values.
@@ -517,16 +519,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CourierInfo&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.vehicleType, vehicleType) || other.vehicleType == vehicleType)&&(identical(other.plateNumber, plateNumber) || other.plateNumber == plateNumber));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CourierInfo&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.vehicleType, vehicleType) || other.vehicleType == vehicleType)&&(identical(other.plateNumber, plateNumber) || other.plateNumber == plateNumber)&&(identical(other.photoPath, photoPath) || other.photoPath == photoPath));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,firstName,phone,vehicleType,plateNumber);
+int get hashCode => Object.hash(runtimeType,firstName,phone,vehicleType,plateNumber,photoPath);
 
 @override
 String toString() {
-  return 'CourierInfo(firstName: $firstName, phone: $phone, vehicleType: $vehicleType, plateNumber: $plateNumber)';
+  return 'CourierInfo(firstName: $firstName, phone: $phone, vehicleType: $vehicleType, plateNumber: $plateNumber, photoPath: $photoPath)';
 }
 
 
@@ -537,7 +539,7 @@ abstract mixin class _$CourierInfoCopyWith<$Res> implements $CourierInfoCopyWith
   factory _$CourierInfoCopyWith(_CourierInfo value, $Res Function(_CourierInfo) _then) = __$CourierInfoCopyWithImpl;
 @override @useResult
 $Res call({
- String firstName, String? phone, VehicleType vehicleType, String? plateNumber
+ String firstName, String? phone, VehicleType vehicleType, String? plateNumber, String? photoPath
 });
 
 
@@ -554,12 +556,13 @@ class __$CourierInfoCopyWithImpl<$Res>
 
 /// Create a copy of CourierInfo
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? firstName = null,Object? phone = freezed,Object? vehicleType = null,Object? plateNumber = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? firstName = null,Object? phone = freezed,Object? vehicleType = null,Object? plateNumber = freezed,Object? photoPath = freezed,}) {
   return _then(_CourierInfo(
 firstName: null == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
 as String,phone: freezed == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
 as String?,vehicleType: null == vehicleType ? _self.vehicleType : vehicleType // ignore: cast_nullable_to_non_nullable
 as VehicleType,plateNumber: freezed == plateNumber ? _self.plateNumber : plateNumber // ignore: cast_nullable_to_non_nullable
+as String?,photoPath: freezed == photoPath ? _self.photoPath : photoPath // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -1984,6 +1987,275 @@ delivered: null == delivered ? _self.delivered : delivered // ignore: cast_nulla
 as bool,attemptsLeft: null == attemptsLeft ? _self.attemptsLeft : attemptsLeft // ignore: cast_nullable_to_non_nullable
 as int,locked: null == locked ? _self.locked : locked // ignore: cast_nullable_to_non_nullable
 as bool,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$CourierLocation {
+
+ double get latitude; double get longitude; DateTime get recordedAt;
+/// Create a copy of CourierLocation
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$CourierLocationCopyWith<CourierLocation> get copyWith => _$CourierLocationCopyWithImpl<CourierLocation>(this as CourierLocation, _$identity);
+
+  /// Serializes this CourierLocation to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CourierLocation&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.recordedAt, recordedAt) || other.recordedAt == recordedAt));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,latitude,longitude,recordedAt);
+
+@override
+String toString() {
+  return 'CourierLocation(latitude: $latitude, longitude: $longitude, recordedAt: $recordedAt)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $CourierLocationCopyWith<$Res>  {
+  factory $CourierLocationCopyWith(CourierLocation value, $Res Function(CourierLocation) _then) = _$CourierLocationCopyWithImpl;
+@useResult
+$Res call({
+ double latitude, double longitude, DateTime recordedAt
+});
+
+
+
+
+}
+/// @nodoc
+class _$CourierLocationCopyWithImpl<$Res>
+    implements $CourierLocationCopyWith<$Res> {
+  _$CourierLocationCopyWithImpl(this._self, this._then);
+
+  final CourierLocation _self;
+  final $Res Function(CourierLocation) _then;
+
+/// Create a copy of CourierLocation
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? latitude = null,Object? longitude = null,Object? recordedAt = null,}) {
+  return _then(_self.copyWith(
+latitude: null == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
+as double,longitude: null == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
+as double,recordedAt: null == recordedAt ? _self.recordedAt : recordedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [CourierLocation].
+extension CourierLocationPatterns on CourierLocation {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _CourierLocation value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _CourierLocation() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _CourierLocation value)  $default,){
+final _that = this;
+switch (_that) {
+case _CourierLocation():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _CourierLocation value)?  $default,){
+final _that = this;
+switch (_that) {
+case _CourierLocation() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double latitude,  double longitude,  DateTime recordedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _CourierLocation() when $default != null:
+return $default(_that.latitude,_that.longitude,_that.recordedAt);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double latitude,  double longitude,  DateTime recordedAt)  $default,) {final _that = this;
+switch (_that) {
+case _CourierLocation():
+return $default(_that.latitude,_that.longitude,_that.recordedAt);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double latitude,  double longitude,  DateTime recordedAt)?  $default,) {final _that = this;
+switch (_that) {
+case _CourierLocation() when $default != null:
+return $default(_that.latitude,_that.longitude,_that.recordedAt);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _CourierLocation extends CourierLocation {
+  const _CourierLocation({required this.latitude, required this.longitude, required this.recordedAt}): super._();
+  factory _CourierLocation.fromJson(Map<String, dynamic> json) => _$CourierLocationFromJson(json);
+
+@override final  double latitude;
+@override final  double longitude;
+@override final  DateTime recordedAt;
+
+/// Create a copy of CourierLocation
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$CourierLocationCopyWith<_CourierLocation> get copyWith => __$CourierLocationCopyWithImpl<_CourierLocation>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$CourierLocationToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CourierLocation&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.recordedAt, recordedAt) || other.recordedAt == recordedAt));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,latitude,longitude,recordedAt);
+
+@override
+String toString() {
+  return 'CourierLocation(latitude: $latitude, longitude: $longitude, recordedAt: $recordedAt)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$CourierLocationCopyWith<$Res> implements $CourierLocationCopyWith<$Res> {
+  factory _$CourierLocationCopyWith(_CourierLocation value, $Res Function(_CourierLocation) _then) = __$CourierLocationCopyWithImpl;
+@override @useResult
+$Res call({
+ double latitude, double longitude, DateTime recordedAt
+});
+
+
+
+
+}
+/// @nodoc
+class __$CourierLocationCopyWithImpl<$Res>
+    implements _$CourierLocationCopyWith<$Res> {
+  __$CourierLocationCopyWithImpl(this._self, this._then);
+
+  final _CourierLocation _self;
+  final $Res Function(_CourierLocation) _then;
+
+/// Create a copy of CourierLocation
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? latitude = null,Object? longitude = null,Object? recordedAt = null,}) {
+  return _then(_CourierLocation(
+latitude: null == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
+as double,longitude: null == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
+as double,recordedAt: null == recordedAt ? _self.recordedAt : recordedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 

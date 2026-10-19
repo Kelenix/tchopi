@@ -445,6 +445,13 @@ entrypoint = "./functions/account-delete/index.ts"
 # For example, if you want to serve static HTML pages in your function:
 # static_files = [ "./functions/account-delete/*.html" ]
 
+[functions.push]
+enabled = true
+# Appelée par la base (pg_net) avec la clé de service, vérifiée par la fonction elle-même.
+verify_jwt = false
+import_map = "./functions/push/deno.json"
+entrypoint = "./functions/push/index.ts"
+
 [functions.admin-users]
 enabled = true
 verify_jwt = false

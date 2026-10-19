@@ -936,5 +936,29 @@
   "eventCodeLocked": "Code bloqué",
   "eventProblemReported": "Problème signalé",
   "eventCourierChanged": "Votre livreur a dû annuler, nous en cherchons un autre",
-  "missionFailedBody": "L'équipe est prévenue et décide de la suite avec le client."
+  "missionFailedBody": "L'équipe est prévenue et décide de la suite avec le client.",
+  "pushTitle": "Être prévenu",
+  "pushEnable": "Activer les notifications",
+  "pushClientBody": "Recevez une notification à chaque étape : commande acceptée, livreur en route, livraison.",
+  "pushCourierBody": "Recevez les nouvelles missions même quand l'app est fermée.",
+  "pushRestaurantBody": "Recevez les nouvelles commandes même quand l'app est fermée.",
+  "pushReminder": "Notifications désactivées : vous ne serez pas prévenu des étapes de la commande.",
+  "pushReminderAction": "Activer",
+  "trackingEta": "Arrivée estimée : environ {minutes} min",
+  "@trackingEta": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "trackingEtaUnavailable": "Position il y a {age} · estimation indisponible",
+  "@trackingEtaUnavailable": {
+    "placeholders": {
+      "age": {
+        "type": "String"
+      }
+    }
+  },
+  "trackingConnectionLost": "Connexion perdue — reconnexion…"
 }

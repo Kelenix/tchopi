@@ -8,7 +8,7 @@
 - **Phase courante** : 4 — Implémentation · Inc-0 (socle) livré, sauf déploiement VPS (accès non fourni)
 - **Dernière mise à jour** : 2026-10-19
 - **Santé** : 🟢 OK · accès VPS et dépôt GitHub non fournis
-- **Prochaine action** : Inc-9 (suivi temps réel, chronologie, notifications)
+- **Prochaine action** : Inc-10 (espèces, transactions, montants séparés)
 - **Plan de référence** : `docs/plan-de-realisation.md` · Design : `docs/design/design-system.md`
 - **Maquette** : `docs/design/maquette.html` — https://claude.ai/artifact/9GyaG6F34CkTe1qQpsy1cP (privée)
 
@@ -25,7 +25,7 @@ Flutter 3.41.9 · Dart 3.11.5 · Supabase CLI 2.116.0 · Docker 29.8.2 · Java 2
 | 1 — Définition produit      | ✅ fait | `docs/product/user-stories.md` (60 stories), `docs/product/screens.md` (45 fiches) |
 | 2 — Planification           | ✅ fait | Backlog, jalons, chemin critique ci-dessous ; risques : plan §10 |
 | 3 — Architecture & design   | ✅ fait | Architecture, conception, données, design system ; maquette v1 validée |
-| 4 — Implémentation          | 🔄 en cours | Inc-0 à Inc-8 livrés ; app unique (ADR-016) |
+| 4 — Implémentation          | 🔄 en cours | Inc-0 à Inc-9 livrés ; app unique (ADR-016) |
 | 5 — Qualité & performance   | ⬜ à faire | Scénarios S1–S6 |
 | 6 — Publication (stores)    | ⬜ à faire | |
 | 7 — Documentation           | ⬜ à faire | |
@@ -46,7 +46,7 @@ Flutter 3.41.9 · Dart 3.11.5 · Supabase CLI 2.116.0 · Docker 29.8.2 · Java 2
 | Inc-6 | Livraison de colis | PAR-01 à 05 | §3.2 | M | ✅ |
 | Inc-7 | En ligne, attribution, supervision, paramètres | COU-05, DIS-01 à 04, ADM-03, ADM-05 | §4.1 | L | ✅ |
 | Inc-8 | Mission livreur, code de livraison, échecs | MIS-01 à 10 | §4.2, §4.5 | L | ✅ |
-| Inc-9 | Suivi temps réel, chronologie, notifications | TRK-01 à 03, NOT-01 à 04 | §4.3, §4.4, §4.6 | L | ⬜ |
+| Inc-9 | Suivi temps réel, chronologie, notifications | TRK-01 à 03, NOT-01 à 04 | §4.3, §4.4, §4.6 | L | ✅ (push : Firebase à créer) |
 | Inc-10 | Espèces, transactions, montants séparés | PAY-01, PAY-02, PAY-06, TRX-01 | §5.3, §5.4, §5.6 | M | ⬜ |
 | Inc-11 | Mobile Money | PAY-03, PAY-05 | §5.1 | L | ⬜ |
 | Inc-12 | Carte bancaire Stripe | PAY-04 | §5.2 | M | ⬜ |
@@ -86,6 +86,16 @@ validation de la maquette → code des écrans à partir de l'Inc-1. Registre de
 - voir `docs/manual-tasks.md` (priorité : compte marchand de paiement, à démarrer tôt)
 
 ## Journal de session (résumé court, le plus récent en haut)
+
+- 2026-10-19 — Inc-9 (branche feat/inc-9-suivi, ADR-025) : position et photo du livreur visibles du client pendant
+  la commande, estimation d'arrivée, position ancienne grisée, bandeau de connexion perdue, chronologie côté livreur
+  et restaurant ; file de notifications par déclencheur, fonction `push` (FCM) appelée par la base, appareils,
+  autorisation après explication, bip navigateur pour le restaurant. Vérifié : chaîne événement → file → pg_net →
+  fonction (« non configurée » sans Firebase) ; dans le navigateur, suivi R-BX4X5 en route (carte, « environ
+  7 min »), position vieillie → grisée « il y a 3 min · estimation indisponible » en direct, chronologie restaurant ;
+  APK Android compilé avec Firebase. Non vérifié : réception réelle d'une notification (projet Firebase à créer,
+  tâche manuelle n° 8). Preuves : analyse 0 problème ; 39 + 45 tests Flutter ; pgTAP 197/197 ; 3 + 7 tests
+  d'intégration réels (position du livreur reçue en direct par le client, notifications en file).
 
 - 2026-10-19 — Inc-8 (branche feat/inc-8-mission, ADR-024) : étapes de mission côté serveur, code à essais limités
   (blocage + alerte, confirmation admin sans code), registre des espèces, problèmes / échec, abandon, remise par le
