@@ -88,7 +88,7 @@ validation de la maquette → code des écrans à partir de l'Inc-1. Registre de
 ## Journal de session (résumé court, le plus récent en haut)
 
 - 2026-10-19 — Villes (ADR-036) : 10 villes ivoiriennes en plus d'Abidjan, avec tarifs ; tests isolés de ces données.
-  Comptes de test sur le serveur : `.dev-accounts.ps1 -Serveur` (mot de passe aléatoire noté seulement dans
+  Comptes de test sur le serveur : `.\dev-accounts.ps1 -Serveur` (mot de passe aléatoire noté seulement dans
   `env/comptes-serveur.txt`). Preuves : analyse 0 ; 64 + 43 tests Flutter ; pgTAP 261/261 ; intégration 10 + 3.
 
 - 2026-10-19 — Déploiement continu (ADR-035) : job « Déploiement du serveur » dans la CI (main, après les tests),

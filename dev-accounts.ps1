@@ -56,7 +56,7 @@ on conflict do nothing;
 if ($Serveur) {
   $sql | ssh tchopi "docker exec -i tchopi-db psql -U postgres -d postgres -q -v ON_ERROR_STOP=1 -v password=$password -o /dev/null"
   if ($LASTEXITCODE -ne 0) { Write-Host 'ÉCHEC : accès au VPS ? (docs/deployer-sur-vps.md § 1)' -ForegroundColor Red; exit 1 }
-  $file = Join-Path $PSScriptRoot 'envcomptes-serveur.txt'
+  $file = Join-Path $PSScriptRoot 'env/comptes-serveur.txt'
   @("Comptes de test sur le serveur en ligne (mot de passe commun) : $password",
     'Admin 07 00 00 00 03 · Client 07 00 00 00 04 · Livreur 07 00 00 00 05 · Restaurant 07 00 00 00 06') |
     Set-Content $file -Encoding utf8
