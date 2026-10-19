@@ -11,14 +11,18 @@ extension OrderTitle on Order {
 }
 
 extension OrderStatusLabel on OrderStatus {
-  String label(AppLocalizations l10n) => switch (this) {
+  /// [parcel] : un colis se retire chez l'expéditeur, pas au restaurant.
+  String label(AppLocalizations l10n, {bool parcel = false}) => switch (this) {
     OrderStatus.awaitingPayment => l10n.orderStatusAwaitingPayment,
     OrderStatus.pending => l10n.orderStatusPending,
     OrderStatus.accepted => l10n.orderStatusAccepted,
     OrderStatus.preparing => l10n.orderStatusPreparing,
     OrderStatus.ready => l10n.orderStatusReady,
     OrderStatus.searchingCourier => l10n.orderStatusSearchingCourier,
-    OrderStatus.courierAssigned => l10n.orderStatusCourierAssigned,
+    OrderStatus.courierAssigned =>
+      parcel
+          ? l10n.orderStatusCourierToPickup
+          : l10n.orderStatusCourierAssigned,
     OrderStatus.pickedUp => l10n.orderStatusPickedUp,
     OrderStatus.inTransit => l10n.orderStatusInTransit,
     OrderStatus.delivered => l10n.orderStatusDelivered,
@@ -150,9 +154,10 @@ String vehicleLabel(
 
 /// Pastille de statut : couleur et texte (jamais la couleur seule).
 class OrderStatusChip extends StatelessWidget {
-  const OrderStatusChip({super.key, required this.status});
+  const OrderStatusChip({super.key, required this.status, this.parcel = false});
 
   final OrderStatus status;
+  final bool parcel;
 
   @override
   Widget build(BuildContext context) {
@@ -177,7 +182,7 @@ class OrderStatusChip extends StatelessWidget {
           vertical: Space.xs,
         ),
         child: Text(
-          status.label(AppLocalizations.of(context)),
+          status.label(AppLocalizations.of(context), parcel: parcel),
           style: Theme.of(context).textTheme.labelLarge!.copyWith(color: color),
         ),
       ),
@@ -353,11 +358,9 @@ class OrderTimeline extends StatelessWidget {
   }
 }
 
-/// « Aucun livreur disponible pour le moment » (ORD-07, PAR-03), avec un nouvel essai.
+/// Aucun livreur en ligne : la commande reste possible et sera prise en charge dès qu'un livreur est disponible.
 class NoCourierBanner extends StatelessWidget {
-  const NoCourierBanner({super.key, required this.onRetry});
-
-  final VoidCallback onRetry;
+  const NoCourierBanner({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -375,11 +378,10 @@ class NoCourierBanner extends StatelessWidget {
           const SizedBox(width: Space.md),
           Expanded(
             child: Text(
-              l10n.failureNoCourier,
+              l10n.noCourierYet,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
-          TextButton(onPressed: onRetry, child: Text(l10n.actionRetry)),
         ],
       ),
     );

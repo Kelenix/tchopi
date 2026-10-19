@@ -622,6 +622,9 @@ class _OrderHero extends ConsumerWidget {
         ? _parcelSteps.indexOf(order.status).clamp(0, 5) + 1
         : order.status == OrderStatus.pickedUp
         ? 5
+        // Livreur en route vers le restaurant : même étape que « Prête ».
+        : order.status == OrderStatus.courierAssigned
+        ? 4
         : _steps.indexOf(order.status) + 1;
 
     return SizedBox(
@@ -677,7 +680,7 @@ class _OrderHero extends ConsumerWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      order.status.label(l10n),
+                      order.status.label(l10n, parcel: parcel),
                       style: text.titleLarge!.copyWith(
                         color: onPhoto,
                         fontWeight: FontWeight.w800,

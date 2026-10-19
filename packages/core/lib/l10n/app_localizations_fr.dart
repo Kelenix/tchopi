@@ -1253,7 +1253,8 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get orderWaitingCourier => 'En attente du livreur';
+  String get orderWaitingCourier =>
+      'Prête · proposée aux livreurs, en attente d\'acceptation';
 
   @override
   String get rejectTitle => 'Motif du refus';
@@ -1301,7 +1302,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get orderStatusSearchingCourier => 'Recherche d\'un livreur';
 
   @override
-  String get orderStatusCourierAssigned => 'Livreur assigné';
+  String get orderStatusCourierAssigned =>
+      'Livreur en route vers le restaurant';
+
+  @override
+  String get orderStatusCourierToPickup => 'Livreur en route vers le retrait';
 
   @override
   String get orderStatusPickedUp => 'Récupérée';
@@ -1676,6 +1681,14 @@ class AppLocalizationsFr extends AppLocalizations {
   String get offerAccept => 'Accepter';
 
   @override
+  String get courierAvailableTitle => 'Commandes à récupérer';
+
+  @override
+  String courierOfferLine(String km, String district) {
+    return 'À $km km · vers $district';
+  }
+
+  @override
   String get offerDecline => 'Refuser';
 
   @override
@@ -1694,7 +1707,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get offerDeclinedBody =>
-      'Elle est proposée à un autre livreur. Restez en ligne pour la prochaine.';
+      'Elle reste proposée aux autres livreurs. Restez en ligne pour la prochaine.';
 
   @override
   String get orderCourierTitle => 'Votre livreur';
@@ -1713,7 +1726,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get dispatchKeepWaiting => 'Continuer d\'attendre';
 
   @override
-  String get eventCourierAssigned => 'Livreur assigné';
+  String get eventCourierAssigned => 'Livreur attribué';
 
   @override
   String get eventCourierReleased => 'Livreur retiré';
@@ -1723,6 +1736,10 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get orderNoCourier => 'Aucun livreur disponible';
+
+  @override
+  String get noCourierYet =>
+      'Aucun livreur en ligne pour l\'instant : vous pouvez commander, un livreur prendra votre commande dès qu\'il sera disponible.';
 
   @override
   String get adminSupervision => 'Commandes en cours';
@@ -1823,10 +1840,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsPaymentTimeout => 'Expiration d\'un paiement (minutes)';
 
   @override
-  String get settingsDispatchAlert => 'Alerte sans livreur (minutes)';
+  String get settingsDispatchAlert =>
+      'Alerte au restaurant sans livreur (minutes)';
 
   @override
-  String get settingsDispatchCancel => 'Annulation sans livreur (minutes)';
+  String get settingsDispatchCancel =>
+      'Annulation d\'un colis sans livreur (minutes)';
 
   @override
   String get settingsSupportTitle => 'Support';
@@ -2057,6 +2076,20 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get restaurantHandover => 'Remise au livreur';
+
+  @override
+  String get affiliatedTitle => 'Livreurs affiliés';
+
+  @override
+  String get affiliatedHint =>
+      'Ils reçoivent les commandes prêtes de ce restaurant. Sans livreur affilié, les livreurs de sa zone les reçoivent.';
+
+  @override
+  String get affiliatedEmpty => 'Aucun livreur validé pour l\'instant.';
+
+  @override
+  String get restaurantWaitingLong =>
+      'Toujours sans livreur : l\'équipe est prévenue et la commande reste proposée.';
 
   @override
   String restaurantCourier(String name) {

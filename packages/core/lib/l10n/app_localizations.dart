@@ -2365,7 +2365,7 @@ abstract class AppLocalizations {
   /// No description provided for @orderWaitingCourier.
   ///
   /// In fr, this message translates to:
-  /// **'En attente du livreur'**
+  /// **'Prête · proposée aux livreurs, en attente d\'acceptation'**
   String get orderWaitingCourier;
 
   /// No description provided for @rejectTitle.
@@ -2461,8 +2461,14 @@ abstract class AppLocalizations {
   /// No description provided for @orderStatusCourierAssigned.
   ///
   /// In fr, this message translates to:
-  /// **'Livreur assigné'**
+  /// **'Livreur en route vers le restaurant'**
   String get orderStatusCourierAssigned;
+
+  /// No description provided for @orderStatusCourierToPickup.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livreur en route vers le retrait'**
+  String get orderStatusCourierToPickup;
 
   /// No description provided for @orderStatusPickedUp.
   ///
@@ -3099,6 +3105,18 @@ abstract class AppLocalizations {
   /// **'Accepter'**
   String get offerAccept;
 
+  /// No description provided for @courierAvailableTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commandes à récupérer'**
+  String get courierAvailableTitle;
+
+  /// No description provided for @courierOfferLine.
+  ///
+  /// In fr, this message translates to:
+  /// **'À {km} km · vers {district}'**
+  String courierOfferLine(String km, String district);
+
   /// No description provided for @offerDecline.
   ///
   /// In fr, this message translates to:
@@ -3132,7 +3150,7 @@ abstract class AppLocalizations {
   /// No description provided for @offerDeclinedBody.
   ///
   /// In fr, this message translates to:
-  /// **'Elle est proposée à un autre livreur. Restez en ligne pour la prochaine.'**
+  /// **'Elle reste proposée aux autres livreurs. Restez en ligne pour la prochaine.'**
   String get offerDeclinedBody;
 
   /// No description provided for @orderCourierTitle.
@@ -3168,7 +3186,7 @@ abstract class AppLocalizations {
   /// No description provided for @eventCourierAssigned.
   ///
   /// In fr, this message translates to:
-  /// **'Livreur assigné'**
+  /// **'Livreur attribué'**
   String get eventCourierAssigned;
 
   /// No description provided for @eventCourierReleased.
@@ -3188,6 +3206,12 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Aucun livreur disponible'**
   String get orderNoCourier;
+
+  /// No description provided for @noCourierYet.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun livreur en ligne pour l\'instant : vous pouvez commander, un livreur prendra votre commande dès qu\'il sera disponible.'**
+  String get noCourierYet;
 
   /// No description provided for @adminSupervision.
   ///
@@ -3372,13 +3396,13 @@ abstract class AppLocalizations {
   /// No description provided for @settingsDispatchAlert.
   ///
   /// In fr, this message translates to:
-  /// **'Alerte sans livreur (minutes)'**
+  /// **'Alerte au restaurant sans livreur (minutes)'**
   String get settingsDispatchAlert;
 
   /// No description provided for @settingsDispatchCancel.
   ///
   /// In fr, this message translates to:
-  /// **'Annulation sans livreur (minutes)'**
+  /// **'Annulation d\'un colis sans livreur (minutes)'**
   String get settingsDispatchCancel;
 
   /// No description provided for @settingsSupportTitle.
@@ -3788,6 +3812,30 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Remise au livreur'**
   String get restaurantHandover;
+
+  /// No description provided for @affiliatedTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livreurs affiliés'**
+  String get affiliatedTitle;
+
+  /// No description provided for @affiliatedHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ils reçoivent les commandes prêtes de ce restaurant. Sans livreur affilié, les livreurs de sa zone les reçoivent.'**
+  String get affiliatedHint;
+
+  /// No description provided for @affiliatedEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun livreur validé pour l\'instant.'**
+  String get affiliatedEmpty;
+
+  /// No description provided for @restaurantWaitingLong.
+  ///
+  /// In fr, this message translates to:
+  /// **'Toujours sans livreur : l\'équipe est prévenue et la commande reste proposée.'**
+  String get restaurantWaitingLong;
 
   /// No description provided for @restaurantCourier.
   ///

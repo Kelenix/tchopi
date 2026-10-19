@@ -64,7 +64,9 @@ _DeliveryOffer _$DeliveryOfferFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       orderId: json['order_id'] as String,
       status: $enumDecode(_$OfferStatusEnumMap, json['status']),
-      expiresAt: DateTime.parse(json['expires_at'] as String),
+      expiresAt: json['expires_at'] == null
+          ? null
+          : DateTime.parse(json['expires_at'] as String),
       summary: OfferSummary.fromJson(json['summary'] as Map<String, dynamic>),
     );
 
@@ -73,7 +75,7 @@ Map<String, dynamic> _$DeliveryOfferToJson(_DeliveryOffer instance) =>
       'id': instance.id,
       'order_id': instance.orderId,
       'status': _$OfferStatusEnumMap[instance.status]!,
-      'expires_at': instance.expiresAt.toIso8601String(),
+      'expires_at': instance.expiresAt?.toIso8601String(),
       'summary': instance.summary,
     };
 

@@ -20,18 +20,18 @@ class MissionRepository {
         ),
       );
 
-  /// Offre en attente la plus récente, en temps réel (la RLS ne livre que les siennes).
-  Stream<DeliveryOffer?> watchPendingOffer(String courierId) => _client
+  /// Commandes proposées au livreur, en attente de réponse, en temps réel (la RLS ne livre que les siennes).
+  Stream<List<DeliveryOffer>> watchPendingOffers(String courierId) => _client
       .from('delivery_offers')
       .stream(primaryKey: ['id'])
       .eq('courier_id', courierId)
       .order('created_at')
-      .limit(5)
+      .limit(50)
       .map(
         (rows) => rows
             .map(DeliveryOffer.fromJson)
             .where((offer) => offer.status == OfferStatus.pending)
-            .firstOrNull,
+            .toList(),
       )
       .handleError((Object error) => throw toFailure(error));
 

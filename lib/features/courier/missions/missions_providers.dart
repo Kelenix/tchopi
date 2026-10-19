@@ -17,11 +17,11 @@ MissionRepository missionRepository(Ref ref) =>
     MissionRepository(ref.watch(supabaseClientProvider));
 
 @riverpod
-Stream<DeliveryOffer?> pendingOffer(Ref ref) {
+Stream<List<DeliveryOffer>> pendingOffers(Ref ref) {
   final userId = ref.watch(currentUserIdProvider);
   return userId == null
-      ? Stream.value(null)
-      : ref.watch(missionRepositoryProvider).watchPendingOffer(userId);
+      ? Stream.value(const [])
+      : ref.watch(missionRepositoryProvider).watchPendingOffers(userId);
 }
 
 @riverpod

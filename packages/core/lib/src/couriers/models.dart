@@ -53,14 +53,14 @@ abstract class CourierInfo with _$CourierInfo {
 
 enum OfferStatus { pending, accepted, declined, expired, cancelled }
 
-/// Offre de mission (DIS-02), valable jusqu'à [expiresAt].
+/// Commande proposée au livreur (DIS-02) ; [expiresAt] absent : proposée jusqu'à ce qu'un livreur la prenne.
 @freezed
 abstract class DeliveryOffer with _$DeliveryOffer {
   const factory DeliveryOffer({
     required String id,
     required String orderId,
     required OfferStatus status,
-    required DateTime expiresAt,
+    DateTime? expiresAt,
     required OfferSummary summary,
   }) = _DeliveryOffer;
 

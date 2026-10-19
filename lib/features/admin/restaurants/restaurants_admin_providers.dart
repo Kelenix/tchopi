@@ -16,3 +16,7 @@ Future<List<Restaurant>> adminRestaurants(Ref ref) =>
 @riverpod
 Future<List<RestaurantMember>> restaurantMembers(Ref ref, String id) =>
     ref.watch(adminRestaurantRepositoryProvider).members(id);
+
+@riverpod
+Future<Set<String>> restaurantCouriers(Ref ref, String id) =>
+    ref.watch(adminRestaurantRepositoryProvider).affiliatedCouriers(id);

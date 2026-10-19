@@ -6,10 +6,11 @@ import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../shared/dialogs.dart';
+import '../../people/people_providers.dart';
 import '../../zones/zones_providers.dart';
 import '../restaurants_admin_providers.dart';
 
-/// A-05 : fiche restaurant (zone, position, commission, activation) et gérants (RES-01, ADM-03).
+/// A-05 : fiche restaurant (zone, position, commission, activation), gérants et livreurs affiliés (RES-01, ADM-03).
 class RestaurantFormScreen extends ConsumerStatefulWidget {
   const RestaurantFormScreen({super.key, this.restaurant});
 
@@ -253,6 +254,17 @@ class _RestaurantFormScreenState extends ConsumerState<RestaurantFormScreen> {
                         style: text.bodyMedium!.copyWith(color: tokens.muted),
                       )
                     : _Managers(restaurantId: restaurant.id),
+                if (restaurant != null) ...[
+                  const SizedBox(height: Space.xl),
+                  Text(l10n.affiliatedTitle, style: text.titleMedium),
+                  const SizedBox(height: Space.xs),
+                  Text(
+                    l10n.affiliatedHint,
+                    style: text.bodySmall!.copyWith(color: tokens.muted),
+                  ),
+                  const SizedBox(height: Space.sm),
+                  _Couriers(restaurantId: restaurant.id),
+                ],
                 if (_error != null) ...[
                   const SizedBox(height: Space.lg),
                   Text(
@@ -375,6 +387,60 @@ class _Managers extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Livreurs affiliés au restaurant, parmi les livreurs validés ; enregistré à chaque coche.
+class _Couriers extends ConsumerWidget {
+  const _Couriers({required this.restaurantId});
+
+  final String restaurantId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final couriers = ref.watch(adminCouriersProvider(CourierStatus.approved));
+    final selected = ref.watch(restaurantCouriersProvider(restaurantId)).value;
+
+    Future<void> toggle(String id, bool on) async {
+      final messenger = ScaffoldMessenger.of(context);
+      try {
+        await ref
+            .read(adminRestaurantRepositoryProvider)
+            .setCouriers(
+              restaurantId,
+              on ? {...?selected, id} : {...?selected}.difference({id}),
+            );
+        ref.invalidate(restaurantCouriersProvider(restaurantId));
+      } on AppFailure catch (failure) {
+        messenger.showSnackBar(
+          SnackBar(content: Text(failureMessage(l10n, failure))),
+        );
+      }
+    }
+
+    return Card(
+      child: switch (couriers) {
+        AsyncData(:final value) when value.isEmpty => ListTile(
+          title: Text(l10n.affiliatedEmpty),
+        ),
+        AsyncData(:final value) when selected != null => Column(
+          children: [
+            for (final c in value)
+              CheckboxListTile(
+                value: selected.contains(c.courier.userId),
+                onChanged: (on) => toggle(c.courier.userId, on ?? false),
+                title: Text(c.name.isEmpty ? c.phone : c.name),
+                subtitle: Text('${c.phone} · ${c.zone}'),
+              ),
+          ],
+        ),
+        AsyncError(:final error) => ListTile(
+          title: Text(failureMessage(l10n, error)),
+        ),
+        _ => const LinearProgressIndicator(),
+      },
     );
   }
 }

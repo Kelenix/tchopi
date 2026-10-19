@@ -574,7 +574,7 @@ as String?,
 /// @nodoc
 mixin _$DeliveryOffer {
 
- String get id; String get orderId; OfferStatus get status; DateTime get expiresAt; OfferSummary get summary;
+ String get id; String get orderId; OfferStatus get status; DateTime? get expiresAt; OfferSummary get summary;
 /// Create a copy of DeliveryOffer
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -607,7 +607,7 @@ abstract mixin class $DeliveryOfferCopyWith<$Res>  {
   factory $DeliveryOfferCopyWith(DeliveryOffer value, $Res Function(DeliveryOffer) _then) = _$DeliveryOfferCopyWithImpl;
 @useResult
 $Res call({
- String id, String orderId, OfferStatus status, DateTime expiresAt, OfferSummary summary
+ String id, String orderId, OfferStatus status, DateTime? expiresAt, OfferSummary summary
 });
 
 
@@ -624,13 +624,13 @@ class _$DeliveryOfferCopyWithImpl<$Res>
 
 /// Create a copy of DeliveryOffer
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? orderId = null,Object? status = null,Object? expiresAt = null,Object? summary = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? orderId = null,Object? status = null,Object? expiresAt = freezed,Object? summary = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,orderId: null == orderId ? _self.orderId : orderId // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as OfferStatus,expiresAt: null == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
-as DateTime,summary: null == summary ? _self.summary : summary // ignore: cast_nullable_to_non_nullable
+as OfferStatus,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,summary: null == summary ? _self.summary : summary // ignore: cast_nullable_to_non_nullable
 as OfferSummary,
   ));
 }
@@ -725,7 +725,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String orderId,  OfferStatus status,  DateTime expiresAt,  OfferSummary summary)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String orderId,  OfferStatus status,  DateTime? expiresAt,  OfferSummary summary)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DeliveryOffer() when $default != null:
 return $default(_that.id,_that.orderId,_that.status,_that.expiresAt,_that.summary);case _:
@@ -746,7 +746,7 @@ return $default(_that.id,_that.orderId,_that.status,_that.expiresAt,_that.summar
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String orderId,  OfferStatus status,  DateTime expiresAt,  OfferSummary summary)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String orderId,  OfferStatus status,  DateTime? expiresAt,  OfferSummary summary)  $default,) {final _that = this;
 switch (_that) {
 case _DeliveryOffer():
 return $default(_that.id,_that.orderId,_that.status,_that.expiresAt,_that.summary);case _:
@@ -766,7 +766,7 @@ return $default(_that.id,_that.orderId,_that.status,_that.expiresAt,_that.summar
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String orderId,  OfferStatus status,  DateTime expiresAt,  OfferSummary summary)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String orderId,  OfferStatus status,  DateTime? expiresAt,  OfferSummary summary)?  $default,) {final _that = this;
 switch (_that) {
 case _DeliveryOffer() when $default != null:
 return $default(_that.id,_that.orderId,_that.status,_that.expiresAt,_that.summary);case _:
@@ -781,13 +781,13 @@ return $default(_that.id,_that.orderId,_that.status,_that.expiresAt,_that.summar
 @JsonSerializable()
 
 class _DeliveryOffer implements DeliveryOffer {
-  const _DeliveryOffer({required this.id, required this.orderId, required this.status, required this.expiresAt, required this.summary});
+  const _DeliveryOffer({required this.id, required this.orderId, required this.status, this.expiresAt, required this.summary});
   factory _DeliveryOffer.fromJson(Map<String, dynamic> json) => _$DeliveryOfferFromJson(json);
 
 @override final  String id;
 @override final  String orderId;
 @override final  OfferStatus status;
-@override final  DateTime expiresAt;
+@override final  DateTime? expiresAt;
 @override final  OfferSummary summary;
 
 /// Create a copy of DeliveryOffer
@@ -823,7 +823,7 @@ abstract mixin class _$DeliveryOfferCopyWith<$Res> implements $DeliveryOfferCopy
   factory _$DeliveryOfferCopyWith(_DeliveryOffer value, $Res Function(_DeliveryOffer) _then) = __$DeliveryOfferCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String orderId, OfferStatus status, DateTime expiresAt, OfferSummary summary
+ String id, String orderId, OfferStatus status, DateTime? expiresAt, OfferSummary summary
 });
 
 
@@ -840,13 +840,13 @@ class __$DeliveryOfferCopyWithImpl<$Res>
 
 /// Create a copy of DeliveryOffer
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? orderId = null,Object? status = null,Object? expiresAt = null,Object? summary = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? orderId = null,Object? status = null,Object? expiresAt = freezed,Object? summary = null,}) {
   return _then(_DeliveryOffer(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,orderId: null == orderId ? _self.orderId : orderId // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as OfferStatus,expiresAt: null == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
-as DateTime,summary: null == summary ? _self.summary : summary // ignore: cast_nullable_to_non_nullable
+as OfferStatus,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,summary: null == summary ? _self.summary : summary // ignore: cast_nullable_to_non_nullable
 as OfferSummary,
   ));
 }

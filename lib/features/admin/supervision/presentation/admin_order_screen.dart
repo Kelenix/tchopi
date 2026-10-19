@@ -139,7 +139,10 @@ class AdminOrderScreen extends ConsumerWidget {
             Row(
               children: [
                 Expanded(child: Text(o.title(l10n), style: text.titleLarge)),
-                OrderStatusChip(status: o.status),
+                OrderStatusChip(
+                  status: o.status,
+                  parcel: o.type == OrderType.parcel,
+                ),
               ],
             ),
             Text(

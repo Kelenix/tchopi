@@ -1,6 +1,6 @@
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(38);
+select plan(35);
 
 insert into auth.users (id, email, aud, role, email_confirmed_at) values
   ('00000000-0000-0000-0000-0000000000ad', 'admin@exemple.ci', 'authenticated', 'authenticated', now()),
@@ -56,11 +56,11 @@ create temporary table q on commit drop as
 select public.quote_food_order('66666666-6666-6666-6666-666666666666', '88888888-8888-8888-8888-888888888888',
   '[{"product_id":"77777777-0000-0000-0000-000000000001","quantity":1}]') as quote;
 select is((select quote->>'couriers_available' from q), 'false', 'le devis signale l''absence de livreur en ligne');
-select throws_ok(
+select lives_ok(
   $$ select public.place_food_order('66666666-6666-6666-6666-666666666666', '88888888-8888-8888-8888-888888888888',
        '[{"product_id":"77777777-0000-0000-0000-000000000001","quantity":1}]', 'cash',
        (select (quote->>'total')::integer from q), '99999999-0000-0000-0000-000000000001') $$,
-  'P0001', 'no_courier_available', 'aucune commande sans livreur en ligne'
+  'le client commande même sans livreur en ligne'
 );
 
 -- Mise en ligne (COU-05).
@@ -77,47 +77,34 @@ set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000a2","r
 select public.set_courier_online(true);
 select public.report_location(6.8850, -6.4550);
 
--- Commande A : la recherche démarre « En préparation » et vise le livreur le plus proche (DIS-01).
 set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000c1","role":"authenticated"}';
-select is(
-  (public.quote_food_order('66666666-6666-6666-6666-666666666666', '88888888-8888-8888-8888-888888888888',
-    '[{"product_id":"77777777-0000-0000-0000-000000000001","quantity":1}]'))->>'couriers_available',
-  'true', 'le devis confirme des livreurs en ligne'
-);
 select public.place_food_order('66666666-6666-6666-6666-666666666666', '88888888-8888-8888-8888-888888888888',
   '[{"product_id":"77777777-0000-0000-0000-000000000001","quantity":1}]', 'cash',
   (select (quote->>'total')::integer from q), ('99999999-0000-0000-0000-00000000000' || k)::uuid)
-  from generate_series(1, 3) k;
+  from generate_series(2, 3) k;
+
+-- Commande 1 : proposée aux livreurs seulement quand le restaurant la marque « Prête », à tous à la fois.
 set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000f1","role":"authenticated"}';
 select public.transition_order(pg_temp.order_id('1'), 'accepted');
-
-reset role;
-select is((select count(*) from public.delivery_offers)::integer, 0, 'pas d''offre avant la préparation');
-set local role authenticated;
 select public.transition_order(pg_temp.order_id('1'), 'preparing');
 reset role;
-select is(
-  (select courier_id from public.delivery_offers where status = 'pending'),
-  '00000000-0000-0000-0000-0000000000a1'::uuid, 'offre au livreur le plus proche du restaurant'
-);
-select ok(
-  (select summary ?& array['earning', 'to_pickup_m', 'trip_m', 'cash_amount', 'pickup_landmark', 'dropoff_landmark']
-     and expires_at between now() + interval '44 seconds' and now() + interval '46 seconds'
-     from public.delivery_offers where status = 'pending'),
-  'offre de 45 s avec gain, distances, repères et espèces à encaisser'
-);
-
--- Commande B : le premier livreur a déjà une offre, elle va au suivant.
+select is((select count(*) from public.delivery_offers)::integer, 0, 'pas d''offre avant « Prête »');
 set local role authenticated;
-select public.transition_order(pg_temp.order_id('2'), 'accepted');
-select public.transition_order(pg_temp.order_id('2'), 'preparing');
+select public.transition_order(pg_temp.order_id('1'), 'ready');
 reset role;
 select is(
-  (select courier_id from public.delivery_offers where status = 'pending' and order_id = pg_temp.order_id('2')),
-  '00000000-0000-0000-0000-0000000000a2'::uuid, 'une seule offre à la fois par livreur'
+  (select array_agg(courier_id order by courier_id)::text from public.delivery_offers where status = 'pending'),
+  '{00000000-0000-0000-0000-0000000000a1,00000000-0000-0000-0000-0000000000a2}',
+  'prête : proposée à tous les livreurs disponibles de la zone'
 );
-insert into ids select 'b2', id from public.delivery_offers where order_id = pg_temp.order_id('2');
-insert into ids select 'a1', id from public.delivery_offers where order_id = pg_temp.order_id('1');
+select ok(
+  (select bool_and(summary ?& array['earning', 'to_pickup_m', 'trip_m', 'cash_amount', 'pickup_landmark',
+                                    'dropoff_landmark'] and expires_at is null)
+     from public.delivery_offers where status = 'pending'),
+  'offre sans limite de temps, avec gain, distances, repères et espèces à encaisser'
+);
+insert into ids select 'a1', id from public.delivery_offers where courier_id = '00000000-0000-0000-0000-0000000000a1';
+insert into ids select 'b1', id from public.delivery_offers where courier_id = '00000000-0000-0000-0000-0000000000a2';
 
 set local role authenticated;
 set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000a2","role":"authenticated"}';
@@ -125,93 +112,121 @@ select is((select count(*) from public.delivery_offers)::integer, 1, 'le livreur
 select is((select count(*) from public.orders)::integer, 0, 'ni les commandes qui ne lui sont pas attribuées');
 select throws_ok($$ select public.respond_to_offer((select id from ids where name = 'a1'), true) $$,
   'P0001', 'not_found', 'impossible de répondre à l''offre d''un autre');
-select lives_ok($$ select public.respond_to_offer((select id from ids where name = 'b2'), false) $$,
-  'le livreur refuse l''offre');
 
--- DIS-02 : acceptation, une mission à la fois.
+-- DIS-02 : le premier qui accepte l'obtient ; « Livreur en route vers le retrait ».
 set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000a1","role":"authenticated"}';
 select lives_ok($$ select public.respond_to_offer((select id from ids where name = 'a1'), true) $$,
-  'le livreur accepte l''offre');
+  'le livreur accepte la commande');
 select is(
   (select row(courier_id, status, courier_info->>'first_name', courier_info->>'plate_number')::text
      from public.orders where id = pg_temp.order_id('1')),
-  row('00000000-0000-0000-0000-0000000000a1'::uuid, 'preparing'::public.order_status, 'Koffi', 'AB-123-CI')::text,
-  'livreur attribué et figé sur la commande, statut du repas inchangé'
+  row('00000000-0000-0000-0000-0000000000a1'::uuid, 'courier_assigned'::public.order_status, 'Koffi', 'AB-123-CI')::text,
+  'livreur attribué, en route vers le restaurant'
 );
 select is(
   (select count(*) from public.order_events where order_id = pg_temp.order_id('1') and kind = 'courier_assigned')::integer,
-  1, 'chronologie : « Livreur assigné »'
+  1, 'chronologie : livreur attribué'
 );
 select is((select count(*) from public.orders)::integer, 1, 'le livreur voit la commande qui lui est attribuée');
-select throws_ok($$ select public.respond_to_offer((select id from ids where name = 'a1'), true) $$,
-  'P0001', 'offer_unavailable', 'une offre déjà traitée ne peut plus être acceptée');
 select throws_ok($$ select public.set_courier_online(false) $$, 'P0001', 'mission_in_progress',
   'hors ligne impossible pendant une mission');
-
--- Refusée, l'offre n'est plus reproposée ; un nouveau livreur en ligne la reçoit à la tâche suivante.
+set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000a2","role":"authenticated"}';
+select throws_ok($$ select public.respond_to_offer((select id from ids where name = 'b1'), true) $$,
+  'P0001', 'offer_unavailable', 'déjà prise : plus personne d''autre ne peut l''accepter');
 reset role;
-select private.tick();
-select is((select count(*) from public.delivery_offers where order_id = pg_temp.order_id('2') and status = 'pending')::integer,
-  0, 'commande B : aucun livreur libre qui ne l''ait pas refusée');
+select ok(
+  exists (select 1 from public.notifications n join auth.users u on u.id = n.user_id
+           where n.order_id = pg_temp.order_id('1') and n.kind = 'courier_assigned'
+             and u.id in ('00000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000000f1')
+           group by n.kind having count(distinct u.id) = 2),
+  'client et restaurant prévenus de l''attribution'
+);
+
+-- Commande 2 : le seul livreur libre refuse ; elle attend et va au prochain livreur disponible.
 set local role authenticated;
+set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000f1","role":"authenticated"}';
+select public.transition_order(pg_temp.order_id('2'), 'accepted');
+select public.transition_order(pg_temp.order_id('2'), 'preparing');
+select public.transition_order(pg_temp.order_id('2'), 'ready');
+reset role;
+select is(
+  (select array_agg(courier_id)::text from public.delivery_offers
+    where order_id = pg_temp.order_id('2') and status = 'pending'),
+  '{00000000-0000-0000-0000-0000000000a2}', 'un livreur en mission n''est pas sollicité'
+);
+insert into ids select 'b2', id from public.delivery_offers where order_id = pg_temp.order_id('2');
+set local role authenticated;
+set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000a2","role":"authenticated"}';
+select lives_ok($$ select public.respond_to_offer((select id from ids where name = 'b2'), false) $$, 'le livreur refuse');
 set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000a3","role":"authenticated"}';
 select public.set_courier_online(true);
 select public.report_location(6.9000, -6.4300);
 reset role;
 select private.tick();
 select is(
-  (select courier_id from public.delivery_offers where order_id = pg_temp.order_id('2') and status = 'pending'),
-  '00000000-0000-0000-0000-0000000000a3'::uuid, 'la tâche planifiée relance la recherche'
-);
-update public.delivery_offers set expires_at = now() - interval '1 second' where status = 'pending';
-select private.tick();
-select is(
-  (select status from public.delivery_offers where order_id = pg_temp.order_id('2') and courier_id = '00000000-0000-0000-0000-0000000000a3'),
-  'expired'::public.offer_status, 'offre expirée après le délai'
+  (select array_agg(courier_id)::text from public.delivery_offers
+    where order_id = pg_temp.order_id('2') and status = 'pending'),
+  '{00000000-0000-0000-0000-0000000000a3}', 'en attente, elle va au livreur qui devient disponible'
 );
 
--- DIS-03 : alerte après 10 min, le client peut alors annuler ; annulation automatique après 30 min.
-update public.orders set dispatch_started_at = now() - interval '11 minutes' where id = pg_temp.order_id('2');
+-- Désistement avant le retrait : le repas redevient « Prête » et est reproposé (pas à celui qui se désiste).
+set local role authenticated;
+set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000a1","role":"authenticated"}';
+select public.release_mission(pg_temp.order_id('1'), 'Pneu crevé');
+reset role;
+select is(
+  (select row(status, courier_id)::text from public.orders where id = pg_temp.order_id('1')),
+  row('ready'::public.order_status, null::uuid)::text, 'désistement : la commande redevient « Prête »'
+);
+select is(
+  (select array_agg(courier_id order by courier_id)::text from public.delivery_offers
+    where order_id = pg_temp.order_id('1') and status = 'pending'),
+  '{00000000-0000-0000-0000-0000000000a2,00000000-0000-0000-0000-0000000000a3}',
+  'reproposée aux autres livreurs disponibles'
+);
+
+-- Attente prolongée : alerte (restaurant prévenu), mais un repas prêt n'est jamais annulé automatiquement.
+update public.orders set dispatch_started_at = now() - interval '31 minutes' where id = pg_temp.order_id('2');
 select private.tick();
 select ok(
-  (select dispatch_alerted_at is not null from public.orders where id = pg_temp.order_id('2'))
-  and exists (select 1 from public.order_events where order_id = pg_temp.order_id('2') and kind = 'dispatch_alert'),
-  'alerte « toujours sans livreur » enregistrée'
+  (select dispatch_alerted_at is not null and status = 'ready' from public.orders where id = pg_temp.order_id('2'))
+  and exists (select 1 from public.notifications where order_id = pg_temp.order_id('2') and kind = 'dispatch_alert'
+                and user_id = '00000000-0000-0000-0000-0000000000f1'),
+  'alerte au restaurant ; le repas prêt reste en attente d''un livreur'
 );
 set local role authenticated;
 set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000c1","role":"authenticated"}';
-select throws_ok($$ select public.cancel_order(pg_temp.order_id('1')) $$, 'P0001', 'already_accepted',
-  'un repas en préparation avec livreur ne s''annule pas');
 select is((public.cancel_order(pg_temp.order_id('2'))).status, 'cancelled'::public.order_status,
-  'le client annule un repas resté sans livreur');
+  'après l''alerte, le client peut annuler un repas resté sans livreur');
+reset role;
+select is((select count(*) from public.delivery_offers where order_id = pg_temp.order_id('2') and status = 'pending')::integer,
+  0, 'les offres d''une commande annulée sont retirées');
 
+-- Livreurs affiliés : un restaurant qui en a ne sollicite qu'eux.
+set local role authenticated;
+set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000c1","role":"authenticated"}';
+select throws_ok($$ select public.admin_set_restaurant_couriers('66666666-6666-6666-6666-666666666666',
+  array['00000000-0000-0000-0000-0000000000a3'::uuid]) $$, 'P0001', 'forbidden', 'seul l''admin choisit les affiliés');
+set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000ad","role":"authenticated"}';
+select public.admin_set_restaurant_couriers('66666666-6666-6666-6666-666666666666',
+  array['00000000-0000-0000-0000-0000000000a3'::uuid]);
 set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000f1","role":"authenticated"}';
 select public.transition_order(pg_temp.order_id('3'), 'accepted');
 select public.transition_order(pg_temp.order_id('3'), 'preparing');
+select public.transition_order(pg_temp.order_id('3'), 'ready');
 reset role;
-update public.orders set dispatch_started_at = now() - interval '31 minutes' where id = pg_temp.order_id('3');
-select private.tick();
 select is(
-  (select row(status, close_reason)::text from public.orders where id = pg_temp.order_id('3')),
-  row('cancelled'::public.order_status, 'no_courier')::text, 'annulée automatiquement après 30 min sans livreur'
+  (select array_agg(courier_id)::text from public.delivery_offers
+    where order_id = pg_temp.order_id('3') and status = 'pending'),
+  '{00000000-0000-0000-0000-0000000000a3}', 'restaurant avec affiliés : seuls eux sont sollicités'
 );
-select is((select count(*) from public.delivery_offers where status = 'pending')::integer, 0,
-  'les offres d''une commande annulée sont retirées');
 
--- PAR-01 : types selon les moyens des livreurs en ligne et à jour (k1 sans position récente, k3 hors ligne).
-update public.courier_locations set recorded_at = now() - interval '3 minutes'
- where courier_id = '00000000-0000-0000-0000-0000000000a1';
-set local role authenticated;
-set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000a3","role":"authenticated"}';
-select public.set_courier_online(false);
-reset role;
-select is((select count(*) from public.courier_locations where courier_id = '00000000-0000-0000-0000-0000000000a3')::integer,
-  0, 'hors ligne, la position n''est plus conservée');
+-- Colis : tous les types proposés sans livreur en ligne ; offre dès la confirmation.
 set local role authenticated;
 set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000c1","role":"authenticated"}';
 select is(
   (select array_agg(code order by position)::text from public.available_parcel_types(6.8780, -6.4500)),
-  '{documents,small}', 'colis moyen indisponible sans moto ni voiture en ligne'
+  '{documents,small,medium}', 'tous les types de colis, livreur en ligne ou non'
 );
 create temporary table pq on commit drop as
 select ((public.quote_parcel(6.8780, -6.4500, 6.8900, -6.4400,
@@ -222,25 +237,15 @@ select public.place_parcel_order(
   'Koffi', '+2250700000022', (select id from public.parcel_types where code = 'small'), null, true, 'cash',
   (select total from pq), '99999999-0000-0000-0000-000000000004');
 reset role;
-select is(
-  (select courier_id from public.delivery_offers where order_id = pg_temp.order_id('4') and status = 'pending'),
-  '00000000-0000-0000-0000-0000000000a2'::uuid, 'colis confirmé : offre immédiate au livreur à vélo'
+select ok(
+  exists (select 1 from public.delivery_offers where order_id = pg_temp.order_id('4') and status = 'pending'
+            and courier_id = '00000000-0000-0000-0000-0000000000a2'),
+  'colis confirmé : proposé aux livreurs de la zone'
 );
 
 -- DIS-04 : attribution manuelle par l'admin.
 set local role authenticated;
 set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000ad","role":"authenticated"}';
-select is(
-  (select array_agg(row(user_id, busy, offer_pending)::text order by distance_m)
-     from public.admin_dispatch_candidates(pg_temp.order_id('4')))::text,
-  array[row('00000000-0000-0000-0000-0000000000a1'::uuid, true, false)::text,
-        row('00000000-0000-0000-0000-0000000000a2'::uuid, false, true)::text]::text,
-  'livreurs en ligne de la zone, triés par distance, avec leur état'
-);
-select throws_ok(
-  $$ select public.admin_assign_courier(pg_temp.order_id('4'), '00000000-0000-0000-0000-0000000000a1', 'Plus rapide') $$,
-  'P0001', 'courier_busy', 'pas d''attribution à un livreur déjà en mission'
-);
 select throws_ok(
   $$ select public.admin_assign_courier(pg_temp.order_id('4'), '00000000-0000-0000-0000-0000000000a2', ' ') $$,
   'P0001', 'reason_required', 'l''attribution manuelle exige un motif'
@@ -249,7 +254,7 @@ select is(
   (select row(status, courier_id)::text
      from public.admin_assign_courier(pg_temp.order_id('4'), '00000000-0000-0000-0000-0000000000a2', 'Client pressé')),
   row('courier_assigned'::public.order_status, '00000000-0000-0000-0000-0000000000a2'::uuid)::text,
-  'l''admin attribue le colis, qui passe « Livreur assigné »'
+  'l''admin attribue le colis, qui passe « Livreur en route »'
 );
 
 -- ADM-05 : paramètres lus par tous, modifiés par l'admin seulement (tracé).

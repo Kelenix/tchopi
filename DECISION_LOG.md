@@ -6,6 +6,35 @@
 
 ---
 
+## ADR-037 — Prise en charge : commande sans livreur, offre à « Prête », livreurs affiliés
+
+- **Date** : 2026-10-19
+- **Statut** : Accepté (demande utilisateur ; remplace en partie ADR-023)
+- **Décideur** : Utilisateur ; mise en œuvre Claude (rôles : backend-engineer, flutter-engineer)
+- **Contexte** : Le client ne pouvait pas commander sans livreur en ligne ; la recherche démarrait dès « En
+  préparation », par offres de 45 s au plus proche, et un repas était annulé après 30 min sans livreur. L'utilisateur
+  veut le fonctionnement des grandes plateformes (Glovo) avec des livreurs affiliés aux restaurants.
+- **Décision** :
+  - Commande et envoi de colis possibles **sans livreur en ligne** (information seulement).
+  - Un repas est proposé aux livreurs quand le restaurant le marque **« Prête »** (un colis dès sa confirmation),
+    **à tous les livreurs éligibles à la fois**, sans limite de temps ; le **premier qui accepte** l'obtient
+    (verrou de la commande), les autres offres sont retirées. Statut « Livreur en route vers le restaurant ».
+  - Éligibles : validés, en ligne, position récente, sans mission en cours, moyen adapté au colis ; **affiliés au
+    restaurant** s'il en a (choisis par l'admin, table `restaurant_couriers`), sinon livreurs de la zone.
+  - **Attente** : la commande reste proposée ; tout livreur qui devient disponible la reçoit (tâche toutes les
+    10 s) ; alerte au restaurant, au client et à l'admin après le délai réglé ; un repas prêt n'est jamais annulé
+    automatiquement (seuls les colis le sont).
+  - **Désistement** avant le retrait : le repas redevient « Prête » et est reproposé (pas à celui qui s'est désisté).
+  - Retrait identifié par le **numéro de commande** ; remise confirmée par le restaurant ou le livreur ; « En route »
+    seulement après le retrait ; livraison confirmée par le code du client.
+- **Alternatives écartées** : offre au plus proche avec expiration (commande bloquée si personne ne répond) ;
+  recherche dès la préparation (livreur immobilisé pendant la cuisson) ; code de retrait séparé (le numéro suffit).
+- **Conséquences** : le réglage « délai d'une offre » n'est plus utilisé ; la notification push de nouvelle
+  commande attend Firebase (tâche n° 8), l'app ouverte l'affiche en direct.
+- **Impact** : métier (élevé), réversible.
+
+---
+
 ## ADR-036 — Villes desservies : principales villes de Côte d'Ivoire
 
 - **Date** : 2026-10-19

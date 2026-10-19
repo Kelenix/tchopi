@@ -3,6 +3,9 @@
 #   .\dev-accounts.ps1 -Serveur    serveur en ligne (accès VPS requis), mêmes numéros et mot de passe
 param([switch]$Serveur)
 
+# Noms accentués (Koné, Traoré) transmis intacts à psql.
+$OutputEncoding = [System.Text.UTF8Encoding]::new($false)
+
 # Mot de passe facile à retenir (serveur pilote fermé, comptes de test seulement).
 $password = 'Tchopi2026'
 $sql = @'

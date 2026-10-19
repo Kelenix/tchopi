@@ -285,11 +285,7 @@ class _ParcelRequestScreenState extends ConsumerState<ParcelRequestScreen> {
                   ref.watch(preferredPaymentProvider).value,
                 );
                 return FilledButton(
-                  onPressed:
-                      quote == null ||
-                          method == null ||
-                          !quote.couriersAvailable ||
-                          _placing
+                  onPressed: quote == null || method == null || _placing
                       ? null
                       : () => _confirm(quote, method),
                   child: _placing
@@ -510,8 +506,6 @@ class _ParcelRequestScreenState extends ConsumerState<ParcelRequestScreen> {
           const SizedBox(height: Space.xl),
           Text(l10n.parcelType, style: text.titleMedium),
           const SizedBox(height: Space.sm),
-          if (types.value?.isEmpty ?? false)
-            NoCourierBanner(onRetry: () => ref.invalidate(typesProvider)),
           for (final type in types.value ?? const <ParcelType>[])
             Padding(
               padding: const EdgeInsets.only(bottom: Space.sm),
@@ -693,13 +687,7 @@ class _ParcelRequestScreenState extends ConsumerState<ParcelRequestScreen> {
               const Center(child: CircularProgressIndicator())
             else ...[
               if (!quote.couriersAvailable) ...[
-                NoCourierBanner(
-                  onRetry: () => setState(
-                    () => _quote = ref
-                        .read(orderRepositoryProvider)
-                        .quoteParcel(_pickup, _dropoff, _type!.id),
-                  ),
-                ),
+                const NoCourierBanner(),
                 const SizedBox(height: Space.lg),
               ],
               AmountRow(

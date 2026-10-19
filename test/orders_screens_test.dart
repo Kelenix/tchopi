@@ -313,7 +313,7 @@ void main() {
     expect(find.text('Koffi'), findsOneWidget);
     expect(find.text('Votre livreur · Moto AB-123-CI'), findsOneWidget);
     expect(find.byTooltip('Appeler'), findsOneWidget);
-    expect(find.text('Livreur assigné'), findsOneWidget);
+    expect(find.text('Livreur attribué'), findsOneWidget);
     expect(
       find.text('Alerte : toujours sans livreur'),
       findsNothing,

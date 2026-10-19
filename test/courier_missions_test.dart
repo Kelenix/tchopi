@@ -48,11 +48,10 @@ const summary = OfferSummary(
   cashAmount: 8800,
 );
 
-DeliveryOffer offer(Duration left) => DeliveryOffer(
+const offer = DeliveryOffer(
   id: 'f1',
   orderId: 'o1',
   status: OfferStatus.pending,
-  expiresAt: DateTime.now().add(left),
   summary: summary,
 );
 
@@ -88,7 +87,7 @@ Widget app(Widget home, List<Override> overrides) => ProviderScope(
 List<Override> courier({
   required bool online,
   Order? current,
-  DeliveryOffer? pending,
+  List<DeliveryOffer> pending = const [],
 }) => [
   courierPresenceProvider.overrideWith(() => _Presence(online)),
   currentMissionProvider.overrideWith((ref) => Stream.value(current)),
@@ -99,7 +98,7 @@ List<Override> courier({
       cashDue: 17500,
     ),
   ),
-  pendingOfferProvider.overrideWith((ref) => Stream.value(pending)),
+  pendingOffersProvider.overrideWith((ref) => Stream.value(pending)),
 ];
 
 void main() {
@@ -137,11 +136,13 @@ void main() {
     expect(find.textContaining('Espèces à encaisser'), findsOneWidget);
   });
 
-  testWidgets('une nouvelle offre s\'ouvre en plein écran', (tester) async {
+  testWidgets('une commande prête s\'ouvre en plein écran et reste listée', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       app(
         const CourierHomeScreen(),
-        courier(online: true, pending: offer(const Duration(seconds: 40))),
+        courier(online: true, pending: const [offer]),
       ),
     );
     await tester.pump();
@@ -154,15 +155,21 @@ void main() {
     expect(find.text('Livraison · Aïcha'), findsOneWidget);
     expect(find.textContaining('Espèces à encaisser'), findsOneWidget);
     expect(find.text('Accepter'), findsOneWidget);
+    expect(
+      find.text('Commandes à récupérer', skipOffstage: false),
+      findsOneWidget,
+    );
     await tester.pumpWidget(const SizedBox());
   });
 
-  testWidgets('refus : l\'offre part au livreur suivant', (tester) async {
+  testWidgets('refus : la commande reste aux autres livreurs', (tester) async {
     final missions = _Missions();
     await tester.pumpWidget(
-      app(OfferScreen(offer: offer(const Duration(seconds: 40))), [
+      app(const OfferScreen(offer: offer), [
         missionRepositoryProvider.overrideWithValue(missions),
-        pendingOfferProvider.overrideWith((ref) => const Stream.empty()),
+        pendingOffersProvider.overrideWith(
+          (ref) => const Stream<List<DeliveryOffer>>.empty(),
+        ),
       ]),
     );
     await tester.pump();
@@ -173,16 +180,18 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
-  testWidgets('sans réponse, l\'offre expire', (tester) async {
+  testWidgets('prise par un autre livreur : l\'offre disparaît', (
+    tester,
+  ) async {
     await tester.pumpWidget(
-      app(OfferScreen(offer: offer(Duration.zero)), [
-        pendingOfferProvider.overrideWith((ref) => const Stream.empty()),
+      app(const OfferScreen(offer: offer), [
+        pendingOffersProvider.overrideWith((ref) => Stream.value(const [])),
       ]),
     );
     await tester.pump();
-    expect(find.text('Accepter'), findsOneWidget);
-    await tester.pump(const Duration(seconds: 1));
-    expect(find.text('Offre expirée'), findsOneWidget);
+    await tester.pump();
+    expect(find.text('Accepter'), findsNothing);
+    expect(find.text('Cette mission n\'est plus disponible.'), findsOneWidget);
     await tester.pumpWidget(const SizedBox());
   });
 }

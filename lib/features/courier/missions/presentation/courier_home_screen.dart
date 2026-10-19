@@ -12,8 +12,8 @@ import 'mission_screen.dart';
 import 'offer_screen.dart';
 
 /// L-03 : tableau de bord du livreur approuvé — interrupteur En ligne / Hors ligne, gains et livraisons du
-/// jour, espèces à reverser, mission en cours ; chaque nouvelle offre s'ouvre en plein écran (COU-05, DIS-02,
-/// MIS-01).
+/// jour, espèces à reverser, mission en cours, commandes prêtes à récupérer ; chaque nouvelle commande proposée
+/// s'ouvre aussi en plein écran (COU-05, DIS-02, MIS-01).
 class CourierHomeScreen extends ConsumerStatefulWidget {
   const CourierHomeScreen({super.key});
 
@@ -25,7 +25,7 @@ class CourierHomeScreen extends ConsumerStatefulWidget {
 
 class _CourierHomeScreenState extends ConsumerState<CourierHomeScreen> {
   bool _busy = false;
-  String? _shownOffer;
+  final _shownOffers = <String>{};
 
   Future<void> _toggle(bool online) async {
     final l10n = AppLocalizations.of(context);
@@ -79,11 +79,9 @@ class _CourierHomeScreenState extends ConsumerState<CourierHomeScreen> {
     );
   }
 
-  Future<void> _showOffer(DeliveryOffer offer) async {
-    if (offer.id == _shownOffer || !offer.expiresAt.isAfter(DateTime.now())) {
-      return;
-    }
-    _shownOffer = offer.id;
+  /// [auto] : ouverture à l'arrivée d'une commande, une seule fois par commande.
+  Future<void> _showOffer(DeliveryOffer offer, {bool auto = false}) async {
+    if (auto && !_shownOffers.add(offer.id)) return;
     ScaffoldMessenger.of(context).clearSnackBars();
     final accepted = await Navigator.of(context).push<bool>(
       MaterialPageRoute(
@@ -98,8 +96,13 @@ class _CourierHomeScreenState extends ConsumerState<CourierHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(pendingOfferProvider, (_, next) {
-      if (next.value case final offer?) _showOffer(offer);
+    ref.listen(pendingOffersProvider, (_, next) {
+      final fresh = (next.value ?? const <DeliveryOffer>[]).where(
+        (offer) => !_shownOffers.contains(offer.id),
+      );
+      if (fresh.isNotEmpty && ref.read(currentMissionProvider).value == null) {
+        _showOffer(fresh.first, auto: true);
+      }
     });
     final l10n = AppLocalizations.of(context);
     final tokens = context.tokens;
@@ -108,6 +111,7 @@ class _CourierHomeScreenState extends ConsumerState<CourierHomeScreen> {
     final online = ref.watch(courierPresenceProvider).value ?? false;
     final mission = ref.watch(currentMissionProvider).value;
     final summary = ref.watch(courierSummaryProvider).value;
+    final offers = ref.watch(pendingOffersProvider).value ?? const [];
 
     return Scaffold(
       appBar: AppBar(
@@ -212,7 +216,11 @@ class _CourierHomeScreenState extends ConsumerState<CourierHomeScreen> {
           const SizedBox(height: Space.xl),
           if (mission != null)
             _MissionCard(order: mission)
-          else if (online)
+          else if (offers.isNotEmpty) ...[
+            SectionHeader(title: l10n.courierAvailableTitle),
+            for (final offer in offers)
+              _OfferTile(offer: offer, onTap: () => _showOffer(offer)),
+          ] else if (online)
             EmptyState(
               icon: Icons.notifications_active_outlined,
               title: l10n.courierWaitingTitle,
@@ -341,6 +349,52 @@ class _Kpi extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Commande prête à récupérer, proposée au livreur : retrait, distance, gain ; ouvre le détail pour accepter.
+class _OfferTile extends StatelessWidget {
+  const _OfferTile({required this.offer, required this.onTap});
+
+  final DeliveryOffer offer;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final tokens = context.tokens;
+    final s = offer.summary;
+    return Card(
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: Space.lg,
+          vertical: Space.sm,
+        ),
+        leading: Icon(
+          s.type == 'parcel'
+              ? Icons.inventory_2_outlined
+              : Icons.shopping_bag_outlined,
+          color: tokens.primary,
+        ),
+        title: Text(
+          '${s.number} · ${s.pickupName ?? s.pickupDistrict}',
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        subtitle: Text(
+          l10n.courierOfferLine(
+            formatDecimal(s.toPickupM / 1000),
+            s.dropoffDistrict,
+          ),
+        ),
+        trailing: Text(
+          '+${formatMoney(s.earning, currency: s.currency)}',
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium!.copyWith(color: tokens.success),
+        ),
+        onTap: onTap,
       ),
     );
   }

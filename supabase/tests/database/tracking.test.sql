@@ -1,6 +1,6 @@
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(15);
+select plan(16);
 
 insert into auth.users (id, email, aud, role, email_confirmed_at) values
   ('00000000-0000-0000-0000-0000000000f1', 'gerant@exemple.ci', 'authenticated', 'authenticated', now()),
@@ -60,10 +60,12 @@ select pg_temp.as_user('00000000-0000-0000-0000-0000000000f1');
 select public.transition_order(pg_temp.order_id(), 'accepted');
 select public.transition_order(pg_temp.order_id(), 'preparing');
 select is(pg_temp.kinds('00000000-0000-0000-0000-0000000000c1'), '{order_accepted}', 'NOT-01 : commande acceptée');
-select is(pg_temp.kinds('00000000-0000-0000-0000-0000000000a1'), '{offer}', 'NOT-02 : offre au livreur');
+select is(pg_temp.kinds('00000000-0000-0000-0000-0000000000a1'), null, 'en préparation : le livreur n''est pas encore sollicité');
+select public.transition_order(pg_temp.order_id(), 'ready');
+select is(pg_temp.kinds('00000000-0000-0000-0000-0000000000a1'), '{offer}', 'NOT-02 : commande prête proposée au livreur');
 reset role;
-select matches((select body from public.notifications where kind = 'offer'), '^\+[0-9 ]+ F · Commerce → Lobia$',
-  'offre : gain et trajet');
+select matches((select body from public.notifications where kind = 'offer'),
+  '^Chez Tantie Rose · Commerce → Lobia · \+[0-9 ]+ F$', 'offre : retrait, trajet et gain');
 select ok((select route = '/orders/' || pg_temp.order_id() from public.notifications where kind = 'order_accepted'),
   'la notification ouvre le suivi de la commande');
 
@@ -73,18 +75,17 @@ select is((select count(*) from public.courier_locations)::integer, 0, 'pas de p
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000a1');
 select public.respond_to_offer((select id from public.delivery_offers where status = 'pending'), true);
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000c1');
-select is(pg_temp.kinds('00000000-0000-0000-0000-0000000000c1'), '{order_accepted,courier_assigned}',
-  'livreur assigné');
+select is(pg_temp.kinds('00000000-0000-0000-0000-0000000000c1'), '{order_accepted,order_ready,courier_assigned}',
+  'commande prête, puis livreur en route');
 select is((select count(*) from public.courier_locations)::integer, 1,
   'TRK-01 : le client voit la position de son livreur');
-select is((select count(*) from public.notifications)::integer, 2, 'chacun ne lit que ses notifications');
+select is((select count(*) from public.notifications)::integer, 3, 'chacun ne lit que ses notifications');
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000c2');
 select is((select count(*) from public.courier_locations)::integer, 0, 'un autre client ne la voit pas');
 
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000f1');
-select public.transition_order(pg_temp.order_id(), 'ready');
-select is(pg_temp.kinds('00000000-0000-0000-0000-0000000000a1'), '{offer,order_ready}',
-  'le livreur est prévenu que la commande est prête');
+select is(pg_temp.kinds('00000000-0000-0000-0000-0000000000f1'), '{new_order,courier_assigned}',
+  'le restaurant est prévenu qu''un livreur arrive');
 
 -- Appareils : enregistrés par leur compte, repris par le dernier compte connecté.
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000c1');

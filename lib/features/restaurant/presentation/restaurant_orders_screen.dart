@@ -499,10 +499,17 @@ class _RestaurantOrderCardState extends ConsumerState<_RestaurantOrderCard> {
                 style: text.labelLarge!.copyWith(color: tokens.primary),
               ),
             ] else if (o.status == OrderStatus.ready) ...[
+              // En attente d'un livreur ; alerte quand l'attente se prolonge (l'équipe est prévenue).
               const SizedBox(height: Space.sm),
               Text(
-                l10n.orderWaitingCourier,
-                style: text.labelLarge!.copyWith(color: tokens.muted),
+                o.dispatchAlertedAt == null
+                    ? l10n.orderWaitingCourier
+                    : l10n.restaurantWaitingLong,
+                style: text.labelLarge!.copyWith(
+                  color: o.dispatchAlertedAt == null
+                      ? tokens.muted
+                      : tokens.warning,
+                ),
               ),
             ],
             ...switch (o.status) {
@@ -546,7 +553,8 @@ class _RestaurantOrderCardState extends ConsumerState<_RestaurantOrderCard> {
                 ),
               ],
               // ORD-10 : remise déclarée par le restaurant, une fois le livreur arrivé.
-              OrderStatus.ready when o.courierId != null => [
+              OrderStatus.ready ||
+              OrderStatus.courierAssigned when o.courierId != null => [
                 const SizedBox(height: Space.md),
                 FilledButton(
                   onPressed: _busy ? null : () => _move(OrderStatus.pickedUp),

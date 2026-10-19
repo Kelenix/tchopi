@@ -68,6 +68,27 @@ class AdminRestaurantRepository {
     ),
   );
 
+  /// Livreurs affiliés : seuls eux reçoivent les commandes du restaurant (sinon, ceux de sa zone).
+  Future<Set<String>> affiliatedCouriers(String restaurantId) =>
+      guardCall(() async {
+        final rows = await _client
+            .from('restaurant_couriers')
+            .select('courier_id')
+            .eq('restaurant_id', restaurantId);
+        return {for (final row in rows) row['courier_id'] as String};
+      });
+
+  Future<void> setCouriers(String restaurantId, Set<String> courierIds) =>
+      guardCall(
+        () => _client.rpc<void>(
+          'admin_set_restaurant_couriers',
+          params: {
+            'p_restaurant_id': restaurantId,
+            'p_courier_ids': courierIds.toList(),
+          },
+        ),
+      );
+
   Future<void> remove(String memberId) => guardCall(
     () => _client.rpc<void>(
       'admin_remove_member',

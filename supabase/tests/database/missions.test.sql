@@ -78,16 +78,16 @@ select pg_temp.as_user('00000000-0000-0000-0000-0000000000f1');
 select public.transition_order(pg_temp.order_id('1'), 'accepted');
 select public.transition_order(pg_temp.order_id('1'), 'preparing');
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000a1');
-select public.respond_to_offer(pg_temp.pending_offer(), true);
 
--- MIS-04 : récupération seulement une fois prête.
-select throws_ok($$ select public.confirm_pickup(pg_temp.order_id('1')) $$, 'P0001', 'not_ready',
-  'un repas en préparation ne peut pas être récupéré');
+-- MIS-04 : un repas n'est proposé aux livreurs qu'une fois prêt.
+select is(pg_temp.pending_offer(), null, 'un repas en préparation n''est pas encore proposé');
+select pg_temp.as_user('00000000-0000-0000-0000-0000000000f1');
+select public.transition_order(pg_temp.order_id('1'), 'ready');
+select pg_temp.as_user('00000000-0000-0000-0000-0000000000a1');
+select public.respond_to_offer(pg_temp.pending_offer(), true);
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000c1');
 select throws_ok($$ select public.confirm_pickup(pg_temp.order_id('1')) $$, 'P0001', 'not_found',
   'seul le livreur de la mission la fait avancer');
-select pg_temp.as_user('00000000-0000-0000-0000-0000000000f1');
-select public.transition_order(pg_temp.order_id('1'), 'ready');
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000a1');
 select is((public.confirm_pickup(pg_temp.order_id('1'))).status, 'picked_up'::public.order_status,
   'repas prêt : récupéré par le livreur');

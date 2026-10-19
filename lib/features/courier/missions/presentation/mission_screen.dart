@@ -133,19 +133,18 @@ class _MissionScreenState extends ConsumerState<MissionScreen> {
     return ListView(
       padding: const EdgeInsets.all(Space.screen),
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                pickedUp ? l10n.missionStepDeliver : l10n.missionStepPickup,
-                style: text.headlineMedium,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(width: Space.sm),
-            OrderStatusChip(status: o.status),
-          ],
+        // Étape en titre, statut en dessous : les statuts longs ne tronquent plus le titre.
+        Text(
+          pickedUp ? l10n.missionStepDeliver : l10n.missionStepPickup,
+          style: text.headlineMedium,
+        ),
+        const SizedBox(height: Space.xs),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: OrderStatusChip(
+            status: o.status,
+            parcel: o.type == OrderType.parcel,
+          ),
         ),
         const SizedBox(height: Space.md),
         MissionMap(

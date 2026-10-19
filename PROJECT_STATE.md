@@ -87,6 +87,13 @@ validation de la maquette → code des écrans à partir de l'Inc-1. Registre de
 
 ## Journal de session (résumé court, le plus récent en haut)
 
+- 2026-10-19 — Prise en charge revue (ADR-037) : commande sans livreur, offre à tous les livreurs éligibles à
+  « Prête », premier qui accepte, attente reproposée, alerte restaurant, désistement → reproposée, livreurs
+  affiliés (admin), libellés « Livreur en route vers le restaurant ». Procédure : `docs/tester-une-commande.md`.
+  Vérifié dans le navigateur : commande R-MC488 passée sans livreur, marquée Prête, livreur passé en ligne → offre
+  reçue en plein écran, acceptée, mission ouverte. Corrigé : titre de mission tronqué, accents des comptes de test.
+  Preuves : `check.ps1 -Integration` vert (analyse 0 ; 43 + 64 tests Flutter ; pgTAP 259/259 ; intégration 3 + 10).
+
 - 2026-10-19 — Villes (ADR-036) : 10 villes ivoiriennes en plus d'Abidjan, avec tarifs ; tests isolés de ces données.
   Comptes de test sur le serveur : `.\dev-accounts.ps1 -Serveur` (mot de passe aléatoire noté seulement dans
   `env/comptes-serveur.txt`). Preuves : analyse 0 ; 64 + 43 tests Flutter ; pgTAP 261/261 ; intégration 10 + 3.

@@ -132,7 +132,6 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
         method != null &&
         ready != null &&
         ready.issues.isEmpty &&
-        ready.couriersAvailable &&
         !quote!.isLoading &&
         !_placing;
 
@@ -216,10 +215,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                   ],
                   if (ready != null && !ready.couriersAvailable) ...[
                     const SizedBox(height: Space.lg),
-                    NoCourierBanner(
-                      onRetry: () =>
-                          ref.invalidate(cartQuoteProvider(address!.id!)),
-                    ),
+                    const NoCourierBanner(),
                   ],
                   const SizedBox(height: Space.xxl),
                   _SectionTitle(l10n.checkoutDeliverTo),

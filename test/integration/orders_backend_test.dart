@@ -299,8 +299,8 @@ void main() {
 
       // Le livreur écoute ses offres avant la commande.
       final offered = missions
-          .watchPendingOffer(ids['livreur']!)
-          .firstWhere((offer) => offer != null);
+          .watchPendingOffers(ids['livreur']!)
+          .firstWhere((offers) => offers.isNotEmpty);
       await Future<void>.delayed(const Duration(seconds: 3));
 
       final cart = Cart(
@@ -326,17 +326,20 @@ void main() {
       );
       await manager.transition(order.id, OrderStatus.accepted);
       await manager.transition(order.id, OrderStatus.preparing);
+      // Proposée aux livreurs une fois « Prête », sans limite de temps.
+      await manager.transition(order.id, OrderStatus.ready);
 
-      final offer = (await offered.timeout(const Duration(seconds: 10)))!;
+      final offer = (await offered.timeout(const Duration(seconds: 10))).first;
       expect(offer.orderId, order.id);
       expect(offer.summary.earning, greaterThan(0));
       expect(offer.summary.cashAmount, order.total);
-      expect(offer.expiresAt.isAfter(DateTime.now()), isTrue);
+      expect(offer.expiresAt, isNull);
 
       await missions.respond(offer.id, accept: true);
       final assigned = await client.fetch(order.id);
       expect(assigned.courierId, ids['livreur']);
       expect(assigned.courierInfo?.firstName, 'Moussa');
+      expect(assigned.status, OrderStatus.courierAssigned);
       expect(
         (await client.events(order.id)).map((e) => e.kind),
         contains('courier_assigned'),
@@ -372,12 +375,7 @@ void main() {
         ),
       );
 
-      // Mission : prête, récupérée, en route, code faux puis juste, espèces encaissées (MIS-04 à MIS-06).
-      await expectLater(
-        missions.confirmPickup(order.id),
-        throwsA(isA<AppFailure>().having((f) => f.code, 'code', 'not_ready')),
-      );
-      await manager.transition(order.id, OrderStatus.ready);
+      // Mission : récupérée, en route, code faux puis juste, espèces encaissées (MIS-04 à MIS-06).
       await missions.confirmPickup(order.id);
       await missions.startDelivery(order.id);
       final code = (await client.deliveryCode(order.id))!;
@@ -437,8 +435,8 @@ void main() {
         landmark: 'Tour A',
       );
       final offered = missions
-          .watchPendingOffer(ids['livreur']!)
-          .firstWhere((offer) => offer != null);
+          .watchPendingOffers(ids['livreur']!)
+          .firstWhere((offers) => offers.isNotEmpty);
       await Future<void>.delayed(const Duration(seconds: 3));
       final quote = await client.quoteParcel(pickup, dropoff, type.id);
       final parcel = await client.placeParcel(
@@ -453,7 +451,7 @@ void main() {
         expectedTotal: quote.total,
         idempotencyKey: '00000000-0000-4000-b000-$stamp'.substring(0, 36),
       );
-      final offer = (await offered.timeout(const Duration(seconds: 15)))!;
+      final offer = (await offered.timeout(const Duration(seconds: 15))).first;
       expect(offer.orderId, parcel.id);
       await missions.respond(offer.id, accept: true);
       await missions.confirmPickup(parcel.id, cashReceived: true);

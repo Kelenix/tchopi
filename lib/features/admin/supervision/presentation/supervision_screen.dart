@@ -199,7 +199,10 @@ class _OrderRow extends StatelessWidget {
           '${DateFormat.Hm('fr').format(order.createdAt.toLocal())} · '
           '${order.courierInfo?.firstName ?? l10n.adminOrderNoCourier}',
         ),
-        trailing: OrderStatusChip(status: order.status),
+        trailing: OrderStatusChip(
+          status: order.status,
+          parcel: order.type == OrderType.parcel,
+        ),
       ),
     );
   }

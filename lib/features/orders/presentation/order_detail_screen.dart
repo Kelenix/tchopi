@@ -297,7 +297,7 @@ class _StatusHeader extends StatelessWidget {
           ),
           const SizedBox(height: Space.md),
           Text(
-            status.label(l10n),
+            status.label(l10n, parcel: order.type == OrderType.parcel),
             style: text.headlineMedium!.copyWith(
               color: failed ? tokens.danger : tokens.primary,
             ),

@@ -50,7 +50,6 @@ class _SettingsForm extends ConsumerStatefulWidget {
 
 class _SettingsFormState extends ConsumerState<_SettingsForm> {
   static final List<_Delay> _delays = [
-    (label: (l) => l.settingsOfferTimeout, unit: 1, min: 15, max: 300),
     (label: (l) => l.settingsRestaurantTimeout, unit: 60, min: 2, max: 60),
     (label: (l) => l.settingsPaymentTimeout, unit: 60, min: 5, max: 60),
     (label: (l) => l.settingsDispatchAlert, unit: 60, min: 2, max: 60),
@@ -67,7 +66,6 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
     super.initState();
     final s = widget.settings;
     final values = [
-      s.offerTimeoutS,
       s.restaurantTimeoutS,
       s.paymentTimeoutS,
       s.dispatchAlertS,
@@ -102,11 +100,12 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
           .read(supervisionRepositoryProvider)
           .saveSettings(
             PlatformSettings(
-              offerTimeoutS: _seconds(0),
-              restaurantTimeoutS: _seconds(1),
-              paymentTimeoutS: _seconds(2),
-              dispatchAlertS: _seconds(3),
-              dispatchCancelS: _seconds(4),
+              // Plus d'offre limitée dans le temps (ADR-037) : valeur conservée telle quelle.
+              offerTimeoutS: widget.settings.offerTimeoutS,
+              restaurantTimeoutS: _seconds(0),
+              paymentTimeoutS: _seconds(1),
+              dispatchAlertS: _seconds(2),
+              dispatchCancelS: _seconds(3),
               supportPhone: normalizePhone(_phone.text),
             ),
           );
@@ -143,7 +142,7 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
                   return l10n.settingsRange(d.min, d.max);
                 }
                 // L'annulation automatique vient après l'alerte (contrainte de la base).
-                if (i == 4 && n <= (int.tryParse(_fields[3].text) ?? 0)) {
+                if (i == 3 && n <= (int.tryParse(_fields[2].text) ?? 0)) {
                   return l10n.settingsCancelAfterAlert;
                 }
                 return null;

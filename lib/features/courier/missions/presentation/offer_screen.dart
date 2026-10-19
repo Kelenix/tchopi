@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,8 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../shared/alert_sound.dart';
 import '../missions_providers.dart';
 
-/// L-04 : offre de mission en plein écran — gain, trajet, espèces à encaisser, compte à rebours (DIS-02).
-/// Son et vibration à l'arrivée, vibration répétée tant que l'offre attend ; app fermée : notification (NOT-02).
+/// L-04 : commande à récupérer, en plein écran — gain, trajet, espèces à encaisser (DIS-02). Proposée à tous les
+/// livreurs disponibles : le premier qui accepte l'obtient. Son et vibration à l'arrivée ; app fermée : notification.
 class OfferScreen extends ConsumerStatefulWidget {
   const OfferScreen({super.key, required this.offer});
 
@@ -19,39 +17,16 @@ class OfferScreen extends ConsumerStatefulWidget {
   ConsumerState<OfferScreen> createState() => _OfferScreenState();
 }
 
-enum _Outcome { deciding, sending, accepted, declined, expired, unavailable }
+enum _Outcome { deciding, sending, accepted, declined, unavailable }
 
 class _OfferScreenState extends ConsumerState<OfferScreen> {
-  late final Timer _clock;
-  late final Duration _total;
   _Outcome _outcome = _Outcome.deciding;
-
-  Duration get _left {
-    final left = widget.offer.expiresAt.difference(DateTime.now());
-    return left.isNegative ? Duration.zero : left;
-  }
 
   @override
   void initState() {
     super.initState();
-    _total = _left.inSeconds > 0 ? _left : const Duration(seconds: 1);
     playAlertSound();
     HapticFeedback.heavyImpact();
-    _clock = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_outcome != _Outcome.deciding) return;
-      if (_left == Duration.zero) {
-        setState(() => _outcome = _Outcome.expired);
-      } else {
-        if (timer.tick.isEven) HapticFeedback.heavyImpact();
-        setState(() {});
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _clock.cancel();
-    super.dispose();
   }
 
   Future<void> _respond(bool accept) async {
@@ -70,11 +45,7 @@ class _OfferScreenState extends ConsumerState<OfferScreen> {
     } on AppFailure catch (failure) {
       if (!mounted) return;
       if (failure.code == 'offer_unavailable') {
-        setState(
-          () => _outcome = _left == Duration.zero
-              ? _Outcome.expired
-              : _Outcome.unavailable,
-        );
+        setState(() => _outcome = _Outcome.unavailable);
       } else {
         setState(() => _outcome = _Outcome.deciding);
         ScaffoldMessenger.of(context).showSnackBar(
@@ -91,15 +62,11 @@ class _OfferScreenState extends ConsumerState<OfferScreen> {
   @override
   Widget build(BuildContext context) {
     // Offre retirée par le serveur (commande annulée, attribuée par l'admin) pendant la décision.
-    ref.listen(pendingOfferProvider, (_, next) {
+    ref.listen(pendingOffersProvider, (_, next) {
       if (_outcome == _Outcome.deciding &&
           next.hasValue &&
-          next.value?.id != widget.offer.id) {
-        setState(
-          () => _outcome = _left == Duration.zero
-              ? _Outcome.expired
-              : _Outcome.unavailable,
-        );
+          !next.value!.any((offer) => offer.id == widget.offer.id)) {
+        setState(() => _outcome = _Outcome.unavailable);
       }
     });
     final deciding =
@@ -149,35 +116,6 @@ class _OfferScreenState extends ConsumerState<OfferScreen> {
           ],
         ),
         const Spacer(),
-        Center(
-          child: SizedBox.square(
-            dimension: 140,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                CircularProgressIndicator(
-                  value: _left.inMilliseconds / _total.inMilliseconds,
-                  strokeWidth: 9,
-                  backgroundColor: tokens.surfaceAlt,
-                  color: tokens.primary,
-                ),
-                Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text('${_left.inSeconds}', style: text.displaySmall),
-                      Text(
-                        l10n.offerSeconds,
-                        style: text.bodySmall!.copyWith(color: tokens.muted),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: Space.xl),
         Text(
           l10n.offerEarning,
           textAlign: TextAlign.center,
@@ -282,11 +220,6 @@ class _OfferScreenState extends ConsumerState<OfferScreen> {
       _Outcome.declined => (
         Icons.do_not_disturb_on_outlined,
         l10n.offerDeclinedTitle,
-        l10n.offerDeclinedBody,
-      ),
-      _Outcome.expired => (
-        Icons.timer_off_outlined,
-        l10n.offerExpiredTitle,
         l10n.offerDeclinedBody,
       ),
       _ => (Icons.info_outline, l10n.failureOfferUnavailable, null),

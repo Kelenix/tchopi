@@ -81,11 +81,9 @@ select is((pg_temp.tx('2')).status, 'cancelled'::public.transaction_status,
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000f1');
 select public.transition_order(pg_temp.order_id('1'), 'accepted');
 select public.transition_order(pg_temp.order_id('1'), 'preparing');
-select pg_temp.as_user('00000000-0000-0000-0000-0000000000a1');
-select public.respond_to_offer((select id from public.delivery_offers where status = 'pending'), true);
-select pg_temp.as_user('00000000-0000-0000-0000-0000000000f1');
 select public.transition_order(pg_temp.order_id('1'), 'ready');
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000a1');
+select public.respond_to_offer((select id from public.delivery_offers where status = 'pending'), true);
 select public.confirm_pickup(pg_temp.order_id('1'));
 select public.start_delivery(pg_temp.order_id('1'));
 select public.confirm_delivery(pg_temp.order_id('1'), pg_temp.code('1'));

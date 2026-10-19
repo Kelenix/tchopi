@@ -124,7 +124,10 @@ class OrderTile extends StatelessWidget {
                       style: text.bodySmall!.copyWith(color: tokens.muted),
                     ),
                     const SizedBox(height: Space.sm),
-                    OrderStatusChip(status: order.status),
+                    OrderStatusChip(
+                      status: order.status,
+                      parcel: order.type == OrderType.parcel,
+                    ),
                   ],
                 ),
               ),

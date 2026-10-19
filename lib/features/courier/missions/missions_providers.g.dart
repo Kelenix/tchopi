@@ -56,44 +56,46 @@ final class MissionRepositoryProvider
 
 String _$missionRepositoryHash() => r'bbd25421883acff56b884080c13aaf8a77f4e080';
 
-@ProviderFor(pendingOffer)
-final pendingOfferProvider = PendingOfferProvider._();
+@ProviderFor(pendingOffers)
+final pendingOffersProvider = PendingOffersProvider._();
 
-final class PendingOfferProvider
+final class PendingOffersProvider
     extends
         $FunctionalProvider<
-          AsyncValue<DeliveryOffer?>,
-          DeliveryOffer?,
-          Stream<DeliveryOffer?>
+          AsyncValue<List<DeliveryOffer>>,
+          List<DeliveryOffer>,
+          Stream<List<DeliveryOffer>>
         >
-    with $FutureModifier<DeliveryOffer?>, $StreamProvider<DeliveryOffer?> {
-  PendingOfferProvider._()
+    with
+        $FutureModifier<List<DeliveryOffer>>,
+        $StreamProvider<List<DeliveryOffer>> {
+  PendingOffersProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'pendingOfferProvider',
+        name: r'pendingOffersProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$pendingOfferHash();
+  String debugGetCreateSourceHash() => _$pendingOffersHash();
 
   @$internal
   @override
-  $StreamProviderElement<DeliveryOffer?> $createElement(
+  $StreamProviderElement<List<DeliveryOffer>> $createElement(
     $ProviderPointer pointer,
   ) => $StreamProviderElement(pointer);
 
   @override
-  Stream<DeliveryOffer?> create(Ref ref) {
-    return pendingOffer(ref);
+  Stream<List<DeliveryOffer>> create(Ref ref) {
+    return pendingOffers(ref);
   }
 }
 
-String _$pendingOfferHash() => r'862f2f250f601149c6a7c42a5c0d9708ba238c83';
+String _$pendingOffersHash() => r'59af894e7e39663e006acd07fdd6d4dd59bc6a61';
 
 @ProviderFor(currentMission)
 final currentMissionProvider = CurrentMissionProvider._();

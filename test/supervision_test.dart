@@ -155,10 +155,19 @@ void main() {
     await tester.pumpWidget(app(const SettingsScreen(), const []));
     await tester.pumpAndSettle();
 
-    expect(find.text('45'), findsOneWidget);
+    expect(
+      find.text('45'),
+      findsNothing,
+      reason:
+          'plus de délai d'
+          'offre',
+    );
     expect(find.text('30'), findsOneWidget, reason: '1 800 s en minutes');
     await tester.enterText(
-      find.widgetWithText(TextFormField, 'Annulation sans livreur (minutes)'),
+      find.widgetWithText(
+        TextFormField,
+        "Annulation d'un colis sans livreur (minutes)",
+      ),
       '8',
     );
     await tester.tap(find.text('Enregistrer'));
