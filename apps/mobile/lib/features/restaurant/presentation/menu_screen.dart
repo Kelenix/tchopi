@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../shared/restaurant_cover.dart';
 import '../restaurant_providers.dart';
 import 'product_editor_screen.dart';
 import 'restaurant_scaffold.dart';
@@ -112,15 +113,7 @@ class _ProductRow extends ConsumerWidget {
         borderRadius: BorderRadius.circular(Radii.chip),
         child: SizedBox.square(
           dimension: 48,
-          child: photo == null
-              ? ColoredBox(
-                  color: tokens.surfaceAlt,
-                  child: Icon(Icons.restaurant, color: tokens.muted),
-                )
-              : Image.network(
-                  ref.read(mediaRepositoryProvider).publicUrl(photo),
-                  fit: BoxFit.cover,
-                ),
+          child: MediaImage(path: photo, seed: product.restaurantId, size: 48),
         ),
       ),
       title: Text(

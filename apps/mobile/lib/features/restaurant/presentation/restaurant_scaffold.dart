@@ -56,6 +56,7 @@ class RestaurantScaffold extends ConsumerWidget {
                         path: restaurant.coverPath,
                         seed: restaurant.id,
                         icon: Icons.storefront_outlined,
+                        size: 44,
                       ),
                     ),
                   ),

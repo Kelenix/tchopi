@@ -8,6 +8,8 @@ import 'package:mobile/features/client/home/client_home_screen.dart';
 import 'package:mobile/features/client/home/restaurant_detail_screen.dart';
 import 'package:mobile/features/restaurant/restaurant_providers.dart';
 
+import 'small_screen.dart';
+
 const restaurant = Restaurant(
   id: 'r1',
   zoneId: 'z',
@@ -119,4 +121,20 @@ void main() {
     expect(find.text('${formatMoney(500)} · Indisponible'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets(
+    'petit écran, grande police : accueil et fiche sans débordement',
+    (tester) async {
+      smallScreenLargeText(tester);
+      await tester.pumpWidget(app(const ClientHomeScreen()));
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+
+      await tester.pumpWidget(
+        app(const RestaurantDetailScreen(restaurantId: 'r1')),
+      );
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+    },
+  );
 }

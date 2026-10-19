@@ -6,6 +6,29 @@
 
 ---
 
+## ADR-030 — Phase 5 : cache des photos, index, charge sans k6
+
+- **Date** : 2026-10-19
+- **Statut** : Accepté
+- **Décideur** : Claude (rôles : performance-engineer, qa-engineer)
+- **Contexte** : Budgets de `docs/design/direction.md` §5 (APK < 25 Mo, fluidité sur Android modeste, données
+  mobiles coûteuses) ; plan de test §9 ; le rôle QA prévoit un test de charge k6.
+- **Décision** :
+  - Photos via `cached_network_image` dans `MediaImage` : décodage à la taille affichée et cache disque.
+  - Index sur les 9 clés étrangères qui n'en avaient pas.
+  - Test de charge écrit en Node (`tests/load/backend.mjs`), déjà installé, au lieu de k6 : mêmes profils
+    (smoke, charge, stress) et seuils (p95, taux d'échec), sans outil à télécharger.
+  - Tests « petit écran, police + 30 % » sur les écrans clés, avec la vraie police chargée dans les tests de l'app.
+  - Listes non converties en `ListView.builder` : elles restent sous 200 éléments et Flutter ne construit que les
+    éléments visibles ; aucune mesure ne justifie la réécriture.
+- **Alternatives écartées** : `Image.network` avec `cacheWidth` seul (pas de cache disque : photos retéléchargées à
+  chaque ouverture) ; k6 (installation supplémentaire).
+- **Conséquences** : une dépendance de plus (cache d'images) ; démarrage et fluidité restent à mesurer sur un vrai
+  téléphone en mode profile (`docs/performance.md`).
+- **Impact** : technique (faible), réversible.
+
+---
+
 ## ADR-029 — L'Admin n'est plus un espace à choisir ; installation sur téléphone
 
 - **Date** : 2026-10-19

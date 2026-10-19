@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,11 +8,20 @@ import '../features/restaurant/restaurant_providers.dart';
 /// Photo publique (couverture, produit) qui apparaît en fondu ; tant qu'elle manque, un motif
 /// dont la teinte varie selon `seed` (un restaurant garde toujours la même).
 class MediaImage extends ConsumerWidget {
-  const MediaImage({super.key, required this.path, this.icon, this.seed = ''});
+  const MediaImage({
+    super.key,
+    required this.path,
+    this.icon,
+    this.seed = '',
+    this.size,
+  });
 
   final String? path;
   final IconData? icon;
   final String seed;
+
+  /// Côté d'une vignette carrée ; absent : photo en pleine largeur d'écran.
+  final double? size;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -44,18 +54,19 @@ class MediaImage extends ConsumerWidget {
     );
     final value = path;
     if (value == null) return placeholder;
-    return Image.network(
-      ref.watch(mediaRepositoryProvider).publicUrl(value),
+    // Décodée à la taille affichée (une photo au plus 16:9 rognée dans une vignette carrée garde sa netteté)
+    // et gardée sur l'appareil : moins de mémoire, pas de nouveau téléchargement à chaque ouverture.
+    final width = size == null
+        ? MediaQuery.sizeOf(context).width
+        : size! * 16 / 9;
+    return CachedNetworkImage(
+      imageUrl: ref.watch(mediaRepositoryProvider).publicUrl(value),
       fit: BoxFit.cover,
-      frameBuilder: (context, child, frame, synchronous) => synchronous
-          ? child
-          : AnimatedOpacity(
-              opacity: frame == null ? 0 : 1,
-              duration: Motion.normal,
-              curve: Motion.curve,
-              child: child,
-            ),
-      errorBuilder: (_, _, _) => placeholder,
+      memCacheWidth: (width * MediaQuery.devicePixelRatioOf(context)).round(),
+      fadeInDuration: Motion.normal,
+      fadeInCurve: Motion.curve,
+      placeholder: (_, _) => placeholder,
+      errorWidget: (_, _, _) => placeholder,
     );
   }
 }

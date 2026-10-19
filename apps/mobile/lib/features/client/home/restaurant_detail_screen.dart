@@ -374,6 +374,7 @@ class _ProductTile extends ConsumerWidget {
                       path: p.photoPath,
                       icon: Icons.lunch_dining_outlined,
                       seed: p.restaurantId,
+                      size: 96,
                     ),
                   ),
                 ),

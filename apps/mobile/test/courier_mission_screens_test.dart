@@ -10,6 +10,8 @@ import 'package:mobile/features/courier/missions/presentation/history_screen.dar
 import 'package:mobile/features/courier/missions/presentation/mission_screen.dart';
 import 'package:mobile/features/orders/orders_providers.dart';
 
+import 'small_screen.dart';
+
 class FakeMissions implements MissionRepository {
   FakeMissions([this.codeResults = const []]);
 
@@ -249,5 +251,20 @@ void main() {
     expect(find.text(formatMoney(2200)), findsOneWidget);
     expect(find.text('Plateau → Cocody'), findsNWidgets(3));
     expect(find.text('Échec de livraison'), findsOneWidget);
+  });
+
+  testWidgets('petit écran, grande police : mission sans débordement', (
+    tester,
+  ) async {
+    smallScreenLargeText(tester);
+    await tester.pumpWidget(
+      app(
+        const MissionScreen(orderId: 'o1'),
+        showing(mission(OrderStatus.ready)),
+      ),
+    );
+    await tester.pump();
+    await tester.pump();
+    expect(tester.takeException(), isNull);
   });
 }

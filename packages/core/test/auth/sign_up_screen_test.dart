@@ -1,10 +1,14 @@
 import 'package:core/core.dart';
+import 'package:core/src/auth/presentation/sign_in_screen.dart';
 import 'package:core/src/auth/presentation/sign_up_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-Widget signUpApp({required bool phoneEnabled}) => ProviderScope(
+Widget signUpApp({
+  required bool phoneEnabled,
+  Widget home = const SignUpScreen(),
+}) => ProviderScope(
   overrides: [
     phoneAuthEnabledProvider.overrideWith((ref) async => phoneEnabled),
   ],
@@ -13,7 +17,7 @@ Widget signUpApp({required bool phoneEnabled}) => ProviderScope(
     locale: const Locale('fr'),
     supportedLocales: AppLocalizations.supportedLocales,
     localizationsDelegates: AppLocalizations.localizationsDelegates,
-    home: const SignUpScreen(),
+    home: home,
   ),
 );
 
@@ -57,4 +61,23 @@ void main() {
       findsWidgets,
     );
   });
+
+  testWidgets(
+    'petit écran, grande police : connexion et inscription lisibles',
+    (tester) async {
+      tester.view
+        ..physicalSize = const Size(640, 1136)
+        ..devicePixelRatio = 2;
+      tester.platformDispatcher.textScaleFactorTestValue = 1.3;
+      addTearDown(() {
+        tester.view.reset();
+        tester.platformDispatcher.clearTextScaleFactorTestValue();
+      });
+      for (final home in [const SignInScreen(), const SignUpScreen()]) {
+        await tester.pumpWidget(signUpApp(phoneEnabled: true, home: home));
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull);
+      }
+    },
+  );
 }

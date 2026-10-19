@@ -5,10 +5,10 @@
 
 ## Snapshot
 
-- **Phase courante** : 4 — Implémentation · Inc-0 à Inc-11 et Inc-13 livrés (déploiement VPS : accès non fourni)
+- **Phase courante** : 5 — Qualité & performance faite · Inc-12 (Stripe) en attente des clés · déploiement VPS : accès non fourni
 - **Dernière mise à jour** : 2026-10-19
 - **Santé** : 🟢 OK · accès VPS et dépôt GitHub non fournis
-- **Prochaine action** : Inc-12 (carte Stripe) — bloqué par les clés de test Stripe (tâche manuelle n° 1) ; essai réel de nyole dès réception de vos clés de test
+- **Prochaine action** : phase 6 (publication : signature, fiche Play Store) ; Inc-12 (carte Stripe) — bloqué par les clés de test Stripe (tâche manuelle n° 1) ; essai réel de nyole dès réception de vos clés de test
 - **Plan de référence** : `docs/plan-de-realisation.md` · Design : `docs/design/design-system.md`
 - **Maquette** : `docs/design/maquette.html` — https://claude.ai/artifact/9GyaG6F34CkTe1qQpsy1cP (privée)
 
@@ -26,7 +26,7 @@ Flutter 3.41.9 · Dart 3.11.5 · Supabase CLI 2.116.0 · Docker 29.8.2 · Java 2
 | 2 — Planification           | ✅ fait | Backlog, jalons, chemin critique ci-dessous ; risques : plan §10 |
 | 3 — Architecture & design   | ✅ fait | Architecture, conception, données, design system ; maquette v1 validée |
 | 4 — Implémentation          | 🔄 en cours | Inc-0 à Inc-11 et Inc-13 livrés ; reste Inc-12 (carte Stripe) |
-| 5 — Qualité & performance   | ⬜ à faire | Scénarios S1–S6 |
+| 5 — Qualité & performance   | ✅ fait | `docs/performance.md`, `docs/qa/` ; reste la mesure de fluidité sur votre téléphone |
 | 6 — Publication (stores)    | ⬜ à faire | |
 | 7 — Documentation           | ⬜ à faire | |
 | 8 — Maintenance             | ⬜ à faire | |
@@ -86,6 +86,13 @@ validation de la maquette → code des écrans à partir de l'Inc-1. Registre de
 - voir `docs/manual-tasks.md` (priorité : compte marchand de paiement, à démarrer tôt)
 
 ## Journal de session (résumé court, le plus récent en haut)
+
+- 2026-10-19 — Phase 5 (ADR-030) : APK arm64 22,5 Mo (< 25) ; photos décodées à la taille affichée et en cache
+  disque ; 9 index de clés étrangères ; tests petit écran + police 130 % (7 écrans, aucun débordement) ; charge
+  (Node) 1/20/50 utilisateurs sans échec, p95 ≤ 240 ms ; lint base sans alerte, RLS sur les 25 tables. Vérifié dans le
+  navigateur : couvertures et vignettes nettes. Preuves : `check.ps1 -Integration` vert (analyse 0 ; 42 + 61 tests
+  Flutter ; pgTAP 246/246 ; intégration 3 + 9). Non mesuré : démarrage et 60 i/s sur téléphone réel (commande dans
+  `docs/performance.md`).
 
 - 2026-10-19 — ADR-029 (demande utilisateur) : l'Administration n'est plus proposée dans « Changer d'espace » ;
   un compte admin arrive directement dans l'Admin et n'en sort pas (écrans Admin et « Mon compte » seulement).

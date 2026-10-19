@@ -13,6 +13,8 @@ import 'package:mobile/features/orders/presentation/order_detail_screen.dart';
 import 'package:mobile/features/restaurant/presentation/restaurant_orders_screen.dart';
 import 'package:mobile/features/restaurant/restaurant_providers.dart';
 
+import 'small_screen.dart';
+
 const cart = Cart(
   restaurantId: 'r1',
   restaurantName: 'Maquis Chez Tante',
@@ -409,6 +411,46 @@ void main() {
 
     expect(find.text('Livreur : Koffi · Moto AB-123-CI'), findsOneWidget);
     expect(find.text('Remise au livreur'), findsOneWidget);
+  });
+
+  testWidgets('petit écran, grande police : validation sans débordement', (
+    tester,
+  ) async {
+    smallScreenLargeText(tester);
+    await tester.pumpWidget(
+      app(const CheckoutScreen(), [
+        ...base,
+        cartQuoteProvider('a1').overrideWith(
+          (ref) async => const FoodQuote(
+            subtotal: 3000,
+            deliveryFee: 500,
+            total: 3500,
+            distanceM: 2400,
+          ),
+        ),
+      ]),
+    );
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('petit écran, grande police : suivi sans débordement', (
+    tester,
+  ) async {
+    smallScreenLargeText(tester);
+    await tester.pumpWidget(
+      app(const OrderDetailScreen(orderId: 'o1'), [
+        orderProvider(
+          'o1',
+        ).overrideWith((ref) async => order('o1', OrderStatus.pending)),
+        orderLiveProvider(
+          'o1',
+        ).overrideWith((ref) => Stream.value(live(OrderStatus.pending))),
+        orderEventsProvider('o1').overrideWith((ref) async => const []),
+      ]),
+    );
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
   });
 
   parcelTests();
