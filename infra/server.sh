@@ -5,6 +5,7 @@
 #   sh server.sh tester <numéro> <code>  autorise l'inscription de ce numéro avec ce code fixe (pas de SMS réel)
 #   sh server.sh admin <numéro>          donne le rôle admin à un compte déjà inscrit
 #   sh server.sh studio start|stop       démarre ou arrête le tableau de bord (Studio)
+#   sh server.sh demo                    ajoute les restaurants de démonstration et leurs photos (une seule fois)
 # Le pare-feu et SSH du serveur ne sont pas modifiés (déjà limités à 22, 80 et 443).
 set -eu
 
@@ -114,11 +115,25 @@ studio() {
   if [ "$1" = start ]; then docker compose --profile studio up -d --wait studio meta; else docker compose stop studio meta; fi
 }
 
+# Restaurants de démonstration (s'ils sont absents) et leurs photos dans le bucket « media ».
+demo() {
+  if [ -z "$(sql -tA -c "select 1 from public.restaurants where id = '22222222-0000-0000-0000-000000000001'")" ]; then
+    sql -1 -f - < "$SRC/supabase/demo.sql"
+  fi
+  key=$(grep '^SERVICE_ROLE_KEY=' "$APP/.env" | cut -d= -f2-)
+  for f in "$SRC"/supabase/seed-media/media/demo/*.jpg; do
+    curl -fsS -o /dev/null -X POST "http://127.0.0.1:8010/storage/v1/object/media/demo/$(basename "$f")" \
+      -H "Authorization: Bearer $key" -H "apikey: $key" -H 'Content-Type: image/jpeg' -H 'x-upsert: true' \
+      --data-binary @"$f"
+  done
+}
+
 case "${1:-}" in
   install) install_supabase "$2"; install_nginx "$2"; install_backups; deploy ;;
   deploy) deploy ;;
   tester) tester "$2" "$3" ;;
   admin) admin "$2" ;;
   studio) studio "$2" ;;
-  *) sed -n '2,8p' "$0"; exit 1 ;;
+  demo) demo ;;
+  *) sed -n '2,9p' "$0"; exit 1 ;;
 esac

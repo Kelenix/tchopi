@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
-/// Carte OpenStreetMap (ADR-019) avec une épingle fixe au centre : on déplace la carte sous l'épingle,
+import 'map_tiles.dart';
+
+/// Carte (ADR-019, ADR-033) avec une épingle fixe au centre : on déplace la carte sous l'épingle,
 /// qui se soulève pendant le geste. `onMoved` reçoit la position désignée par la pointe.
 class PinMap extends StatefulWidget {
   const PinMap({
@@ -57,40 +59,11 @@ class _PinMapState extends State<PinMap> {
         },
       ),
       children: [
-        TileLayer(
-          urlTemplate: Env.mapTilesUrl,
-          userAgentPackageName: 'com.tchopi.mobile',
-        ),
+        const MapTiles(),
         IgnorePointer(
           child: Center(child: _Pin(lifted: _moving)),
         ),
-        // Mention exigée par OpenStreetMap ; en haut, car le bas de la carte peut être recouvert.
-        Align(
-          alignment: Alignment.topRight,
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(Space.sm),
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: tokens.surface.withValues(alpha: 0.85),
-                  borderRadius: BorderRadius.circular(Radii.chip),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: Space.sm,
-                    vertical: 2,
-                  ),
-                  child: Text(
-                    '© OpenStreetMap',
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodySmall!.copyWith(color: tokens.muted),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
+        const MapAttribution(),
       ],
     );
   }

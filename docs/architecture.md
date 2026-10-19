@@ -121,7 +121,7 @@ Repositories **concrets** (pas d'interface abstraite tant qu'une seule implémen
 - Les apps reçoivent leur configuration par `--dart-define-from-file=env/<env>.json` (fichiers ignorés par git ;
   `env/example.json` versionné) : `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `STRIPE_PUBLISHABLE_KEY`. Ce sont des clés
   **publiques** par conception ; la sécurité repose sur la RLS.
-- Fond de carte : URL de tuiles `MAP_TILES_URL` (OpenStreetMap par défaut en développement, fournisseur choisi en production — ADR-019) ; aucune clé dans le binaire.
+- Fond de carte : style vectoriel OpenFreeMap `MAP_STYLE_URL` (gratuit, sans clé — ADR-033), repli automatique sur les tuiles OpenStreetMap si le style ne se charge pas.
 - **Aucun secret dans les apps** : clé `service_role`, clés secrètes Stripe / Mobile Money, compte de service Firebase,
   identifiants SMTP / SMS restent dans le `.env` du VPS et les secrets des Edge Functions.
 - Session : stockage sécurisé (`flutter_secure_storage` → Android Keystore / iOS Keychain) branché sur `supabase_flutter`.
@@ -133,7 +133,7 @@ Repositories **concrets** (pas d'interface abstraite tant qu'une seule implémen
 | Backend | `supabase_flutter` | — | — |
 | État / navigation / modèles | `flutter_riverpod`, `riverpod_annotation`, `go_router`, `freezed`, `json_serializable` | — | — |
 | Session sécurisée | `flutter_secure_storage` | — | — |
-| Cartes | `flutter_map` + `latlong2` (tuiles OpenStreetMap, ADR-019) | — | — |
+| Cartes | `flutter_map` + `latlong2` + `vector_map_tiles` (OpenFreeMap, ADR-019, ADR-033) | — | — |
 | Position | `geolocator` | Localisation « pendant l'utilisation » ; livreur : service au premier plan de type localisation | Client : ajout d'une adresse · Livreur : passage en ligne |
 | Photos | `image_picker` (réduction à 800 px) | Caméra (seulement si « Prendre une photo ») | Profil livreur, produits |
 | Notifications | `firebase_messaging`, `flutter_local_notifications` (canaux et sons) | Notifications (Android 13+) | Après la 1ʳᵉ commande · passage en ligne · 1ʳᵉ connexion restaurant |

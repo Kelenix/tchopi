@@ -17,6 +17,7 @@ String failureMessage(AppLocalizations l10n, Object? error) {
     'code_invalid' => l10n.failureCodeInvalid,
     'rate_limited' => l10n.failureRateLimited,
     'sms_failed' => l10n.failureSmsFailed,
+    'email_disabled' => l10n.failureEmailDisabled,
     'weak_password' => l10n.failureWeakPassword,
     'same_password' => l10n.failureSamePassword,
     'account_suspended' => l10n.failureSuspended,

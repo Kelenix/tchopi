@@ -27,6 +27,10 @@ void main() {
       'sms_failed',
     );
     expect(
+      toFailure(const AuthException('x', code: 'email_provider_disabled')).code,
+      'email_disabled',
+    );
+    expect(
       toFailure(const AuthException('x', code: 'inconnu')).code,
       'unknown',
     );

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../shared/map_tiles.dart';
 import '../missions_providers.dart';
 
 /// L-06 : prochaine étape et position du livreur ; itinéraire dans Google Maps ou Waze (MIS-03).
@@ -48,10 +49,7 @@ class MissionMap extends ConsumerWidget {
                 ),
               ),
               children: [
-                TileLayer(
-                  urlTemplate: Env.mapTilesUrl,
-                  userAgentPackageName: 'com.tchopi.mobile',
-                ),
+                const MapTiles(),
                 MarkerLayer(
                   markers: [
                     Marker(
@@ -80,18 +78,7 @@ class MissionMap extends ConsumerWidget {
                       ),
                   ],
                 ),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: const EdgeInsets.all(Space.sm),
-                    child: Text(
-                      '© OpenStreetMap',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodySmall!.copyWith(color: tokens.muted),
-                    ),
-                  ),
-                ),
+                const MapAttribution(),
               ],
             ),
           ),

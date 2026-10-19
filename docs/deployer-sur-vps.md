@@ -75,6 +75,7 @@ avertit, « Installer quand même » (l'app n'est pas encore sur le Play Store).
 | Changement | Commande |
 |------------|----------|
 | Base de données ou fonctions serveur (après commit) | `.\vps.ps1 deployer` |
+| Restaurants de démonstration (menus, photos ; une seule fois, déjà fait) | `.\vps.ps1 demo` |
 | App | `flutter run` (téléphone branché) ou `flutter build apk --release` et renvoyer l'APK ; s'installe par-dessus, comptes conservés |
 
 ## 6. Administrer le serveur
@@ -96,7 +97,7 @@ avertit, « Installer quand même » (l'app n'est pas encore sur le Play Store).
 | Pas de connexion par email | n° 5 : envoi d'emails (SMTP), puis `ENABLE_EMAIL_SIGNUP=true` dans le `.env` |
 | Pas de notifications push (les écrans se mettent à jour en direct) | n° 8 : Firebase |
 | Mobile Money | n° 1 : clés nyole |
-| Carte : serveurs publics OpenStreetMap, à remplacer avant d'ouvrir au public | n° 7 |
+| Carte OpenFreeMap (données OpenStreetMap) : moins de lieux que Google Maps | n° 7 (facultatif) |
 | APK signé avec la clé de test : Google Play demandera la signature définitive | n° 11 (phase 6) |
 
 ## En cas de problème

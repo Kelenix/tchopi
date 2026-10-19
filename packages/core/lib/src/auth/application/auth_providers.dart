@@ -5,6 +5,7 @@ import '../../config/env.dart';
 import '../../supabase/supabase_setup.dart';
 import '../data/auth_repository.dart';
 import '../data/profile_repository.dart';
+import '../domain/login_identifier.dart';
 import '../domain/models.dart';
 
 part 'auth_providers.g.dart';
@@ -56,9 +57,9 @@ Future<AccountRoles?> accountRoles(Ref ref) async {
   return userId == null ? null : ref.watch(profileRepositoryProvider).roles();
 }
 
-/// En cas d'erreur réseau, l'option téléphone est masquée plutôt que de proposer un parcours qui échouerait.
+/// En cas d'erreur réseau, seul l'email est proposé (le téléphone demande un fournisseur SMS confirmé).
 @riverpod
-Future<bool> phoneAuthEnabled(Ref ref) => ref
+Future<LoginMethods> loginMethods(Ref ref) => ref
     .watch(authRepositoryProvider)
-    .isPhoneAuthEnabled()
-    .catchError((_) => false);
+    .loginMethods()
+    .catchError((_) => (email: true, phone: false));

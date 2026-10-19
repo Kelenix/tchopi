@@ -21,13 +21,17 @@ class AuthRepository {
   Stream<Session?> get sessionChanges =>
       _auth.onAuthStateChange.map((state) => state.session);
 
-  /// La connexion par téléphone n'est proposée que si un fournisseur SMS est configuré sur le serveur.
-  Future<bool> isPhoneAuthEnabled() => guardCall(() async {
+  /// Seuls les modes actifs sur le serveur sont proposés (fournisseur SMS, envoi d'emails).
+  Future<LoginMethods> loginMethods() => guardCall(() async {
     final response = await http
         .get(Uri.parse('$apiUrl/auth/v1/settings'), headers: {'apikey': apiKey})
         .timeout(const Duration(seconds: 10));
     final settings = jsonDecode(response.body) as Map<String, dynamic>;
-    return (settings['external'] as Map<String, dynamic>?)?['phone'] == true;
+    final external = settings['external'] as Map<String, dynamic>?;
+    return (
+      email: external?['email'] == true,
+      phone: external?['phone'] == true,
+    );
   });
 
   Future<void> signUp(

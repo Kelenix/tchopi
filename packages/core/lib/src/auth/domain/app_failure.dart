@@ -31,6 +31,8 @@ const _authCodes = {
   'over_request_rate_limit': 'rate_limited',
   // Pilote sans fournisseur SMS : numéro non autorisé (ADR-031) ; ensuite, échec d'envoi chez le fournisseur.
   'sms_send_failed': 'sms_failed',
+  // Envoi d'emails pas encore configuré sur le serveur (connexion avec un ancien compte email).
+  'email_provider_disabled': 'email_disabled',
   'weak_password': 'weak_password',
   'same_password': 'same_password',
   'user_banned': 'account_suspended',

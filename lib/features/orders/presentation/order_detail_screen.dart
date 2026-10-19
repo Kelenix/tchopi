@@ -8,6 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../shared/map_tiles.dart';
 import '../../../shared/push.dart';
 import '../../courier/profile/courier_providers.dart';
 import '../orders_providers.dart';
@@ -494,10 +495,7 @@ class _TrackingCardState extends ConsumerState<_TrackingCard> {
                 ),
               ),
               children: [
-                TileLayer(
-                  urlTemplate: Env.mapTilesUrl,
-                  userAgentPackageName: 'com.tchopi.mobile',
-                ),
+                const MapTiles(),
                 MarkerLayer(
                   markers: [
                     if (!pickedUp)
@@ -518,18 +516,7 @@ class _TrackingCardState extends ConsumerState<_TrackingCard> {
                     ),
                   ],
                 ),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: const EdgeInsets.all(Space.sm),
-                    child: Text(
-                      '© OpenStreetMap',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodySmall!.copyWith(color: tokens.muted),
-                    ),
-                  ),
-                ),
+                const MapAttribution(),
               ],
             ),
           ),

@@ -268,40 +268,46 @@ final class AccountRolesProvider
 
 String _$accountRolesHash() => r'31e8b6c52f457bedfe4bb1a289dda4434cebf882';
 
-/// En cas d'erreur réseau, l'option téléphone est masquée plutôt que de proposer un parcours qui échouerait.
+/// En cas d'erreur réseau, seul l'email est proposé (le téléphone demande un fournisseur SMS confirmé).
 
-@ProviderFor(phoneAuthEnabled)
-final phoneAuthEnabledProvider = PhoneAuthEnabledProvider._();
+@ProviderFor(loginMethods)
+final loginMethodsProvider = LoginMethodsProvider._();
 
-/// En cas d'erreur réseau, l'option téléphone est masquée plutôt que de proposer un parcours qui échouerait.
+/// En cas d'erreur réseau, seul l'email est proposé (le téléphone demande un fournisseur SMS confirmé).
 
-final class PhoneAuthEnabledProvider
-    extends $FunctionalProvider<AsyncValue<bool>, bool, FutureOr<bool>>
-    with $FutureModifier<bool>, $FutureProvider<bool> {
-  /// En cas d'erreur réseau, l'option téléphone est masquée plutôt que de proposer un parcours qui échouerait.
-  PhoneAuthEnabledProvider._()
+final class LoginMethodsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<LoginMethods>,
+          LoginMethods,
+          FutureOr<LoginMethods>
+        >
+    with $FutureModifier<LoginMethods>, $FutureProvider<LoginMethods> {
+  /// En cas d'erreur réseau, seul l'email est proposé (le téléphone demande un fournisseur SMS confirmé).
+  LoginMethodsProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'phoneAuthEnabledProvider',
+        name: r'loginMethodsProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$phoneAuthEnabledHash();
+  String debugGetCreateSourceHash() => _$loginMethodsHash();
 
   @$internal
   @override
-  $FutureProviderElement<bool> $createElement($ProviderPointer pointer) =>
-      $FutureProviderElement(pointer);
+  $FutureProviderElement<LoginMethods> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<bool> create(Ref ref) {
-    return phoneAuthEnabled(ref);
+  FutureOr<LoginMethods> create(Ref ref) {
+    return loginMethods(ref);
   }
 }
 
-String _$phoneAuthEnabledHash() => r'07167100c843d8952ee1d24af226f375ea8aba6e';
+String _$loginMethodsHash() => r'2bb055dad5e40e32556686fe0d6ca537f3eb6465';

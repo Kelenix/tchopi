@@ -550,6 +550,12 @@ abstract class AppLocalizations {
   /// **'Trop de tentatives. Patientez une minute avant de réessayer.'**
   String get failureRateLimited;
 
+  /// No description provided for @failureEmailDisabled.
+  ///
+  /// In fr, this message translates to:
+  /// **'La connexion par email n\'est pas encore disponible : utilisez votre numéro de téléphone.'**
+  String get failureEmailDisabled;
+
   /// No description provided for @failureSmsFailed.
   ///
   /// In fr, this message translates to:

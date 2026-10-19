@@ -73,17 +73,16 @@
 - **Coût** : par code envoyé, variable selon le pays et le fournisseur.
 - **Vérification** : un SMS est reçu et la connexion aboutit.
 
-## 7. Choisir le fournisseur de fond de carte (avant la publication)
-- **Pourquoi** : les cartes (adresses, colis, suivi) utilisent des tuiles OpenStreetMap (ADR-019). En développement, l'app
-  lit les serveurs publics d'OpenStreetMap, dont la politique d'usage interdit le trafic d'une app publiée.
-- **Quand** : avant les tests réels à grande échelle et la publication (phase 6).
-- **Étapes** : 1. Choisir un fournisseur de tuiles OpenStreetMap (ex. MapTiler, Stadia Maps) **ou** héberger ses propres
-  tuiles sur le VPS. 2. Récupérer l'URL des tuiles (`…/{z}/{x}/{y}.png`), avec sa clé si le fournisseur en demande une
-  (clé publique, restreinte au domaine / à l'app chez le fournisseur). 3. La communiquer à Claude : elle
-  remplace la valeur par défaut de `MAP_TILES_URL` dans `packages/core/lib/src/config/env.dart`.
-- **Coût** : offres gratuites limitées, puis payantes selon le trafic ; l'hébergement sur le VPS évite l'abonnement mais
-  demande de l'espace disque et de la maintenance.
-- **Vérification** : la carte s'affiche dans l'écran « Nouvelle adresse » de la version de production.
+## 7. Fond de carte : passer à Google Maps (facultatif, plus tard)
+- **Aujourd'hui** : carte moderne OpenFreeMap (ADR-033), gratuite sans limite, sans clé ni compte : rien à faire.
+- **Pourquoi changer** : Google Maps affiche davantage de commerces et de lieux à Abidjan.
+- **Quand** : seulement si vous acceptez un compte Google Cloud avec carte bancaire.
+- **Étapes** : 1. Créer un projet sur https://console.cloud.google.com et un compte de facturation. 2. Activer « Maps SDK
+  for Android », « Maps SDK for iOS » et « Maps JavaScript API ». 3. Créer une clé API, restreinte à l'app
+  `com.tchopi.mobile` (Android / iOS) et aux sites `tchopi.com` (web). 4. La communiquer à Claude, qui adapte les cartes.
+- **Coût** : cartes gratuites sur Android et iOS ; version navigateur gratuite jusqu'à 10 000 affichages par mois, puis
+  payante.
+- **Vérification** : la carte Google s'affiche dans l'écran « Nouvelle adresse ».
 
 ## 8. Créer le projet Firebase (notifications push)
 - **Pourquoi** : notifications client, livreur, restaurant — Inc-9.

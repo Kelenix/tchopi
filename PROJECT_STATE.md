@@ -87,9 +87,15 @@ validation de la maquette → code des écrans à partir de l'Inc-1. Registre de
 
 ## Journal de session (résumé court, le plus récent en haut)
 
+- 2026-10-19 — ADR-033 : zone d'Abidjan et tarifs par migration (déployée), restaurants de démonstration en ligne
+  (`vps.ps1 demo` : 3 restaurants, 9 plats, 12 photos) ; carte moderne OpenFreeMap (repli OpenStreetMap), rendu
+  vérifié dans le navigateur sur Abidjan. Numéros de test valides : +2250700000001 / 02. Tests 61 + 43, analyse OK.
+
 - 2026-10-19 — ADR-032 (demande utilisateur) : app déplacée à la racine (`lib/`, `android/`… ; paquet `tchopi`),
   serveur en ligne par défaut dans `Env` : `flutter run` suffit. Supprimés : `run.ps1`, `phone.ps1`, guide Wi-Fi,
   `vps.ps1 config`. Scripts, CI, hook et docs adaptés. Vérifié : analyse sans problème, tests 61 (app) + 42 (core).
+  Inscription : l'app ne propose que les modes actifs sur le serveur (téléphone seul tant que le SMTP manque) ; message
+  clair si un email est refusé (`email_provider_disabled`).
 
 - 2026-10-19 — Back-end déployé sur le VPS (ADR-031) : https://api.tchopi.com (nginx de l'hôte + certbot), Supabase
   officiel figé `self-hosted/v0.8.3` allégé (7 conteneurs `tchopi-*`, ~660 Mo), pilote fermé (numéros autorisés avec

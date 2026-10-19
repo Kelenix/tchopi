@@ -6,6 +6,31 @@
 
 ---
 
+## ADR-033 — Données de départ et carte moderne gratuite
+
+- **Date** : 2026-10-19
+- **Statut** : Accepté (demande utilisateur ; complète ADR-019)
+- **Décideur** : Utilisateur (restaurants de démonstration en ligne ; pas de service payant pour la carte « pour le
+  moment ») ; mise en œuvre Claude (rôle : database-architect / flutter-engineer)
+- **Contexte** : Le serveur en ligne était vide (aucune ville : profil et adresses impossibles) et la carte OpenStreetMap
+  classique jugée « vide, vieille, pas moderne ». Google Maps exige un compte Google Cloud avec carte bancaire (web
+  payant au-delà de 10 000 affichages par mois) ; CARTO exige désormais une clé.
+- **Décision** :
+  - Migration `20261019150000_default_zone` : zone « Abidjan — agglomération » et tarifs de départ sur tous les serveurs
+    (modifiables dans l'Administration).
+  - Restaurants de démonstration dans `supabase/demo.sql` (seed local, puis `vps.ps1 demo` sur le serveur, photos dans
+    le bucket « media ») ; supprimables depuis l'Administration avant l'ouverture au public.
+  - Carte : style vectoriel **OpenFreeMap « liberty »** (gratuit, sans clé ni compte, usage commercial permis) via
+    `vector_map_tiles` 9 (bêta, la version stable ne gère pas `latlong2` 0.10) ; repli automatique sur les tuiles
+    OpenStreetMap si le style ne se charge pas. Fond commun `lib/shared/map_tiles.dart` pour les trois cartes.
+- **Alternatives écartées** : Google Maps maintenant (compte de facturation refusé pour l'instant, tâche 7) ; CARTO
+  (clé obligatoire) ; MapLibre natif (refonte des trois cartes et des tests).
+- **Conséquences** : rendu vectoriel calculé par l'app (à surveiller sur les téléphones d'entrée de gamme) ;
+  dépendance bêta à revoir à la sortie de la version stable.
+- **Impact** : produit / design (fort), technique (moyen).
+
+---
+
 ## ADR-032 — App à la racine du dépôt, serveur en ligne par défaut
 
 - **Date** : 2026-10-19

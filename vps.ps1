@@ -4,9 +4,10 @@
 #   .\vps.ps1 deployer                      envoie la base et les fonctions serveur (version commitée)
 #   .\vps.ps1 testeur +225XXXXXXXXXX <code>  autorise l'inscription de ce numéro avec ce code à 6 chiffres
 #   .\vps.ps1 admin +225XXXXXXXXXX           donne le rôle admin à ce compte (déjà inscrit dans l'app)
-#   .\vps.ps1 studio                         tableau de bord Supabase sur http://localhost:8000 (Ctrl+C pour fermer)
+#   .\vps.ps1 demo                           ajoute les restaurants de démonstration (menus, photos)
+#   .\vps.ps1 studio                        tableau de bord Supabase sur http://localhost:8000 (Ctrl+C pour fermer)
 param(
-  [Parameter(Mandatory)][ValidateSet('cle', 'installer', 'deployer', 'testeur', 'admin', 'studio')][string]$Action,
+  [Parameter(Mandatory)][ValidateSet('cle', 'installer', 'deployer', 'testeur', 'admin', 'demo', 'studio')][string]$Action,
   [string]$Valeur,
   [string]$Code
 )
@@ -23,6 +24,10 @@ function Remote([string]$command) {
 function Phone([string]$value) {
   $digits = $value -replace '[\s+.-]', ''
   if ($digits -notmatch '^\d{8,15}$') { Fail "numéro invalide : $value (ex. +2250701020304)" }
+  # Côte d'Ivoire : 10 chiffres après +225, commençant par 01, 05 ou 07 (même règle que l'app).
+  if ($digits -like '225*' -and $digits -notmatch '^225(01|05|07)\d{8}$') {
+    Fail "numéro ivoirien invalide : $value (10 chiffres après +225, ex. +2250701020304)"
+  }
   $digits
 }
 
@@ -32,7 +37,7 @@ function Send-Source {
     Write-Host 'Attention : modifications non commitées dans infra/ ou supabase/ ; seule la version commitée est envoyée.' -ForegroundColor Yellow
   }
   $tar = Join-Path $env:TEMP 'tchopi-src.tar'
-  git -C $PSScriptRoot archive -o $tar HEAD infra supabase/migrations supabase/functions
+  git -C $PSScriptRoot archive -o $tar HEAD infra supabase/migrations supabase/functions supabase/demo.sql supabase/seed-media/media
   scp -q $tar tchopi:/tmp/tchopi-src.tar
   if ($LASTEXITCODE -ne 0) { Fail 'envoi vers le VPS : clé de ce PC enregistrée sur le VPS ? (docs/deployer-sur-vps.md § 1)' }
   Remove-Item $tar
@@ -84,6 +89,11 @@ switch ($Action) {
     if ($LASTEXITCODE -ne 0) { Fail 'le VPS ne répond pas' }
     if ($id) { Write-Host "+$phone est admin : se reconnecter dans l'app." -ForegroundColor Green }
     else { Write-Host "Aucun changement : +$phone n'est pas inscrit, ou il est déjà admin." -ForegroundColor Yellow }
+  }
+  'demo' {
+    Send-Source
+    Remote 'sh /opt/tchopi/src/infra/server.sh demo'
+    Write-Host 'Restaurants de démonstration en place.' -ForegroundColor Green
   }
   'studio' {
     # Démarré à la demande (mémoire du VPS partagé), arrêté à la fermeture du tunnel.

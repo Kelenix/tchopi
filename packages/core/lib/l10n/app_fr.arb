@@ -100,6 +100,7 @@
   "failureUserExists": "Un compte existe déjà avec cet identifiant.",
   "failureCodeInvalid": "Code incorrect ou expiré.",
   "failureRateLimited": "Trop de tentatives. Patientez une minute avant de réessayer.",
+  "failureEmailDisabled": "La connexion par email n'est pas encore disponible : utilisez votre numéro de téléphone.",
   "failureSmsFailed": "Impossible d'envoyer le code par SMS à ce numéro. Vérifiez-le, ou demandez à l'administrateur de l'autoriser.",
   "failureWeakPassword": "Mot de passe trop faible : 8 caractères minimum, avec des lettres et des chiffres.",
   "failureSamePassword": "Choisissez un mot de passe différent de l'actuel.",

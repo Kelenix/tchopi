@@ -16,11 +16,16 @@ abstract final class Env {
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzkyNDE0NjA1LCJleHAiOjE5NTAwOTQ2MDV9.nclb8EOOkSElPrTlwOQXuefHArkqmaumSSDKPpDUg9k',
   );
 
-  /// Fond de carte. Par défaut les tuiles d'OpenStreetMap, réservées au développement (faible trafic) ;
-  /// en production, l'URL du fournisseur retenu (ADR-019, docs/manual-tasks.md).
-  static const mapTilesUrl = String.fromEnvironment(
-    'MAP_TILES_URL',
-    defaultValue: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+  /// Fond de carte (ADR-033) : style moderne OpenFreeMap (données OpenStreetMap), gratuit, sans clé ni compte.
+  static const mapStyleUrl = String.fromEnvironment(
+    'MAP_STYLE_URL',
+    defaultValue: 'https://tiles.openfreemap.org/styles/liberty',
+  );
+
+  /// Mention exigée par les fournisseurs du fond de carte.
+  static const mapAttribution = String.fromEnvironment(
+    'MAP_ATTRIBUTION',
+    defaultValue: '© OpenFreeMap © OpenMapTiles © OpenStreetMap',
   );
 
   /// Notifications push (ADR-025) : configuration Firebase de l'app, publique par conception. Vide tant que le

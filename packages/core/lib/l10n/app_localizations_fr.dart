@@ -258,6 +258,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Trop de tentatives. Patientez une minute avant de réessayer.';
 
   @override
+  String get failureEmailDisabled =>
+      'La connexion par email n\'est pas encore disponible : utilisez votre numéro de téléphone.';
+
+  @override
   String get failureSmsFailed =>
       'Impossible d\'envoyer le code par SMS à ce numéro. Vérifiez-le, ou demandez à l\'administrateur de l\'autoriser.';
 
