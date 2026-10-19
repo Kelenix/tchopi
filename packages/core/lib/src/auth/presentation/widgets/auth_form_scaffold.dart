@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../../l10n/app_localizations.dart';
 import '../../../design/tokens.dart';
+import '../../../design/widgets.dart';
 import '../../domain/app_failure.dart';
 
 /// Message français d'une erreur présentable (plan §3.4) ; jamais de détail technique.
@@ -30,6 +32,9 @@ String failureMessage(AppLocalizations l10n, Object? error) {
     'cart_changed' => l10n.failureCartChanged,
     'cart_empty' => l10n.failureCartEmpty,
     'payment_unavailable' => l10n.failurePaymentUnavailable,
+    'payment_closed' => l10n.failurePaymentClosed,
+    'already_paid' => l10n.failureAlreadyPaid,
+    'payment_provider_error' => l10n.failurePaymentProvider,
     'already_accepted' => l10n.failureAlreadyAccepted,
     'invalid_transition' => l10n.failureInvalidTransition,
     'different_zones' => l10n.failureDifferentZones,
@@ -53,8 +58,9 @@ String failureMessage(AppLocalizations l10n, Object? error) {
   };
 }
 
-/// Mise en page commune des formulaires d'accès : titre, sous-titre, champs défilants,
-/// erreur éventuelle et action principale toujours visible en bas.
+/// Mise en page commune des formulaires d'accès. Parcours d'accès (`branded`) : photo de plats et marque en haut,
+/// formulaire sur une feuille claire, action principale juste sous les champs. Écrans du compte : barre simple et
+/// action principale toujours visible en bas.
 class AuthFormScaffold extends StatelessWidget {
   const AuthFormScaffold({
     super.key,
@@ -66,6 +72,7 @@ class AuthFormScaffold extends StatelessWidget {
     this.isLoading = false,
     this.error,
     this.footer,
+    this.branded = true,
   });
 
   final String title;
@@ -76,11 +83,93 @@ class AuthFormScaffold extends StatelessWidget {
   final bool isLoading;
   final Object? error;
   final Widget? footer;
+  final bool branded;
 
   @override
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
     final tokens = context.tokens;
+    final heading = [
+      Text(title, style: text.displaySmall),
+      const SizedBox(height: Space.sm),
+      Text(subtitle, style: text.bodyMedium!.copyWith(color: tokens.muted)),
+      const SizedBox(height: Space.xxl),
+      ...children,
+    ];
+    final actions = [
+      if (error != null) ...[
+        _ErrorBanner(
+          message: failureMessage(AppLocalizations.of(context), error),
+        ),
+        const SizedBox(height: Space.md),
+      ],
+      FilledButton(
+        onPressed: isLoading ? null : onPrimary,
+        child: isLoading
+            ? SizedBox.square(
+                dimension: 22,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  color: tokens.muted,
+                ),
+              )
+            : Text(primaryLabel),
+      ),
+      ?footer,
+    ];
+
+    if (branded) {
+      return AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light,
+        child: Scaffold(
+          backgroundColor: tokens.surface,
+          body: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              _AuthHero(canPop: Navigator.canPop(context)),
+              // La feuille remonte sur la photo, dont le bas passe sous ses coins arrondis.
+              Transform.translate(
+                offset: const Offset(0, -Radii.sheet),
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: tokens.surface,
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(Radii.sheet),
+                    ),
+                  ),
+                  child: SafeArea(
+                    top: false,
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 480),
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                            Space.screen,
+                            Space.xxxl,
+                            Space.screen,
+                            Space.lg,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              ...heading,
+                              const SizedBox(height: Space.xxl),
+                              ...actions,
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -97,16 +186,7 @@ class AuthFormScaffold extends StatelessWidget {
                   Space.screen,
                   Space.xxl,
                 ),
-                children: [
-                  Text(title, style: text.displaySmall),
-                  const SizedBox(height: Space.sm),
-                  Text(
-                    subtitle,
-                    style: text.bodyMedium!.copyWith(color: tokens.muted),
-                  ),
-                  const SizedBox(height: Space.xxl),
-                  ...children,
-                ],
+                children: heading,
               ),
             ),
             Padding(
@@ -116,35 +196,73 @@ class AuthFormScaffold extends StatelessWidget {
                 Space.screen,
                 Space.lg,
               ),
-              child: Column(
-                children: [
-                  if (error != null) ...[
-                    _ErrorBanner(
-                      message: failureMessage(
-                        AppLocalizations.of(context),
-                        error,
-                      ),
-                    ),
-                    const SizedBox(height: Space.md),
-                  ],
-                  FilledButton(
-                    onPressed: isLoading ? null : onPrimary,
-                    child: isLoading
-                        ? SizedBox.square(
-                            dimension: 22,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2.5,
-                              color: tokens.muted,
-                            ),
-                          )
-                        : Text(primaryLabel),
-                  ),
-                  ?footer,
-                ],
-              ),
+              child: Column(children: actions),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Haut des écrans d'accès : photo de plats assombrie, retour et marque.
+class _AuthHero extends StatelessWidget {
+  const _AuthHero({required this.canPop});
+
+  final bool canPop;
+
+  @override
+  Widget build(BuildContext context) {
+    final height = MediaQuery.sizeOf(context).height * 0.3;
+    return SizedBox(
+      height: height.clamp(190, 270) + Radii.sheet,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.asset(
+            'assets/images/welcome-hero.jpg',
+            package: 'core',
+            fit: BoxFit.cover,
+            alignment: const Alignment(0, 0.25),
+          ),
+          // Assombrit le haut (barre d'état, retour) et le bas (marque) sans masquer les plats.
+          const DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                stops: [0, 0.4, 1],
+                colors: [
+                  Color(0x8C000000),
+                  Color(0x14000000),
+                  Color(0x99000000),
+                ],
+              ),
+            ),
+          ),
+          SafeArea(
+            bottom: false,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(
+                Space.sm,
+                Space.sm,
+                Space.screen,
+                Radii.sheet + Space.lg,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (canPop) const Row(children: [RoundBackButton()]),
+                  const Spacer(),
+                  const Padding(
+                    padding: EdgeInsets.only(left: Space.md),
+                    child: BrandWordmark(size: 32, color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

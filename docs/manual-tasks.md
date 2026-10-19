@@ -12,11 +12,20 @@
 - **Quand** : maintenant.
 - **Étapes** :
   1. **Stripe** : compte au nom de votre société (pays compatible) ; activer les paiements par carte ; récupérer les **clés de test**.
-  2. **Mobile Money** : demander à **Paystack** si votre société peut ouvrir un compte marchand pour la Côte d'Ivoire
-     (Orange Money, MTN, Wave) ; à défaut, **CinetPay**. Communiquer le fournisseur retenu à Claude avant l'Inc-11.
+  2. **Mobile Money — nyole** (retenu, ADR-028) : dans https://app.nyole.com/developer, vérifier que votre compte
+     affiche des **clés API** (la doc nyole indique que les comptes ouverts après le 17/10/2026 passent par LinkAfr,
+     Griotia ou Wapilot : si vous n'avez pas de clés, contactez nyole). Ensuite :
+     - **Essai local** : copiez la clé **secrète de test** (`af_test_sec_…`) dans `supabase/functions/.env`
+       (`NYOLE_API_URL=https://app.nyole.com/api`, `NYOLE_SECRET_KEY=…`), puis `supabase stop` et `supabase start`.
+       Ne la collez jamais dans le chat ni dans le code. Sur la page de paiement, les boutons « simuler » valident
+       ou refusent ; dans l'app, « J'ai payé : vérifier » relit le statut (nyole ne peut pas joindre votre PC).
+     - **Serveur** (avec le VPS) : secrets `NYOLE_SECRET_KEY` (clé `af_live_sec_…` après vérification d'identité) et,
+       si souhaité, `NYOLE_RETURN_URL` ; dans le tableau de bord nyole, URL du webhook :
+       `https://api.<votre-domaine>/functions/v1/payments-webhook-nyole`.
+     - Activer « Mobile Money » dans Admin → Paramètres.
   3. Soumettre les documents demandés (registre de commerce, pièce du dirigeant, compte bancaire) ; les clés de production viendront après le KYC.
   4. Vérifier avec votre conseil les obligations liées à l'encaissement par une société étrangère pour une activité en Côte d'Ivoire.
-- **Coût** : pas d'abonnement ; commissions par transaction (grilles Stripe et du fournisseur Mobile Money ; ex. 1,95 % Mobile Money annoncé par Paystack en CI).
+- **Coût** : pas d'abonnement ; commissions par transaction (grille Stripe ; nyole : 5 % par paiement réussi, retraits vers votre Mobile Money 2,5 %, minimum 500 F).
 - **Vérification** : un paiement de test passe à l'état « Réussie » dans l'app après réception du webhook.
 
 ## 2. Préparer le VPS Hostinger et le nom de domaine

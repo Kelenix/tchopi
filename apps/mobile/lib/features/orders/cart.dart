@@ -171,6 +171,9 @@ class CartController extends _$CartController {
     );
   }
 
+  /// Demande rendue après l'annulation d'une commande non payée (changement de moyen de paiement).
+  Future<void> restore(Cart cart) => _save(cart);
+
   void remove(Iterable<String> productIds) {
     final cart = state.value;
     if (cart == null) return;

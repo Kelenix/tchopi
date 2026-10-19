@@ -43,6 +43,8 @@ Windows PowerShell n'accepte pas `&&` : une commande par ligne, ou les scripts c
    supabase start
    ```
 2. Créer `env/local.json` à partir de `env/example.json` et y coller la clé `anon` (ou `Publishable`) affichée par `supabase status`.
+   Copier `supabase/functions/.env.example` vers `supabase/functions/.env` (paiement Mobile Money simulé en local),
+   puis relancer `supabase stop` et `supabase start`.
 3. Lancer l'app **dans Chrome** (aucun téléphone nécessaire) :
    ```powershell
    .\run.ps1 -d chrome
@@ -61,12 +63,17 @@ Windows PowerShell n'accepte pas `&&` : une commande par ligne, ou les scripts c
    ```powershell
    .\dev-admin.ps1 +2250700000001
    ```
-   puis se déconnecter / reconnecter. L'espace Restaurant apparaît pour un compte invité comme gérant par l'admin.
+   puis se déconnecter / reconnecter. Ce compte n'ouvre plus que l'Administration (jamais proposée dans
+   « Changer d'espace ») : commander et livrer se font avec d'autres comptes. L'espace Restaurant apparaît pour un
+   compte invité comme gérant par l'admin.
 6. Commander exige **un livreur en ligne** dans la zone (sinon « Aucun livreur disponible ») : avec un second
    compte (`07 00 00 00 02`) ouvert dans une fenêtre de navigation privée, espace Livreur → « Devenir livreur »,
    validation par l'admin (Admin → Livreurs), puis interrupteur « En ligne » (autoriser la localisation).
    Garder cette fenêtre ouverte : la position part toutes les 30 s et les offres s'y affichent en plein écran.
-   L'admin suit tout dans Admin → Commandes en cours.
+   L'admin suit tout dans Admin → Commandes en cours. Le client est un troisième compte (ex. `07 00 00 00 03`).
+
+**Sur ton téléphone Android** (sans câble une fois installé, même Wi-Fi que le PC) : `.\phone.ps1` — voir
+[docs/installer-sur-telephone.md](docs/installer-sur-telephone.md).
 
 En local, trois restaurants de démonstration et leurs menus sont créés par `supabase/seed.sql` (à chaque
 `supabase db reset`). La carte utilise les tuiles OpenStreetMap, sans clé (voir `docs/manual-tasks.md` §7 pour la production).

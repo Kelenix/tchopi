@@ -101,9 +101,12 @@ class SectionHeader extends StatelessWidget {
 
 /// Nom de l'app suivi d'un point vert : logo typographique en attendant le logo de marque.
 class BrandWordmark extends StatelessWidget {
-  const BrandWordmark({super.key, this.size = 22});
+  const BrandWordmark({super.key, this.size = 22, this.color});
 
   final double size;
+
+  /// Couleur du nom (encre par défaut ; blanc sur une photo).
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +122,7 @@ class BrandWordmark extends StatelessWidget {
         ],
       ),
       style: Theme.of(context).textTheme.titleLarge!.copyWith(
-        color: tokens.ink,
+        color: color ?? tokens.ink,
         fontSize: size,
         fontWeight: FontWeight.w800,
         letterSpacing: -0.6,

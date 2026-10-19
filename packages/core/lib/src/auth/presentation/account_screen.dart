@@ -6,16 +6,20 @@ import '../../../l10n/app_localizations.dart';
 import '../../design/tokens.dart';
 import '../application/auth_controllers.dart';
 import '../application/auth_providers.dart';
+import '../domain/models.dart';
 import 'widgets/auth_form_scaffold.dart';
 import 'widgets/confirm_sheet.dart';
 
 /// Entrée propre à une app dans « Mon compte » (ex. « Mes adresses » dans l'app Client).
 class AccountLink {
-  const AccountLink(this.icon, this.label, this.path);
+  const AccountLink(this.icon, this.label, this.path, {this.visible});
 
   final IconData icon;
   final String Function(AppLocalizations l10n) label;
   final String path;
+
+  /// Comptes auxquels l'entrée s'adresse (tous si absent).
+  final bool Function(AccountRoles roles)? visible;
 }
 
 /// Mon compte : identité, identifiant de connexion, déconnexion et suppression (AUTH-06/07/08).
@@ -65,6 +69,7 @@ class AccountScreen extends ConsumerWidget {
     final profile = ref.watch(currentProfileProvider).value;
     final user = ref.watch(sessionProvider).value?.user;
     final submission = ref.watch(formSubmissionProvider('account'));
+    final roles = ref.watch(accountRolesProvider).value ?? const AccountRoles();
     final login = (user?.email?.isNotEmpty ?? false)
         ? user!.email!
         : '+${user?.phone ?? ''}';
@@ -158,7 +163,9 @@ class AccountScreen extends ConsumerWidget {
                   subtitle: Text(login, style: text.bodyMedium),
                 ),
                 const Divider(),
-                for (final link in links) ...[
+                for (final link in links.where(
+                  (link) => link.visible?.call(roles) ?? true,
+                )) ...[
                   action(
                     link.icon,
                     link.label(l10n),

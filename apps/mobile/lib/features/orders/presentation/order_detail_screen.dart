@@ -12,6 +12,7 @@ import '../../../shared/push.dart';
 import '../../courier/profile/courier_providers.dart';
 import '../orders_providers.dart';
 import '../tracking.dart';
+import 'mobile_money_panel.dart';
 import 'order_widgets.dart';
 
 /// C-08 / C-11 : détail et suivi d'une commande — statut en direct, chronologie, articles, montants (ORD-11, ORD-12).
@@ -74,9 +75,11 @@ class OrderDetailScreen extends ConsumerWidget {
               o.courierId == null &&
               !status.isClosed;
           final cancellable = parcel
-              ? status == OrderStatus.searchingCourier ||
+              ? status == OrderStatus.awaitingPayment ||
+                    status == OrderStatus.searchingCourier ||
                     status == OrderStatus.courierAssigned
               : status == OrderStatus.pending || stillSearching;
+          final awaitingPayment = status == OrderStatus.awaitingPayment;
           return ListView(
             padding: const EdgeInsets.fromLTRB(
               Space.screen,
@@ -94,7 +97,11 @@ class OrderDetailScreen extends ConsumerWidget {
                 const SizedBox(height: Space.md),
               ],
               _StatusHeader(order: o, status: status),
-              if (!status.isClosed) const _PushPrompt(),
+              if (awaitingPayment) ...[
+                const SizedBox(height: Space.lg),
+                MobileMoneyPanel(order: o),
+              ],
+              if (!status.isClosed && !awaitingPayment) const _PushPrompt(),
               if (push == PushState.denied && !status.isClosed) ...[
                 const SizedBox(height: Space.md),
                 _Notice(
@@ -125,7 +132,7 @@ class OrderDetailScreen extends ConsumerWidget {
                 const SizedBox(height: Space.sm),
                 OrderTimeline(events: events),
               ],
-              if (!status.isClosed) ...[
+              if (!status.isClosed && !awaitingPayment) ...[
                 const SizedBox(height: Space.lg),
                 _DeliveryCode(order: o),
               ],
@@ -201,14 +208,19 @@ class OrderDetailScreen extends ConsumerWidget {
                       subtitle: Text(o.dropoffLandmark),
                     ),
                     ListTile(
-                      leading: const Icon(Icons.payments_outlined),
+                      leading: Icon(paymentIcon(o.paymentMethod)),
                       title: Text(
-                        parcel ? l10n.parcelPaymentCash : l10n.paymentCash,
+                        o.paymentMethod != PaymentMethod.cash
+                            ? paymentMethodLabel(l10n, o.paymentMethod)
+                            : parcel
+                            ? l10n.parcelPaymentCash
+                            : l10n.paymentCash,
                       ),
                       subtitle: Text(
                         [
                           formatMoney(o.total),
                           if (parcel &&
+                              o.paymentMethod == PaymentMethod.cash &&
                               o.paymentStatus == OrderPaymentStatus.unpaid)
                             l10n.parcelPayCash
                           else

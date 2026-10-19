@@ -6,6 +6,61 @@
 
 ---
 
+## ADR-029 — L'Admin n'est plus un espace à choisir ; installation sur téléphone
+
+- **Date** : 2026-10-19
+- **Statut** : Accepté (demande utilisateur, complète ADR-016)
+- **Décideur** : Utilisateur ; mise en œuvre Claude (rôle : mobile-architect / flutter-engineer)
+- **Contexte** : Avec un compte de test cumulant les rôles, « Changer d'espace » proposait aussi l'Administration.
+  L'utilisateur veut qu'on n'accède à l'Admin qu'avec des identifiants admin ; un utilisateur doit en revanche
+  pouvoir rester Client et devenir Livreur ou gérant de Restaurant.
+- **Décision** :
+  - « Changer d'espace » ne propose que Client, Livreur et Restaurant (selon les droits).
+  - Un compte admin arrive directement dans l'Administration et n'en sort pas : seuls les écrans Admin et
+    « Mon compte » lui sont ouverts ; ni changement d'espace, ni commandes, ni adresses dans son compte.
+  - Les entrées de « Mon compte » peuvent désormais dépendre des droits (`AccountLink.visible`).
+  - Installation sur téléphone : script `phone.ps1` (APK release relié au Supabase du PC par le Wi-Fi) et guide
+    `docs/installer-sur-telephone.md` ; tests en 4G et par des tiers : VPS + Google Play « Test interne ».
+- **Alternatives écartées** : un espace par compte pour tous les rôles (refusé par l'utilisateur : un client doit
+  pouvoir devenir livreur ou restaurateur) ; app d'administration séparée (deux apps à maintenir, ADR-016).
+- **Conséquences** : l'administrateur a besoin d'un compte distinct pour commander ou livrer. Les droits restent
+  vérifiés par le serveur (RLS) ; ce changement ne concerne que la navigation.
+- **Impact** : fonctionnel (faible), réversible.
+
+---
+
+## ADR-028 — Mobile Money par nyole (Inc-11)
+
+- **Date** : 2026-10-19
+- **Statut** : Accepté
+- **Décideur** : utilisateur (fournisseur nyole) ; Claude (rôle : backend-engineer / flutter-engineer) pour l'intégration
+- **Contexte** : Stories PAY-03, PAY-05. nyole (https://nyole.com/docs/) encaisse Orange Money, MTN MoMo, Wave et
+  Moov en Côte d'Ivoire par une **page de paiement hébergée** ; webhooks signés HMAC-SHA256 ; statut consultable par
+  API ; mode test (clés `af_test_…`) ; remboursements uniquement via leur support ; 5 % par paiement réussi.
+- **Décision** :
+  - **Un seul moyen « Mobile Money »** dans l'app ; l'opérateur et le numéro se choisissent sur la page nyole
+    (numéro du client prérempli). Écart assumé avec PAY-03 (choix de l'opérateur dans l'app) : nyole ne l'expose pas.
+  - **Commande en `awaiting_payment`** à la création, transaction « en attente » ; rien n'est transmis au restaurant
+    ni aux livreurs avant confirmation. Le délai de réponse du restaurant part de la transmission (`submitted_at`).
+  - **Edge Functions** : `payments-create` ouvre la session (montant = total, clé d'idempotence = transaction +
+    tentative : un double toucher rend la même session) ou rend celle en cours pour un nouvel essai ;
+    `payments-webhook-nyole` vérifie la signature (5 min de tolérance) puis **relit le statut chez nyole** avant toute
+    écriture ; le montant et la devise sont revérifiés en base. Clé secrète uniquement dans les secrets serveur.
+  - **Refus de l'opérateur** : « Réessayer » sur la même page ; **« Changer de moyen de paiement »** annule la commande
+    non payée et rend la demande (panier restauré, ou nouveau colis).
+  - **Sans confirmation en 15 min** (réglable) : commande annulée ; un paiement confirmé ensuite est marqué « à
+    rembourser » (circuit d'ADR-027, remboursement via le support nyole).
+  - **Frais nyole (5 %)** supportés par la plateforme : même prix pour le client quel que soit le moyen. Réversible
+    (frais de service par moyen) si vous le décidez.
+- **Alternatives écartées** : un moyen par opérateur dans l'app (double choix, nyole redemande l'opérateur) ; webhook
+  seul (sans relecture du statut, un faux appel signé avec une clé fuitée suffirait) ; changer le moyen d'une
+  commande existante (risque de double paiement si le client paie après coup).
+- **Risque** : la documentation nyole précise que les comptes ouverts après le 17 octobre 2026 encaissent via
+  LinkAfr, Griotia ou Wapilot ; vérifier que votre compte dispose bien des clés API (tâche manuelle n° 1).
+- **Impact** : financier (moyen : 5 % des paiements Mobile Money), technique (moyen).
+
+---
+
 ## ADR-027 — Remboursements, reçus, statistiques (Inc-13)
 
 - **Date** : 2026-10-19

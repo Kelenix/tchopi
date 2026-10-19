@@ -98,6 +98,9 @@ abstract class Order with _$Order {
     required PaymentMethod paymentMethod,
     @Default(OrderPaymentStatus.unpaid) OrderPaymentStatus paymentStatus,
     required DateTime createdAt,
+
+    /// Transmise au restaurant ou à la recherche d'un livreur : à la création, ou au paiement en ligne.
+    DateTime? submittedAt,
     String? closeReason,
     String? courierId,
     CourierInfo? courierInfo,
@@ -118,6 +121,7 @@ abstract class Order with _$Order {
 abstract class OrderItem with _$OrderItem {
   const factory OrderItem({
     required String orderId,
+    String? productId,
     required String name,
     required int unitPrice,
     required int quantity,

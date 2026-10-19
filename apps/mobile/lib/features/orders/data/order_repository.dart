@@ -200,6 +200,7 @@ class OrderRepository {
     required String parcelTypeId,
     required String description,
     required bool rulesAccepted,
+    required PaymentMethod method,
     required int expectedTotal,
     required String idempotencyKey,
   }) => guardCall(() async {
@@ -213,7 +214,7 @@ class OrderRepository {
         'p_parcel_type_id': parcelTypeId,
         'p_description': description.trim(),
         'p_rules_accepted': rulesAccepted,
-        'p_payment_method': PaymentMethod.cash.wireName,
+        'p_payment_method': method.wireName,
         'p_expected_total': expectedTotal,
         'p_idempotency_key': idempotencyKey,
       },

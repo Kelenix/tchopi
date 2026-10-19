@@ -78,7 +78,9 @@ select throws_ok(
 );
 select throws_ok(
   $$ select public.place_food_order('66666666-6666-6666-6666-666666666666', '88888888-8888-8888-8888-888888888888',
-       '[{"product_id":"77777777-0000-0000-0000-000000000001","quantity":1}]', 'card', 1,
+       '[{"product_id":"77777777-0000-0000-0000-000000000001","quantity":1}]', 'card',
+       ((public.quote_food_order('66666666-6666-6666-6666-666666666666', '88888888-8888-8888-8888-888888888888',
+         '[{"product_id":"77777777-0000-0000-0000-000000000001","quantity":1}]'))->>'total')::integer,
        '99999999-0000-0000-0000-000000000001') $$,
   'P0001', 'payment_unavailable', 'la carte n''est pas encore proposée'
 );
@@ -151,11 +153,11 @@ reset role;
 insert into public.orders (number, type, status, customer_id, zone_id, currency, restaurant_id,
   pickup_lat, pickup_lng, pickup_name, pickup_district, pickup_landmark, dropoff_lat, dropoff_lng, recipient_name,
   dropoff_district, dropoff_landmark, subtotal, delivery_fee, total, commission_amount, courier_earning,
-  platform_amount, distance_m, payment_method, idempotency_key, created_at)
+  platform_amount, distance_m, payment_method, idempotency_key, created_at, submitted_at)
 values ('R-OLD22', 'food', 'pending', '00000000-0000-0000-0000-0000000000c1', '55555555-5555-5555-5555-555555555555',
   'XOF', '66666666-6666-6666-6666-666666666666', 6.878, -6.45, 'Chez Tantie Rose', 'Commerce', 'Gare', 6.885, -6.44,
   'Awa', 'Lobia', 'Marché', 1500, 500, 2000, 150, 400, 250, 1200, 'cash', gen_random_uuid(),
-  now() - interval '11 minutes');
+  now() - interval '11 minutes', now() - interval '11 minutes');
 select is(private.reject_unanswered_orders(), 1, 'une commande sans réponse depuis 10 min est refusée');
 select is(
   (select row(status, close_reason)::text from public.orders where number = 'R-OLD22'),

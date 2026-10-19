@@ -187,6 +187,9 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
 class _PaymentOptions extends ConsumerWidget {
   const _PaymentOptions();
 
+  /// Fournisseurs intégrés : la carte (Stripe) arrive avec l'Inc-12.
+  static const _integrated = {'cash', 'nyole'};
+
   Future<void> _toggle(
     BuildContext context,
     WidgetRef ref,
@@ -218,11 +221,13 @@ class _PaymentOptions extends ConsumerWidget {
             SwitchListTile(
               secondary: Icon(paymentIcon(option.method)),
               title: Text('${option.label} · ${option.countryCode}'),
-              subtitle: option.method == PaymentMethod.cash
-                  ? null
-                  : Text(l10n.paymentSoon),
+              subtitle: switch (option.provider) {
+                'cash' => null,
+                'nyole' => Text(l10n.paymentMobileMoneyHint),
+                _ => Text(l10n.paymentSoon),
+              },
               value: option.isEnabled,
-              onChanged: option.method == PaymentMethod.cash
+              onChanged: _integrated.contains(option.provider)
                   ? (value) => _toggle(context, ref, option, value)
                   : null,
             ),

@@ -12,12 +12,12 @@ import '../features/restaurant/presentation/restaurant_orders_screen.dart';
 
 part 'spaces.g.dart';
 
-/// Espaces de l'app (ADR-016).
+/// Espaces proposés par « Changer d'espace » (ADR-016). L'Admin n'en fait pas partie : il ne s'ouvre qu'en se
+/// connectant avec un compte admin (ADR-029).
 enum AppSpace {
   client(Icons.shopping_bag_outlined, ClientHomeScreen.path),
   courier(Icons.two_wheeler, CourierHomeScreen.path),
-  restaurant(Icons.storefront_outlined, RestaurantOrdersScreen.path),
-  admin(Icons.admin_panel_settings_outlined, DashboardScreen.path);
+  restaurant(Icons.storefront_outlined, RestaurantOrdersScreen.path);
 
   const AppSpace(this.icon, this.home);
 
@@ -30,14 +30,12 @@ enum AppSpace {
     client => l10n.spaceClient,
     courier => l10n.spaceCourier,
     restaurant => l10n.spaceRestaurant,
-    admin => l10n.spaceAdmin,
   };
 
   String description(AppLocalizations l10n) => switch (this) {
     client => l10n.spaceClientBody,
     courier => l10n.spaceCourierBody,
     restaurant => l10n.spaceRestaurantBody,
-    admin => l10n.spaceAdminBody,
   };
 }
 
@@ -46,19 +44,27 @@ List<AppSpace> availableSpaces(AccountRoles roles) => [
   AppSpace.client,
   if (roles.courierStatus != null) AppSpace.courier,
   if (roles.restaurantIds.isNotEmpty) AppSpace.restaurant,
-  if (roles.isAdmin) AppSpace.admin,
 ];
 
-/// Point d'entrée « / » : dernier espace utilisé s'il est encore ouvert au compte, sinon l'espace Client.
-String spaceHome(AccountRoles roles, AppSpace? lastUsed) =>
-    (lastUsed != null && availableSpaces(roles).contains(lastUsed)
-            ? lastUsed
-            : AppSpace.client)
-        .home;
+/// Point d'entrée « / » : l'Admin pour un compte admin ; sinon le dernier espace utilisé s'il est encore ouvert
+/// au compte, ou l'espace Client.
+String spaceHome(AccountRoles roles, AppSpace? lastUsed) {
+  if (roles.isAdmin) return DashboardScreen.path;
+  return (lastUsed != null && availableSpaces(roles).contains(lastUsed)
+          ? lastUsed
+          : AppSpace.client)
+      .home;
+}
 
 /// Garde des écrans propres à un espace (le serveur reste seul juge des données, via la RLS).
 String? guardSpaces(String location, AccountRoles roles) {
-  if (location.startsWith('/admin') && !roles.isAdmin) return SpaceRoutes.entry;
+  // Compte admin : écrans Admin et « Mon compte » uniquement.
+  if (roles.isAdmin) {
+    final allowed =
+        location.startsWith('/admin') || location.startsWith(AppRoutes.account);
+    return allowed ? null : DashboardScreen.path;
+  }
+  if (location.startsWith('/admin')) return SpaceRoutes.entry;
   if (location.startsWith('/restaurant') && roles.restaurantIds.isEmpty) {
     return SpaceRoutes.entry;
   }

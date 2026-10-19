@@ -138,6 +138,116 @@ final class MyTransactionsProvider
 
 String _$myTransactionsHash() => r'75eb1f9a573482d4474717918c98e3f74411fbab';
 
+@ProviderFor(orderTransaction)
+final orderTransactionProvider = OrderTransactionFamily._();
+
+final class OrderTransactionProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<PaymentTransaction?>,
+          PaymentTransaction?,
+          Stream<PaymentTransaction?>
+        >
+    with
+        $FutureModifier<PaymentTransaction?>,
+        $StreamProvider<PaymentTransaction?> {
+  OrderTransactionProvider._({
+    required OrderTransactionFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'orderTransactionProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$orderTransactionHash();
+
+  @override
+  String toString() {
+    return r'orderTransactionProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $StreamProviderElement<PaymentTransaction?> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
+
+  @override
+  Stream<PaymentTransaction?> create(Ref ref) {
+    final argument = this.argument as String;
+    return orderTransaction(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is OrderTransactionProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$orderTransactionHash() => r'1cc1d143c216bdb8cfef4f71eb09905c0aa46ae0';
+
+final class OrderTransactionFamily extends $Family
+    with $FunctionalFamilyOverride<Stream<PaymentTransaction?>, String> {
+  OrderTransactionFamily._()
+    : super(
+        retry: null,
+        name: r'orderTransactionProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  OrderTransactionProvider call(String orderId) =>
+      OrderTransactionProvider._(argument: orderId, from: this);
+
+  @override
+  String toString() => r'orderTransactionProvider';
+}
+
+@ProviderFor(paymentTimeout)
+final paymentTimeoutProvider = PaymentTimeoutProvider._();
+
+final class PaymentTimeoutProvider
+    extends $FunctionalProvider<AsyncValue<int>, int, FutureOr<int>>
+    with $FutureModifier<int>, $FutureProvider<int> {
+  PaymentTimeoutProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'paymentTimeoutProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$paymentTimeoutHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<int> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<int> create(Ref ref) {
+    return paymentTimeout(ref);
+  }
+}
+
+String _$paymentTimeoutHash() => r'1a44e0e3d08b0882413a27a168d6814cd239b607';
+
 /// PAY-01 : le dernier moyen choisi est proposé à la commande suivante.
 
 @ProviderFor(PreferredPayment)

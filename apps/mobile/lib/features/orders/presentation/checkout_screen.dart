@@ -7,6 +7,7 @@ import 'package:uuid/uuid.dart';
 import '../../client/addresses/application/addresses_providers.dart';
 import '../../client/addresses/presentation/addresses_screen.dart';
 import '../../client/payments/payments_providers.dart';
+import '../../client/payments/presentation/payment_choice.dart';
 import '../cart.dart';
 import '../orders_providers.dart';
 import 'order_detail_screen.dart';
@@ -251,23 +252,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                   ),
                   const SizedBox(height: Space.xxl),
                   _SectionTitle(l10n.checkoutPayment),
-                  Card(
-                    child: options.isEmpty
-                        ? ListTile(title: Text(l10n.paymentNoneAvailable))
-                        : Column(
-                            children: [
-                              for (final option in options)
-                                _PaymentOption(
-                                  icon: paymentIcon(option.method),
-                                  label: paymentOptionLabel(l10n, option),
-                                  selected: option.method == method,
-                                  onTap: () => ref
-                                      .read(preferredPaymentProvider.notifier)
-                                      .select(option.method),
-                                ),
-                            ],
-                          ),
-                  ),
+                  const PaymentChoice(),
                   const SizedBox(height: Space.xxl),
                   _Summary(quote: quote),
                 ],
@@ -324,31 +309,6 @@ class _SectionTitle extends StatelessWidget {
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.only(bottom: Space.sm),
     child: Text(label, style: Theme.of(context).textTheme.titleMedium),
-  );
-}
-
-class _PaymentOption extends StatelessWidget {
-  const _PaymentOption({
-    required this.icon,
-    required this.label,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) => ListTile(
-    onTap: onTap,
-    leading: Icon(icon),
-    title: Text(label),
-    trailing: Icon(
-      selected ? Icons.radio_button_checked : Icons.radio_button_off,
-      color: context.tokens.primary,
-    ),
   );
 }
 

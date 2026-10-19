@@ -287,6 +287,13 @@ max_frequency = "5s"
 [auth.sms.test_otp]
 2250700000001 = "123456"
 2250700000002 = "123456"
+2250700000003 = "123456"
+2250700000004 = "123456"
+2250700000005 = "123456"
+2250700000006 = "123456"
+2250700000007 = "123456"
+2250700000008 = "123456"
+2250700000009 = "123456"
 
 # Configure logged in session timeouts.
 # [auth.sessions]
@@ -451,6 +458,20 @@ enabled = true
 verify_jwt = false
 import_map = "./functions/push/deno.json"
 entrypoint = "./functions/push/index.ts"
+
+[functions.payments-create]
+enabled = true
+# Le client est vérifié par la base (begin_mobile_money) avec son propre jeton.
+verify_jwt = false
+import_map = "./functions/payments-create/deno.json"
+entrypoint = "./functions/payments-create/index.ts"
+
+[functions.payments-webhook-nyole]
+enabled = true
+# Appelée par nyole : authentifiée par la signature HMAC du corps.
+verify_jwt = false
+import_map = "./functions/payments-webhook-nyole/deno.json"
+entrypoint = "./functions/payments-webhook-nyole/index.ts"
 
 [functions.admin-users]
 enabled = true

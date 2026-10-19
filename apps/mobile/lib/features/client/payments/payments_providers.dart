@@ -18,6 +18,14 @@ Future<List<PaymentOption>> paymentOptions(Ref ref) =>
 Future<List<PaymentTransaction>> myTransactions(Ref ref) =>
     ref.watch(paymentRepositoryProvider).mine();
 
+@riverpod
+Stream<PaymentTransaction?> orderTransaction(Ref ref, String orderId) =>
+    ref.watch(paymentRepositoryProvider).watchOrder(orderId);
+
+@riverpod
+Future<int> paymentTimeout(Ref ref) =>
+    ref.watch(paymentRepositoryProvider).paymentTimeoutS();
+
 /// PAY-01 : le dernier moyen choisi est proposé à la commande suivante.
 @Riverpod(keepAlive: true)
 class PreferredPayment extends _$PreferredPayment {

@@ -686,12 +686,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get spaceCourierBody => 'Mon profil livreur et mes missions.';
 
   @override
-  String get spaceAdmin => 'Administration';
-
-  @override
-  String get spaceAdminBody => 'Zones et tarifs, livreurs, utilisateurs.';
-
-  @override
   String get spaceBecomeCourier => 'Devenir livreur';
 
   @override
@@ -1008,6 +1002,72 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get paymentSoon => 'Bientôt';
+
+  @override
+  String get paymentMobileMoneyHint =>
+      'Orange Money, MTN MoMo, Wave, Moov Money';
+
+  @override
+  String get momoTitle => 'Paiement Mobile Money';
+
+  @override
+  String momoBody(String amount) {
+    return 'Payez $amount sur la page sécurisée de nyole (Orange Money, MTN MoMo, Wave ou Moov Money), puis revenez ici : la commande part dès que l\'opérateur confirme le paiement.';
+  }
+
+  @override
+  String momoPay(String amount) {
+    return 'Payer $amount';
+  }
+
+  @override
+  String get momoWaiting =>
+      'Validez le paiement sur votre téléphone. Nous attendons la confirmation de l\'opérateur…';
+
+  @override
+  String get momoResume => 'Reprendre le paiement';
+
+  @override
+  String get momoCheck => 'J\'ai payé : vérifier';
+
+  @override
+  String get momoStillPending =>
+      'Paiement pas encore confirmé. Si vous l\'avez validé, patientez quelques secondes.';
+
+  @override
+  String get momoFailed => 'Le paiement n\'a pas été validé par l\'opérateur.';
+
+  @override
+  String get momoRetry => 'Réessayer';
+
+  @override
+  String momoDeadline(String time) {
+    return 'Sans paiement d\'ici $time, la commande est annulée.';
+  }
+
+  @override
+  String get momoChangeMethod => 'Changer de moyen de paiement';
+
+  @override
+  String get momoChangeBody =>
+      'Cette commande non payée sera annulée ; vous retrouverez votre demande pour choisir un autre moyen de paiement.';
+
+  @override
+  String get failurePaymentClosed =>
+      'Le délai de paiement est dépassé : la commande a été annulée.';
+
+  @override
+  String get failureAlreadyPaid => 'Cette commande est déjà payée.';
+
+  @override
+  String get failurePaymentProvider =>
+      'Le service de paiement ne répond pas. Réessayez dans un instant.';
+
+  @override
+  String get orderPaymentTimeout => 'Paiement non reçu à temps';
+
+  @override
+  String get orderLatePayment => 'Paiement reçu après l\'annulation';
 
   @override
   String get checkoutSubtotal => 'Sous-total';

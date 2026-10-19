@@ -46,6 +46,7 @@ class _LoginChangeScreenState extends ConsumerState<LoginChangeScreen> {
     final l10n = AppLocalizations.of(context);
     final submission = ref.watch(formSubmissionProvider('login-change'));
     return AuthFormScaffold(
+      branded: false,
       title: l10n.loginChangeTitle,
       subtitle: l10n.loginChangeSubtitle,
       primaryLabel: l10n.actionContinue,

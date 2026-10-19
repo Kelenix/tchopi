@@ -5,10 +5,10 @@
 
 ## Snapshot
 
-- **Phase courante** : 4 — Implémentation · Inc-0 à Inc-10 et Inc-13 livrés (déploiement VPS : accès non fourni)
+- **Phase courante** : 4 — Implémentation · Inc-0 à Inc-11 et Inc-13 livrés (déploiement VPS : accès non fourni)
 - **Dernière mise à jour** : 2026-10-19
 - **Santé** : 🟢 OK · accès VPS et dépôt GitHub non fournis
-- **Prochaine action** : Inc-11 (Mobile Money) — bloqué par le choix du fournisseur (Paystack ou CinetPay) ; Inc-12 (carte Stripe) — bloqué par les clés de test Stripe (tâche manuelle n° 1)
+- **Prochaine action** : Inc-12 (carte Stripe) — bloqué par les clés de test Stripe (tâche manuelle n° 1) ; essai réel de nyole dès réception de vos clés de test
 - **Plan de référence** : `docs/plan-de-realisation.md` · Design : `docs/design/design-system.md`
 - **Maquette** : `docs/design/maquette.html` — https://claude.ai/artifact/9GyaG6F34CkTe1qQpsy1cP (privée)
 
@@ -25,7 +25,7 @@ Flutter 3.41.9 · Dart 3.11.5 · Supabase CLI 2.116.0 · Docker 29.8.2 · Java 2
 | 1 — Définition produit      | ✅ fait | `docs/product/user-stories.md` (60 stories), `docs/product/screens.md` (45 fiches) |
 | 2 — Planification           | ✅ fait | Backlog, jalons, chemin critique ci-dessous ; risques : plan §10 |
 | 3 — Architecture & design   | ✅ fait | Architecture, conception, données, design system ; maquette v1 validée |
-| 4 — Implémentation          | 🔄 en cours | Inc-0 à Inc-10 et Inc-13 livrés ; reste Inc-11 / 12 (paiements en ligne) |
+| 4 — Implémentation          | 🔄 en cours | Inc-0 à Inc-11 et Inc-13 livrés ; reste Inc-12 (carte Stripe) |
 | 5 — Qualité & performance   | ⬜ à faire | Scénarios S1–S6 |
 | 6 — Publication (stores)    | ⬜ à faire | |
 | 7 — Documentation           | ⬜ à faire | |
@@ -48,7 +48,7 @@ Flutter 3.41.9 · Dart 3.11.5 · Supabase CLI 2.116.0 · Docker 29.8.2 · Java 2
 | Inc-8 | Mission livreur, code de livraison, échecs | MIS-01 à 10 | §4.2, §4.5 | L | ✅ |
 | Inc-9 | Suivi temps réel, chronologie, notifications | TRK-01 à 03, NOT-01 à 04 | §4.3, §4.4, §4.6 | L | ✅ (push : Firebase à créer) |
 | Inc-10 | Espèces, transactions, montants séparés | PAY-01, PAY-02, PAY-06, TRX-01 | §5.3, §5.4, §5.6 | M | ✅ |
-| Inc-11 | Mobile Money | PAY-03, PAY-05 | §5.1 | L | ⬜ |
+| Inc-11 | Mobile Money | PAY-03, PAY-05 | §5.1 | L | ✅ nyole (essai réel : clés de test à fournir) |
 | Inc-12 | Carte bancaire Stripe | PAY-04 | §5.2 | M | ⬜ |
 | Inc-13 | Annulations, remboursements, reçus, transactions admin, statistiques | TRX-02, TRX-03, ADM-04, ADM-06 | §5.5, §6.D | M | ✅ (remboursements auto : Inc-11 / 12) |
 
@@ -74,7 +74,7 @@ validation de la maquette → code des écrans à partir de l'Inc-1. Registre de
 - [x] Q3 — Email ou téléphone + mot de passe, OTP email / SMS (D-3)
 - [x] Q4 — Android d'abord (D-6)
 - [x] Q5 — Back-office restaurant + admin dans ce projet (D-7)
-- [ ] Fournisseur Mobile Money (Paystack ou CinetPay selon l'éligibilité de la société) — **avant Inc-11**
+- [x] Fournisseur Mobile Money : **nyole** (ADR-028)
 - [ ] Infos VPS (offre, IP), nom de domaine, nom / logo de l'app — avant Inc-0 (VPS) et la maquette (marque)
 
 ## Blocages
@@ -86,6 +86,28 @@ validation de la maquette → code des écrans à partir de l'Inc-1. Registre de
 - voir `docs/manual-tasks.md` (priorité : compte marchand de paiement, à démarrer tôt)
 
 ## Journal de session (résumé court, le plus récent en haut)
+
+- 2026-10-19 — ADR-029 (demande utilisateur) : l'Administration n'est plus proposée dans « Changer d'espace » ;
+  un compte admin arrive directement dans l'Admin et n'en sort pas (écrans Admin et « Mon compte » seulement).
+  Client, Livreur et Restaurant restent cumulables. Installation sur téléphone : `phone.ps1` + guide
+  `docs/installer-sur-telephone.md`. Vérifié dans le navigateur (format téléphone) : compte livreur → Client et
+  Livreur seulement ; même compte rendu admin → tableau de bord direct, `/spaces` et `/home` renvoyés à l'Admin,
+  « Mon compte » sans changement d'espace ; rôle retiré → retour à l'espace Client, `/admin` refusé. Preuves :
+  analyse 0 problème ; 57 + 41 tests Flutter.
+  Puis, après retour utilisateur sur téléphone : écrans d'accès refaits (photo + marque en haut, formulaire sur
+  feuille, bouton sous les champs) ; comptes de test par profil (`dev-accounts.ps1`) ; inscription locale ouverte aux
+  numéros 07 00 00 00 01 à 09 (code 123456 ; les autres numéros échouaient faute de SMS). Vérifié : connexion des
+  4 comptes avec leurs rôles, inscription + code par l'API, connexion du client dans le navigateur.
+
+- 2026-10-19 — Inc-11 (branche feat/inc-11-mobile-money, ADR-028) : Mobile Money par nyole (page hébergée, commande en
+  attente de paiement, webhook signé + statut relu chez nyole, refus / nouvel essai, changement de moyen, expiration
+  15 min, paiement tardif à rembourser), choix du moyen pour les colis, activation admin. Vérifié dans le navigateur
+  avec un nyole simulé envoyant de vrais webhooks signés : activation admin, commande Mobile Money, page de paiement,
+  refus affiché puis succès reçu en direct (commande transmise, « Mobile Money · Payée », reçu avec référence),
+  changement de moyen (commande annulée, panier restauré). Corrigé à cette occasion : code de livraison affiché avant
+  paiement, bouton de confirmation trop long. Non vérifié : vraie API nyole (clés de test à fournir, tâche n° 1).
+  Preuves : analyse 0 problème ; tests Flutter ; pgTAP 246/246 ; intégration de bout en bout (Edge Functions + nyole
+  simulé).
 
 - 2026-10-19 — Inc-13 (branche feat/inc-13-transactions, ADR-027) : circuit de remboursement (à rembourser d'office
   après annulation d'une commande payée, décision de l'admin après un échec, « Remboursée » avec référence,

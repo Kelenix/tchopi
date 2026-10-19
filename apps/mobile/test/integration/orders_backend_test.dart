@@ -262,6 +262,7 @@ void main() {
         parcelTypeId: type.id,
         description: 'Documents',
         rulesAccepted: true,
+        method: PaymentMethod.cash,
         expectedTotal: quote.total,
         idempotencyKey: '00000000-0000-4000-9000-$stamp'.substring(0, 36),
       );
@@ -449,6 +450,7 @@ void main() {
         parcelTypeId: type.id,
         description: 'Documents',
         rulesAccepted: true,
+        method: PaymentMethod.cash,
         expectedTotal: quote.total,
         idempotencyKey: '00000000-0000-4000-b000-$stamp'.substring(0, 36),
       );

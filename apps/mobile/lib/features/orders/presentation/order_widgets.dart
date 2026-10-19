@@ -35,6 +35,8 @@ String closeReasonLabel(AppLocalizations l10n, String reason) {
     'no_response' => l10n.orderNoResponse,
     'cancelled_by_customer' => l10n.orderCancelledByCustomer,
     'no_courier' => l10n.orderNoCourier,
+    'payment_timeout' => l10n.orderPaymentTimeout,
+    'late_payment' => l10n.orderLatePayment,
     'customer_unreachable' ||
     'address_not_found' ||
     'recipient_absent' ||

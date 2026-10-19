@@ -47,16 +47,19 @@ GoRouter router(Ref ref) => buildAppRouter(
       Icons.swap_horiz,
       (l10n) => l10n.spacesTitle,
       SpacesScreen.path,
+      visible: _notAdmin,
     ),
     AccountLink(
       Icons.receipt_long_outlined,
       (l10n) => l10n.ordersTitle,
       OrdersScreen.path,
+      visible: _notAdmin,
     ),
     AccountLink(
       Icons.place_outlined,
       (l10n) => l10n.accountAddresses,
       AddressesScreen.path,
+      visible: _notAdmin,
     ),
   ],
   routes: [
@@ -199,3 +202,6 @@ GoRouter router(Ref ref) => buildAppRouter(
     );
   },
 );
+
+// Un compte admin n'a que l'espace Admin : ni changement d'espace, ni commandes, ni adresses.
+bool _notAdmin(AccountRoles roles) => !roles.isAdmin;

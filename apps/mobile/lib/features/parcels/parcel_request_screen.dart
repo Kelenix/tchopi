@@ -9,6 +9,8 @@ import 'package:uuid/uuid.dart';
 import '../../shared/pin_map.dart';
 import '../client/addresses/application/addresses_providers.dart';
 import '../client/client_nav_bar.dart';
+import '../client/payments/payments_providers.dart';
+import '../client/payments/presentation/payment_choice.dart';
 import '../orders/orders_providers.dart';
 import '../orders/presentation/order_detail_screen.dart';
 import '../orders/presentation/order_widgets.dart';
@@ -150,7 +152,7 @@ class _ParcelRequestScreenState extends ConsumerState<ParcelRequestScreen> {
     }
   }
 
-  Future<void> _confirm(FoodQuote quote) async {
+  Future<void> _confirm(FoodQuote quote, PaymentMethod method) async {
     setState(() {
       _placing = true;
       _error = null;
@@ -166,6 +168,7 @@ class _ParcelRequestScreenState extends ConsumerState<ParcelRequestScreen> {
             parcelTypeId: _type!.id,
             description: _description.text,
             rulesAccepted: _rulesAccepted,
+            method: method,
             expectedTotal: quote.total,
             idempotencyKey: _idempotencyKey,
           );
@@ -277,11 +280,18 @@ class _ParcelRequestScreenState extends ConsumerState<ParcelRequestScreen> {
               future: _quote,
               builder: (context, snapshot) {
                 final quote = snapshot.data;
+                final method = chosenPayment(
+                  ref.watch(paymentOptionsProvider).value ?? const [],
+                  ref.watch(preferredPaymentProvider).value,
+                );
                 return FilledButton(
                   onPressed:
-                      quote == null || !quote.couriersAvailable || _placing
+                      quote == null ||
+                          method == null ||
+                          !quote.couriersAvailable ||
+                          _placing
                       ? null
-                      : () => _confirm(quote),
+                      : () => _confirm(quote, method),
                   child: _placing
                       ? const SizedBox.square(
                           dimension: 22,
@@ -668,14 +678,11 @@ class _ParcelRequestScreenState extends ConsumerState<ParcelRequestScreen> {
                     title: Text(_recipientName.text.trim()),
                     subtitle: Text(normalizePhone(_recipientPhone.text) ?? ''),
                   ),
-                  ListTile(
-                    leading: const Icon(Icons.payments_outlined),
-                    title: Text(l10n.parcelPaymentCash),
-                    subtitle: Text(l10n.parcelPayCash),
-                  ),
                 ],
               ),
             ),
+            const SizedBox(height: Space.md),
+            const PaymentChoice(parcel: true),
             const SizedBox(height: Space.lg),
             if (snapshot.hasError)
               Text(

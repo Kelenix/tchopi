@@ -45,7 +45,7 @@ Set<OrderAlert> orderAlerts(
   if (order.dispatchAlertedAt != null && order.courierId == null)
     OrderAlert.noCourier,
   if (order.status == OrderStatus.pending &&
-      now.difference(order.createdAt).inSeconds >
+      now.difference(order.submittedAt ?? order.createdAt).inSeconds >
           (settings?.restaurantTimeoutS ?? 600) ~/ 2)
     OrderAlert.restaurantSilent,
   if (order.codeLockedAt != null && !order.status.isClosed)

@@ -61,6 +61,8 @@ _PaymentTransaction _$PaymentTransactionFromJson(Map<String, dynamic> json) =>
       ),
       providerReference: json['provider_reference'] as String?,
       refundReference: json['refund_reference'] as String?,
+      failureReason: json['failure_reason'] as String?,
+      checkoutUrl: json['checkout_url'] as String?,
     );
 
 Map<String, dynamic> _$PaymentTransactionToJson(_PaymentTransaction instance) =>
@@ -81,6 +83,8 @@ Map<String, dynamic> _$PaymentTransactionToJson(_PaymentTransaction instance) =>
           _$OrderPaymentStatusEnumMap[instance.orderPaymentStatus],
       'provider_reference': instance.providerReference,
       'refund_reference': instance.refundReference,
+      'failure_reason': instance.failureReason,
+      'checkout_url': instance.checkoutUrl,
     };
 
 const _$TransactionStatusEnumMap = {

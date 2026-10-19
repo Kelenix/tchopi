@@ -17,6 +17,35 @@ class PaymentRepository {
     return rows.map(PaymentOption.fromJson).toList();
   });
 
+  /// PAY-03 : ouvre ou rouvre la page de paiement nyole ; `null` si nyole a déjà confirmé le paiement.
+  Future<String?> startMobileMoney(String orderId) => guardCall(() async {
+    final response = await _client.functions.invoke(
+      'payments-create',
+      body: {'order_id': orderId},
+    );
+    return (response.data as Map<String, dynamic>)['url'] as String?;
+  });
+
+  /// Transaction de la commande, en direct : refus de l'opérateur, page ouverte, confirmation.
+  Stream<PaymentTransaction?> watchOrder(String orderId) => _client
+      .from('transactions')
+      .stream(primaryKey: ['id'])
+      .eq('order_id', orderId)
+      .order('created_at')
+      .map(
+        (rows) => rows.isEmpty ? null : PaymentTransaction.fromJson(rows.first),
+      )
+      .handleError((Object error) => throw toFailure(error));
+
+  /// Délai de paiement en ligne (ADM-05) avant annulation de la commande.
+  Future<int> paymentTimeoutS() => guardCall(() async {
+    final row = await _client
+        .from('settings')
+        .select('payment_timeout_s')
+        .single();
+    return row['payment_timeout_s'] as int;
+  });
+
   Future<List<PaymentTransaction>> mine() => guardCall(() async {
     final rows = await _client
         .from('transactions')

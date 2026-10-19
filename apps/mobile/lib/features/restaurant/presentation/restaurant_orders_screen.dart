@@ -432,7 +432,7 @@ class _RestaurantOrderCardState extends ConsumerState<_RestaurantOrderCard> {
     final items = ref.watch(orderItemsProvider(o.id)).value ?? const [];
     final left =
         RestaurantOrdersScreen.answerDelay -
-        DateTime.now().difference(o.createdAt);
+        DateTime.now().difference(o.submittedAt ?? o.createdAt);
 
     return Card(
       child: Padding(

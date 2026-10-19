@@ -89,6 +89,7 @@ class _ProfileFormScreenState extends ConsumerState<ProfileFormScreen> {
     );
 
     return AuthFormScaffold(
+      branded: widget.isSetup,
       title: widget.isSetup ? l10n.profileSetupTitle : l10n.profileEditTitle,
       subtitle: l10n.profileSetupSubtitle,
       primaryLabel: widget.isSetup ? l10n.actionContinue : l10n.actionSave,

@@ -132,8 +132,8 @@ select is((public.courier_summary()->>'cash_due')::integer, (select amount from 
 -- PAY-01 / ADM-05 : moyens activés par pays ; un moyen non intégré ne s'active pas.
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000ad');
 select throws_ok(
-  $$ select public.admin_set_payment_option((select id from public.payment_options where operator = 'orange'), true) $$,
-  'P0001', 'payment_unavailable', 'Mobile Money non intégré : activation refusée'
+  $$ select public.admin_set_payment_option((select id from public.payment_options where method = 'card'), true) $$,
+  'P0001', 'payment_unavailable', 'carte non intégrée : activation refusée'
 );
 select public.admin_set_payment_option((select id from public.payment_options where method = 'cash'), false);
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000c1');

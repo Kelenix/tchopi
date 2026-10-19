@@ -48,6 +48,12 @@ abstract class PaymentTransaction with _$PaymentTransaction {
     @JsonKey(readValue: _orderField) OrderPaymentStatus? orderPaymentStatus,
     String? providerReference,
     String? refundReference,
+
+    /// Mobile Money : refus de l'opérateur (« failed ») ou session annulée (« cancelled »).
+    String? failureReason,
+
+    /// Page de paiement nyole à rouvrir pour payer ou réessayer.
+    String? checkoutUrl,
   }) = _PaymentTransaction;
 
   factory PaymentTransaction.fromJson(Map<String, dynamic> json) =>

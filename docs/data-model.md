@@ -73,7 +73,7 @@ courier_assigned, picked_up, in_transit, delivered, cancelled, failed`. Pour un 
 | `zones` | `id`, `name`, `city`, `country_code` (`CI`), `currency` (`XOF`), `timezone` (`Africa/Abidjan`), `center`, `radius_m`, `is_active` | Une adresse appartient à la zone active qui la contient (la plus proche si chevauchement) |
 | `pricing_rules` | PK (`zone_id`, `service`) ; `base_fee`, `per_km_fee`, `min_fee`, `max_fee`, `detour_factor` (1,30), `rounding_step` (25), `courier_base`, `courier_per_km` | Frais = arrondi supérieur au pas de (base + prix/km × km × détour), borné [plancher, plafond] |
 | `settings` | ligne unique : `offer_timeout_s` (45), `restaurant_timeout_s` (600), `payment_timeout_s` (900), `dispatch_alert_s` (600), `dispatch_cancel_s` (1800), `location_fresh_s` (120), `delivery_code_max_attempts` (5), `support_phone` | Modifiables par l'admin (ADM-05), chaque modification tracée dans `audit_log` |
-| `payment_options` | `country_code`, `method`, `operator` (`orange`, `mtn`, `wave`, `moov`…), `provider` (`stripe`, `paystack`, `cinetpay`, `cash`), `label`, `is_enabled`, `position` | Seules les lignes activées sont proposées (PAY-01) |
+| `payment_options` | `country_code`, `method`, `operator`, `provider` (`cash`, `nyole`, `stripe`), `label`, `is_enabled`, `position` | Seules les lignes activées sont proposées (PAY-01) ; Mobile Money : une ligne, l'opérateur se choisit chez nyole |
 | `parcel_types` | `id`, `code`, `label`, `max_weight_kg`, `allowed_vehicles vehicle_type[]`, `position`, `is_active` | Données initiales : Documents · Petit colis ≤ 5 kg · Colis moyen ≤ 15 kg |
 
 ### Comptes
@@ -107,7 +107,7 @@ courier_assigned, picked_up, in_transit, delivered, cancelled, failed`. Pour un 
 | | **Destination** figée : `dropoff_location`, `recipient_name`, `recipient_phone`, `dropoff_district`, `dropoff_landmark`, `dropoff_instructions` | Repas : le client |
 | | **Montants** figés : `subtotal`, `delivery_fee`, `total`, `commission_amount`, `courier_earning`, `platform_amount`, `distance_m` | `check` : `total = subtotal + delivery_fee` ; `platform_amount = delivery_fee − courier_earning + commission_amount` |
 | | **Paiement** : `payment_method`, `payment_status` | `payment_status` écrit uniquement par les fonctions de paiement |
-| | **Dates** : `created_at`, `paid_at`, `accepted_at`, `ready_at`, `assigned_at`, `picked_up_at`, `delivered_at`, `closed_at`, `dispatch_started_at`, `dispatch_alerted_at` ; `close_reason` | |
+| | **Dates** : `created_at`, `submitted_at` (transmission, après paiement en ligne), `paid_at`, `accepted_at`, `ready_at`, `assigned_at`, `picked_up_at`, `delivered_at`, `closed_at`, `dispatch_started_at`, `dispatch_alerted_at` ; `close_reason` | |
 | `order_items` | `id`, `order_id`, `product_id`, `name`, `unit_price`, `quantity` (> 0), `line_total` | Copie du produit au moment de la commande |
 | `order_events` | `id`, `order_id`, `kind` (`status_changed`, `courier_assigned`, `courier_released`, `problem_reported`, `code_failed`, `code_locked`, `payment_*`, `dispatch_alert`…), `status`, `actor_id`, `actor_role`, `reason`, `created_at` | Chronologie (TRK-03) ; source des notifications |
 | `delivery_codes` | PK `order_id` ; `code` (4 chiffres), `failed_attempts`, `locked_at` | Lisible **uniquement** par le client de la commande |
@@ -117,7 +117,7 @@ courier_assigned, picked_up, in_transit, delivered, cancelled, failed`. Pour un 
 
 | Table | Colonnes principales | Notes |
 |-------|----------------------|-------|
-| `transactions` | `id`, `order_id`, `amount`, `currency`, `method`, `operator`, `provider`, `provider_reference` (unique), `status`, `failure_reason`, `refund_reference`, `created_at`, `succeeded_at`, `updated_at` | Index unique partiel : au plus **une** transaction `pending`, `succeeded` ou `refunded` par commande (PAY-05) ; `check` : `amount` = total de la commande (vérifié par la fonction) |
+| `transactions` | `id`, `order_id`, `amount`, `currency`, `method`, `operator`, `provider`, `provider_reference` (unique), `status`, `failure_reason`, `refund_reference`, `checkout_session_id` (unique), `checkout_url`, `checkout_attempt`, `created_at`, `succeeded_at`, `updated_at` | Index unique partiel : au plus **une** transaction `pending`, `succeeded` ou `refunded` par commande (PAY-05) ; `check` : `amount` = total de la commande (vérifié par la fonction) |
 | `cash_ledger` | `id`, `courier_id`, `order_id`, `type` (`collected` / `remitted`), `amount`, `reference`, `recorded_by`, `created_at` | Une seule écriture « encaissé » par commande ; solde dû = Σ encaissé − Σ versé (`courier_summary()`) |
 | `audit_log` | `id`, `actor_id`, `action`, `target_type`, `target_id`, `details` (jsonb), `created_at` | Actions admin hors commandes (suspension, identifiant, paramètres) |
 
@@ -206,9 +206,11 @@ les apps et le web traduisent ces codes en messages (plan §3.4).
 | `admin_request_refund(order_id, reason)` | admin | Décide le remboursement d'une commande payée close (échec, annulée, refusée) |
 | `admin_mark_refunded(order_id, reference)` | admin | Remboursement effectué hors application : commande et transaction « remboursées » |
 | `admin_stats(from, to)` | admin | Indicateurs du tableau de bord |
+| `begin_mobile_money(order_id)` | client | Données de la session nyole de sa commande en attente de paiement |
+| `record_checkout_session(…)` · `apply_payment_status(…)` | service | Session ouverte ; statut relu chez nyole appliqué (réussi une seule fois, montant vérifié) |
 
-**Edge Functions** (`/functions/v1/…`) : `payments-create` (crée le paiement Stripe ou Mobile Money d'une commande),
-`payments-webhook-stripe`, `payments-webhook-momo` (signature vérifiée, idempotent), `payments-refund` (appel interne),
+**Edge Functions** (`/functions/v1/…`) : `payments-create` (ouvre ou rouvre la session nyole d'une commande),
+`payments-webhook-nyole` (signature vérifiée, statut relu chez nyole, idempotent), `payments-webhook-stripe` (Inc-12),
 `push` (appel interne depuis la base), `account-delete` (anonymisation + suppression du compte d'authentification),
 `admin-update-login` (changement d'identifiant de connexion par l'admin).
 

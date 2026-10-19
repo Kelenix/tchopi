@@ -4,6 +4,18 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · versions [S
 
 ## [Non publié]
 
+### Ajouté (Inc-11, ADR-028)
+- Paiement **Mobile Money** par nyole (Orange Money, MTN MoMo, Wave, Moov Money) pour les repas et les colis : page
+  de paiement sécurisée, statut en direct, « Réessayer » après un refus, « Changer de moyen de paiement » (panier
+  restauré), annulation sans paiement sous 15 min ; la commande n'est transmise qu'après confirmation par nyole.
+- Colis : choix du moyen de paiement (espèces au retrait ou Mobile Money).
+- Admin : Mobile Money activable dans les Paramètres.
+- Serveur : fonctions `payments-create` et `payments-webhook-nyole` (signature vérifiée, statut relu chez nyole,
+  rejeu sans effet) ; paiement arrivé après l'annulation marqué « à rembourser ».
+
+### Modifié (Inc-11)
+- Le délai de réponse du restaurant part de la transmission de la commande (après paiement en ligne).
+
 ### Ajouté (Inc-13, ADR-027)
 - Remboursements : commande payée puis annulée ou refusée marquée « À rembourser » ; après un échec de livraison,
   l'admin décide du remboursement (motif) puis le marque « Remboursée » avec une référence ; le client suit l'état

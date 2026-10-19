@@ -44,6 +44,9 @@ _Order _$OrderFromJson(Map<String, dynamic> json) => _Order(
       ) ??
       OrderPaymentStatus.unpaid,
   createdAt: DateTime.parse(json['created_at'] as String),
+  submittedAt: json['submitted_at'] == null
+      ? null
+      : DateTime.parse(json['submitted_at'] as String),
   closeReason: json['close_reason'] as String?,
   courierId: json['courier_id'] as String?,
   courierInfo: json['courier_info'] == null
@@ -98,6 +101,7 @@ Map<String, dynamic> _$OrderToJson(_Order instance) => <String, dynamic>{
   'payment_method': _$PaymentMethodEnumMap[instance.paymentMethod]!,
   'payment_status': _$OrderPaymentStatusEnumMap[instance.paymentStatus]!,
   'created_at': instance.createdAt.toIso8601String(),
+  'submitted_at': instance.submittedAt?.toIso8601String(),
   'close_reason': instance.closeReason,
   'courier_id': instance.courierId,
   'courier_info': instance.courierInfo,
@@ -140,6 +144,7 @@ const _$OrderPaymentStatusEnumMap = {
 
 _OrderItem _$OrderItemFromJson(Map<String, dynamic> json) => _OrderItem(
   orderId: json['order_id'] as String,
+  productId: json['product_id'] as String?,
   name: json['name'] as String,
   unitPrice: (json['unit_price'] as num).toInt(),
   quantity: (json['quantity'] as num).toInt(),
@@ -149,6 +154,7 @@ _OrderItem _$OrderItemFromJson(Map<String, dynamic> json) => _OrderItem(
 Map<String, dynamic> _$OrderItemToJson(_OrderItem instance) =>
     <String, dynamic>{
       'order_id': instance.orderId,
+      'product_id': instance.productId,
       'name': instance.name,
       'unit_price': instance.unitPrice,
       'quantity': instance.quantity,

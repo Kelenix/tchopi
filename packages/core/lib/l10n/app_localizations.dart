@@ -1348,18 +1348,6 @@ abstract class AppLocalizations {
   /// **'Mon profil livreur et mes missions.'**
   String get spaceCourierBody;
 
-  /// No description provided for @spaceAdmin.
-  ///
-  /// In fr, this message translates to:
-  /// **'Administration'**
-  String get spaceAdmin;
-
-  /// No description provided for @spaceAdminBody.
-  ///
-  /// In fr, this message translates to:
-  /// **'Zones et tarifs, livreurs, utilisateurs.'**
-  String get spaceAdminBody;
-
   /// No description provided for @spaceBecomeCourier.
   ///
   /// In fr, this message translates to:
@@ -1947,6 +1935,114 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Bientôt'**
   String get paymentSoon;
+
+  /// No description provided for @paymentMobileMoneyHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Orange Money, MTN MoMo, Wave, Moov Money'**
+  String get paymentMobileMoneyHint;
+
+  /// No description provided for @momoTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement Mobile Money'**
+  String get momoTitle;
+
+  /// No description provided for @momoBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Payez {amount} sur la page sécurisée de nyole (Orange Money, MTN MoMo, Wave ou Moov Money), puis revenez ici : la commande part dès que l\'opérateur confirme le paiement.'**
+  String momoBody(String amount);
+
+  /// No description provided for @momoPay.
+  ///
+  /// In fr, this message translates to:
+  /// **'Payer {amount}'**
+  String momoPay(String amount);
+
+  /// No description provided for @momoWaiting.
+  ///
+  /// In fr, this message translates to:
+  /// **'Validez le paiement sur votre téléphone. Nous attendons la confirmation de l\'opérateur…'**
+  String get momoWaiting;
+
+  /// No description provided for @momoResume.
+  ///
+  /// In fr, this message translates to:
+  /// **'Reprendre le paiement'**
+  String get momoResume;
+
+  /// No description provided for @momoCheck.
+  ///
+  /// In fr, this message translates to:
+  /// **'J\'ai payé : vérifier'**
+  String get momoCheck;
+
+  /// No description provided for @momoStillPending.
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement pas encore confirmé. Si vous l\'avez validé, patientez quelques secondes.'**
+  String get momoStillPending;
+
+  /// No description provided for @momoFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le paiement n\'a pas été validé par l\'opérateur.'**
+  String get momoFailed;
+
+  /// No description provided for @momoRetry.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réessayer'**
+  String get momoRetry;
+
+  /// No description provided for @momoDeadline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sans paiement d\'ici {time}, la commande est annulée.'**
+  String momoDeadline(String time);
+
+  /// No description provided for @momoChangeMethod.
+  ///
+  /// In fr, this message translates to:
+  /// **'Changer de moyen de paiement'**
+  String get momoChangeMethod;
+
+  /// No description provided for @momoChangeBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette commande non payée sera annulée ; vous retrouverez votre demande pour choisir un autre moyen de paiement.'**
+  String get momoChangeBody;
+
+  /// No description provided for @failurePaymentClosed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le délai de paiement est dépassé : la commande a été annulée.'**
+  String get failurePaymentClosed;
+
+  /// No description provided for @failureAlreadyPaid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette commande est déjà payée.'**
+  String get failureAlreadyPaid;
+
+  /// No description provided for @failurePaymentProvider.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le service de paiement ne répond pas. Réessayez dans un instant.'**
+  String get failurePaymentProvider;
+
+  /// No description provided for @orderPaymentTimeout.
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement non reçu à temps'**
+  String get orderPaymentTimeout;
+
+  /// No description provided for @orderLatePayment.
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement reçu après l\'annulation'**
+  String get orderLatePayment;
 
   /// No description provided for @checkoutSubtotal.
   ///

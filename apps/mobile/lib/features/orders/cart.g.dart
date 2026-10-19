@@ -36,7 +36,7 @@ final class CartControllerProvider
   CartController create() => CartController();
 }
 
-String _$cartControllerHash() => r'b4a835b7fc9741ac6feee031db9533385e2ec0f4';
+String _$cartControllerHash() => r'3db6806c80c25fd7f67e98ee66747db4fbf2ed1d';
 
 /// Panier conservé sur le téléphone entre deux ouvertures de l'app (ORD-05).
 
