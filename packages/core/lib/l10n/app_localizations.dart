@@ -2242,6 +2242,12 @@ abstract class AppLocalizations {
   /// **'Le restaurant n\'a pas encore accepté : rien ne vous sera facturé.'**
   String get orderCancelBody;
 
+  /// No description provided for @orderCancelPaidBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le restaurant n\'a pas encore accepté : votre paiement vous sera remboursé intégralement.'**
+  String get orderCancelPaidBody;
+
   /// No description provided for @orderCancelled.
   ///
   /// In fr, this message translates to:
@@ -2769,6 +2775,12 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Votre colis n\'a pas encore été récupéré : rien ne vous sera facturé.'**
   String get parcelCancelBody;
+
+  /// No description provided for @parcelCancelPaidBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre colis n\'a pas encore été récupéré : votre paiement vous sera remboursé intégralement.'**
+  String get parcelCancelPaidBody;
 
   /// No description provided for @parcelConfirm.
   ///

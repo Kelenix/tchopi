@@ -479,6 +479,7 @@
   "orderCancel": "Annuler la commande",
   "orderCancelTitle": "Annuler cette commande ?",
   "orderCancelBody": "Le restaurant n'a pas encore accepté : rien ne vous sera facturé.",
+  "orderCancelPaidBody": "Le restaurant n'a pas encore accepté : votre paiement vous sera remboursé intégralement.",
   "orderCancelled": "Commande annulée.",
   "orderReason": "Motif : {reason}",
   "@orderReason": {
@@ -605,6 +606,7 @@
   "parcelPayCash": "À payer au livreur à la récupération",
   "parcelPaymentCash": "Espèces",
   "parcelCancelBody": "Votre colis n'a pas encore été récupéré : rien ne vous sera facturé.",
+  "parcelCancelPaidBody": "Votre colis n'a pas encore été récupéré : votre paiement vous sera remboursé intégralement.",
   "parcelConfirm": "Confirmer · {total}",
   "@parcelConfirm": {
     "placeholders": {

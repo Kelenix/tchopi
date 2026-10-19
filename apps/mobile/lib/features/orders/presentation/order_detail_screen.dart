@@ -24,14 +24,20 @@ class OrderDetailScreen extends ConsumerWidget {
 
   final String orderId;
 
-  Future<void> _cancel(BuildContext context, WidgetRef ref, bool parcel) async {
+  Future<void> _cancel(BuildContext context, WidgetRef ref, Order o) async {
     final l10n = AppLocalizations.of(context);
+    final paid = o.paymentStatus == OrderPaymentStatus.paid;
     final messenger = ScaffoldMessenger.of(context);
     final confirmed = await showConfirmSheet(
       context,
       icon: Icons.cancel_outlined,
       title: l10n.orderCancelTitle,
-      body: parcel ? l10n.parcelCancelBody : l10n.orderCancelBody,
+      body: switch ((o.type == OrderType.parcel, paid)) {
+        (true, true) => l10n.parcelCancelPaidBody,
+        (true, false) => l10n.parcelCancelBody,
+        (false, true) => l10n.orderCancelPaidBody,
+        (false, false) => l10n.orderCancelBody,
+      },
       confirmLabel: l10n.orderCancel,
       destructive: true,
     );
@@ -115,7 +121,7 @@ class OrderDetailScreen extends ConsumerWidget {
               ],
               if (stillSearching) ...[
                 const SizedBox(height: Space.lg),
-                _StillSearching(onCancel: () => _cancel(context, ref, parcel)),
+                _StillSearching(onCancel: () => _cancel(context, ref, o)),
               ],
               if (o.courierInfo case final courier? when !status.isClosed) ...[
                 const SizedBox(height: Space.lg),
@@ -237,7 +243,7 @@ class OrderDetailScreen extends ConsumerWidget {
                   style: OutlinedButton.styleFrom(
                     foregroundColor: tokens.danger,
                   ),
-                  onPressed: () => _cancel(context, ref, parcel),
+                  onPressed: () => _cancel(context, ref, o),
                   child: Text(l10n.orderCancel),
                 ),
               ],

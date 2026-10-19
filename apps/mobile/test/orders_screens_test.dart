@@ -241,6 +241,33 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('annuler une commande payée : remboursement annoncé', (
+    tester,
+  ) async {
+    tall(tester);
+    final paid = order('o1', OrderStatus.pending).copyWith(
+      paymentMethod: PaymentMethod.card,
+      paymentStatus: OrderPaymentStatus.paid,
+    );
+    await tester.pumpWidget(
+      app(const OrderDetailScreen(orderId: 'o1'), [
+        orderProvider('o1').overrideWith((ref) async => paid),
+        orderLiveProvider(
+          'o1',
+        ).overrideWith((ref) => Stream.value(live(OrderStatus.pending))),
+        orderEventsProvider('o1').overrideWith((ref) async => const []),
+      ]),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Annuler la commande'));
+    await tester.pumpAndSettle();
+    expect(
+      find.textContaining('votre paiement vous sera remboursé intégralement'),
+      findsOneWidget,
+    );
+    expect(find.textContaining('rien ne vous sera facturé'), findsNothing);
+  });
+
   testWidgets('suivi : livreur attribué, chronologie « Livreur assigné »', (
     tester,
   ) async {

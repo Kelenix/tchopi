@@ -1186,6 +1186,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Le restaurant n\'a pas encore accepté : rien ne vous sera facturé.';
 
   @override
+  String get orderCancelPaidBody =>
+      'Le restaurant n\'a pas encore accepté : votre paiement vous sera remboursé intégralement.';
+
+  @override
   String get orderCancelled => 'Commande annulée.';
 
   @override
@@ -1470,6 +1474,10 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get parcelCancelBody =>
       'Votre colis n\'a pas encore été récupéré : rien ne vous sera facturé.';
+
+  @override
+  String get parcelCancelPaidBody =>
+      'Votre colis n\'a pas encore été récupéré : votre paiement vous sera remboursé intégralement.';
 
   @override
   String parcelConfirm(String total) {
