@@ -2,8 +2,8 @@ import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobile/features/restaurant/presentation/menu_screen.dart';
-import 'package:mobile/features/restaurant/restaurant_providers.dart';
+import 'package:tchopi/features/restaurant/presentation/menu_screen.dart';
+import 'package:tchopi/features/restaurant/restaurant_providers.dart';
 
 const restaurant = Restaurant(
   id: 'r1',

@@ -1,7 +1,7 @@
 import 'package:core/core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobile/main.dart';
+import 'package:tchopi/main.dart';
 
 void main() {
   testWidgets("sans session, démarre sur l'écran de bienvenue en français", (

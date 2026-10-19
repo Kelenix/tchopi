@@ -87,10 +87,14 @@ validation de la maquette → code des écrans à partir de l'Inc-1. Registre de
 
 ## Journal de session (résumé court, le plus récent en haut)
 
+- 2026-10-19 — ADR-032 (demande utilisateur) : app déplacée à la racine (`lib/`, `android/`… ; paquet `tchopi`),
+  serveur en ligne par défaut dans `Env` : `flutter run` suffit. Supprimés : `run.ps1`, `phone.ps1`, guide Wi-Fi,
+  `vps.ps1 config`. Scripts, CI, hook et docs adaptés. Vérifié : analyse sans problème, tests 61 (app) + 42 (core).
+
 - 2026-10-19 — Back-end déployé sur le VPS (ADR-031) : https://api.tchopi.com (nginx de l'hôte + certbot), Supabase
   officiel figé `self-hosted/v0.8.3` allégé (7 conteneurs `tchopi-*`, ~660 Mo), pilote fermé (numéros autorisés avec
   code, pas de SMS), sauvegardes quotidiennes ; outils `vps.ps1` (PC, une clé SSH par PC) + `infra/server.sh` ; APK de
-  test `phone.ps1 -Vps` ; message clair si l'envoi du SMS échoue. Testé d'abord dans Docker sur le PC (inscription
+  test `phone.ps1` (serveur en ligne par défaut, `-Local` pour le PC) ; message clair si l'envoi du SMS échoue. Testé d'abord dans Docker sur le PC (inscription
   autorisée / refusée, admin, fonctions, temps réel, fichiers, Studio à la demande, pg_dump, redéploiement sans
   rejeu). Sur le VPS : 14 migrations, 7 services sains, API joignable en HTTPS, autres sites du serveur intacts.
 

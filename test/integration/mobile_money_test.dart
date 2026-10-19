@@ -7,9 +7,9 @@ import 'dart:io';
 import 'package:core/core.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobile/features/client/payments/data/payment_repository.dart';
-import 'package:mobile/features/courier/missions/data/mission_repository.dart';
-import 'package:mobile/features/orders/data/order_repository.dart';
+import 'package:tchopi/features/client/payments/data/payment_repository.dart';
+import 'package:tchopi/features/courier/missions/data/mission_repository.dart';
+import 'package:tchopi/features/orders/data/order_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Mobile Money de bout en bout (PAY-03, PAY-05) : Edge Functions locales face à un nyole simulé sur le poste
@@ -18,7 +18,7 @@ void main() {
   setUpAll(() => HttpOverrides.global = null);
 
   const mockUrl = 'http://host.docker.internal:54390/api';
-  final functionsEnv = File('../../supabase/functions/.env');
+  final functionsEnv = File('supabase/functions/.env');
   final settings = {
     if (functionsEnv.existsSync())
       for (final line in functionsEnv.readAsLinesSync())
@@ -29,7 +29,7 @@ void main() {
   final secret = settings['NYOLE_SECRET_KEY'] ?? '';
 
   final env =
-      jsonDecode(File('../../env/local.json').readAsStringSync())
+      jsonDecode(File('env/local.json').readAsStringSync())
           as Map<String, dynamic>;
   final url = env['SUPABASE_URL'] as String;
   final anonKey = env['SUPABASE_ANON_KEY'] as String;
@@ -138,12 +138,11 @@ void main() {
     if (!simulated) return;
     nyole = await HttpServer.bind(InternetAddress.anyIPv4, 54390);
     nyole.listen(serve);
-    final status = await Process.run(
-      'supabase',
-      ['status', '-o', 'env'],
-      workingDirectory: '../..',
-      runInShell: true,
-    );
+    final status = await Process.run('supabase', [
+      'status',
+      '-o',
+      'env',
+    ], runInShell: true);
     final serviceKey = RegExp(
       r'^SERVICE_ROLE_KEY="?([^"\r\n]+)',
       multiLine: true,

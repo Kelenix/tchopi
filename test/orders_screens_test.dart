@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobile/features/client/addresses/application/addresses_providers.dart';
-import 'package:mobile/features/client/payments/payments_providers.dart';
-import 'package:mobile/features/orders/cart.dart';
-import 'package:mobile/features/orders/data/order_repository.dart';
-import 'package:mobile/features/orders/orders_providers.dart';
-import 'package:mobile/features/orders/presentation/checkout_screen.dart';
-import 'package:mobile/features/orders/presentation/order_detail_screen.dart';
-import 'package:mobile/features/restaurant/presentation/restaurant_orders_screen.dart';
-import 'package:mobile/features/restaurant/restaurant_providers.dart';
+import 'package:tchopi/features/client/addresses/application/addresses_providers.dart';
+import 'package:tchopi/features/client/payments/payments_providers.dart';
+import 'package:tchopi/features/orders/cart.dart';
+import 'package:tchopi/features/orders/data/order_repository.dart';
+import 'package:tchopi/features/orders/orders_providers.dart';
+import 'package:tchopi/features/orders/presentation/checkout_screen.dart';
+import 'package:tchopi/features/orders/presentation/order_detail_screen.dart';
+import 'package:tchopi/features/restaurant/presentation/restaurant_orders_screen.dart';
+import 'package:tchopi/features/restaurant/restaurant_providers.dart';
 
 import 'small_screen.dart';
 

@@ -1,8 +1,11 @@
 # Architecture
 
-> **Mise à jour 2026-10-18 (ADR-016)** : une seule app `apps/mobile` remplace `apps/client`, `apps/courier` et
+> **Mise à jour 2026-10-18 (ADR-016)** : une seule app remplace `apps/client`, `apps/courier` et
 > `apps/backoffice` ; ses espaces (Client, Livreur, Restaurant, Admin) suivent les rôles du compte. Le reste de ce
 > document s'applique tel quel à l'app unique.
+>
+> **Mise à jour 2026-10-19 (ADR-032)** : l'app est à la racine du dépôt (`lib/`, `android/`, `ios/`, `web/`, à côté de
+> `packages/core`) et appelle par défaut le serveur en ligne `https://api.tchopi.com` : `flutter run` suffit.
 >
 > Phase 3 (rôle : Mobile Architect). Décisions : `DECISION_LOG.md` (ADR-001 à ADR-011). Conception détaillée des flux :
 > `docs/system-design.md`. Base de données : `docs/data-model.md`. Design : `docs/design/design-system.md`.
@@ -43,11 +46,9 @@ Toutes les règles de l'INTAKE §7.C vivent dans Postgres (ADR-003) et sont donc
 ## 2. Dépôt (monorepo, workspace Dart)
 
 ```
-food-delive/
-├── apps/
-│   ├── client/          # app Client (Android, iOS)
-│   ├── courier/         # app Livreur (Android, iOS)
-│   └── backoffice/      # Restaurant + Admin (Android, web)
+tchopi/
+├── lib/, test/          # l'app (espaces Client, Livreur, Restaurant, Admin) et ses tests
+├── android/, ios/, web/ # plateformes
 ├── packages/
 │   └── core/            # code partagé (design system, connexion, compte, Supabase)
 ├── supabase/

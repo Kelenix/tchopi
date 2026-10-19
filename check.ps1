@@ -24,16 +24,16 @@ function Run([string]$dir, [string]$command) {
 
 Run 'packages\core' 'flutter gen-l10n'
 Run 'packages\core' 'dart run build_runner build'
-Run 'apps\mobile' 'dart run build_runner build'
+Run '.' 'dart run build_runner build'
 Run '.' 'flutter analyze'
 Run 'packages\core' 'flutter test'
-Run 'apps\mobile' 'flutter test'
+Run '.' 'flutter test'
 if (-not $SkipDb) {
   Run '.' 'supabase db reset'
   Run '.' 'supabase test db'
 }
 if ($Integration) {
   Run 'packages\core' 'flutter test -t integration --run-skipped'
-  Run 'apps\mobile' 'flutter test -t integration --run-skipped'
+  Run '.' 'flutter test -t integration --run-skipped'
 }
 Write-Host "`nTout est vert." -ForegroundColor Green

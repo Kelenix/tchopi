@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobile/features/client/payments/data/payment_repository.dart';
-import 'package:mobile/features/client/payments/payments_providers.dart';
-import 'package:mobile/features/client/payments/presentation/payment_choice.dart';
-import 'package:mobile/features/orders/presentation/mobile_money_panel.dart';
+import 'package:tchopi/features/client/payments/data/payment_repository.dart';
+import 'package:tchopi/features/client/payments/payments_providers.dart';
+import 'package:tchopi/features/client/payments/presentation/payment_choice.dart';
+import 'package:tchopi/features/orders/presentation/mobile_money_panel.dart';
 
 class FakePayments implements PaymentRepository {
   final started = <String>[];

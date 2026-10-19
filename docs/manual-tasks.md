@@ -79,8 +79,8 @@
 - **Quand** : avant les tests réels à grande échelle et la publication (phase 6).
 - **Étapes** : 1. Choisir un fournisseur de tuiles OpenStreetMap (ex. MapTiler, Stadia Maps) **ou** héberger ses propres
   tuiles sur le VPS. 2. Récupérer l'URL des tuiles (`…/{z}/{x}/{y}.png`), avec sa clé si le fournisseur en demande une
-  (clé publique, restreinte au domaine / à l'app chez le fournisseur). 3. L'ajouter dans `env/prod.json` :
-  `"MAP_TILES_URL": "https://…/{z}/{x}/{y}.png"`.
+  (clé publique, restreinte au domaine / à l'app chez le fournisseur). 3. La communiquer à Claude : elle
+  remplace la valeur par défaut de `MAP_TILES_URL` dans `packages/core/lib/src/config/env.dart`.
 - **Coût** : offres gratuites limitées, puis payantes selon le trafic ; l'hébergement sur le VPS évite l'abonnement mais
   demande de l'espace disque et de la maintenance.
 - **Vérification** : la carte s'affiche dans l'écran « Nouvelle adresse » de la version de production.

@@ -4,7 +4,7 @@ library;
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:mobile/features/admin/zones/data/admin_zone_repository.dart';
+import 'package:tchopi/features/admin/zones/data/admin_zone_repository.dart';
 import 'package:core/core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -15,7 +15,7 @@ void main() {
   setUpAll(() => HttpOverrides.global = null);
 
   final env =
-      jsonDecode(File('../../env/local.json').readAsStringSync())
+      jsonDecode(File('env/local.json').readAsStringSync())
           as Map<String, dynamic>;
   final url = env['SUPABASE_URL'] as String;
   late SupabaseClient service;
@@ -24,12 +24,11 @@ void main() {
   String? zoneId;
 
   setUpAll(() async {
-    final status = await Process.run(
-      'supabase',
-      ['status', '-o', 'env'],
-      workingDirectory: '../..',
-      runInShell: true,
-    );
+    final status = await Process.run('supabase', [
+      'status',
+      '-o',
+      'env',
+    ], runInShell: true);
     final serviceKey = RegExp(
       r'^SERVICE_ROLE_KEY="?([^"\r\n]+)',
       multiLine: true,

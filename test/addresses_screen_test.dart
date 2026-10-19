@@ -1,5 +1,5 @@
-import 'package:mobile/features/client/addresses/application/addresses_providers.dart';
-import 'package:mobile/features/client/addresses/presentation/addresses_screen.dart';
+import 'package:tchopi/features/client/addresses/application/addresses_providers.dart';
+import 'package:tchopi/features/client/addresses/presentation/addresses_screen.dart';
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

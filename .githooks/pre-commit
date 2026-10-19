@@ -1,6 +1,6 @@
 #!/bin/sh
 # Refuse un commit dont le code Dart n'est pas formaté.
-dart format --output=none --set-exit-if-changed apps packages || {
-  echo "Code non formaté : lancez « dart format apps packages » puis recommencez."
+dart format --output=none --set-exit-if-changed lib test packages || {
+  echo "Code non formaté : lancez « dart format lib test packages » puis recommencez."
   exit 1
 }

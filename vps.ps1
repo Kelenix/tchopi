@@ -1,13 +1,12 @@
 ﻿# Serveur (VPS Hostinger) piloté depuis ce PC. Guide : docs/deployer-sur-vps.md.
 #   .\vps.ps1 cle <IP du VPS>                crée la clé SSH de ce PC et affiche la clé publique à ajouter chez Hostinger
-#   .\vps.ps1 installer api.<domaine>        installe le serveur (une seule fois) et crée env\prod.json
-#   .\vps.ps1 config                         crée env\prod.json sur un autre PC (serveur déjà installé)
-#   .\vps.ps1 deployer                       envoie la base et les fonctions serveur (version commitée)
+#   .\vps.ps1 installer api.<domaine>        installe le serveur (une seule fois)
+#   .\vps.ps1 deployer                      envoie la base et les fonctions serveur (version commitée)
 #   .\vps.ps1 testeur +225XXXXXXXXXX <code>  autorise l'inscription de ce numéro avec ce code à 6 chiffres
 #   .\vps.ps1 admin +225XXXXXXXXXX           donne le rôle admin à ce compte (déjà inscrit dans l'app)
 #   .\vps.ps1 studio                         tableau de bord Supabase sur http://localhost:8000 (Ctrl+C pour fermer)
 param(
-  [Parameter(Mandatory)][ValidateSet('cle', 'installer', 'config', 'deployer', 'testeur', 'admin', 'studio')][string]$Action,
+  [Parameter(Mandatory)][ValidateSet('cle', 'installer', 'deployer', 'testeur', 'admin', 'studio')][string]$Action,
   [string]$Valeur,
   [string]$Code
 )
@@ -40,22 +39,6 @@ function Send-Source {
   Remote 'rm -rf /opt/tchopi/src && mkdir -p /opt/tchopi/src && tar -xf /tmp/tchopi-src.tar -C /opt/tchopi/src && rm /tmp/tchopi-src.tar'
 }
 
-# env\prod.json (non versionné, à créer sur chaque PC) : adresse et clé « anon » lues sur le serveur, publiques par
-# conception ; les autres valeurs (Firebase) sont conservées.
-function Save-ProdConfig {
-  $values = @{}
-  ssh tchopi "grep -E '^(SUPABASE_PUBLIC_URL|ANON_KEY)=' /opt/tchopi/supabase/.env" |
-    ForEach-Object { $name, $value = $_ -split '=', 2; $values[$name] = $value }
-  if ($LASTEXITCODE -ne 0 -or $values.Count -ne 2) { Fail 'configuration introuvable : VPS joignable et serveur installé ?' }
-  $file = Join-Path $PSScriptRoot 'env\prod.json'
-  $source = if (Test-Path $file) { $file } else { Join-Path $PSScriptRoot 'env\example.json' }
-  $config = Get-Content $source -Raw | ConvertFrom-Json
-  $config.SUPABASE_URL = $values.SUPABASE_PUBLIC_URL
-  $config.SUPABASE_ANON_KEY = $values.ANON_KEY
-  [IO.File]::WriteAllText($file, ($config | ConvertTo-Json))
-  Write-Host "env\prod.json prêt : app reliée à $($values.SUPABASE_PUBLIC_URL) (.\phone.ps1 -Vps)" -ForegroundColor Green
-}
-
 switch ($Action) {
   'cle' {
     if ($Valeur -notmatch '^\d{1,3}(\.\d{1,3}){3}$') { Fail 'adresse IP du VPS attendue (hPanel : VPS > Aperçu)' }
@@ -80,9 +63,10 @@ switch ($Action) {
     if ($Valeur -notmatch '^[a-z0-9-]+(\.[a-z0-9-]+)+$') { Fail 'nom de domaine attendu, ex. api.mondomaine.com' }
     Send-Source
     Remote "sh /opt/tchopi/src/infra/server.sh install $Valeur"
-    Save-ProdConfig
+    # L'app embarque l'adresse et la clé publique « anon » du serveur : à reporter si elles ont changé.
+    Remote "sed -n 's/^ANON_KEY=//p' /opt/tchopi/supabase/.env"
+    Write-Host "Serveur prêt : https://$Valeur. Clé « anon » ci-dessus : packages\core\lib\src\config\env.dart." -ForegroundColor Green
   }
-  'config' { Save-ProdConfig }
   'deployer' {
     Send-Source
     Remote 'sh /opt/tchopi/src/infra/server.sh deploy'

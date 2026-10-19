@@ -7,9 +7,8 @@ App web SaaS (tchopi.com)┘   l'app web est elle aussi hébergée sur le VPS
 ```
 
 Ordre : 1) back-end sur le VPS (ce guide) ; 2) app web sur `tchopi.com` ; 3) app mobile sur Google Play (test
-interne, puis production). L'APK de `.\phone.ps1 -Vps` n'est **pas** hébergé sur le VPS : c'est l'app mobile
-reliée à l'API du VPS, à installer sur quelques téléphones de test en attendant le Play Store.
-Choix techniques : ADR-009 et ADR-031.
+interne, puis production). L'app appelle directement `https://api.tchopi.com` (adresse inscrite dans
+`packages/core/lib/src/config/env.dart`) : `flutter run` suffit (README). Choix techniques : ADR-009, ADR-031, ADR-032.
 
 **Le VPS** (Hostinger `srv1681209`, IP `69.62.116.243`) est partagé avec d'autres sites (melodya, ponctio…) :
 Tchopi y tourne à part (`/opt/tchopi`, conteneurs `tchopi-*`, port local 8010), derrière le nginx du serveur ;
@@ -31,18 +30,15 @@ dans hPanel → VPS → **Console web**, coller cette ligne puis Entrée, en rem
 printf '\n%s\n' "<clé>" >> ~/.ssh/authorized_keys
 ```
 
-Sur un PC autre que celui de l'installation, créer ensuite la configuration de l'app (`env\prod.json`, non
-versionné) : `.\vps.ps1 config`.
-
-## 2. Installer le serveur (une fois)
+## 2. Installer le serveur (une fois, déjà fait le 2026-10-19)
 
 ```powershell
 .\vps.ps1 installer api.tchopi.com
 ```
 
 Installe Supabase (version figée, secrets générés sur le VPS), le site nginx `api.tchopi.com` avec HTTPS
-(certbot), les sauvegardes quotidiennes, la base et les fonctions serveur ; crée `env\prod.json`. Relançable sans
-risque : les données sont conservées.
+(certbot), les sauvegardes quotidiennes, la base et les fonctions serveur. Relançable sans risque : les données sont
+conservées. Après une réinstallation complète, reporter la clé « anon » affichée dans `env.dart`.
 
 ## 3. Premier administrateur et installation de l'app
 
@@ -51,10 +47,10 @@ vous leur attribuez (6 chiffres, un code différent par numéro).
 
 ```powershell
 .\vps.ps1 testeur +225XXXXXXXXXX 482913
-.\phone.ps1 -Vps
+flutter run
 ```
 
-Sur le téléphone : « Créer un compte » avec ce numéro, puis le code `482913`. Ensuite :
+Sur le téléphone (branché en USB) : « Créer un compte » avec ce numéro, puis le code `482913`. Ensuite :
 
 ```powershell
 .\vps.ps1 admin +225XXXXXXXXXX
@@ -67,18 +63,19 @@ valider les livreurs. Un compte admin n'ouvre que l'Administration : commander o
 
 ```powershell
 .\vps.ps1 testeur +225XXXXXXXXXX <code>
-.\phone.ps1 -Vps -BuildOnly
+flutter build apk --release
 ```
 
-Envoyer au testeur son code et le fichier `apps\mobile\build\app\outputs\flutter-apk\app-release.apk` (WhatsApp,
-Google Drive…) ; installation comme indiqué dans `docs/installer-sur-telephone.md` (« Sans câble »).
+Envoyer au testeur son code et le fichier `build\app\outputs\flutter-apk\app-release.apk` (WhatsApp, Google
+Drive…). Sur son téléphone : ouvrir le fichier, autoriser « Installer des applis inconnues » ; si Play Protect
+avertit, « Installer quand même » (l'app n'est pas encore sur le Play Store).
 
 ## 5. Mettre à jour
 
 | Changement | Commande |
 |------------|----------|
 | Base de données ou fonctions serveur (après commit) | `.\vps.ps1 deployer` |
-| App | `.\phone.ps1 -Vps` (ou `-BuildOnly` et renvoyer l'APK) ; s'installe par-dessus, comptes conservés |
+| App | `flutter run` (téléphone branché) ou `flutter build apk --release` et renvoyer l'APK ; s'installe par-dessus, comptes conservés |
 
 ## 6. Administrer le serveur
 

@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobile/features/orders/orders_providers.dart';
-import 'package:mobile/features/orders/presentation/order_detail_screen.dart';
-import 'package:mobile/features/orders/presentation/order_widgets.dart';
-import 'package:mobile/features/orders/tracking.dart';
-import 'package:mobile/shared/push.dart';
+import 'package:tchopi/features/orders/orders_providers.dart';
+import 'package:tchopi/features/orders/presentation/order_detail_screen.dart';
+import 'package:tchopi/features/orders/presentation/order_widgets.dart';
+import 'package:tchopi/features/orders/tracking.dart';
+import 'package:tchopi/shared/push.dart';
 
 class FakePush extends Push {
   FakePush(this.value);

@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobile/features/courier/missions/data/mission_repository.dart';
-import 'package:mobile/features/courier/missions/missions_providers.dart';
-import 'package:mobile/features/courier/missions/presentation/code_screen.dart';
-import 'package:mobile/features/courier/missions/presentation/history_screen.dart';
-import 'package:mobile/features/courier/missions/presentation/mission_screen.dart';
-import 'package:mobile/features/orders/orders_providers.dart';
+import 'package:tchopi/features/courier/missions/data/mission_repository.dart';
+import 'package:tchopi/features/courier/missions/missions_providers.dart';
+import 'package:tchopi/features/courier/missions/presentation/code_screen.dart';
+import 'package:tchopi/features/courier/missions/presentation/history_screen.dart';
+import 'package:tchopi/features/courier/missions/presentation/mission_screen.dart';
+import 'package:tchopi/features/orders/orders_providers.dart';
 
 import 'small_screen.dart';
 

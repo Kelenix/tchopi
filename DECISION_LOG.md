@@ -6,6 +6,30 @@
 
 ---
 
+## ADR-032 — App à la racine du dépôt, serveur en ligne par défaut
+
+- **Date** : 2026-10-19
+- **Statut** : Accepté (demande utilisateur ; remplace, dans ADR-031, `env/prod.json`, `vps.ps1 config`, `run.ps1`
+  et `phone.ps1`)
+- **Décideur** : Utilisateur ; mise en œuvre Claude (rôle : mobile-architect / flutter-engineer)
+- **Contexte** : Le back-end est en ligne (https://api.tchopi.com). L'utilisateur veut un `flutter run` normal, à la
+  racine, sans script ni fichier de configuration ; le dossier `apps/mobile` (hérité des 3 apps d'origine, ADR-016)
+  n'a plus de raison d'être avec une seule app.
+- **Décision** :
+  - L'app est à la racine (`lib/`, `test/`, `android/`, `ios/`, `web/`, paquet `tchopi`), racine de l'espace de
+    travail Dart avec `packages/core`.
+  - `Env` (packages/core) a pour valeurs par défaut l'URL du serveur en ligne et sa clé `anon` (publique par
+    conception : présente dans toute app publiée ; la sécurité repose sur la RLS). Supabase du PC :
+    `--dart-define-from-file=env/local.json`.
+  - Supprimés : `run.ps1`, `phone.ps1`, `docs/installer-sur-telephone.md` (mode Wi-Fi), `vps.ps1 config`.
+- **Alternatives écartées** : garder `apps/mobile` avec des scripts de lancement (jugé incompréhensible par
+  l'utilisateur) ; Supabase du PC par défaut (le développement courant se fait sur le serveur en ligne).
+- **Conséquences** : une réinstallation complète du serveur impose de reporter la nouvelle clé `anon` dans `env.dart` ;
+  les tests contre le serveur en ligne créent de vraies données (comptes de test à nettoyer avant la production).
+- **Impact** : technique (moyen), expérience de développement (fort).
+
+---
+
 ## ADR-031 — Déploiement sur le VPS : pilote fermé, piloté depuis le PC
 
 - **Date** : 2026-10-19
@@ -29,7 +53,7 @@
     version **commitée** (`git archive`), migrations appliquées une seule fois (table
     `supabase_migrations.schema_migrations`, comme la CLI), fonctions copiées avec une import map commune (le routeur
     officiel n'en lit qu'une), testeurs, admin, Studio. Une clé SSH par PC ; `vps.ps1 config` recrée `env/prod.json`.
-    APK de test : `phone.ps1 -Vps`.
+    `run.ps1` et `phone.ps1` reliés par défaut au serveur en ligne (`-Local` : Supabase du PC).
 - **Alternatives écartées** : Caddy (80/443 déjà tenus par nginx) ; pile officielle complète (mémoire du VPS
   partagé) ; confirmation automatique des inscriptions (n'importe qui pourrait prendre le numéro d'un autre) ; Studio
   public derrière un mot de passe (surface d'attaque) ; déploiement continu GitHub Actions tout de suite (secrets SSH

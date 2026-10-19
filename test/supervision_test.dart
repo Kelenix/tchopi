@@ -2,11 +2,11 @@ import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobile/features/admin/supervision/presentation/dashboard_screen.dart';
-import 'package:mobile/features/admin/supervision/presentation/settings_screen.dart';
-import 'package:mobile/features/admin/supervision/presentation/supervision_screen.dart';
-import 'package:mobile/features/admin/supervision/supervision_providers.dart';
-import 'package:mobile/features/admin/zones/zones_providers.dart';
+import 'package:tchopi/features/admin/supervision/presentation/dashboard_screen.dart';
+import 'package:tchopi/features/admin/supervision/presentation/settings_screen.dart';
+import 'package:tchopi/features/admin/supervision/presentation/supervision_screen.dart';
+import 'package:tchopi/features/admin/supervision/supervision_providers.dart';
+import 'package:tchopi/features/admin/zones/zones_providers.dart';
 
 const settings = PlatformSettings(
   offerTimeoutS: 45,

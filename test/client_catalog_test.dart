@@ -2,11 +2,11 @@ import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobile/features/client/addresses/application/addresses_providers.dart';
-import 'package:mobile/features/client/home/catalog_providers.dart';
-import 'package:mobile/features/client/home/client_home_screen.dart';
-import 'package:mobile/features/client/home/restaurant_detail_screen.dart';
-import 'package:mobile/features/restaurant/restaurant_providers.dart';
+import 'package:tchopi/features/client/addresses/application/addresses_providers.dart';
+import 'package:tchopi/features/client/home/catalog_providers.dart';
+import 'package:tchopi/features/client/home/client_home_screen.dart';
+import 'package:tchopi/features/client/home/restaurant_detail_screen.dart';
+import 'package:tchopi/features/restaurant/restaurant_providers.dart';
 
 import 'small_screen.dart';
 

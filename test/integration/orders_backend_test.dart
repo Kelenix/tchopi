@@ -6,11 +6,11 @@ import 'dart:io';
 
 import 'package:core/core.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobile/features/admin/supervision/data/supervision_repository.dart';
-import 'package:mobile/features/client/payments/data/payment_repository.dart';
-import 'package:mobile/features/courier/missions/data/mission_repository.dart';
-import 'package:mobile/features/orders/cart.dart';
-import 'package:mobile/features/orders/data/order_repository.dart';
+import 'package:tchopi/features/admin/supervision/data/supervision_repository.dart';
+import 'package:tchopi/features/client/payments/data/payment_repository.dart';
+import 'package:tchopi/features/courier/missions/data/mission_repository.dart';
+import 'package:tchopi/features/orders/cart.dart';
+import 'package:tchopi/features/orders/data/order_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Commande de repas réelle contre Supabase local : devis, commande unique malgré un double envoi,
@@ -21,7 +21,7 @@ void main() {
   setUpAll(() => HttpOverrides.global = null);
 
   final env =
-      jsonDecode(File('../../env/local.json').readAsStringSync())
+      jsonDecode(File('env/local.json').readAsStringSync())
           as Map<String, dynamic>;
   final url = env['SUPABASE_URL'] as String;
   final anonKey = env['SUPABASE_ANON_KEY'] as String;
@@ -44,12 +44,11 @@ void main() {
   }
 
   setUpAll(() async {
-    final status = await Process.run(
-      'supabase',
-      ['status', '-o', 'env'],
-      workingDirectory: '../..',
-      runInShell: true,
-    );
+    final status = await Process.run('supabase', [
+      'status',
+      '-o',
+      'env',
+    ], runInShell: true);
     final serviceKey = RegExp(
       r'^SERVICE_ROLE_KEY="?([^"\r\n]+)',
       multiLine: true,

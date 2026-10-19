@@ -7,9 +7,9 @@ import 'dart:typed_data';
 
 import 'package:core/core.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobile/features/admin/restaurants/data/admin_restaurant_repository.dart';
-import 'package:mobile/features/restaurant/data/restaurant_repository.dart';
-import 'package:mobile/shared/media.dart';
+import 'package:tchopi/features/admin/restaurants/data/admin_restaurant_repository.dart';
+import 'package:tchopi/features/restaurant/data/restaurant_repository.dart';
+import 'package:tchopi/shared/media.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Restaurants réels contre Supabase local : création par l'admin, invitation d'un gérant,
@@ -18,7 +18,7 @@ void main() {
   setUpAll(() => HttpOverrides.global = null);
 
   final env =
-      jsonDecode(File('../../env/local.json').readAsStringSync())
+      jsonDecode(File('env/local.json').readAsStringSync())
           as Map<String, dynamic>;
   final url = env['SUPABASE_URL'] as String;
   final anonKey = env['SUPABASE_ANON_KEY'] as String;
@@ -41,12 +41,11 @@ void main() {
   }
 
   setUpAll(() async {
-    final status = await Process.run(
-      'supabase',
-      ['status', '-o', 'env'],
-      workingDirectory: '../..',
-      runInShell: true,
-    );
+    final status = await Process.run('supabase', [
+      'status',
+      '-o',
+      'env',
+    ], runInShell: true);
     final serviceKey = RegExp(
       r'^SERVICE_ROLE_KEY="?([^"\r\n]+)',
       multiLine: true,

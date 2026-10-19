@@ -4,7 +4,7 @@ library;
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:mobile/features/client/addresses/data/address_repository.dart';
+import 'package:tchopi/features/client/addresses/data/address_repository.dart';
 import 'package:core/core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -14,7 +14,7 @@ void main() {
   setUpAll(() => HttpOverrides.global = null);
 
   final env =
-      jsonDecode(File('../../env/local.json').readAsStringSync())
+      jsonDecode(File('env/local.json').readAsStringSync())
           as Map<String, dynamic>;
   late SupabaseClient client;
   late AddressRepository addresses;

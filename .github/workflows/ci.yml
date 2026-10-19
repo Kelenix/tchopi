@@ -11,7 +11,7 @@ concurrency:
 
 env:
   FLUTTER_VERSION: 3.41.9
-  PACKAGES: packages/core apps/mobile
+  PACKAGES: packages/core .
 
 jobs:
   flutter:
@@ -29,7 +29,7 @@ jobs:
         run: |
           (cd packages/core && flutter gen-l10n)
           for p in $PACKAGES; do (cd "$p" && dart run build_runner build -d); done
-          dart format apps packages
+          dart format lib test packages
           git diff --exit-code
       - run: flutter analyze
       - name: Tests
@@ -63,5 +63,5 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
-      - run: cd apps/mobile && flutter build apk --debug
-      - run: cd apps/mobile && flutter build web --release
+      - run: flutter build apk --debug
+      - run: flutter build web --release

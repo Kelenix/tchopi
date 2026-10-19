@@ -2,8 +2,8 @@ import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobile/features/courier/profile/courier_providers.dart';
-import 'package:mobile/features/courier/profile/presentation/courier_status_screen.dart';
+import 'package:tchopi/features/courier/profile/courier_providers.dart';
+import 'package:tchopi/features/courier/profile/presentation/courier_status_screen.dart';
 
 Courier courier(CourierStatus status, {String? reason}) => Courier(
   userId: 'u',

@@ -1,12 +1,26 @@
-# Configuration locale des apps (clés) : seul l'exemple est versionné
+# Configuration locale (Supabase du PC) : seul l'exemple est versionné
 env/*.json
 !env/example.json
 
-# Dart / Flutter (compléments des .gitignore de chaque app)
+# Dart / Flutter
 .dart_tool/
+.flutter-plugins-dependencies
+.pub-cache/
 build/
+coverage/
 *.iml
+*.ipr
+*.iws
 .idea/
+*.log
+**/ios/Flutter/.last_build_id
+.swiftpm/
+migrate_working_dir/
+app.*.symbols
+app.*.map.json
+/android/app/debug
+/android/app/profile
+/android/app/release
 
 # Éditeurs et système
 .vscode/

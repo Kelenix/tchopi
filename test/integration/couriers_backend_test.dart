@@ -7,8 +7,8 @@ import 'dart:typed_data';
 
 import 'package:core/core.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobile/features/admin/people/data/admin_people_repository.dart';
-import 'package:mobile/features/courier/profile/data/courier_repository.dart';
+import 'package:tchopi/features/admin/people/data/admin_people_repository.dart';
+import 'package:tchopi/features/courier/profile/data/courier_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Livreur et administration réels contre Supabase local : inscription livreur avec photo, validation,
@@ -17,7 +17,7 @@ void main() {
   setUpAll(() => HttpOverrides.global = null);
 
   final env =
-      jsonDecode(File('../../env/local.json').readAsStringSync())
+      jsonDecode(File('env/local.json').readAsStringSync())
           as Map<String, dynamic>;
   final url = env['SUPABASE_URL'] as String;
   final anonKey = env['SUPABASE_ANON_KEY'] as String;
@@ -31,12 +31,11 @@ void main() {
   SupabaseClient anonClient() => SupabaseClient(url, anonKey);
 
   setUpAll(() async {
-    final status = await Process.run(
-      'supabase',
-      ['status', '-o', 'env'],
-      workingDirectory: '../..',
-      runInShell: true,
-    );
+    final status = await Process.run('supabase', [
+      'status',
+      '-o',
+      'env',
+    ], runInShell: true);
     final serviceKey = RegExp(
       r'^SERVICE_ROLE_KEY="?([^"\r\n]+)',
       multiLine: true,

@@ -11,7 +11,7 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
   final loader = FontLoader(AppTheme.fontFamily);
   for (final weight in ['Medium', 'SemiBold', 'Bold', 'ExtraBold']) {
     final bytes = File(
-      '../../packages/core/assets/fonts/PlusJakartaSans-$weight.ttf',
+      'packages/core/assets/fonts/PlusJakartaSans-$weight.ttf',
     ).readAsBytes();
     loader.addFont(bytes.then(ByteData.sublistView));
   }

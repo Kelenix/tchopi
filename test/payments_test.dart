@@ -4,12 +4,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobile/features/admin/payments/admin_payments_providers.dart';
-import 'package:mobile/features/admin/payments/data/admin_payments_repository.dart';
-import 'package:mobile/features/admin/payments/presentation/transactions_admin_screen.dart';
-import 'package:mobile/features/client/payments/payments_providers.dart';
-import 'package:mobile/features/client/payments/payments_screen.dart';
-import 'package:mobile/features/orders/orders_providers.dart';
+import 'package:tchopi/features/admin/payments/admin_payments_providers.dart';
+import 'package:tchopi/features/admin/payments/data/admin_payments_repository.dart';
+import 'package:tchopi/features/admin/payments/presentation/transactions_admin_screen.dart';
+import 'package:tchopi/features/client/payments/payments_providers.dart';
+import 'package:tchopi/features/client/payments/payments_screen.dart';
+import 'package:tchopi/features/orders/orders_providers.dart';
 
 const cash = PaymentOption(
   id: 'p1',

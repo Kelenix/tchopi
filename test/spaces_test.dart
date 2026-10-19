@@ -1,10 +1,10 @@
 import 'package:core/core.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobile/features/admin/supervision/presentation/dashboard_screen.dart';
-import 'package:mobile/features/courier/missions/presentation/courier_home_screen.dart';
-import 'package:mobile/features/courier/profile/presentation/courier_profile_screen.dart';
-import 'package:mobile/features/courier/profile/presentation/courier_status_screen.dart';
-import 'package:mobile/spaces/spaces.dart';
+import 'package:tchopi/features/admin/supervision/presentation/dashboard_screen.dart';
+import 'package:tchopi/features/courier/missions/presentation/courier_home_screen.dart';
+import 'package:tchopi/features/courier/profile/presentation/courier_profile_screen.dart';
+import 'package:tchopi/features/courier/profile/presentation/courier_status_screen.dart';
+import 'package:tchopi/spaces/spaces.dart';
 
 void main() {
   const client = AccountRoles();
