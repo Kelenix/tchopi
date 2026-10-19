@@ -82,7 +82,7 @@ jobs:
     steps:
       - name: Déploiement non configuré
         if: env.CONFIGURED != 'true'
-        run: echo "::warning::Serveur non mis à jour : lancer une fois .\vps.ps1 ci (docs/deployer-sur-vps.md)."
+        run: echo '::warning::Serveur non mis à jour, lancer une fois .\vps.ps1 ci (docs/deployer-sur-vps.md).'
       - uses: actions/checkout@v4
         if: env.CONFIGURED == 'true'
       - name: Accès SSH au VPS (clé réservée à GitHub, empreinte du serveur vérifiée)
