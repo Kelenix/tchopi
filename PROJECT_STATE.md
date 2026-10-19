@@ -87,6 +87,12 @@ validation de la maquette → code des écrans à partir de l'Inc-1. Registre de
 
 ## Journal de session (résumé court, le plus récent en haut)
 
+- 2026-10-19 — Déploiement continu (ADR-035) : job « Déploiement du serveur » dans la CI (main, après les tests),
+  clé SSH réservée à GitHub et empreinte du VPS vérifiée, branché par `vps.ps1 ci`. Constaté : la CI ne déployait
+  rien jusqu'ici et ce PC n'a pas d'accès SSH au VPS : l'Inc-12 n'est pas encore sur le serveur. Reste à faire par vous :
+  `.ps.ps1 ci` une fois, depuis le PC qui a accès au VPS. Vérifié : syntaxe de `vps.ps1` et `server.sh` ; le job
+  ne s'exécutera réellement qu'avec les secrets.
+
 - 2026-10-19 — Inc-12 (branche feat/inc-12-carte, ADR-034) : carte par Stripe Checkout (page hébergée, 3-D Secure),
   même circuit que Mobile Money (couche commune aux fournisseurs), webhook signé + statut relu chez Stripe,
   remboursement automatique des paiements par carte (tâche planifiée → payments-refund), page de retour, carte

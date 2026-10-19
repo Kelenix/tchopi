@@ -4,10 +4,13 @@ on:
   push:
     branches: [main]
   pull_request:
+  # Relance manuelle (Actions → CI → Run workflow), aussi utilisée par « vps.ps1 ci » pour le premier déploiement.
+  workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  # Jamais d'arrêt en plein déploiement : seules les vérifications des pull requests sont remplacées.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
   FLUTTER_VERSION: 3.41.9
@@ -65,3 +68,47 @@ jobs:
       - run: flutter pub get
       - run: flutter build apk --debug
       - run: flutter build web --release
+
+  deploy:
+    name: Déploiement du serveur (base et fonctions)
+    needs: [flutter, database]
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy
+      cancel-in-progress: false
+    env:
+      CONFIGURED: ${{ secrets.VPS_SSH_KEY != '' && secrets.VPS_HOST != '' && secrets.VPS_KNOWN_HOSTS != '' }}
+    steps:
+      - name: Déploiement non configuré
+        if: env.CONFIGURED != 'true'
+        run: echo "::warning::Serveur non mis à jour : lancer une fois .\vps.ps1 ci (docs/deployer-sur-vps.md)."
+      - uses: actions/checkout@v4
+        if: env.CONFIGURED == 'true'
+      - name: Accès SSH au VPS (clé réservée à GitHub, empreinte du serveur vérifiée)
+        if: env.CONFIGURED == 'true'
+        env:
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d ~/.ssh
+          echo "$VPS_SSH_KEY" > ~/.ssh/tchopi
+          chmod 600 ~/.ssh/tchopi
+          echo "$VPS_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          cat > ~/.ssh/config <<EOF
+          Host tchopi
+            HostName $VPS_HOST
+            User root
+            IdentityFile ~/.ssh/tchopi
+            BatchMode yes
+            StrictHostKeyChecking yes
+            KexAlgorithms ecdh-sha2-nistp256
+          EOF
+      # Même envoi que « vps.ps1 deployer » : version commitée de infra/ et supabase/, jamais de secret.
+      - name: Envoi et déploiement (migrations, fonctions)
+        if: env.CONFIGURED == 'true'
+        run: |
+          git archive -o /tmp/tchopi-src.tar HEAD infra supabase/migrations supabase/functions supabase/demo.sql supabase/seed-media/media
+          scp -q /tmp/tchopi-src.tar tchopi:/tmp/tchopi-src.tar
+          ssh tchopi 'rm -rf /opt/tchopi/src && mkdir -p /opt/tchopi/src && tar -xf /tmp/tchopi-src.tar -C /opt/tchopi/src && rm /tmp/tchopi-src.tar && sh /opt/tchopi/src/infra/server.sh deploy'

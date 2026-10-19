@@ -2,12 +2,13 @@
 #   .\vps.ps1 cle <IP du VPS>                crée la clé SSH de ce PC et affiche la clé publique à ajouter chez Hostinger
 #   .\vps.ps1 installer api.<domaine>        installe le serveur (une seule fois)
 #   .\vps.ps1 deployer                      envoie la base et les fonctions serveur (version commitée)
+#   .\vps.ps1 ci                            déploiement automatique par GitHub à chaque push sur main (une seule fois)
 #   .\vps.ps1 testeur +225XXXXXXXXXX <code>  autorise l'inscription de ce numéro avec ce code à 6 chiffres
 #   .\vps.ps1 admin +225XXXXXXXXXX           donne le rôle admin à ce compte (déjà inscrit dans l'app)
 #   .\vps.ps1 demo                           ajoute les restaurants de démonstration (menus, photos)
 #   .\vps.ps1 studio                        tableau de bord Supabase sur http://localhost:8000 (Ctrl+C pour fermer)
 param(
-  [Parameter(Mandatory)][ValidateSet('cle', 'installer', 'deployer', 'testeur', 'admin', 'demo', 'studio')][string]$Action,
+  [Parameter(Mandatory)][ValidateSet('cle', 'installer', 'deployer', 'ci', 'testeur', 'admin', 'demo', 'studio')][string]$Action,
   [string]$Valeur,
   [string]$Code
 )
@@ -76,6 +77,25 @@ switch ($Action) {
     Send-Source
     Remote 'sh /opt/tchopi/src/infra/server.sh deploy'
     Write-Host 'Base et fonctions serveur à jour.' -ForegroundColor Green
+  }
+  'ci' {
+    # Clé réservée à GitHub Actions (jamais celle de ce PC), autorisée sur le VPS ; adresse et empreinte du VPS et clé
+    # privée enregistrées comme secrets du dépôt (gh connecté), puis premier déploiement.
+    $key = Join-Path $env:TEMP 'tchopi-github'
+    Remove-Item "$key", "$key.pub" -ErrorAction SilentlyContinue
+    Start-Process ssh-keygen -ArgumentList "-q -t ed25519 -N `"`" -C tchopi-github -f `"$key`"" -NoNewWindow -Wait
+    $public = (Get-Content "$key.pub" -Raw).Trim()
+    Remote "grep -qxF '$public' ~/.ssh/authorized_keys || echo '$public' >> ~/.ssh/authorized_keys"
+    $address = ((ssh -G tchopi | Select-String '^hostname ').Line -split ' ')[1]
+    $known = ssh-keygen -F $address | Where-Object { $_ -notmatch '^#' }
+    if (-not $known) { Fail 'empreinte du VPS absente de known_hosts : se connecter une fois (ssh tchopi)' }
+    Get-Content $key -Raw | gh secret set VPS_SSH_KEY
+    if ($LASTEXITCODE -ne 0) { Fail 'gh non connecté à GitHub : gh auth login' }
+    $address | gh secret set VPS_HOST
+    ($known -join "`n") | gh secret set VPS_KNOWN_HOSTS
+    Remove-Item "$key", "$key.pub"
+    gh workflow run ci.yml --ref main
+    Write-Host 'Déploiement automatique en place ; premier déploiement lancé (GitHub → Actions → CI).' -ForegroundColor Green
   }
   'testeur' {
     $phone = Phone $Valeur

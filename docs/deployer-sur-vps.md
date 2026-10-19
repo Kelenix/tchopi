@@ -72,9 +72,22 @@ avertit, « Installer quand même » (l'app n'est pas encore sur le Play Store).
 
 ## 5. Mettre à jour
 
+**Automatique** : chaque push sur `main` déploie la base et les fonctions serveur, après les tests (GitHub →
+Actions → CI → « Déploiement du serveur »). À brancher **une seule fois**, depuis un PC qui a accès au VPS (§ 1)
+et où `gh` est connecté à GitHub (`gh auth login`) :
+
+```powershell
+.\vps.ps1 ci
+```
+
+La commande crée une clé SSH réservée à GitHub, l'autorise sur le VPS, enregistre l'adresse, l'empreinte du VPS et
+cette clé comme secrets du dépôt (`VPS_HOST`, `VPS_KNOWN_HOSTS`, `VPS_SSH_KEY`), puis lance le premier déploiement.
+Tant que ce n'est pas fait, la CI affiche « Serveur non mis à jour ». Retirer l'accès de GitHub : supprimer la ligne
+`… tchopi-github` dans `~/.ssh/authorized_keys` du VPS.
+
 | Changement | Commande |
 |------------|----------|
-| Base de données ou fonctions serveur (après commit) | `.\vps.ps1 deployer` |
+| Base de données ou fonctions serveur | automatique au push sur `main` ; à la main : `.\vps.ps1 deployer` |
 | Restaurants de démonstration (menus, photos ; une seule fois, déjà fait) | `.\vps.ps1 demo` |
 | App | `flutter run` (téléphone branché) ou `flutter build apk --release` et renvoyer l'APK ; s'installe par-dessus, comptes conservés |
 

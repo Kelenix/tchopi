@@ -6,6 +6,29 @@
 
 ---
 
+## ADR-035 — Déploiement continu du serveur par GitHub Actions
+
+- **Date** : 2026-10-19
+- **Statut** : Accepté (demande utilisateur ; lève le report d'ADR-031)
+- **Décideur** : Utilisateur ; mise en œuvre Claude (rôle : release-manager / security)
+- **Contexte** : L'utilisateur attend que chaque push sur `main` mette le serveur à jour. ADR-031 avait reporté le
+  déploiement continu après un premier déploiement manuel validé (fait) ; la CI ne faisait que tester et compiler.
+- **Décision** :
+  - Job « Déploiement du serveur » dans `ci.yml`, sur `main` uniquement (push ou relance manuelle), **après** les
+    tests Flutter et pgTAP ; même envoi que `vps.ps1 deployer` (version commitée de `infra/` et `supabase/`, puis
+    `server.sh deploy`) ; un seul déploiement à la fois, jamais interrompu par un nouveau push.
+  - **Clé SSH réservée à GitHub** (différente de celle des PC), **empreinte du VPS vérifiée** (`VPS_KNOWN_HOSTS`,
+    pas d'acceptation à l'aveugle) ; secrets posés par `vps.ps1 ci` depuis un PC qui a accès au VPS, sans passer par
+    le chat ni le code.
+  - Sans secrets, le job avertit « Serveur non mis à jour » au lieu d'échouer.
+- **Alternatives écartées** : réutiliser la clé d'un PC (révocation impossible sans couper ce PC) ; webhook ou agent
+  sur le VPS (service supplémentaire à exposer et maintenir).
+- **Conséquences** : tout commit sur `main` touchant la base part en production après les tests ; les migrations
+  doivent rester compatibles avec l'app déjà installée. La publication de l'app (APK, web) reste hors de ce job.
+- **Impact** : exploitation / sécurité (moyen), réversible (retirer la clé `tchopi-github` du VPS).
+
+---
+
 ## ADR-034 — Carte bancaire par Stripe Checkout, remboursements automatiques (Inc-12)
 
 - **Date** : 2026-10-19
