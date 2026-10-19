@@ -12,6 +12,8 @@ insert into public.admins (user_id) values ('00000000-0000-0000-0000-0000000000a
 insert into public.zones (id, name, city, center_lat, center_lng, radius_m, is_active) values
   ('22222222-2222-2222-2222-222222222222', 'Bouaké centre', 'Bouaké', 7.6900, -5.0300, 5000, true),
   ('33333333-3333-3333-3333-333333333333', 'Zone fermée', 'Korhogo', 9.4580, -5.6290, 5000, false);
+-- Zones d'essai seules actives (les villes de départ couvrent aussi Bouaké et Korhogo).
+update public.zones set is_active = false where id::text like '11111111-1111-1111-1111-%';
 insert into public.pricing_rules
   (zone_id, service, base_fee, per_km_fee, min_fee, max_fee, detour_factor, rounding_step, courier_base, courier_per_km)
 values ('22222222-2222-2222-2222-222222222222', 'food', 500, 150, 500, 3000, 1.30, 25, 400, 100);

@@ -103,7 +103,7 @@ abstract class AppLocalizations {
   /// No description provided for @welcomeClientHeadline.
   ///
   /// In fr, this message translates to:
-  /// **'Vos plats et vos colis, livrés dans tout Abidjan.'**
+  /// **'Vos plats et vos colis, livrés partout dans votre ville.'**
   String get welcomeClientHeadline;
 
   /// No description provided for @welcomeClientSubtitle.
@@ -1369,7 +1369,7 @@ abstract class AppLocalizations {
   /// No description provided for @spaceBecomeCourierBody.
   ///
   /// In fr, this message translates to:
-  /// **'Livrez à Abidjan à votre rythme. Votre profil est validé par l\'équipe.'**
+  /// **'Livrez dans votre ville, à votre rythme. Votre profil est validé par l\'équipe.'**
   String get spaceBecomeCourierBody;
 
   /// No description provided for @spaceRestaurant.

@@ -8,7 +8,7 @@ Widget welcomeApp(ThemeData theme) => MaterialApp(
   supportedLocales: AppLocalizations.supportedLocales,
   localizationsDelegates: AppLocalizations.localizationsDelegates,
   home: const WelcomeScreen(
-    headline: 'Vos plats et vos colis, livrés dans tout Abidjan.',
+    headline: 'Vos plats et vos colis, livrés partout dans votre ville.',
     subtitle: 'Payez en Mobile Money, par carte ou en espèces.',
     features: [
       WelcomeFeature(Icons.storefront_outlined, 'Restaurants du quartier'),
@@ -37,7 +37,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      find.text('Vos plats et vos colis, livrés dans tout Abidjan.'),
+      find.text('Vos plats et vos colis, livrés partout dans votre ville.'),
       findsOneWidget,
     );
     expect(find.text('Suivi en direct'), findsOneWidget);

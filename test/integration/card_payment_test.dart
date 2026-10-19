@@ -165,7 +165,7 @@ void main() {
         (await service
                 .from('zones')
                 .select('id')
-                .eq('is_active', true)
+                .eq('city', 'Abidjan')
                 .limit(1)
                 .single())['id']
             as String;

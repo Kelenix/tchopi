@@ -13,7 +13,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get welcomeClientHeadline =>
-      'Vos plats et vos colis, livrés dans tout Abidjan.';
+      'Vos plats et vos colis, livrés partout dans votre ville.';
 
   @override
   String get welcomeClientSubtitle =>
@@ -698,7 +698,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get spaceBecomeCourierBody =>
-      'Livrez à Abidjan à votre rythme. Votre profil est validé par l\'équipe.';
+      'Livrez dans votre ville, à votre rythme. Votre profil est validé par l\'équipe.';
 
   @override
   String get spaceRestaurant => 'Restaurant';

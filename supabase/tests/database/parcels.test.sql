@@ -10,6 +10,8 @@ update public.profiles set first_name = 'Awa', last_name = 'Koné', phone = '+22
 insert into public.zones (id, name, city, center_lat, center_lng, radius_m) values
   ('55555555-5555-5555-5555-555555555555', 'Daloa', 'Daloa', 6.8774, -6.4502, 6000),
   ('55555555-5555-5555-5555-555555555556', 'Man', 'Man', 7.4125, -7.5538, 6000);
+-- Zones d'essai seules actives (les villes de départ couvrent aussi Daloa et Man).
+update public.zones set is_active = false where id::text like '11111111-1111-1111-1111-%';
 insert into public.pricing_rules (zone_id, service, base_fee, per_km_fee, min_fee, max_fee, courier_base, courier_per_km)
 values ('55555555-5555-5555-5555-555555555555', 'parcel', 700, 175, 700, 4000, 500, 120);
 

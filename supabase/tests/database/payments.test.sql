@@ -14,6 +14,8 @@ update public.profiles set first_name = 'Koffi' where id = '00000000-0000-0000-0
 insert into public.admins (user_id) values ('00000000-0000-0000-0000-0000000000ad');
 insert into public.zones (id, name, city, center_lat, center_lng, radius_m)
 values ('55555555-5555-5555-5555-555555555555', 'Daloa', 'Daloa', 6.8774, -6.4502, 6000);
+-- Zone d'essai seule active (les villes de départ couvrent aussi Daloa).
+update public.zones set is_active = false where id <> '55555555-5555-5555-5555-555555555555';
 insert into public.pricing_rules (zone_id, service, base_fee, per_km_fee, min_fee, max_fee, courier_base, courier_per_km)
 values ('55555555-5555-5555-5555-555555555555', 'food', 500, 150, 500, 3000, 400, 100);
 insert into public.restaurants (id, zone_id, name, phone, latitude, longitude, district, landmark, commission_rate)

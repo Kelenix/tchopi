@@ -82,10 +82,10 @@ void main() {
       await expectLater(
         addresses.save(
           const Address(
-            district: 'Bouaké',
+            district: 'Odienné',
             landmark: 'Gare',
-            latitude: 7.69,
-            longitude: -5.03,
+            latitude: 9.5051,
+            longitude: -7.5643,
           ),
         ),
         throwsA(

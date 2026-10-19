@@ -16,7 +16,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      find.text('Vos plats et vos colis, livrés dans tout Abidjan.'),
+      find.text('Vos plats et vos colis, livrés partout dans votre ville.'),
       findsOneWidget,
     );
   });

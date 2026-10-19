@@ -6,6 +6,22 @@
 
 ---
 
+## ADR-036 — Villes desservies : principales villes de Côte d'Ivoire
+
+- **Date** : 2026-10-19
+- **Statut** : Accepté (demande utilisateur)
+- **Décideur** : Utilisateur ; mise en œuvre Claude (rôle : database-architect)
+- **Contexte** : Seule Abidjan existait ; l'app doit couvrir le pays.
+- **Décision** : 10 villes ajoutées en données de départ (migration `20261019170000_cities.sql`) : Bouaké,
+  Yamoussoukro, San-Pédro, Daloa, Korhogo, Man, Gagnoa, Divo, Abengourou, Grand-Bassam ; chacune une zone (centre,
+  rayon 6 à 12 km) avec les tarifs d'Abidjan plafonnés plus bas (2 000 F repas, 2 500 F colis). Tout reste modifiable
+  ou désactivable dans l'Administration (Zones). Textes « Abidjan » de l'accueil et de « Devenir livreur » rendus
+  généraux.
+- **Conséquences** : une ville n'a de restaurants et de livreurs que si l'admin en crée ou en valide dans sa zone.
+- **Impact** : métier (moyen), réversible.
+
+---
+
 ## ADR-035 — Déploiement continu du serveur par GitHub Actions
 
 - **Date** : 2026-10-19

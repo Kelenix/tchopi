@@ -4,7 +4,7 @@
   "@appBrand": {
     "description": "Nom de l'app (provisoire), affiché en logo texte."
   },
-  "welcomeClientHeadline": "Vos plats et vos colis, livrés dans tout Abidjan.",
+  "welcomeClientHeadline": "Vos plats et vos colis, livrés partout dans votre ville.",
   "welcomeClientSubtitle": "Payez en Mobile Money, par carte ou en espèces.",
   "featureRestaurants": "Restaurants du quartier",
   "featureParcels": "Colis d'un point à un autre",
@@ -270,7 +270,7 @@
   "spaceCourier": "Livreur",
   "spaceCourierBody": "Mon profil livreur et mes missions.",
   "spaceBecomeCourier": "Devenir livreur",
-  "spaceBecomeCourierBody": "Livrez à Abidjan à votre rythme. Votre profil est validé par l'équipe.",
+  "spaceBecomeCourierBody": "Livrez dans votre ville, à votre rythme. Votre profil est validé par l'équipe.",
   "spaceRestaurant": "Restaurant",
   "spaceRestaurantBody": "Commandes reçues en direct, menu et horaires.",
   "restaurantMenu": "Menu",
