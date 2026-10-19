@@ -26,8 +26,7 @@ restaurant (`06`) qui accepte ; l'admin (`03`) suit tout dans Commandes en cours
 
 ## Serveur en ligne (api.tchopi.com)
 
-`.\dev-accounts.ps1 -Serveur` crée les mêmes quatre comptes sur le serveur (accès VPS requis), avec un mot de passe
-aléatoire noté seulement sur ce PC dans `env/comptes-serveur.txt` (jamais commité).
+`.\dev-accounts.ps1 -Serveur` crée les mêmes quatre comptes sur le serveur (accès VPS requis), avec le même mot de passe.
 
 ## Créer un nouveau compte
 

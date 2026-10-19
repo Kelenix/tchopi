@@ -1,14 +1,10 @@
 ﻿# Crée (ou remet en état) un compte de test par profil (admin, client, livreur, restaurant), sans vider la base.
 #   .\dev-accounts.ps1             Supabase local ; identifiants : docs/donnees-de-test.md
-#   .\dev-accounts.ps1 -Serveur    serveur en ligne (accès VPS requis) ; mot de passe aléatoire, noté seulement dans
-#                               env/comptes-serveur.txt sur ce PC (jamais commité)
+#   .\dev-accounts.ps1 -Serveur    serveur en ligne (accès VPS requis), mêmes numéros et mot de passe
 param([switch]$Serveur)
 
+# Mot de passe facile à retenir (serveur pilote fermé, comptes de test seulement).
 $password = 'Tchopi2026'
-if ($Serveur) {
-  $chars = [char[]]'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789'
-  $password = -join (1..10 | ForEach-Object { $chars | Get-Random }) + (Get-Random -Minimum 10 -Maximum 99)
-}
 $sql = @'
 create function pg_temp.dev_account(p_phone text, p_first text, p_last text, p_password text) returns uuid
 language plpgsql as $$
