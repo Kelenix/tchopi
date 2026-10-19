@@ -1,4 +1,5 @@
 import 'package:core/core.dart';
+import 'package:flutter/material.dart' show DateUtils;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'data/supervision_repository.dart';
@@ -16,6 +17,16 @@ Stream<List<Order>> activeOrders(Ref ref) =>
 @riverpod
 Future<List<DispatchCandidate>> dispatchCandidates(Ref ref, String orderId) =>
     ref.watch(supervisionRepositoryProvider).candidates(orderId);
+
+/// Période du tableau de bord, en jours jusqu'à maintenant (1, 7 ou 30).
+@riverpod
+Future<Map<String, dynamic>> adminStats(Ref ref, int days) {
+  final now = DateTime.now();
+  final from = DateUtils.dateOnly(now).subtract(Duration(days: days - 1));
+  return ref
+      .watch(supervisionRepositoryProvider)
+      .stats(from, now.add(const Duration(minutes: 1)));
+}
 
 @riverpod
 Future<PlatformSettings> platformSettings(Ref ref) =>

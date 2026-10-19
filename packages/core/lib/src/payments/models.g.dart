@@ -54,6 +54,13 @@ _PaymentTransaction _$PaymentTransactionFromJson(Map<String, dynamic> json) =>
         _$OrderStatusEnumMap,
         _orderField(json, 'order_status'),
       ),
+      orderZoneId: _orderField(json, 'order_zone_id') as String?,
+      orderPaymentStatus: $enumDecodeNullable(
+        _$OrderPaymentStatusEnumMap,
+        _orderField(json, 'order_payment_status'),
+      ),
+      providerReference: json['provider_reference'] as String?,
+      refundReference: json['refund_reference'] as String?,
     );
 
 Map<String, dynamic> _$PaymentTransactionToJson(_PaymentTransaction instance) =>
@@ -69,6 +76,11 @@ Map<String, dynamic> _$PaymentTransactionToJson(_PaymentTransaction instance) =>
       'succeeded_at': instance.succeededAt?.toIso8601String(),
       'order_number': instance.orderNumber,
       'order_status': _$OrderStatusEnumMap[instance.orderStatus],
+      'order_zone_id': instance.orderZoneId,
+      'order_payment_status':
+          _$OrderPaymentStatusEnumMap[instance.orderPaymentStatus],
+      'provider_reference': instance.providerReference,
+      'refund_reference': instance.refundReference,
     };
 
 const _$TransactionStatusEnumMap = {
@@ -93,6 +105,13 @@ const _$OrderStatusEnumMap = {
   OrderStatus.rejected: 'rejected',
   OrderStatus.cancelled: 'cancelled',
   OrderStatus.failed: 'failed',
+};
+
+const _$OrderPaymentStatusEnumMap = {
+  OrderPaymentStatus.unpaid: 'unpaid',
+  OrderPaymentStatus.paid: 'paid',
+  OrderPaymentStatus.refundPending: 'refund_pending',
+  OrderPaymentStatus.refunded: 'refunded',
 };
 
 _CashBalance _$CashBalanceFromJson(Map<String, dynamic> json) => _CashBalance(

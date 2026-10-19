@@ -12,6 +12,7 @@ class AdminSection {
 }
 
 const adminSections = [
+  AdminSection(Icons.insights_outlined, _dashboard, '/admin/dashboard'),
   AdminSection(Icons.receipt_long_outlined, _orders, '/admin/orders'),
   AdminSection(Icons.radar, _zones, '/admin/zones'),
   AdminSection(Icons.storefront_outlined, _restaurants, '/admin/restaurants'),
@@ -21,6 +22,7 @@ const adminSections = [
   AdminSection(Icons.tune, _settings, '/admin/settings'),
 ];
 
+String _dashboard(AppLocalizations l10n) => l10n.adminDashboard;
 String _orders(AppLocalizations l10n) => l10n.adminSupervision;
 String _settings(AppLocalizations l10n) => l10n.adminSettings;
 String _payments(AppLocalizations l10n) => l10n.adminTransactions;

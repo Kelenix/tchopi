@@ -5,10 +5,10 @@
 
 ## Snapshot
 
-- **Phase courante** : 4 — Implémentation · Inc-0 (socle) livré, sauf déploiement VPS (accès non fourni)
+- **Phase courante** : 4 — Implémentation · Inc-0 à Inc-10 et Inc-13 livrés (déploiement VPS : accès non fourni)
 - **Dernière mise à jour** : 2026-10-19
 - **Santé** : 🟢 OK · accès VPS et dépôt GitHub non fournis
-- **Prochaine action** : Inc-11 (Mobile Money) — bloqué par le choix du fournisseur (Paystack ou CinetPay) ; en attendant, Inc-12 (carte Stripe) puis Inc-13
+- **Prochaine action** : Inc-11 (Mobile Money) — bloqué par le choix du fournisseur (Paystack ou CinetPay) ; Inc-12 (carte Stripe) — bloqué par les clés de test Stripe (tâche manuelle n° 1)
 - **Plan de référence** : `docs/plan-de-realisation.md` · Design : `docs/design/design-system.md`
 - **Maquette** : `docs/design/maquette.html` — https://claude.ai/artifact/9GyaG6F34CkTe1qQpsy1cP (privée)
 
@@ -25,7 +25,7 @@ Flutter 3.41.9 · Dart 3.11.5 · Supabase CLI 2.116.0 · Docker 29.8.2 · Java 2
 | 1 — Définition produit      | ✅ fait | `docs/product/user-stories.md` (60 stories), `docs/product/screens.md` (45 fiches) |
 | 2 — Planification           | ✅ fait | Backlog, jalons, chemin critique ci-dessous ; risques : plan §10 |
 | 3 — Architecture & design   | ✅ fait | Architecture, conception, données, design system ; maquette v1 validée |
-| 4 — Implémentation          | 🔄 en cours | Inc-0 à Inc-10 livrés ; app unique (ADR-016) |
+| 4 — Implémentation          | 🔄 en cours | Inc-0 à Inc-10 et Inc-13 livrés ; reste Inc-11 / 12 (paiements en ligne) |
 | 5 — Qualité & performance   | ⬜ à faire | Scénarios S1–S6 |
 | 6 — Publication (stores)    | ⬜ à faire | |
 | 7 — Documentation           | ⬜ à faire | |
@@ -50,7 +50,7 @@ Flutter 3.41.9 · Dart 3.11.5 · Supabase CLI 2.116.0 · Docker 29.8.2 · Java 2
 | Inc-10 | Espèces, transactions, montants séparés | PAY-01, PAY-02, PAY-06, TRX-01 | §5.3, §5.4, §5.6 | M | ✅ |
 | Inc-11 | Mobile Money | PAY-03, PAY-05 | §5.1 | L | ⬜ |
 | Inc-12 | Carte bancaire Stripe | PAY-04 | §5.2 | M | ⬜ |
-| Inc-13 | Annulations, remboursements, reçus, transactions admin, statistiques | TRX-02, TRX-03, ADM-04, ADM-06 | §5.5, §6.D | M | ⬜ |
+| Inc-13 | Annulations, remboursements, reçus, transactions admin, statistiques | TRX-02, TRX-03, ADM-04, ADM-06 | §5.5, §6.D | M | ✅ (remboursements auto : Inc-11 / 12) |
 
 TRV-01, TRV-05 et TRV-07 (réseau, erreurs, API documentée) s'appliquent à chaque incrément.
 
@@ -86,6 +86,16 @@ validation de la maquette → code des écrans à partir de l'Inc-1. Registre de
 - voir `docs/manual-tasks.md` (priorité : compte marchand de paiement, à démarrer tôt)
 
 ## Journal de session (résumé court, le plus récent en haut)
+
+- 2026-10-19 — Inc-13 (branche feat/inc-13-transactions, ADR-027) : circuit de remboursement (à rembourser d'office
+  après annulation d'une commande payée, décision de l'admin après un échec, « Remboursée » avec référence,
+  notifications), reçu partageable, historique groupé par jour, tableau de bord admin, filtres des transactions.
+  Vérifié dans le navigateur : Paiements et reçu du client (copie), tableau de bord (2 commandes, 2 275 F, espèces
+  4 550 F, 1 remboursement), demande puis marquage du remboursement par l'admin avec chronologie à jour en direct,
+  filtre « Remboursements » du client. Corrigé à cette occasion : message « Reçu copié » caché sous les feuilles,
+  libellé « Motif » sur la référence de remboursement, sous-total affiché pour un colis, état du paiement absent du
+  suivi en direct. Preuves : analyse 0 problème ; tests Flutter ; pgTAP 226/226 ; 4 tests d'intégration réels
+  (dont remboursement et statistiques).
 
 - 2026-10-19 — Inc-10 (branche feat/inc-10-especes, ADR-026) : moyens de paiement par pays, transactions (en
   attente → réussie à l'encaissement, annulée sinon), versements d'espèces par l'admin. Vérifié dans le navigateur :

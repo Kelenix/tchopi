@@ -299,7 +299,7 @@ as int,
 /// @nodoc
 mixin _$PaymentTransaction {
 
- String get id; String get orderId; int get amount; String get currency; PaymentMethod get method; String? get operator; TransactionStatus get status; DateTime get createdAt; DateTime? get succeededAt;@JsonKey(readValue: _orderField) String? get orderNumber;@JsonKey(readValue: _orderField) OrderStatus? get orderStatus;
+ String get id; String get orderId; int get amount; String get currency; PaymentMethod get method; String? get operator; TransactionStatus get status; DateTime get createdAt; DateTime? get succeededAt;@JsonKey(readValue: _orderField) String? get orderNumber;@JsonKey(readValue: _orderField) OrderStatus? get orderStatus;@JsonKey(readValue: _orderField) String? get orderZoneId;@JsonKey(readValue: _orderField) OrderPaymentStatus? get orderPaymentStatus; String? get providerReference; String? get refundReference;
 /// Create a copy of PaymentTransaction
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -312,16 +312,16 @@ $PaymentTransactionCopyWith<PaymentTransaction> get copyWith => _$PaymentTransac
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PaymentTransaction&&(identical(other.id, id) || other.id == id)&&(identical(other.orderId, orderId) || other.orderId == orderId)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.method, method) || other.method == method)&&(identical(other.operator, operator) || other.operator == operator)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.succeededAt, succeededAt) || other.succeededAt == succeededAt)&&(identical(other.orderNumber, orderNumber) || other.orderNumber == orderNumber)&&(identical(other.orderStatus, orderStatus) || other.orderStatus == orderStatus));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PaymentTransaction&&(identical(other.id, id) || other.id == id)&&(identical(other.orderId, orderId) || other.orderId == orderId)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.method, method) || other.method == method)&&(identical(other.operator, operator) || other.operator == operator)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.succeededAt, succeededAt) || other.succeededAt == succeededAt)&&(identical(other.orderNumber, orderNumber) || other.orderNumber == orderNumber)&&(identical(other.orderStatus, orderStatus) || other.orderStatus == orderStatus)&&(identical(other.orderZoneId, orderZoneId) || other.orderZoneId == orderZoneId)&&(identical(other.orderPaymentStatus, orderPaymentStatus) || other.orderPaymentStatus == orderPaymentStatus)&&(identical(other.providerReference, providerReference) || other.providerReference == providerReference)&&(identical(other.refundReference, refundReference) || other.refundReference == refundReference));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,orderId,amount,currency,method,operator,status,createdAt,succeededAt,orderNumber,orderStatus);
+int get hashCode => Object.hash(runtimeType,id,orderId,amount,currency,method,operator,status,createdAt,succeededAt,orderNumber,orderStatus,orderZoneId,orderPaymentStatus,providerReference,refundReference);
 
 @override
 String toString() {
-  return 'PaymentTransaction(id: $id, orderId: $orderId, amount: $amount, currency: $currency, method: $method, operator: $operator, status: $status, createdAt: $createdAt, succeededAt: $succeededAt, orderNumber: $orderNumber, orderStatus: $orderStatus)';
+  return 'PaymentTransaction(id: $id, orderId: $orderId, amount: $amount, currency: $currency, method: $method, operator: $operator, status: $status, createdAt: $createdAt, succeededAt: $succeededAt, orderNumber: $orderNumber, orderStatus: $orderStatus, orderZoneId: $orderZoneId, orderPaymentStatus: $orderPaymentStatus, providerReference: $providerReference, refundReference: $refundReference)';
 }
 
 
@@ -332,7 +332,7 @@ abstract mixin class $PaymentTransactionCopyWith<$Res>  {
   factory $PaymentTransactionCopyWith(PaymentTransaction value, $Res Function(PaymentTransaction) _then) = _$PaymentTransactionCopyWithImpl;
 @useResult
 $Res call({
- String id, String orderId, int amount, String currency, PaymentMethod method, String? operator, TransactionStatus status, DateTime createdAt, DateTime? succeededAt,@JsonKey(readValue: _orderField) String? orderNumber,@JsonKey(readValue: _orderField) OrderStatus? orderStatus
+ String id, String orderId, int amount, String currency, PaymentMethod method, String? operator, TransactionStatus status, DateTime createdAt, DateTime? succeededAt,@JsonKey(readValue: _orderField) String? orderNumber,@JsonKey(readValue: _orderField) OrderStatus? orderStatus,@JsonKey(readValue: _orderField) String? orderZoneId,@JsonKey(readValue: _orderField) OrderPaymentStatus? orderPaymentStatus, String? providerReference, String? refundReference
 });
 
 
@@ -349,7 +349,7 @@ class _$PaymentTransactionCopyWithImpl<$Res>
 
 /// Create a copy of PaymentTransaction
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? orderId = null,Object? amount = null,Object? currency = null,Object? method = null,Object? operator = freezed,Object? status = null,Object? createdAt = null,Object? succeededAt = freezed,Object? orderNumber = freezed,Object? orderStatus = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? orderId = null,Object? amount = null,Object? currency = null,Object? method = null,Object? operator = freezed,Object? status = null,Object? createdAt = null,Object? succeededAt = freezed,Object? orderNumber = freezed,Object? orderStatus = freezed,Object? orderZoneId = freezed,Object? orderPaymentStatus = freezed,Object? providerReference = freezed,Object? refundReference = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,orderId: null == orderId ? _self.orderId : orderId // ignore: cast_nullable_to_non_nullable
@@ -362,7 +362,11 @@ as TransactionStatus,createdAt: null == createdAt ? _self.createdAt : createdAt 
 as DateTime,succeededAt: freezed == succeededAt ? _self.succeededAt : succeededAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,orderNumber: freezed == orderNumber ? _self.orderNumber : orderNumber // ignore: cast_nullable_to_non_nullable
 as String?,orderStatus: freezed == orderStatus ? _self.orderStatus : orderStatus // ignore: cast_nullable_to_non_nullable
-as OrderStatus?,
+as OrderStatus?,orderZoneId: freezed == orderZoneId ? _self.orderZoneId : orderZoneId // ignore: cast_nullable_to_non_nullable
+as String?,orderPaymentStatus: freezed == orderPaymentStatus ? _self.orderPaymentStatus : orderPaymentStatus // ignore: cast_nullable_to_non_nullable
+as OrderPaymentStatus?,providerReference: freezed == providerReference ? _self.providerReference : providerReference // ignore: cast_nullable_to_non_nullable
+as String?,refundReference: freezed == refundReference ? _self.refundReference : refundReference // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -447,10 +451,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String orderId,  int amount,  String currency,  PaymentMethod method,  String? operator,  TransactionStatus status,  DateTime createdAt,  DateTime? succeededAt, @JsonKey(readValue: _orderField)  String? orderNumber, @JsonKey(readValue: _orderField)  OrderStatus? orderStatus)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String orderId,  int amount,  String currency,  PaymentMethod method,  String? operator,  TransactionStatus status,  DateTime createdAt,  DateTime? succeededAt, @JsonKey(readValue: _orderField)  String? orderNumber, @JsonKey(readValue: _orderField)  OrderStatus? orderStatus, @JsonKey(readValue: _orderField)  String? orderZoneId, @JsonKey(readValue: _orderField)  OrderPaymentStatus? orderPaymentStatus,  String? providerReference,  String? refundReference)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PaymentTransaction() when $default != null:
-return $default(_that.id,_that.orderId,_that.amount,_that.currency,_that.method,_that.operator,_that.status,_that.createdAt,_that.succeededAt,_that.orderNumber,_that.orderStatus);case _:
+return $default(_that.id,_that.orderId,_that.amount,_that.currency,_that.method,_that.operator,_that.status,_that.createdAt,_that.succeededAt,_that.orderNumber,_that.orderStatus,_that.orderZoneId,_that.orderPaymentStatus,_that.providerReference,_that.refundReference);case _:
   return orElse();
 
 }
@@ -468,10 +472,10 @@ return $default(_that.id,_that.orderId,_that.amount,_that.currency,_that.method,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String orderId,  int amount,  String currency,  PaymentMethod method,  String? operator,  TransactionStatus status,  DateTime createdAt,  DateTime? succeededAt, @JsonKey(readValue: _orderField)  String? orderNumber, @JsonKey(readValue: _orderField)  OrderStatus? orderStatus)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String orderId,  int amount,  String currency,  PaymentMethod method,  String? operator,  TransactionStatus status,  DateTime createdAt,  DateTime? succeededAt, @JsonKey(readValue: _orderField)  String? orderNumber, @JsonKey(readValue: _orderField)  OrderStatus? orderStatus, @JsonKey(readValue: _orderField)  String? orderZoneId, @JsonKey(readValue: _orderField)  OrderPaymentStatus? orderPaymentStatus,  String? providerReference,  String? refundReference)  $default,) {final _that = this;
 switch (_that) {
 case _PaymentTransaction():
-return $default(_that.id,_that.orderId,_that.amount,_that.currency,_that.method,_that.operator,_that.status,_that.createdAt,_that.succeededAt,_that.orderNumber,_that.orderStatus);case _:
+return $default(_that.id,_that.orderId,_that.amount,_that.currency,_that.method,_that.operator,_that.status,_that.createdAt,_that.succeededAt,_that.orderNumber,_that.orderStatus,_that.orderZoneId,_that.orderPaymentStatus,_that.providerReference,_that.refundReference);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -488,10 +492,10 @@ return $default(_that.id,_that.orderId,_that.amount,_that.currency,_that.method,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String orderId,  int amount,  String currency,  PaymentMethod method,  String? operator,  TransactionStatus status,  DateTime createdAt,  DateTime? succeededAt, @JsonKey(readValue: _orderField)  String? orderNumber, @JsonKey(readValue: _orderField)  OrderStatus? orderStatus)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String orderId,  int amount,  String currency,  PaymentMethod method,  String? operator,  TransactionStatus status,  DateTime createdAt,  DateTime? succeededAt, @JsonKey(readValue: _orderField)  String? orderNumber, @JsonKey(readValue: _orderField)  OrderStatus? orderStatus, @JsonKey(readValue: _orderField)  String? orderZoneId, @JsonKey(readValue: _orderField)  OrderPaymentStatus? orderPaymentStatus,  String? providerReference,  String? refundReference)?  $default,) {final _that = this;
 switch (_that) {
 case _PaymentTransaction() when $default != null:
-return $default(_that.id,_that.orderId,_that.amount,_that.currency,_that.method,_that.operator,_that.status,_that.createdAt,_that.succeededAt,_that.orderNumber,_that.orderStatus);case _:
+return $default(_that.id,_that.orderId,_that.amount,_that.currency,_that.method,_that.operator,_that.status,_that.createdAt,_that.succeededAt,_that.orderNumber,_that.orderStatus,_that.orderZoneId,_that.orderPaymentStatus,_that.providerReference,_that.refundReference);case _:
   return null;
 
 }
@@ -503,7 +507,7 @@ return $default(_that.id,_that.orderId,_that.amount,_that.currency,_that.method,
 @JsonSerializable()
 
 class _PaymentTransaction implements PaymentTransaction {
-  const _PaymentTransaction({required this.id, required this.orderId, required this.amount, this.currency = 'XOF', required this.method, this.operator, required this.status, required this.createdAt, this.succeededAt, @JsonKey(readValue: _orderField) this.orderNumber, @JsonKey(readValue: _orderField) this.orderStatus});
+  const _PaymentTransaction({required this.id, required this.orderId, required this.amount, this.currency = 'XOF', required this.method, this.operator, required this.status, required this.createdAt, this.succeededAt, @JsonKey(readValue: _orderField) this.orderNumber, @JsonKey(readValue: _orderField) this.orderStatus, @JsonKey(readValue: _orderField) this.orderZoneId, @JsonKey(readValue: _orderField) this.orderPaymentStatus, this.providerReference, this.refundReference});
   factory _PaymentTransaction.fromJson(Map<String, dynamic> json) => _$PaymentTransactionFromJson(json);
 
 @override final  String id;
@@ -517,6 +521,10 @@ class _PaymentTransaction implements PaymentTransaction {
 @override final  DateTime? succeededAt;
 @override@JsonKey(readValue: _orderField) final  String? orderNumber;
 @override@JsonKey(readValue: _orderField) final  OrderStatus? orderStatus;
+@override@JsonKey(readValue: _orderField) final  String? orderZoneId;
+@override@JsonKey(readValue: _orderField) final  OrderPaymentStatus? orderPaymentStatus;
+@override final  String? providerReference;
+@override final  String? refundReference;
 
 /// Create a copy of PaymentTransaction
 /// with the given fields replaced by the non-null parameter values.
@@ -531,16 +539,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PaymentTransaction&&(identical(other.id, id) || other.id == id)&&(identical(other.orderId, orderId) || other.orderId == orderId)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.method, method) || other.method == method)&&(identical(other.operator, operator) || other.operator == operator)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.succeededAt, succeededAt) || other.succeededAt == succeededAt)&&(identical(other.orderNumber, orderNumber) || other.orderNumber == orderNumber)&&(identical(other.orderStatus, orderStatus) || other.orderStatus == orderStatus));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PaymentTransaction&&(identical(other.id, id) || other.id == id)&&(identical(other.orderId, orderId) || other.orderId == orderId)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.method, method) || other.method == method)&&(identical(other.operator, operator) || other.operator == operator)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.succeededAt, succeededAt) || other.succeededAt == succeededAt)&&(identical(other.orderNumber, orderNumber) || other.orderNumber == orderNumber)&&(identical(other.orderStatus, orderStatus) || other.orderStatus == orderStatus)&&(identical(other.orderZoneId, orderZoneId) || other.orderZoneId == orderZoneId)&&(identical(other.orderPaymentStatus, orderPaymentStatus) || other.orderPaymentStatus == orderPaymentStatus)&&(identical(other.providerReference, providerReference) || other.providerReference == providerReference)&&(identical(other.refundReference, refundReference) || other.refundReference == refundReference));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,orderId,amount,currency,method,operator,status,createdAt,succeededAt,orderNumber,orderStatus);
+int get hashCode => Object.hash(runtimeType,id,orderId,amount,currency,method,operator,status,createdAt,succeededAt,orderNumber,orderStatus,orderZoneId,orderPaymentStatus,providerReference,refundReference);
 
 @override
 String toString() {
-  return 'PaymentTransaction(id: $id, orderId: $orderId, amount: $amount, currency: $currency, method: $method, operator: $operator, status: $status, createdAt: $createdAt, succeededAt: $succeededAt, orderNumber: $orderNumber, orderStatus: $orderStatus)';
+  return 'PaymentTransaction(id: $id, orderId: $orderId, amount: $amount, currency: $currency, method: $method, operator: $operator, status: $status, createdAt: $createdAt, succeededAt: $succeededAt, orderNumber: $orderNumber, orderStatus: $orderStatus, orderZoneId: $orderZoneId, orderPaymentStatus: $orderPaymentStatus, providerReference: $providerReference, refundReference: $refundReference)';
 }
 
 
@@ -551,7 +559,7 @@ abstract mixin class _$PaymentTransactionCopyWith<$Res> implements $PaymentTrans
   factory _$PaymentTransactionCopyWith(_PaymentTransaction value, $Res Function(_PaymentTransaction) _then) = __$PaymentTransactionCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String orderId, int amount, String currency, PaymentMethod method, String? operator, TransactionStatus status, DateTime createdAt, DateTime? succeededAt,@JsonKey(readValue: _orderField) String? orderNumber,@JsonKey(readValue: _orderField) OrderStatus? orderStatus
+ String id, String orderId, int amount, String currency, PaymentMethod method, String? operator, TransactionStatus status, DateTime createdAt, DateTime? succeededAt,@JsonKey(readValue: _orderField) String? orderNumber,@JsonKey(readValue: _orderField) OrderStatus? orderStatus,@JsonKey(readValue: _orderField) String? orderZoneId,@JsonKey(readValue: _orderField) OrderPaymentStatus? orderPaymentStatus, String? providerReference, String? refundReference
 });
 
 
@@ -568,7 +576,7 @@ class __$PaymentTransactionCopyWithImpl<$Res>
 
 /// Create a copy of PaymentTransaction
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? orderId = null,Object? amount = null,Object? currency = null,Object? method = null,Object? operator = freezed,Object? status = null,Object? createdAt = null,Object? succeededAt = freezed,Object? orderNumber = freezed,Object? orderStatus = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? orderId = null,Object? amount = null,Object? currency = null,Object? method = null,Object? operator = freezed,Object? status = null,Object? createdAt = null,Object? succeededAt = freezed,Object? orderNumber = freezed,Object? orderStatus = freezed,Object? orderZoneId = freezed,Object? orderPaymentStatus = freezed,Object? providerReference = freezed,Object? refundReference = freezed,}) {
   return _then(_PaymentTransaction(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,orderId: null == orderId ? _self.orderId : orderId // ignore: cast_nullable_to_non_nullable
@@ -581,7 +589,11 @@ as TransactionStatus,createdAt: null == createdAt ? _self.createdAt : createdAt 
 as DateTime,succeededAt: freezed == succeededAt ? _self.succeededAt : succeededAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,orderNumber: freezed == orderNumber ? _self.orderNumber : orderNumber // ignore: cast_nullable_to_non_nullable
 as String?,orderStatus: freezed == orderStatus ? _self.orderStatus : orderStatus // ignore: cast_nullable_to_non_nullable
-as OrderStatus?,
+as OrderStatus?,orderZoneId: freezed == orderZoneId ? _self.orderZoneId : orderZoneId // ignore: cast_nullable_to_non_nullable
+as String?,orderPaymentStatus: freezed == orderPaymentStatus ? _self.orderPaymentStatus : orderPaymentStatus // ignore: cast_nullable_to_non_nullable
+as OrderPaymentStatus?,providerReference: freezed == providerReference ? _self.providerReference : providerReference // ignore: cast_nullable_to_non_nullable
+as String?,refundReference: freezed == refundReference ? _self.refundReference : refundReference // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

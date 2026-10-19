@@ -20,7 +20,7 @@ class PaymentRepository {
   Future<List<PaymentTransaction>> mine() => guardCall(() async {
     final rows = await _client
         .from('transactions')
-        .select('*, order:orders(number, status)')
+        .select('*, order:orders(number, status, payment_status)')
         .order('created_at', ascending: false)
         .limit(100);
     return rows.map(PaymentTransaction.fromJson).toList();

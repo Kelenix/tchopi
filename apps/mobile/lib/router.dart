@@ -7,6 +7,7 @@ import 'features/admin/people/presentation/couriers_admin_screen.dart';
 import 'features/admin/people/presentation/users_admin_screen.dart';
 import 'features/admin/payments/presentation/transactions_admin_screen.dart';
 import 'features/admin/supervision/presentation/admin_order_screen.dart';
+import 'features/admin/supervision/presentation/dashboard_screen.dart';
 import 'features/admin/supervision/presentation/settings_screen.dart';
 import 'features/admin/supervision/presentation/supervision_screen.dart';
 import 'features/admin/zones/presentation/zone_form_screen.dart';
@@ -141,6 +142,10 @@ GoRouter router(Ref ref) => buildAppRouter(
       builder: (_, _) => const RestaurantProfileScreen(),
     ),
     // Espace Admin
+    GoRoute(
+      path: DashboardScreen.path,
+      builder: (_, _) => const DashboardScreen(),
+    ),
     GoRoute(
       path: SupervisionScreen.path,
       builder: (_, _) => const SupervisionScreen(),

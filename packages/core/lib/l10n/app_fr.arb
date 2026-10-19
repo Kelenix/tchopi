@@ -1005,5 +1005,75 @@
     }
   },
   "cashEntryRemitted": "Versement",
-  "settingsPaymentsTitle": "Moyens de paiement"
+  "settingsPaymentsTitle": "Moyens de paiement",
+  "payUnpaid": "À payer",
+  "payPaid": "Payée",
+  "payRefundPending": "Remboursement en cours",
+  "payRefunded": "Remboursée",
+  "eventRefundPending": "Remboursement en cours",
+  "eventRefunded": "Remboursement effectué",
+  "receiptTitle": "Reçu",
+  "receiptShare": "Partager le reçu",
+  "receiptCopy": "Copier",
+  "receiptCopied": "Reçu copié.",
+  "receiptView": "Voir le reçu",
+  "filterAll": "Tout",
+  "filterAnyPeriod": "Toute période",
+  "filterAnyMethod": "Tous les moyens",
+  "filterSucceeded": "Réussies",
+  "filterRefunds": "Remboursements",
+  "dayToday": "Aujourd'hui",
+  "dayYesterday": "Hier",
+  "txOrder": "Commande",
+  "txAmount": "Montant",
+  "txMethod": "Moyen de paiement",
+  "txDate": "Date",
+  "txStatus": "Statut",
+  "txReference": "Référence",
+  "txRefundPending": "À rembourser",
+  "adminRequestRefund": "Rembourser le client",
+  "adminRefundReason": "Motif du remboursement",
+  "adminMarkRefunded": "Marquer remboursée",
+  "adminRefundReference": "Référence du remboursement",
+  "adminRefundRequested": "Remboursement à effectuer.",
+  "adminRefunded": "Remboursement enregistré.",
+  "adminDashboard": "Tableau de bord",
+  "periodDay": "Aujourd'hui",
+  "periodWeek": "7 jours",
+  "periodMonth": "30 jours",
+  "statOrders": "Commandes",
+  "statRevenue": "Chiffre d'affaires",
+  "statFees": "Frais de livraison",
+  "statCommissions": "Commissions",
+  "statCourierEarnings": "Rémunération des livreurs",
+  "statPlatform": "Part de la plateforme",
+  "statCash": "Espèces à rapprocher",
+  "statRefunds": "Remboursements à effectuer",
+  "statCouriersOnline": "Livreurs en ligne",
+  "statByStatus": "Par statut",
+  "statByType": "Par type",
+  "statDeliveredOnly": "Montants des commandes livrées sur la période.",
+  "receiptText": "Tchopi · Reçu {number}\n{date}\n{lines}\nTotal : {total}\nPaiement : {method} · {status}",
+  "@receiptText": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      },
+      "lines": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      },
+      "method": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  }
 }

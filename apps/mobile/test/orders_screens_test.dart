@@ -80,8 +80,12 @@ Order order(String id, OrderStatus status) => Order(
   ],
 );
 
-OrderLive live(OrderStatus status) =>
-    (status: status, courierId: null, dispatchAlertedAt: null);
+OrderLive live(OrderStatus status) => (
+  status: status,
+  courierId: null,
+  dispatchAlertedAt: null,
+  paymentStatus: OrderPaymentStatus.unpaid,
+);
 
 Widget app(Widget home, List<Override> overrides) => ProviderScope(
   overrides: overrides,

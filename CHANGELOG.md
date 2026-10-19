@@ -4,6 +4,20 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · versions [S
 
 ## [Non publié]
 
+### Ajouté (Inc-13, ADR-027)
+- Remboursements : commande payée puis annulée ou refusée marquée « À rembourser » ; après un échec de livraison,
+  l'admin décide du remboursement (motif) puis le marque « Remboursée » avec une référence ; le client suit l'état
+  sur sa commande, dans la chronologie et par notification.
+- Client : Paiements groupés par jour (Aujourd'hui, Hier…), filtres Tout / Réussies / Remboursements, reçu détaillé
+  partageable (WhatsApp, SMS, copie).
+- Admin : tableau de bord en accueil (jour, 7 jours, 30 jours : commandes par statut et par type, chiffre
+  d'affaires, frais, commissions, rémunération des livreurs, part de la plateforme, espèces à rapprocher,
+  remboursements en attente, livreurs en ligne) ; transactions filtrables par statut, moyen, période et zone.
+
+### Corrigé (Inc-13)
+- Suivi en direct : l'état du paiement et la chronologie se mettent à jour sans recharger.
+- Admin : sous-total masqué pour un colis.
+
 ### Ajouté (Inc-10, ADR-026)
 - Moyens de paiement par pays, activables par l'admin (Paramètres) ; seuls les moyens actifs sont proposés à la
   validation, le dernier choisi est retenu ; Mobile Money et carte affichés « Bientôt ».

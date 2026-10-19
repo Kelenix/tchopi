@@ -26,7 +26,7 @@ class AdminPaymentsRepository {
   Future<List<PaymentTransaction>> transactions() => guardCall(() async {
     final rows = await _client
         .from('transactions')
-        .select('*, order:orders(number, status)')
+        .select('*, order:orders(number, status, zone_id, payment_status)')
         .order('created_at', ascending: false)
         .limit(200);
     return rows.map(PaymentTransaction.fromJson).toList();

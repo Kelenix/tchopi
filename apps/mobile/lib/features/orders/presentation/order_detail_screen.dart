@@ -206,9 +206,14 @@ class OrderDetailScreen extends ConsumerWidget {
                         parcel ? l10n.parcelPaymentCash : l10n.paymentCash,
                       ),
                       subtitle: Text(
-                        parcel
-                            ? '${formatMoney(o.total)} · ${l10n.parcelPayCash}'
-                            : formatMoney(o.total),
+                        [
+                          formatMoney(o.total),
+                          if (parcel &&
+                              o.paymentStatus == OrderPaymentStatus.unpaid)
+                            l10n.parcelPayCash
+                          else
+                            paymentStatusLabel(l10n, o.paymentStatus),
+                        ].join(' · '),
                       ),
                     ),
                   ],

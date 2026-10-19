@@ -68,6 +68,31 @@ class SupervisionRepository {
     ),
   );
 
+  Future<void> requestRefund(String orderId, String reason) => guardCall(
+    () => _client.rpc<void>(
+      'admin_request_refund',
+      params: {'p_order_id': orderId, 'p_reason': reason},
+    ),
+  );
+
+  Future<void> markRefunded(String orderId, String reference) => guardCall(
+    () => _client.rpc<void>(
+      'admin_mark_refunded',
+      params: {'p_order_id': orderId, 'p_reference': reference},
+    ),
+  );
+
+  /// ADM-06 : indicateurs entre deux instants.
+  Future<Map<String, dynamic>> stats(DateTime from, DateTime to) => guardCall(
+    () => _client.rpc<Map<String, dynamic>>(
+      'admin_stats',
+      params: {
+        'p_from': from.toUtc().toIso8601String(),
+        'p_to': to.toUtc().toIso8601String(),
+      },
+    ),
+  );
+
   Future<PlatformSettings> settings() => guardCall(() async {
     final row = await _client.from('settings').select().single();
     return PlatformSettings.fromJson(row);

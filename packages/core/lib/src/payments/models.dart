@@ -25,11 +25,9 @@ abstract class PaymentOption with _$PaymentOption {
       _$PaymentOptionFromJson(json);
 }
 
-/// Champs de la commande liée (`order:orders(number, status)`) ; clés en snake_case (field_rename).
+/// Champ de la commande liée (`order:orders(...)`) : « order_number » lit « number », etc. (clés snake_case).
 Object? _orderField(Map<dynamic, dynamic> json, String key) =>
-    (json['order'] as Map<String, dynamic>?)?[key == 'order_number'
-        ? 'number'
-        : 'status'];
+    (json['order'] as Map<String, dynamic>?)?[key.substring('order_'.length)];
 
 /// Transaction d'une commande (TRX-01) : montant égal au total, statut, moyen et référence du fournisseur.
 @freezed
@@ -46,6 +44,10 @@ abstract class PaymentTransaction with _$PaymentTransaction {
     DateTime? succeededAt,
     @JsonKey(readValue: _orderField) String? orderNumber,
     @JsonKey(readValue: _orderField) OrderStatus? orderStatus,
+    @JsonKey(readValue: _orderField) String? orderZoneId,
+    @JsonKey(readValue: _orderField) OrderPaymentStatus? orderPaymentStatus,
+    String? providerReference,
+    String? refundReference,
   }) = _PaymentTransaction;
 
   factory PaymentTransaction.fromJson(Map<String, dynamic> json) =>

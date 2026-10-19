@@ -174,6 +174,92 @@ final class DispatchCandidatesFamily extends $Family
   String toString() => r'dispatchCandidatesProvider';
 }
 
+/// Période du tableau de bord, en jours jusqu'à maintenant (1, 7 ou 30).
+
+@ProviderFor(adminStats)
+final adminStatsProvider = AdminStatsFamily._();
+
+/// Période du tableau de bord, en jours jusqu'à maintenant (1, 7 ou 30).
+
+final class AdminStatsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<Map<String, dynamic>>,
+          Map<String, dynamic>,
+          FutureOr<Map<String, dynamic>>
+        >
+    with
+        $FutureModifier<Map<String, dynamic>>,
+        $FutureProvider<Map<String, dynamic>> {
+  /// Période du tableau de bord, en jours jusqu'à maintenant (1, 7 ou 30).
+  AdminStatsProvider._({
+    required AdminStatsFamily super.from,
+    required int super.argument,
+  }) : super(
+         retry: null,
+         name: r'adminStatsProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$adminStatsHash();
+
+  @override
+  String toString() {
+    return r'adminStatsProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<Map<String, dynamic>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<Map<String, dynamic>> create(Ref ref) {
+    final argument = this.argument as int;
+    return adminStats(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is AdminStatsProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$adminStatsHash() => r'f8232fc8302358ecfaf6fc47f80080913f30de7a';
+
+/// Période du tableau de bord, en jours jusqu'à maintenant (1, 7 ou 30).
+
+final class AdminStatsFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<Map<String, dynamic>>, int> {
+  AdminStatsFamily._()
+    : super(
+        retry: null,
+        name: r'adminStatsProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// Période du tableau de bord, en jours jusqu'à maintenant (1, 7 ou 30).
+
+  AdminStatsProvider call(int days) =>
+      AdminStatsProvider._(argument: days, from: this);
+
+  @override
+  String toString() => r'adminStatsProvider';
+}
+
 @ProviderFor(platformSettings)
 final platformSettingsProvider = PlatformSettingsProvider._();
 

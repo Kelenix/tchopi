@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../features/admin/supervision/presentation/supervision_screen.dart';
+import '../features/admin/supervision/presentation/dashboard_screen.dart';
 import '../features/client/home/client_home_screen.dart';
 import '../features/courier/missions/presentation/courier_home_screen.dart';
 import '../features/courier/profile/presentation/courier_profile_screen.dart';
@@ -17,7 +17,7 @@ enum AppSpace {
   client(Icons.shopping_bag_outlined, ClientHomeScreen.path),
   courier(Icons.two_wheeler, CourierHomeScreen.path),
   restaurant(Icons.storefront_outlined, RestaurantOrdersScreen.path),
-  admin(Icons.admin_panel_settings_outlined, SupervisionScreen.path);
+  admin(Icons.admin_panel_settings_outlined, DashboardScreen.path);
 
   const AppSpace(this.icon, this.home);
 

@@ -3920,6 +3920,301 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Moyens de paiement'**
   String get settingsPaymentsTitle;
+
+  /// No description provided for @payUnpaid.
+  ///
+  /// In fr, this message translates to:
+  /// **'À payer'**
+  String get payUnpaid;
+
+  /// No description provided for @payPaid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Payée'**
+  String get payPaid;
+
+  /// No description provided for @payRefundPending.
+  ///
+  /// In fr, this message translates to:
+  /// **'Remboursement en cours'**
+  String get payRefundPending;
+
+  /// No description provided for @payRefunded.
+  ///
+  /// In fr, this message translates to:
+  /// **'Remboursée'**
+  String get payRefunded;
+
+  /// No description provided for @eventRefundPending.
+  ///
+  /// In fr, this message translates to:
+  /// **'Remboursement en cours'**
+  String get eventRefundPending;
+
+  /// No description provided for @eventRefunded.
+  ///
+  /// In fr, this message translates to:
+  /// **'Remboursement effectué'**
+  String get eventRefunded;
+
+  /// No description provided for @receiptTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Reçu'**
+  String get receiptTitle;
+
+  /// No description provided for @receiptShare.
+  ///
+  /// In fr, this message translates to:
+  /// **'Partager le reçu'**
+  String get receiptShare;
+
+  /// No description provided for @receiptCopy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Copier'**
+  String get receiptCopy;
+
+  /// No description provided for @receiptCopied.
+  ///
+  /// In fr, this message translates to:
+  /// **'Reçu copié.'**
+  String get receiptCopied;
+
+  /// No description provided for @receiptView.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir le reçu'**
+  String get receiptView;
+
+  /// No description provided for @filterAll.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tout'**
+  String get filterAll;
+
+  /// No description provided for @filterAnyPeriod.
+  ///
+  /// In fr, this message translates to:
+  /// **'Toute période'**
+  String get filterAnyPeriod;
+
+  /// No description provided for @filterAnyMethod.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tous les moyens'**
+  String get filterAnyMethod;
+
+  /// No description provided for @filterSucceeded.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réussies'**
+  String get filterSucceeded;
+
+  /// No description provided for @filterRefunds.
+  ///
+  /// In fr, this message translates to:
+  /// **'Remboursements'**
+  String get filterRefunds;
+
+  /// No description provided for @dayToday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aujourd\'hui'**
+  String get dayToday;
+
+  /// No description provided for @dayYesterday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hier'**
+  String get dayYesterday;
+
+  /// No description provided for @txOrder.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande'**
+  String get txOrder;
+
+  /// No description provided for @txAmount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Montant'**
+  String get txAmount;
+
+  /// No description provided for @txMethod.
+  ///
+  /// In fr, this message translates to:
+  /// **'Moyen de paiement'**
+  String get txMethod;
+
+  /// No description provided for @txDate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Date'**
+  String get txDate;
+
+  /// No description provided for @txStatus.
+  ///
+  /// In fr, this message translates to:
+  /// **'Statut'**
+  String get txStatus;
+
+  /// No description provided for @txReference.
+  ///
+  /// In fr, this message translates to:
+  /// **'Référence'**
+  String get txReference;
+
+  /// No description provided for @txRefundPending.
+  ///
+  /// In fr, this message translates to:
+  /// **'À rembourser'**
+  String get txRefundPending;
+
+  /// No description provided for @adminRequestRefund.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rembourser le client'**
+  String get adminRequestRefund;
+
+  /// No description provided for @adminRefundReason.
+  ///
+  /// In fr, this message translates to:
+  /// **'Motif du remboursement'**
+  String get adminRefundReason;
+
+  /// No description provided for @adminMarkRefunded.
+  ///
+  /// In fr, this message translates to:
+  /// **'Marquer remboursée'**
+  String get adminMarkRefunded;
+
+  /// No description provided for @adminRefundReference.
+  ///
+  /// In fr, this message translates to:
+  /// **'Référence du remboursement'**
+  String get adminRefundReference;
+
+  /// No description provided for @adminRefundRequested.
+  ///
+  /// In fr, this message translates to:
+  /// **'Remboursement à effectuer.'**
+  String get adminRefundRequested;
+
+  /// No description provided for @adminRefunded.
+  ///
+  /// In fr, this message translates to:
+  /// **'Remboursement enregistré.'**
+  String get adminRefunded;
+
+  /// No description provided for @adminDashboard.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tableau de bord'**
+  String get adminDashboard;
+
+  /// No description provided for @periodDay.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aujourd\'hui'**
+  String get periodDay;
+
+  /// No description provided for @periodWeek.
+  ///
+  /// In fr, this message translates to:
+  /// **'7 jours'**
+  String get periodWeek;
+
+  /// No description provided for @periodMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'30 jours'**
+  String get periodMonth;
+
+  /// No description provided for @statOrders.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commandes'**
+  String get statOrders;
+
+  /// No description provided for @statRevenue.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chiffre d\'affaires'**
+  String get statRevenue;
+
+  /// No description provided for @statFees.
+  ///
+  /// In fr, this message translates to:
+  /// **'Frais de livraison'**
+  String get statFees;
+
+  /// No description provided for @statCommissions.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commissions'**
+  String get statCommissions;
+
+  /// No description provided for @statCourierEarnings.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rémunération des livreurs'**
+  String get statCourierEarnings;
+
+  /// No description provided for @statPlatform.
+  ///
+  /// In fr, this message translates to:
+  /// **'Part de la plateforme'**
+  String get statPlatform;
+
+  /// No description provided for @statCash.
+  ///
+  /// In fr, this message translates to:
+  /// **'Espèces à rapprocher'**
+  String get statCash;
+
+  /// No description provided for @statRefunds.
+  ///
+  /// In fr, this message translates to:
+  /// **'Remboursements à effectuer'**
+  String get statRefunds;
+
+  /// No description provided for @statCouriersOnline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livreurs en ligne'**
+  String get statCouriersOnline;
+
+  /// No description provided for @statByStatus.
+  ///
+  /// In fr, this message translates to:
+  /// **'Par statut'**
+  String get statByStatus;
+
+  /// No description provided for @statByType.
+  ///
+  /// In fr, this message translates to:
+  /// **'Par type'**
+  String get statByType;
+
+  /// No description provided for @statDeliveredOnly.
+  ///
+  /// In fr, this message translates to:
+  /// **'Montants des commandes livrées sur la période.'**
+  String get statDeliveredOnly;
+
+  /// No description provided for @receiptText.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tchopi · Reçu {number}\n{date}\n{lines}\nTotal : {total}\nPaiement : {method} · {status}'**
+  String receiptText(
+    String number,
+    String date,
+    String lines,
+    String total,
+    String method,
+    String status,
+  );
 }
 
 class _AppLocalizationsDelegate

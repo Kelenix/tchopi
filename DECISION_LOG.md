@@ -6,6 +6,37 @@
 
 ---
 
+## ADR-027 — Remboursements, reçus, statistiques (Inc-13)
+
+- **Date** : 2026-10-19
+- **Statut** : Accepté
+- **Décideur** : Claude (rôle : backend-engineer / flutter-engineer)
+- **Contexte** : Stories TRX-02, TRX-03, ADM-04, ADM-06. Les paiements en ligne ne sont pas encore intégrés
+  (Inc-11 : fournisseur Mobile Money à choisir ; Inc-12 : clés Stripe).
+- **Décision** :
+  - **Circuit de remboursement commun**, indépendant du fournisseur : commande payée puis annulée ou refusée →
+    « À rembourser » d'office (déclencheur) ; échec de livraison après encaissement → **l'admin décide** (motif
+    obligatoire), le client pouvant être en cause (absent) ; l'admin marque « Remboursée » avec une référence
+    (espèces rendues, transfert) → transaction « Remboursée ». Stripe et Mobile Money brancheront leur remboursement
+    automatique sur ce même état. Une commande en espèces annulée avant encaissement n'a rien à rembourser
+    (transaction annulée, ADR-026).
+  - **Le client suit chaque étape** : état du paiement sur la commande (mis à jour en direct), chronologie,
+    notification « Remboursement en cours » puis « Remboursement effectué », filtre « Remboursements ».
+  - **Reçu simple** (TRX-02) composé dans l'app à partir de la commande et de la transaction, partagé en texte
+    (WhatsApp, SMS, copie). Historique groupé par jour (Aujourd'hui, Hier, date).
+  - **Admin** : filtres statut, moyen, période, zone sur les 200 dernières transactions ; le tableau de bord devient
+    l'accueil admin : `admin_stats(from, to)` calculé en base en un appel (montants des commandes livrées de la
+    période, commandes par statut et par type, espèces à rapprocher, remboursements en attente, livreurs en ligne avec
+    position fraîche — mêmes critères que l'attribution).
+- **Alternatives écartées** : reçu PDF (paquet et stockage en plus, inutile au MVP) ; remboursement automatique de
+  tout échec (risque d'abus, décision laissée à l'admin) ; statistiques calculées dans l'app (volume, droits) ;
+  export CSV (hors critères d'acceptation).
+- **Conséquences** : au-delà de quelques centaines de transactions par jour, filtrer côté serveur (pagination).
+- **Reporté** : remboursements automatiques Stripe (Inc-12) et Mobile Money (Inc-11).
+- **Impact** : financier (moyen : traçabilité des remboursements), métier (faible).
+
+---
+
 ## ADR-026 — Espèces, transactions, moyens de paiement (Inc-10)
 
 - **Date** : 2026-10-19

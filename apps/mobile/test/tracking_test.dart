@@ -128,6 +128,7 @@ void main() {
             status: OrderStatus.inTransit,
             courierId: 'k1',
             dispatchAlertedAt: null,
+            paymentStatus: OrderPaymentStatus.unpaid,
           )),
         ),
         courierLocationProvider(
@@ -152,6 +153,7 @@ void main() {
             status: OrderStatus.inTransit,
             courierId: 'k1',
             dispatchAlertedAt: null,
+            paymentStatus: OrderPaymentStatus.unpaid,
           )),
         ),
         courierLocationProvider('k1').overrideWith(

@@ -2,6 +2,7 @@ import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mobile/features/admin/supervision/presentation/dashboard_screen.dart';
 import 'package:mobile/features/admin/supervision/presentation/settings_screen.dart';
 import 'package:mobile/features/admin/supervision/presentation/supervision_screen.dart';
 import 'package:mobile/features/admin/supervision/supervision_providers.dart';
@@ -44,6 +45,21 @@ Widget app(Widget home, List<Order> orders) => ProviderScope(
     activeOrdersProvider.overrideWith((ref) => Stream.value(orders)),
     platformSettingsProvider.overrideWith((ref) async => settings),
     adminZonesProvider.overrideWith((ref) async => const []),
+    adminStatsProvider(1).overrideWith(
+      (ref) async => {
+        'orders': 12,
+        'by_status': {'delivered': 9, 'cancelled': 3},
+        'by_type': {'food': 10, 'parcel': 2},
+        'revenue': 45000,
+        'delivery_fees': 9000,
+        'commissions': 3600,
+        'courier_earnings': 7200,
+        'platform': 5400,
+        'cash_to_reconcile': 17500,
+        'refunds_pending': 1,
+        'couriers_online': 4,
+      },
+    ),
   ],
   child: MaterialApp(
     theme: AppTheme.light,
@@ -151,5 +167,26 @@ void main() {
       find.text('L\'annulation doit venir après l\'alerte.'),
       findsOneWidget,
     );
+  });
+
+  testWidgets('tableau de bord : indicateurs du jour et alertes', (
+    tester,
+  ) async {
+    tester.view
+      ..physicalSize = const Size(800, 2600)
+      ..devicePixelRatio = 2;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      app(const DashboardScreen(), [
+        order('R-AAAAA', OrderStatus.preparing, alerted: now),
+      ]),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text(formatMoney(45000)), findsOneWidget);
+    expect(find.text("Chiffre d'affaires"), findsOneWidget);
+    expect(find.text(formatMoney(17500)), findsOneWidget);
+    expect(find.text('Livreurs en ligne'), findsOneWidget);
+    expect(find.text('Livrée'), findsOneWidget, reason: 'par statut');
+    expect(find.text('Commandes en cours'), findsOneWidget, reason: 'alerte');
   });
 }

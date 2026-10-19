@@ -2127,4 +2127,158 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get settingsPaymentsTitle => 'Moyens de paiement';
+
+  @override
+  String get payUnpaid => 'À payer';
+
+  @override
+  String get payPaid => 'Payée';
+
+  @override
+  String get payRefundPending => 'Remboursement en cours';
+
+  @override
+  String get payRefunded => 'Remboursée';
+
+  @override
+  String get eventRefundPending => 'Remboursement en cours';
+
+  @override
+  String get eventRefunded => 'Remboursement effectué';
+
+  @override
+  String get receiptTitle => 'Reçu';
+
+  @override
+  String get receiptShare => 'Partager le reçu';
+
+  @override
+  String get receiptCopy => 'Copier';
+
+  @override
+  String get receiptCopied => 'Reçu copié.';
+
+  @override
+  String get receiptView => 'Voir le reçu';
+
+  @override
+  String get filterAll => 'Tout';
+
+  @override
+  String get filterAnyPeriod => 'Toute période';
+
+  @override
+  String get filterAnyMethod => 'Tous les moyens';
+
+  @override
+  String get filterSucceeded => 'Réussies';
+
+  @override
+  String get filterRefunds => 'Remboursements';
+
+  @override
+  String get dayToday => 'Aujourd\'hui';
+
+  @override
+  String get dayYesterday => 'Hier';
+
+  @override
+  String get txOrder => 'Commande';
+
+  @override
+  String get txAmount => 'Montant';
+
+  @override
+  String get txMethod => 'Moyen de paiement';
+
+  @override
+  String get txDate => 'Date';
+
+  @override
+  String get txStatus => 'Statut';
+
+  @override
+  String get txReference => 'Référence';
+
+  @override
+  String get txRefundPending => 'À rembourser';
+
+  @override
+  String get adminRequestRefund => 'Rembourser le client';
+
+  @override
+  String get adminRefundReason => 'Motif du remboursement';
+
+  @override
+  String get adminMarkRefunded => 'Marquer remboursée';
+
+  @override
+  String get adminRefundReference => 'Référence du remboursement';
+
+  @override
+  String get adminRefundRequested => 'Remboursement à effectuer.';
+
+  @override
+  String get adminRefunded => 'Remboursement enregistré.';
+
+  @override
+  String get adminDashboard => 'Tableau de bord';
+
+  @override
+  String get periodDay => 'Aujourd\'hui';
+
+  @override
+  String get periodWeek => '7 jours';
+
+  @override
+  String get periodMonth => '30 jours';
+
+  @override
+  String get statOrders => 'Commandes';
+
+  @override
+  String get statRevenue => 'Chiffre d\'affaires';
+
+  @override
+  String get statFees => 'Frais de livraison';
+
+  @override
+  String get statCommissions => 'Commissions';
+
+  @override
+  String get statCourierEarnings => 'Rémunération des livreurs';
+
+  @override
+  String get statPlatform => 'Part de la plateforme';
+
+  @override
+  String get statCash => 'Espèces à rapprocher';
+
+  @override
+  String get statRefunds => 'Remboursements à effectuer';
+
+  @override
+  String get statCouriersOnline => 'Livreurs en ligne';
+
+  @override
+  String get statByStatus => 'Par statut';
+
+  @override
+  String get statByType => 'Par type';
+
+  @override
+  String get statDeliveredOnly =>
+      'Montants des commandes livrées sur la période.';
+
+  @override
+  String receiptText(
+    String number,
+    String date,
+    String lines,
+    String total,
+    String method,
+    String status,
+  ) {
+    return 'Tchopi · Reçu $number\n$date\n$lines\nTotal : $total\nPaiement : $method · $status';
+  }
 }

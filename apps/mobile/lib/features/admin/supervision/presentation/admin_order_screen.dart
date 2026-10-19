@@ -69,6 +69,40 @@ class AdminOrderScreen extends ConsumerWidget {
     }
   }
 
+  /// Décision de rembourser (après échec) puis remboursement effectué, avec référence (TRX-03, ADM-04).
+  Future<void> _refund(
+    BuildContext context,
+    WidgetRef ref, {
+    required bool done,
+  }) async {
+    final l10n = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final value = await (done
+        ? askText(
+            context,
+            title: l10n.adminMarkRefunded,
+            label: l10n.adminRefundReference,
+          )
+        : askReason(context, l10n.adminRefundReason));
+    if (value == null) return;
+    final repo = ref.read(supervisionRepositoryProvider);
+    try {
+      await (done
+          ? repo.markRefunded(orderId, value)
+          : repo.requestRefund(orderId, value));
+      ref.invalidate(orderProvider(orderId));
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(done ? l10n.adminRefunded : l10n.adminRefundRequested),
+        ),
+      );
+    } on AppFailure catch (failure) {
+      messenger.showSnackBar(
+        SnackBar(content: Text(failureMessage(l10n, failure))),
+      );
+    }
+  }
+
   Future<void> _cancel(BuildContext context, WidgetRef ref) async {
     final l10n = AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
@@ -198,10 +232,11 @@ class AdminOrderScreen extends ConsumerWidget {
                       ),
                     if (o.parcelDescription case final d? when d.isNotEmpty)
                       AmountRow(label: d, value: ''),
-                    AmountRow(
-                      label: l10n.checkoutSubtotal,
-                      value: formatMoney(o.subtotal),
-                    ),
+                    if (o.type == OrderType.food)
+                      AmountRow(
+                        label: l10n.checkoutSubtotal,
+                        value: formatMoney(o.subtotal),
+                      ),
                     AmountRow(
                       label: l10n.checkoutDeliveryFee,
                       value: formatMoney(o.deliveryFee),
@@ -212,10 +247,10 @@ class AdminOrderScreen extends ConsumerWidget {
                       strong: true,
                     ),
                     AmountRow(
-                      label: l10n.paymentCash,
-                      value: o.paymentStatus == OrderPaymentStatus.paid
-                          ? l10n.adminPaymentPaid
-                          : l10n.adminPaymentUnpaid,
+                      label: paymentMethodLabel(l10n, o.paymentMethod),
+                      value: o.paymentStatus == OrderPaymentStatus.unpaid
+                          ? l10n.adminPaymentUnpaid
+                          : paymentStatusLabel(l10n, o.paymentStatus),
                     ),
                     const Divider(height: Space.xl),
                     AmountRow(
@@ -238,6 +273,22 @@ class AdminOrderScreen extends ConsumerWidget {
               const SizedBox(height: Space.lg),
               SectionHeader(title: l10n.orderTimeline),
               OrderTimeline(events: events, detailed: true),
+            ],
+            if (o.paymentStatus == OrderPaymentStatus.paid &&
+                o.status.isClosed &&
+                o.status != OrderStatus.delivered) ...[
+              const SizedBox(height: Space.xxl),
+              FilledButton.tonal(
+                onPressed: () => _refund(context, ref, done: false),
+                child: Text(l10n.adminRequestRefund),
+              ),
+            ],
+            if (o.paymentStatus == OrderPaymentStatus.refundPending) ...[
+              const SizedBox(height: Space.xxl),
+              FilledButton(
+                onPressed: () => _refund(context, ref, done: true),
+                child: Text(l10n.adminMarkRefunded),
+              ),
             ],
             if (o.status == OrderStatus.pickedUp ||
                 o.status == OrderStatus.inTransit) ...[

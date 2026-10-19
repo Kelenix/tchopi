@@ -3,11 +3,13 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../cart.dart';
 
-/// Ce qui change en direct sur une commande : statut, livreur attribué, alerte « toujours sans livreur ».
+/// Ce qui change en direct sur une commande : statut, livreur attribué, alerte « toujours sans livreur »,
+/// paiement (encaissé, à rembourser, remboursé).
 typedef OrderLive = ({
   OrderStatus status,
   String? courierId,
   DateTime? dispatchAlertedAt,
+  OrderPaymentStatus paymentStatus,
 });
 
 /// Commandes de repas : devis, création et suivi (client), réception et actions (restaurant).
@@ -90,6 +92,7 @@ class OrderRepository {
           status: o.status,
           courierId: o.courierId,
           dispatchAlertedAt: o.dispatchAlertedAt,
+          paymentStatus: o.paymentStatus,
         );
       })
       .handleError((Object error) => throw toFailure(error));

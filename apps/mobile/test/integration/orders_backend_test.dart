@@ -6,6 +6,7 @@ import 'dart:io';
 
 import 'package:core/core.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mobile/features/admin/supervision/data/supervision_repository.dart';
 import 'package:mobile/features/client/payments/data/payment_repository.dart';
 import 'package:mobile/features/courier/missions/data/mission_repository.dart';
 import 'package:mobile/features/orders/cart.dart';
@@ -26,7 +27,7 @@ void main() {
   final anonKey = env['SUPABASE_ANON_KEY'] as String;
   final stamp = DateTime.now().microsecondsSinceEpoch;
   final emails = {
-    for (final role in ['gerant', 'client', 'livreur'])
+    for (final role in ['gerant', 'client', 'livreur', 'admin'])
       role: '$role$stamp@exemple.ci',
   };
   final ids = <String, String>{};
@@ -144,6 +145,7 @@ void main() {
     await MissionRepository(courier).setOnline(true);
     await MissionRepository(courier).reportLocation(5.36, -3.97, 10);
     await courier.dispose();
+    await service.from('admins').insert({'user_id': ids['admin']});
   });
 
   tearDownAll(() async {
@@ -203,7 +205,9 @@ void main() {
       expect(first.status, OrderStatus.pending);
       expect(first.total, quote.total);
 
-      final live = await received.timeout(const Duration(seconds: 10));
+      // Juste après « supabase db reset », le premier abonnement temps réel peut tarder ; le flux recharge les
+      // données dès qu'il est abonné.
+      final live = await received.timeout(const Duration(seconds: 30));
       expect(live.single.id, first.id);
 
       await manager.transition(first.id, OrderStatus.accepted);
@@ -403,6 +407,79 @@ void main() {
       await clientClient.dispose();
       await managerClient.dispose();
       await courierClient.dispose();
+    },
+  );
+
+  test(
+    "remboursement : colis payé puis en échec, décidé et remboursé par l'admin",
+    () async {
+      final clientClient = await signedIn('client');
+      final courierClient = await signedIn('livreur');
+      final adminClient = await signedIn('admin');
+      final client = OrderRepository(clientClient);
+      final missions = MissionRepository(courierClient);
+      final admin = SupervisionRepository(adminClient);
+
+      final type = (await client.parcelTypes(
+        5.37,
+        -3.95,
+      )).firstWhere((t) => t.code == 'small');
+      const pickup = ParcelPoint(
+        lat: 5.36,
+        lng: -3.97,
+        district: 'Cocody',
+        landmark: 'Carrefour de la vie',
+      );
+      const dropoff = ParcelPoint(
+        lat: 5.32,
+        lng: -4.02,
+        district: 'Plateau',
+        landmark: 'Tour A',
+      );
+      final offered = missions
+          .watchPendingOffer(ids['livreur']!)
+          .firstWhere((offer) => offer != null);
+      await Future<void>.delayed(const Duration(seconds: 3));
+      final quote = await client.quoteParcel(pickup, dropoff, type.id);
+      final parcel = await client.placeParcel(
+        pickup: pickup,
+        dropoff: dropoff,
+        recipientName: 'Koffi',
+        recipientPhone: '+2250700000022',
+        parcelTypeId: type.id,
+        description: 'Documents',
+        rulesAccepted: true,
+        expectedTotal: quote.total,
+        idempotencyKey: '00000000-0000-4000-b000-$stamp'.substring(0, 36),
+      );
+      final offer = (await offered.timeout(const Duration(seconds: 15)))!;
+      expect(offer.orderId, parcel.id);
+      await missions.respond(offer.id, accept: true);
+      await missions.confirmPickup(parcel.id, cashReceived: true);
+      await missions.declareFailure(parcel.id, 'Destinataire absent');
+
+      await admin.requestRefund(parcel.id, 'Destinataire absent');
+      expect(
+        (await client.fetch(parcel.id)).paymentStatus,
+        OrderPaymentStatus.refundPending,
+      );
+      await admin.markRefunded(parcel.id, 'Espèces rendues, reçu 7');
+      final refunded = (await PaymentRepository(
+        clientClient,
+      ).mine()).firstWhere((t) => t.orderId == parcel.id);
+      expect(refunded.status, TransactionStatus.refunded);
+
+      final now = DateTime.now();
+      final stats = await admin.stats(
+        now.subtract(const Duration(days: 1)),
+        now.add(const Duration(minutes: 1)),
+      );
+      expect(stats['orders'], greaterThanOrEqualTo(3));
+      expect((stats['by_status'] as Map)['failed'], greaterThanOrEqualTo(1));
+
+      await clientClient.dispose();
+      await courierClient.dispose();
+      await adminClient.dispose();
     },
   );
 }

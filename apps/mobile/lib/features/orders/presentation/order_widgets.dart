@@ -44,6 +44,22 @@ String closeReasonLabel(AppLocalizations l10n, String reason) {
   return [label, ...rest].join(' · ');
 }
 
+String paymentMethodLabel(AppLocalizations l10n, PaymentMethod method) =>
+    switch (method) {
+      PaymentMethod.cash => l10n.parcelPaymentCash,
+      PaymentMethod.mobileMoney => l10n.paymentMobileMoney,
+      PaymentMethod.card => l10n.paymentCard,
+    };
+
+/// État du paiement d'une commande, remboursement compris (TRX-03).
+String paymentStatusLabel(AppLocalizations l10n, OrderPaymentStatus status) =>
+    switch (status) {
+      OrderPaymentStatus.unpaid => l10n.payUnpaid,
+      OrderPaymentStatus.paid => l10n.payPaid,
+      OrderPaymentStatus.refundPending => l10n.payRefundPending,
+      OrderPaymentStatus.refunded => l10n.payRefunded,
+    };
+
 IconData paymentIcon(PaymentMethod method) => switch (method) {
   PaymentMethod.cash => Icons.payments_outlined,
   PaymentMethod.mobileMoney => Icons.phone_android_outlined,
@@ -63,6 +79,9 @@ String paymentOptionLabel(AppLocalizations l10n, PaymentOption option) =>
       l10n.txDeliveredUnpaid,
       tokens.danger,
     ),
+    TransactionStatus.succeeded
+        when t.orderPaymentStatus == OrderPaymentStatus.refundPending =>
+      (l10n.txRefundPending, tokens.danger),
     TransactionStatus.pending => (l10n.txPending, tokens.warning),
     TransactionStatus.succeeded => (l10n.txSucceeded, tokens.success),
     TransactionStatus.failed => (l10n.txFailed, tokens.danger),
@@ -99,6 +118,8 @@ String? eventLabel(
   'code_failed' => detailed ? l10n.eventCodeFailed : null,
   'code_locked' => detailed ? l10n.eventCodeLocked : null,
   'problem_reported' => detailed ? l10n.eventProblemReported : null,
+  'refund_pending' => l10n.eventRefundPending,
+  'refunded' => l10n.eventRefunded,
   _ => event.status?.label(l10n),
 };
 

@@ -1,27 +1,62 @@
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import '../../orders/presentation/order_detail_screen.dart';
 import '../../orders/presentation/order_widgets.dart';
 import '../client_nav_bar.dart';
 import 'payments_providers.dart';
+import 'presentation/receipt_sheet.dart';
 
-/// C-12 : paiements — moyens disponibles et transactions des commandes avec leur statut (PAY-01, TRX-01).
-/// Historique groupé par date et reçus : Inc-13.
-class PaymentsScreen extends ConsumerWidget {
+enum _Filter { all, succeeded, refunds }
+
+/// C-12 : paiements — moyens disponibles ; transactions groupées par jour, filtrables, avec reçu (PAY-01, TRX-01,
+/// TRX-02, TRX-03).
+class PaymentsScreen extends ConsumerStatefulWidget {
   const PaymentsScreen({super.key});
 
   static const path = ClientNavBar.paymentsPath;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<PaymentsScreen> createState() => _PaymentsScreenState();
+}
+
+class _PaymentsScreenState extends ConsumerState<PaymentsScreen> {
+  _Filter _filter = _Filter.all;
+
+  bool _keep(PaymentTransaction t) => switch (_filter) {
+    _Filter.all => true,
+    _Filter.succeeded => t.status == TransactionStatus.succeeded,
+    _Filter.refunds =>
+      t.status == TransactionStatus.refunded ||
+          t.orderPaymentStatus == OrderPaymentStatus.refundPending,
+  };
+
+  String _day(AppLocalizations l10n, DateTime date) {
+    final day = DateUtils.dateOnly(date.toLocal());
+    final today = DateUtils.dateOnly(DateTime.now());
+    if (day == today) return l10n.dayToday;
+    if (day == today.subtract(const Duration(days: 1))) {
+      return l10n.dayYesterday;
+    }
+    return DateFormat('d MMM y', 'fr').format(day);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final tokens = context.tokens;
     final options = ref.watch(paymentOptionsProvider).value ?? const [];
-    final transactions = ref.watch(myTransactionsProvider).value ?? const [];
+    final transactions = [
+      for (final t
+          in ref.watch(myTransactionsProvider).value ??
+              const <PaymentTransaction>[])
+        if (_keep(t)) t,
+    ];
+    final days = <String, List<PaymentTransaction>>{};
+    for (final t in transactions) {
+      (days[_day(l10n, t.createdAt)] ??= []).add(t);
+    }
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.paymentsTitle)),
@@ -58,6 +93,22 @@ class PaymentsScreen extends ConsumerWidget {
               ),
             ),
             SectionHeader(title: l10n.paymentsHistory),
+            Wrap(
+              spacing: Space.sm,
+              children: [
+                for (final (filter, label) in [
+                  (_Filter.all, l10n.filterAll),
+                  (_Filter.succeeded, l10n.filterSucceeded),
+                  (_Filter.refunds, l10n.filterRefunds),
+                ])
+                  ChoiceChip(
+                    label: Text(label),
+                    selected: _filter == filter,
+                    onSelected: (_) => setState(() => _filter = filter),
+                  ),
+              ],
+            ),
+            const SizedBox(height: Space.sm),
             if (transactions.isEmpty)
               EmptyState(
                 icon: Icons.receipt_long_outlined,
@@ -65,14 +116,24 @@ class PaymentsScreen extends ConsumerWidget {
                 body: l10n.paymentsEmptyBody,
               )
             else
-              Card(
-                child: Column(
-                  children: [
-                    for (final t in transactions)
-                      _TransactionRow(transaction: t),
-                  ],
+              for (final MapEntry(key: day, value: list) in days.entries) ...[
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, Space.md, 0, Space.xs),
+                  child: Text(
+                    day,
+                    style: Theme.of(
+                      context,
+                    ).textTheme.labelLarge!.copyWith(color: tokens.muted),
+                  ),
                 ),
-              ),
+                Card(
+                  child: Column(
+                    children: [
+                      for (final t in list) _TransactionRow(transaction: t),
+                    ],
+                  ),
+                ),
+              ],
           ],
         ),
       ),
@@ -94,7 +155,11 @@ class _TransactionRow extends StatelessWidget {
     final (status, color) = transactionStatus(context, t);
     final void_ = t.status == TransactionStatus.cancelled;
     return ListTile(
-      onTap: () => context.push(OrderDetailScreen.location(t.orderId)),
+      onTap: () => showModalBottomSheet<void>(
+        context: context,
+        isScrollControlled: true,
+        builder: (_) => ReceiptSheet(transaction: t),
+      ),
       leading: CircleAvatar(
         backgroundColor: tokens.surfaceAlt,
         child: Icon(paymentIcon(t.method), color: tokens.ink),
@@ -105,7 +170,7 @@ class _TransactionRow extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
       ),
       subtitle: Text(
-        '${DateFormat('d MMM · HH:mm', 'fr').format(t.createdAt.toLocal())} · $status',
+        '${DateFormat.Hm('fr').format(t.createdAt.toLocal())} · $status',
         style: text.bodySmall!.copyWith(color: color),
       ),
       trailing: Text(

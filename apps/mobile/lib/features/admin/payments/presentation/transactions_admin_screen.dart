@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 
 import '../../../orders/presentation/order_widgets.dart';
 import '../../admin_scaffold.dart';
+import '../../zones/zones_providers.dart';
 import '../../supervision/presentation/admin_order_screen.dart';
 import '../admin_payments_providers.dart';
 
@@ -36,50 +37,176 @@ class TransactionsAdminScreen extends ConsumerWidget {
   }
 }
 
-class _Transactions extends ConsumerWidget {
+enum _Status { all, pending, succeeded, refundPending, refunded, cancelled }
+
+class _Transactions extends ConsumerStatefulWidget {
   const _Transactions();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_Transactions> createState() => _TransactionsState();
+}
+
+class _TransactionsState extends ConsumerState<_Transactions> {
+  _Status _status = _Status.all;
+  PaymentMethod? _method;
+  int? _days;
+  String? _zoneId;
+
+  bool _keep(PaymentTransaction t, DateTime now) {
+    final status = switch (_status) {
+      _Status.all => true,
+      _Status.pending => t.status == TransactionStatus.pending,
+      _Status.succeeded =>
+        t.status == TransactionStatus.succeeded &&
+            t.orderPaymentStatus != OrderPaymentStatus.refundPending,
+      _Status.refundPending =>
+        t.orderPaymentStatus == OrderPaymentStatus.refundPending,
+      _Status.refunded => t.status == TransactionStatus.refunded,
+      _Status.cancelled => t.status == TransactionStatus.cancelled,
+    };
+    final since = _days == null
+        ? null
+        : DateUtils.dateOnly(now).subtract(Duration(days: _days! - 1));
+    return status &&
+        (since == null || !t.createdAt.toLocal().isBefore(since)) &&
+        (_method == null || t.method == _method) &&
+        (_zoneId == null || t.orderZoneId == _zoneId);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final text = Theme.of(context).textTheme;
     final date = DateFormat('d MMM · HH:mm', 'fr');
-    return switch (ref.watch(adminTransactionsProvider)) {
-      AsyncData(value: final list) when list.isEmpty => EmptyState(
-        icon: Icons.receipt_long_outlined,
-        title: l10n.txEmpty,
+    final zones = ref.watch(adminZonesProvider).value ?? const <Zone>[];
+    final now = DateTime.now();
+    final filters = Padding(
+      padding: const EdgeInsets.fromLTRB(
+        Space.screen,
+        Space.md,
+        Space.screen,
+        0,
       ),
-      AsyncData(value: final list) => RefreshIndicator(
-        onRefresh: () => ref.refresh(adminTransactionsProvider.future),
-        child: ListView.separated(
-          padding: const EdgeInsets.all(Space.screen),
-          itemCount: list.length,
-          separatorBuilder: (_, _) => const SizedBox(height: Space.sm),
-          itemBuilder: (context, index) {
-            final t = list[index];
-            final (status, color) = transactionStatus(context, t);
-            return Card(
-              child: ListTile(
-                onTap: () => context.push(AdminOrderScreen.location(t.orderId)),
-                leading: Icon(paymentIcon(t.method)),
-                title: Text(t.orderNumber ?? ''),
-                subtitle: Text(date.format(t.createdAt.toLocal())),
-                trailing: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      formatMoney(t.amount, currency: t.currency),
-                      style: text.titleMedium,
-                    ),
-                    Text(status, style: text.bodySmall!.copyWith(color: color)),
-                  ],
+      child: Wrap(
+        spacing: Space.sm,
+        runSpacing: Space.sm,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          for (final (status, label) in [
+            (_Status.all, l10n.filterAll),
+            (_Status.pending, l10n.txPending),
+            (_Status.succeeded, l10n.filterSucceeded),
+            (_Status.refundPending, l10n.txRefundPending),
+            (_Status.refunded, l10n.txRefunded),
+            (_Status.cancelled, l10n.txCancelled),
+          ])
+            ChoiceChip(
+              label: Text(label),
+              selected: _status == status,
+              onSelected: (_) => setState(() => _status = status),
+            ),
+          DropdownButton<PaymentMethod?>(
+            value: _method,
+            style: text.labelLarge,
+            underline: const SizedBox.shrink(),
+            items: [
+              DropdownMenuItem(child: Text(l10n.filterAnyMethod)),
+              for (final m in PaymentMethod.values)
+                DropdownMenuItem(
+                  value: m,
+                  child: Text(paymentMethodLabel(l10n, m)),
                 ),
-              ),
-            );
-          },
-        ),
+            ],
+            onChanged: (value) => setState(() => _method = value),
+          ),
+          DropdownButton<int?>(
+            value: _days,
+            style: text.labelLarge,
+            underline: const SizedBox.shrink(),
+            items: [
+              DropdownMenuItem(child: Text(l10n.filterAnyPeriod)),
+              DropdownMenuItem(value: 1, child: Text(l10n.periodDay)),
+              DropdownMenuItem(value: 7, child: Text(l10n.periodWeek)),
+              DropdownMenuItem(value: 30, child: Text(l10n.periodMonth)),
+            ],
+            onChanged: (value) => setState(() => _days = value),
+          ),
+          if (zones.length > 1)
+            DropdownButton<String?>(
+              value: _zoneId,
+              style: text.labelLarge,
+              underline: const SizedBox.shrink(),
+              items: [
+                DropdownMenuItem(child: Text(l10n.supervisionAllZones)),
+                for (final z in zones)
+                  DropdownMenuItem(value: z.id, child: Text(z.name)),
+              ],
+              onChanged: (value) => setState(() => _zoneId = value),
+            ),
+        ],
       ),
+    );
+    return switch (ref.watch(adminTransactionsProvider)) {
+      AsyncData(value: final all) => () {
+        final list = [
+          for (final t in all)
+            if (_keep(t, now)) t,
+        ];
+        return Column(
+          children: [
+            filters,
+            Expanded(
+              child: list.isEmpty
+                  ? EmptyState(
+                      icon: Icons.receipt_long_outlined,
+                      title: l10n.txEmpty,
+                    )
+                  : RefreshIndicator(
+                      onRefresh: () =>
+                          ref.refresh(adminTransactionsProvider.future),
+                      child: ListView.separated(
+                        padding: const EdgeInsets.all(Space.screen),
+                        itemCount: list.length,
+                        separatorBuilder: (_, _) =>
+                            const SizedBox(height: Space.sm),
+                        itemBuilder: (context, index) {
+                          final t = list[index];
+                          final (status, color) = transactionStatus(context, t);
+                          return Card(
+                            child: ListTile(
+                              onTap: () => context.push(
+                                AdminOrderScreen.location(t.orderId),
+                              ),
+                              leading: Icon(paymentIcon(t.method)),
+                              title: Text(t.orderNumber ?? ''),
+                              subtitle: Text(
+                                date.format(t.createdAt.toLocal()),
+                              ),
+                              trailing: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    formatMoney(t.amount, currency: t.currency),
+                                    style: text.titleMedium,
+                                  ),
+                                  Text(
+                                    status,
+                                    style: text.bodySmall!.copyWith(
+                                      color: color,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+            ),
+          ],
+        );
+      }(),
       AsyncError(:final error) => Center(
         child: Text(failureMessage(l10n, error)),
       ),

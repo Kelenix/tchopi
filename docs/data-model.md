@@ -203,7 +203,8 @@ les apps et le web traduisent ces codes en messages (plan §3.4).
 | `admin_confirm_delivery(order_id, reason)` | admin | Livraison sans code (tracée) |
 | `admin_set_user_suspended(user_id, suspended, reason)` | admin | |
 | `admin_record_cash_remittance(courier_id, amount, reference)` | admin | Versement d'espèces |
-| `admin_mark_refunded(transaction_id, reference)` | admin | Remboursement effectué hors application |
+| `admin_request_refund(order_id, reason)` | admin | Décide le remboursement d'une commande payée close (échec, annulée, refusée) |
+| `admin_mark_refunded(order_id, reference)` | admin | Remboursement effectué hors application : commande et transaction « remboursées » |
 | `admin_stats(from, to)` | admin | Indicateurs du tableau de bord |
 
 **Edge Functions** (`/functions/v1/…`) : `payments-create` (crée le paiement Stripe ou Mobile Money d'une commande),
@@ -215,7 +216,8 @@ les apps et le web traduisent ces codes en messages (plan §3.4).
 
 - **Déclencheurs** : création du profil à l'inscription ; liaison des invitations restaurant à la vérification du compte ;
   zone et ville des adresses ; `updated_at` ; écriture de la chronologie ; appel de la fonction `push` à chaque
-  événement notifiable (via `pg_net`, secret partagé dans le coffre `vault`).
+  événement notifiable (via `pg_net`, secret partagé dans le coffre `vault`) ; commande payée puis annulée ou refusée
+  → `refund_pending` ; étapes du remboursement notifiées au client.
 - **Tâche planifiée unique** `private.tick()` (`pg_cron`, toutes les 10 s) : expiration des offres → livreur suivant ;
   démarrage des recherches en attente ; alerte à 10 min et annulation à 30 min sans livreur ; refus automatique après
   10 min sans réponse du restaurant ; annulation des paiements non confirmés après 15 min.

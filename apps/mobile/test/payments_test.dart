@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
@@ -8,6 +9,7 @@ import 'package:mobile/features/admin/payments/data/admin_payments_repository.da
 import 'package:mobile/features/admin/payments/presentation/transactions_admin_screen.dart';
 import 'package:mobile/features/client/payments/payments_providers.dart';
 import 'package:mobile/features/client/payments/payments_screen.dart';
+import 'package:mobile/features/orders/orders_providers.dart';
 
 const cash = PaymentOption(
   id: 'p1',
@@ -96,7 +98,29 @@ void main() {
               TransactionStatus.pending,
               order: OrderStatus.delivered,
             ),
+            tx(
+              'C-EEEEE',
+              TransactionStatus.refunded,
+              order: OrderStatus.failed,
+            ),
           ],
+        ),
+        orderProvider('R-AAAAA').overrideWith(
+          (ref) async => Order(
+            id: 'R-AAAAA',
+            number: 'R-AAAAA',
+            status: OrderStatus.delivered,
+            pickupName: 'Le Grill du Plateau',
+            recipientName: 'Awa',
+            dropoffDistrict: 'Cocody',
+            dropoffLandmark: 'Pharmacie',
+            subtotal: 3000,
+            deliveryFee: 500,
+            total: 3500,
+            paymentMethod: PaymentMethod.cash,
+            paymentStatus: OrderPaymentStatus.paid,
+            createdAt: DateTime.now(),
+          ),
         ),
       ]),
     );
@@ -104,10 +128,79 @@ void main() {
 
     expect(find.text('Espèces à la livraison'), findsOneWidget);
     expect(find.text('Mobile Money'), findsNothing, reason: 'non proposé');
-    expect(find.textContaining('Réussie'), findsOneWidget);
-    expect(find.textContaining('En attente'), findsOneWidget);
-    expect(find.textContaining('Annulée'), findsOneWidget);
+    expect(
+      find.text('Aujourd\'hui'),
+      findsOneWidget,
+      reason: 'groupé par jour',
+    );
+    expect(find.textContaining('· Réussie'), findsOneWidget);
+    expect(find.textContaining('· En attente'), findsOneWidget);
+    expect(find.textContaining('· Annulée'), findsOneWidget);
     expect(find.textContaining('Livrée · non encaissée'), findsOneWidget);
+
+    await tester.tap(find.text('Remboursements'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('C-EEEEE'), findsOneWidget);
+    expect(find.textContaining('R-AAAAA'), findsNothing);
+
+    await tester.tap(find.text('Tout'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.textContaining('R-AAAAA'));
+    await tester.pumpAndSettle();
+    expect(find.text('Reçu'), findsOneWidget);
+    expect(find.text('Partager le reçu'), findsOneWidget);
+    expect(find.text(formatMoney(500)), findsOneWidget, reason: 'frais');
+
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      SystemChannels.platform,
+      (call) async => null,
+    );
+    addTearDown(
+      () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        null,
+      ),
+    );
+    await tester.tap(find.text('Partager le reçu'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Copier'));
+    await tester.pumpAndSettle();
+    expect(find.text('Reçu copié.'), findsOneWidget);
+    expect(find.text('Reçu'), findsNothing, reason: 'message visible');
+  });
+
+  testWidgets('admin : transactions filtrées par statut et par moyen', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      app(const TransactionsAdminScreen(), [
+        adminTransactionsProvider.overrideWith(
+          (ref) async => [
+            tx('R-AAAAA', TransactionStatus.succeeded),
+            tx(
+              'C-BBBBB',
+              TransactionStatus.succeeded,
+            ).copyWith(orderPaymentStatus: OrderPaymentStatus.refundPending),
+            tx('R-CCCCC', TransactionStatus.refunded),
+          ],
+        ),
+        cashBalancesProvider.overrideWith((ref) async => const []),
+      ]),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('R-AAAAA'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(ChoiceChip, 'À rembourser'));
+    await tester.pumpAndSettle();
+    expect(find.text('C-BBBBB'), findsOneWidget);
+    expect(find.text('R-AAAAA'), findsNothing);
+    expect(find.text('R-CCCCC'), findsNothing);
+
+    await tester.tap(find.text('Tous les moyens'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Carte bancaire').last);
+    await tester.pumpAndSettle();
+    expect(find.text('Aucune transaction pour l\'instant.'), findsOneWidget);
   });
 
   testWidgets('admin : espèces dues par livreur, versement enregistré', (
