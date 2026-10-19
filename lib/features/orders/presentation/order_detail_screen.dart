@@ -2,13 +2,12 @@ import 'dart:async';
 
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../shared/map_tiles.dart';
+import '../../../shared/delivery_map.dart';
 import '../../../shared/push.dart';
 import '../../courier/profile/courier_providers.dart';
 import '../orders_providers.dart';
@@ -470,61 +469,19 @@ class _TrackingCardState extends ConsumerState<_TrackingCard> {
     );
     final pickedUp =
         o.status == OrderStatus.pickedUp || o.status == OrderStatus.inTransit;
-    final courier = LatLng(location.latitude, location.longitude);
-    final pickup = LatLng(o.pickupLat, o.pickupLng);
-    final dropoff = LatLng(o.dropoffLat, o.dropoffLng);
-    Marker pin(LatLng point, IconData icon, Color color) => Marker(
-      point: point,
-      width: 36,
-      height: 36,
-      alignment: Alignment.topCenter,
-      child: Icon(icon, color: color, size: 36),
-    );
     return Card(
       clipBehavior: Clip.antiAlias,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SizedBox(
-            height: 180,
-            child: FlutterMap(
-              key: ValueKey(pickedUp),
-              options: MapOptions(
-                initialCameraFit: CameraFit.coordinates(
-                  coordinates: [courier, dropoff, if (!pickedUp) pickup],
-                  padding: const EdgeInsets.all(40),
-                  maxZoom: 16,
-                ),
-                backgroundColor: tokens.surfaceAlt,
-                interactionOptions: const InteractionOptions(
-                  flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
-                ),
-              ),
-              children: [
-                const MapTiles(),
-                MarkerLayer(
-                  markers: [
-                    if (!pickedUp)
-                      pin(pickup, Icons.storefront_rounded, tokens.ink),
-                    pin(dropoff, Icons.location_on, tokens.primary),
-                    Marker(
-                      point: courier,
-                      width: 34,
-                      height: 34,
-                      child: CircleAvatar(
-                        backgroundColor: stale ? tokens.muted : tokens.ink,
-                        child: Icon(
-                          Icons.two_wheeler,
-                          size: 18,
-                          color: tokens.onInk,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const MapAttribution(),
-              ],
-            ),
+          DeliveryMap(
+            pickup: LatLng(o.pickupLat, o.pickupLng),
+            dropoff: LatLng(o.dropoffLat, o.dropoffLng),
+            courier: LatLng(location.latitude, location.longitude),
+            vehicle: widget.courier.vehicleType,
+            stale: stale,
+            parcel: o.type == OrderType.parcel,
+            showPickup: !pickedUp,
           ),
           ListTile(
             leading: Icon(

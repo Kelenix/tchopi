@@ -169,6 +169,8 @@ class _RestaurantFormScreenState extends ConsumerState<RestaurantFormScreen> {
                 field(_name, l10n.fieldRestaurantName, validator: required),
                 const SizedBox(height: Space.lg),
                 DropdownButtonFormField<String>(
+                  borderRadius: BorderRadius.circular(Radii.field),
+                  icon: const Icon(Icons.expand_more_rounded),
                   initialValue: _zoneId,
                   decoration: InputDecoration(
                     labelText: l10n.fieldRestaurantZone,
@@ -195,7 +197,12 @@ class _RestaurantFormScreenState extends ConsumerState<RestaurantFormScreen> {
                       : null,
                 ),
                 const SizedBox(height: Space.lg),
-                field(_district, l10n.fieldDistrict, validator: required),
+                DistrictField(
+                  controller: _district,
+                  city: () =>
+                      zones.where((z) => z.id == _zoneId).firstOrNull?.city,
+                  validator: required,
+                ),
                 const SizedBox(height: Space.lg),
                 field(_landmark, l10n.fieldLandmark, validator: required),
                 const SizedBox(height: Space.lg),

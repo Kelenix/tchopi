@@ -2,7 +2,6 @@ import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../shared/dialogs.dart';
@@ -147,11 +146,7 @@ class _MissionScreenState extends ConsumerState<MissionScreen> {
           ),
         ),
         const SizedBox(height: Space.md),
-        MissionMap(
-          target: pickedUp
-              ? LatLng(o.dropoffLat, o.dropoffLng)
-              : LatLng(o.pickupLat, o.pickupLng),
-        ),
+        MissionMap(order: o),
         const SizedBox(height: Space.lg),
         _Stop(
           title: l10n.missionPickupTitle,

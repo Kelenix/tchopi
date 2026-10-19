@@ -16,10 +16,24 @@ abstract final class Env {
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzkyNDE0NjA1LCJleHAiOjE5NTAwOTQ2MDV9.nclb8EOOkSElPrTlwOQXuefHArkqmaumSSDKPpDUg9k',
   );
 
-  /// Fond de carte (ADR-033) : style moderne OpenFreeMap (données OpenStreetMap), gratuit, sans clé ni compte.
+  /// Fond de carte (ADR-033) : style OpenFreeMap (données OpenStreetMap), gratuit, sans clé ni compte. « Positron »,
+  /// sobre, met en valeur le trajet et les repères ; même famille que le style sombre (ADR-038).
   static const mapStyleUrl = String.fromEnvironment(
     'MAP_STYLE_URL',
-    defaultValue: 'https://tiles.openfreemap.org/styles/liberty',
+    defaultValue: 'https://tiles.openfreemap.org/styles/positron',
+  );
+
+  /// Même fond en thème sombre (ADR-038).
+  static const mapStyleDarkUrl = String.fromEnvironment(
+    'MAP_STYLE_DARK_URL',
+    defaultValue: 'https://tiles.openfreemap.org/styles/dark',
+  );
+
+  /// Calcul des trajets routiers affichés sur les cartes (OSRM, ADR-038). Service public de démonstration par
+  /// défaut ; à remplacer par une instance hébergée (VPS) avant un trafic important.
+  static const routingUrl = String.fromEnvironment(
+    'ROUTING_URL',
+    defaultValue: 'https://router.project-osrm.org',
   );
 
   /// Mention exigée par les fournisseurs du fond de carte.

@@ -153,6 +153,8 @@ class _CourierProfileScreenState extends ConsumerState<CourierProfileScreen> {
               ],
               const SizedBox(height: Space.xl),
               DropdownButtonFormField<String>(
+                borderRadius: BorderRadius.circular(Radii.field),
+                icon: const Icon(Icons.expand_more_rounded),
                 key: ValueKey((_zoneId, zones.length)),
                 initialValue: zones.any((zone) => zone.id == _zoneId)
                     ? _zoneId

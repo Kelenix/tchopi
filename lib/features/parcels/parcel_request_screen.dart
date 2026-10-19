@@ -86,6 +86,13 @@ class _ParcelRequestScreenState extends ConsumerState<ParcelRequestScreen> {
             _addresses.where((a) => a.isDefault).firstOrNull ??
             _addresses.firstOrNull;
 
+  /// Ville de la zone desservie au point, pour les suggestions de quartiers.
+  String? _cityOf(LatLng point) => cityAt(
+    ref.read(activeZonesProvider).value ?? const [],
+    point.latitude,
+    point.longitude,
+  );
+
   LatLng get _start {
     final address = _addresses.where((a) => a.isDefault).firstOrNull;
     return address == null
@@ -392,13 +399,9 @@ class _ParcelRequestScreenState extends ConsumerState<ParcelRequestScreen> {
               (point) => _pickupPoint = point,
             ),
             const SizedBox(height: Space.lg),
-            TextFormField(
+            DistrictField(
               controller: _pickupDistrict,
-              textCapitalization: TextCapitalization.words,
-              decoration: InputDecoration(
-                labelText: l10n.fieldDistrict,
-                prefixIcon: const Icon(Icons.location_city_outlined),
-              ),
+              city: () => _cityOf(_pickupPoint ?? _start),
               validator: _required,
             ),
             const SizedBox(height: Space.md),
@@ -436,13 +439,10 @@ class _ParcelRequestScreenState extends ConsumerState<ParcelRequestScreen> {
           ).textTheme.bodySmall!.copyWith(color: context.tokens.muted),
         ),
         const SizedBox(height: Space.lg),
-        TextFormField(
+        DistrictField(
           controller: _dropoffDistrict,
-          textCapitalization: TextCapitalization.words,
-          decoration: InputDecoration(
-            labelText: l10n.fieldDistrict,
-            prefixIcon: const Icon(Icons.location_city_outlined),
-          ),
+          city: () =>
+              _cityOf(_dropoffPoint ?? LatLng(_pickup.lat, _pickup.lng)),
           validator: _required,
         ),
         const SizedBox(height: Space.md),

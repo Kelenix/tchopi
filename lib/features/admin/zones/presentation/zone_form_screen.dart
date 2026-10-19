@@ -141,10 +141,9 @@ class _ZoneFormScreenState extends ConsumerState<ZoneFormScreen> {
                       ),
                       validator: required,
                     ),
-                    TextFormField(
-                      controller: _city,
-                      decoration: InputDecoration(labelText: l10n.fieldCity),
-                      validator: required,
+                    CityField(
+                      initialValue: _city.text.isEmpty ? null : _city.text,
+                      onChanged: (city) => _city.text = city,
                     ),
                     _Row(
                       children: [

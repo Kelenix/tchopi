@@ -30,9 +30,12 @@ class WelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
     final tokens = context.tokens;
+    final veil = tokens.background.withValues(alpha: 0.9);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.dark,
+      value: Theme.of(context).brightness == Brightness.dark
+          ? SystemUiOverlayStyle.light
+          : SystemUiOverlayStyle.dark,
       child: Scaffold(
         backgroundColor: tokens.background,
         body: LayoutBuilder(
@@ -60,47 +63,58 @@ class WelcomeScreen extends StatelessWidget {
                               alignment: Alignment.bottomCenter,
                             ),
                           ),
-                          // Fondu clair qui garde le texte lisible au-dessus des plats.
-                          Positioned.fill(
-                            child: DecoratedBox(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  stops: const [0, 0.35, 0.6],
-                                  colors: [
-                                    tokens.background,
-                                    tokens.background.withValues(alpha: 0.85),
-                                    tokens.background.withValues(alpha: 0),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          SafeArea(
-                            bottom: false,
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                Space.xxl,
-                                Space.lg,
-                                Space.xxl,
-                                Space.xxxl,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const BrandWordmark(),
-                                  const SizedBox(height: Space.xxl),
-                                  Text(headline, style: text.displaySmall),
-                                  const SizedBox(height: Space.md),
-                                  Text(
-                                    subtitle,
-                                    style: text.bodyLarge!.copyWith(
-                                      color: tokens.ink,
+                          // Voile sous le texte, prolongé par un fondu : le texte reste lisible au-dessus des plats
+                          // quelle que soit la hauteur de l'écran.
+                          SizedBox(
+                            width: double.infinity,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                ColoredBox(
+                                  color: veil,
+                                  child: SafeArea(
+                                    bottom: false,
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                        Space.xxl,
+                                        Space.lg,
+                                        Space.xxl,
+                                        Space.sm,
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const BrandWordmark(),
+                                          const SizedBox(height: Space.xxl),
+                                          Text(
+                                            headline,
+                                            style: text.displaySmall,
+                                          ),
+                                          const SizedBox(height: Space.md),
+                                          Text(
+                                            subtitle,
+                                            style: text.bodyLarge!.copyWith(
+                                              color: tokens.ink,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                                Container(
+                                  height: Space.huge,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [veil, veil.withValues(alpha: 0)],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],

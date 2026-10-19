@@ -1,7 +1,7 @@
 # Design system
 
 > Phase 3 (rôle : UI/UX Designer). **Valeurs définitives** (elles remplacent la proposition de `direction.md` §3).
-> Implémentation : `packages/core/lib/src/design/` — `ThemeData` Material 3 **clair uniquement** (ADR-019) + extension de thème `AppTokens`.
+> Implémentation : `packages/core/lib/src/design/` — `ThemeData` Material 3 **clair et sombre** au choix de l’utilisateur (ADR-038) + extension de thème `AppTokens`.
 > Aucune couleur, taille ou durée en dur dans les écrans. Maquette : `docs/design/maquette.html`.
 
 ## 1. Couleurs

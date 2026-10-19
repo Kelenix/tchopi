@@ -448,6 +448,54 @@ abstract class AppLocalizations {
   /// **'Supprimer mon compte'**
   String get accountDelete;
 
+  /// No description provided for @cityPickerTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisir une ville'**
+  String get cityPickerTitle;
+
+  /// No description provided for @cityPickerSearch.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rechercher une ville'**
+  String get cityPickerSearch;
+
+  /// No description provided for @cityPickerEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune ville ne correspond.'**
+  String get cityPickerEmpty;
+
+  /// No description provided for @cityServed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraisons disponibles'**
+  String get cityServed;
+
+  /// No description provided for @appearanceTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Apparence'**
+  String get appearanceTitle;
+
+  /// No description provided for @appearanceSystem.
+  ///
+  /// In fr, this message translates to:
+  /// **'Auto'**
+  String get appearanceSystem;
+
+  /// No description provided for @appearanceLight.
+  ///
+  /// In fr, this message translates to:
+  /// **'Clair'**
+  String get appearanceLight;
+
+  /// No description provided for @appearanceDark.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sombre'**
+  String get appearanceDark;
+
   /// No description provided for @accountLicenses.
   ///
   /// In fr, this message translates to:

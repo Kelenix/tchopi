@@ -13,7 +13,10 @@ double contrast(Color a, Color b) {
 void main() {
   const aaText = 4.5;
 
-  for (final (name, t) in [('clair', AppTokens.light)]) {
+  for (final (name, t) in [
+    ('clair', AppTokens.light),
+    ('sombre', AppTokens.dark),
+  ]) {
     group('Thème $name — contrastes AA du texte', () {
       final pairs = {
         'texte principal / fond': (t.ink, t.background),

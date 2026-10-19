@@ -201,6 +201,30 @@ class AppLocalizationsFr extends AppLocalizations {
   String get accountDelete => 'Supprimer mon compte';
 
   @override
+  String get cityPickerTitle => 'Choisir une ville';
+
+  @override
+  String get cityPickerSearch => 'Rechercher une ville';
+
+  @override
+  String get cityPickerEmpty => 'Aucune ville ne correspond.';
+
+  @override
+  String get cityServed => 'Livraisons disponibles';
+
+  @override
+  String get appearanceTitle => 'Apparence';
+
+  @override
+  String get appearanceSystem => 'Auto';
+
+  @override
+  String get appearanceLight => 'Clair';
+
+  @override
+  String get appearanceDark => 'Sombre';
+
+  @override
   String get accountLicenses => 'Licences';
 
   @override

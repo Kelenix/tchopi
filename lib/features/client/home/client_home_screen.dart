@@ -639,6 +639,7 @@ class _OrderHero extends ConsumerWidget {
                 path: cover,
                 seed: restaurantId ?? order.id,
                 icon: parcel ? Icons.inventory_2_outlined : null,
+                iconAlignment: Alignment.topRight,
               ),
               // Voile sombre : texte blanc lisible sur toute photo.
               const DecoratedBox(

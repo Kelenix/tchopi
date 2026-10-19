@@ -265,14 +265,13 @@ class _AddressEditorScreenState extends ConsumerState<AddressEditorScreen> {
                                   ],
                                 ),
                                 const SizedBox(height: Space.xl),
-                                TextFormField(
+                                DistrictField(
                                   controller: _district,
-                                  textCapitalization: TextCapitalization.words,
-                                  decoration: InputDecoration(
-                                    labelText: l10n.fieldDistrict,
-                                    prefixIcon: const Icon(
-                                      Icons.location_city_outlined,
-                                    ),
+                                  city: () => cityAt(
+                                    ref.read(activeZonesProvider).value ??
+                                        const [],
+                                    _position.latitude,
+                                    _position.longitude,
                                   ),
                                   validator: required,
                                 ),

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../design/tokens.dart';
 import '../application/auth_controllers.dart';
+import '../../app/theme_preference.dart';
 import '../application/auth_providers.dart';
 import '../domain/models.dart';
 import 'widgets/auth_form_scaffold.dart';
@@ -191,6 +192,53 @@ class AccountScreen extends ConsumerWidget {
                   () => showLicensePage(context: context),
                 ),
               ],
+            ),
+          ),
+          const SizedBox(height: Space.lg),
+          // Apparence (ADR-038) : suit le téléphone, ou clair / sombre au choix ; mémorisée sur l'appareil.
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(Space.lg),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(l10n.appearanceTitle, style: text.titleMedium),
+                  const SizedBox(height: Space.md),
+                  SegmentedButton<ThemeMode>(
+                    showSelectedIcon: false,
+                    segments: [
+                      ButtonSegment(
+                        value: ThemeMode.system,
+                        label: Text(
+                          l10n.appearanceSystem,
+                          maxLines: 1,
+                          softWrap: false,
+                        ),
+                      ),
+                      ButtonSegment(
+                        value: ThemeMode.light,
+                        label: Text(
+                          l10n.appearanceLight,
+                          maxLines: 1,
+                          softWrap: false,
+                        ),
+                      ),
+                      ButtonSegment(
+                        value: ThemeMode.dark,
+                        label: Text(
+                          l10n.appearanceDark,
+                          maxLines: 1,
+                          softWrap: false,
+                        ),
+                      ),
+                    ],
+                    selected: {ref.watch(themePreferenceProvider)},
+                    onSelectionChanged: (selection) => ref
+                        .read(themePreferenceProvider.notifier)
+                        .select(selection.single),
+                  ),
+                ],
+              ),
             ),
           ),
           const SizedBox(height: Space.lg),

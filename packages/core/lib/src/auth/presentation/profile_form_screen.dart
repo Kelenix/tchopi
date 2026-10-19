@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../design/tokens.dart';
+import '../../places/place_fields.dart';
 import '../application/auth_controllers.dart';
 import '../../places/places_providers.dart';
 import '../application/auth_providers.dart';
@@ -129,7 +130,7 @@ class _ProfileFormScreenState extends ConsumerState<ProfileFormScreen> {
   }
 }
 
-/// Ville choisie parmi les villes desservies (zones actives) ; présélectionnée s'il n'y en a qu'une.
+/// Ville parmi toutes celles de Côte d'Ivoire, les villes desservies (zones actives) en tête (ADR-038).
 class _CityField extends ConsumerWidget {
   const _CityField({required this.value, required this.onChanged});
 
@@ -140,28 +141,11 @@ class _CityField extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final cities = ref.watch(servedCitiesProvider);
-    final options = cities.value ?? const <String>[];
-    final selected = options.contains(value)
-        ? value
-        : (options.length == 1 ? options.single : null);
-    if (selected != value && selected != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => onChanged(selected));
-    }
-    return DropdownButtonFormField<String>(
-      // Reconstruit le champ quand la liste arrive (la valeur initiale n'est lue qu'à la création).
-      key: ValueKey((selected, options.length)),
-      initialValue: selected,
-      items: [
-        for (final city in options)
-          DropdownMenuItem(value: city, child: Text(city)),
-      ],
+    return CityField(
+      initialValue: value,
+      served: cities.value ?? const [],
       onChanged: onChanged,
-      validator: (city) => city == null ? l10n.errorRequired : null,
-      decoration: InputDecoration(
-        labelText: l10n.fieldCity,
-        prefixIcon: const Icon(Icons.location_city_outlined),
-        errorText: cities.hasError ? l10n.failureNetwork : null,
-      ),
+      errorText: cities.hasError ? l10n.failureNetwork : null,
     );
   }
 }

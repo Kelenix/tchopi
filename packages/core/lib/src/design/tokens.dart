@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Couleurs du design system (`docs/design/design-system.md` §1) ; thème clair uniquement (ADR-019).
+/// Couleurs du design system (`docs/design/design-system.md` §1), en clair et en sombre (maquette, ADR-038).
 /// Les écrans les lisent via `context.tokens` ; aucune couleur n'est écrite en dur ailleurs.
 @immutable
 class AppTokens extends ThemeExtension<AppTokens> {
@@ -57,6 +57,26 @@ class AppTokens extends ThemeExtension<AppTokens> {
     warningSoft: Color(0xFFFCEFD9),
     danger: Color(0xFFC81E1E),
     dangerSoft: Color(0xFFFDE7E7),
+  );
+
+  /// Thème sombre de la maquette (`docs/design/maquette.html`) : fond presque noir, vert éclairci.
+  static const dark = AppTokens(
+    background: Color(0xFF0C110E),
+    surface: Color(0xFF151B17),
+    surfaceAlt: Color(0xFF1E2621),
+    border: Color(0xFF2A332D),
+    ink: Color(0xFFEEF2EE),
+    onInk: Color(0xFF0F1412),
+    muted: Color(0xFF9AA39C),
+    primary: Color(0xFF3DD68C),
+    onPrimary: Color(0xFF06281A),
+    primarySoft: Color(0xFF173326),
+    success: Color(0xFF4ADE80),
+    progress: Color(0xFF22C55E),
+    warning: Color(0xFFFBBF24),
+    warningSoft: Color(0xFF33270F),
+    danger: Color(0xFFF87171),
+    dangerSoft: Color(0xFF3A1717),
   );
 
   // Les jetons sont fixes : aucune variante locale n'est prévue.

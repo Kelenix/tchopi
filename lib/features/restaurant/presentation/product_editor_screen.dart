@@ -238,6 +238,8 @@ class _ProductEditorScreenState extends ConsumerState<ProductEditorScreen> {
               children: [
                 Expanded(
                   child: DropdownButtonFormField<String?>(
+                    borderRadius: BorderRadius.circular(Radii.field),
+                    icon: const Icon(Icons.expand_more_rounded),
                     key: ValueKey((_categoryId, categories.length)),
                     initialValue: categories.any((c) => c.id == _categoryId)
                         ? _categoryId

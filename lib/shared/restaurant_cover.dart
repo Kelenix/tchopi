@@ -14,6 +14,7 @@ class MediaImage extends ConsumerWidget {
     this.icon,
     this.seed = '',
     this.size,
+    this.iconAlignment = Alignment.center,
   });
 
   final String? path;
@@ -22,6 +23,9 @@ class MediaImage extends ConsumerWidget {
 
   /// Côté d'une vignette carrée ; absent : photo en pleine largeur d'écran.
   final double? size;
+
+  /// Place de l'icône sans photo (en coin quand du texte recouvre l'image).
+  final Alignment iconAlignment;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -44,11 +48,15 @@ class MediaImage extends ConsumerWidget {
           ],
         ),
       ),
-      child: Center(
-        child: Icon(
-          icon ?? Icons.restaurant,
-          size: 40,
-          color: strong.withValues(alpha: 0.55),
+      child: Align(
+        alignment: iconAlignment,
+        child: Padding(
+          padding: const EdgeInsets.all(Space.lg),
+          child: Icon(
+            icon ?? Icons.restaurant,
+            size: 40,
+            color: strong.withValues(alpha: 0.55),
+          ),
         ),
       ),
     );

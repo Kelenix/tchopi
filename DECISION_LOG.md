@@ -6,6 +6,38 @@
 
 ---
 
+## ADR-038 — Thème sombre, villes et quartiers, carte de livraison
+
+- **Date** : 2026-10-20
+- **Statut** : Accepté (demande utilisateur ; remplace ADR-019 « clair uniquement »)
+- **Décideur** : Claude (rôles : mobile-ui-designer, mobile-architect)
+- **Contexte** : refonte demandée : choix de ville compact couvrant toute la Côte d'Ivoire, quartiers suggérés,
+  carte conforme à la maquette (trajet, retrait, destination, livreur orienté et animé), design harmonisé, thèmes
+  clair et sombre mémorisés.
+- **Décision** :
+  - **Thèmes** : jetons `AppTokens.dark` repris de la maquette ; sélecteur « Apparence » (Auto / Clair / Sombre)
+    dans Mon compte, mémorisé sur l'appareil (`shared_preferences`). Thème des menus, listes déroulantes, fenêtres,
+    info-bulles, cases et sélection de texte dérivé des jetons ; contrastes AA testés dans les deux thèmes.
+  - **Villes** : liste embarquée (`places_reference.dart`) des chefs-lieux de département et principales villes
+    (Wikipédia, sans doublons), villes desservies en tête ; feuille de hauteur fixe (70 % de l'écran) avec recherche
+    sans accents, casse ni séparateurs (« san ped » → San-Pédro).
+  - **Quartiers** : suggestions par ville (Abidjan et 10 grandes villes), discrètes sous le champ ; la ville vient
+    de la zone qui contient l'épingle ; saisie libre conservée.
+  - **Carte** (`DeliveryMap`, suivi client et mission livreur) : trajet routier OSRM (`ROUTING_URL`, service public
+    de démonstration par défaut, ligne droite si indisponible), calculé une fois par trajet ; retrait en carré foncé
+    (restaurant ou colis), destination en rond vert, livreur avec l'icône de son véhicule, pulsation, flèche de
+    direction (seulement au-delà de 5 m) et glissement animé de 0,9 s ; seule la couche du livreur se redessine,
+    la carte n'est plus reconstruite à chaque étape (recadrage). Fond « positron » en clair, « dark » en sombre
+    (OpenFreeMap), chacun avec son identifiant : sans lui, la bibliothèque mélangeait les deux styles en cache.
+- **Alternatives écartées** : API de lieux (Google Places : clé et coût, pas de quartiers fiables en CI) ; trajet
+  calculé sur le serveur (inutile tant que le service public suffit) ; style « liberty » (chargé, peu lisible sous
+  le trajet).
+- **Conséquences** : le service OSRM public n'a pas de garantie : à héberger sur le VPS avant un trafic important
+  (`ROUTING_URL`). La liste des quartiers s'enrichit dans `places_reference.dart`.
+- **Impact** : technique et produit (réversible).
+
+---
+
 ## ADR-037 — Prise en charge : commande sans livreur, offre à « Prête », livreurs affiliés
 
 - **Date** : 2026-10-19

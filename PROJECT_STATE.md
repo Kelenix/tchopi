@@ -6,7 +6,7 @@
 ## Snapshot
 
 - **Phase courante** : 5 — Qualité & performance faite · Inc-12 (carte Stripe) livré, à brancher sur vos clés · back-end en ligne sur https://api.tchopi.com (VPS partagé, ADR-031) ; app web sur tchopi.com et Play Store à venir
-- **Dernière mise à jour** : 2026-10-19
+- **Dernière mise à jour** : 2026-10-20
 - **Santé** : 🟢 OK · serveur en ligne ; inscriptions réservées aux numéros autorisés (pas encore de SMS)
 - **Prochaine action** : phase 6 (publication : signature, fiche Play Store) ; essais réels Stripe et nyole dès réception de vos clés de test (tâche manuelle n° 1)
 - **Plan de référence** : `docs/plan-de-realisation.md` · Design : `docs/design/design-system.md`
@@ -87,6 +87,12 @@ validation de la maquette → code des écrans à partir de l'Inc-1. Registre de
 
 ## Journal de session (résumé court, le plus récent en haut)
 
+- 2026-10-20 — Refonte design (ADR-038) : thème sombre de la maquette + sélecteur Apparence mémorisé ; choix de
+  ville compact (toutes les villes de CI, recherche sans accents) ; quartiers suggérés (adresses, colis, restaurant) ;
+  carte de livraison commune (trajet routier, retrait, destination, livreur orienté et animé, fond clair/sombre) ;
+  menus, fenêtres et listes harmonisés ; accueil lisible sur petit écran. Vérifié dans le navigateur en clair et en
+  sombre, 320 et 375 px : accueil, compte, ville, quartier, suivi (déplacement du livreur), mission livreur.
+  Preuves : `check.ps1 -Integration` vert (analyse 0 ; 59 + 64 tests Flutter ; pgTAP ; intégration 3 + 10).
 - 2026-10-19 — Prise en charge revue (ADR-037) : commande sans livreur, offre à tous les livreurs éligibles à
   « Prête », premier qui accepte, attente reproposée, alerte restaurant, désistement → reproposée, livreurs
   affiliés (admin), libellés « Livreur en route vers le restaurant ». Procédure : `docs/tester-une-commande.md`.

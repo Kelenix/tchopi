@@ -3,16 +3,16 @@ import 'package:flutter/services.dart';
 
 import 'tokens.dart';
 
-/// Thème Material 3 construit à partir des jetons ; police embarquée dans `core`.
-/// Clair uniquement, quel que soit le réglage du téléphone (ADR-019).
+/// Thème Material 3 construit à partir des jetons, en clair et en sombre (ADR-038) ; police embarquée dans `core`.
 abstract final class AppTheme {
   static const fontFamily = 'packages/core/PlusJakartaSans';
 
-  static final light = _build(AppTokens.light);
+  static final light = _build(AppTokens.light, Brightness.light);
+  static final dark = _build(AppTokens.dark, Brightness.dark);
 
-  static ThemeData _build(AppTokens t) {
+  static ThemeData _build(AppTokens t, Brightness brightness) {
     final scheme = ColorScheme(
-      brightness: Brightness.light,
+      brightness: brightness,
       primary: t.primary,
       onPrimary: t.onPrimary,
       primaryContainer: t.primarySoft,
@@ -53,11 +53,13 @@ abstract final class AppTheme {
 
     return ThemeData(
       useMaterial3: true,
-      brightness: Brightness.light,
+      brightness: brightness,
       colorScheme: scheme,
       fontFamily: fontFamily,
       textTheme: text,
       scaffoldBackgroundColor: t.background,
+      canvasColor: t.surface,
+      iconTheme: IconThemeData(color: t.ink),
       splashFactory: InkSparkle.splashFactory,
       extensions: [t],
       // Transitions douces et cohérentes sur toutes les plateformes.
@@ -82,9 +84,11 @@ abstract final class AppTheme {
         centerTitle: false,
         toolbarHeight: 64,
         titleSpacing: Space.lg,
-        systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
-          statusBarColor: Colors.transparent,
-        ),
+        systemOverlayStyle:
+            (brightness == Brightness.light
+                    ? SystemUiOverlayStyle.dark
+                    : SystemUiOverlayStyle.light)
+                .copyWith(statusBarColor: Colors.transparent),
         titleTextStyle: text.titleLarge!.copyWith(fontWeight: FontWeight.w800),
       ),
       actionIconTheme: ActionIconThemeData(
@@ -188,10 +192,84 @@ abstract final class AppTheme {
           ),
         ),
       ),
+      popupMenuTheme: PopupMenuThemeData(
+        color: t.surface,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(Radii.field),
+          side: BorderSide(color: t.border),
+        ),
+      ),
+      menuTheme: MenuThemeData(
+        style: MenuStyle(
+          backgroundColor: WidgetStatePropertyAll(t.surface),
+          surfaceTintColor: const WidgetStatePropertyAll(Colors.transparent),
+          shape: WidgetStatePropertyAll(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(Radii.field),
+              side: BorderSide(color: t.border),
+            ),
+          ),
+        ),
+      ),
+      segmentedButtonTheme: SegmentedButtonThemeData(
+        style: SegmentedButton.styleFrom(
+          backgroundColor: t.surface,
+          foregroundColor: t.ink,
+          selectedBackgroundColor: t.primarySoft,
+          selectedForegroundColor: t.primary,
+          side: BorderSide(color: t.border),
+          textStyle: text.labelLarge,
+          padding: const EdgeInsets.symmetric(horizontal: Space.sm),
+        ),
+      ),
+      dropdownMenuTheme: DropdownMenuThemeData(
+        menuStyle: MenuStyle(
+          backgroundColor: WidgetStatePropertyAll(t.surface),
+          surfaceTintColor: const WidgetStatePropertyAll(Colors.transparent),
+          shape: WidgetStatePropertyAll(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(Radii.field),
+              side: BorderSide(color: t.border),
+            ),
+          ),
+        ),
+      ),
+      checkboxTheme: CheckboxThemeData(
+        side: BorderSide(color: t.muted, width: 1.5),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+      ),
+      radioTheme: RadioThemeData(
+        fillColor: WidgetStateProperty.resolveWith(
+          (states) =>
+              states.contains(WidgetState.selected) ? t.primary : t.muted,
+        ),
+      ),
+      tooltipTheme: TooltipThemeData(
+        decoration: BoxDecoration(
+          color: t.ink,
+          borderRadius: BorderRadius.circular(Radii.chip),
+        ),
+        textStyle: text.bodySmall!.copyWith(color: t.onInk),
+      ),
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: t.primary,
+        selectionColor: t.primary.withValues(alpha: 0.3),
+        selectionHandleColor: t.primary,
+      ),
+      // Fenêtres : surface du thème, filet discret, titre et texte de l'échelle typographique.
       dialogTheme: DialogThemeData(
         backgroundColor: t.surface,
+        surfaceTintColor: Colors.transparent,
+        titleTextStyle: text.titleLarge,
+        contentTextStyle: text.bodyMedium!.copyWith(color: t.muted),
+        insetPadding: const EdgeInsets.symmetric(
+          horizontal: Space.screen,
+          vertical: Space.xxl,
+        ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(Radii.card),
+          side: BorderSide(color: t.border),
         ),
       ),
       navigationBarTheme: NavigationBarThemeData(
