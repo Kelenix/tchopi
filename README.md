@@ -35,7 +35,7 @@ Après une modification d'un fichier `@riverpod`, d'un modèle ou de `packages/c
 
 ## Lancer en local (PowerShell, depuis la racine du projet)
 
-Toutes les commandes se tapent dans PowerShell, dans le dossier du projet (`C:\PROJECT PERSO\food-delive`).
+Toutes les commandes se tapent dans PowerShell, dans le dossier du projet.
 Windows PowerShell n'accepte pas `&&` : une commande par ligne, ou les scripts ci-dessous.
 
 1. Démarrer Supabase (Docker Desktop ouvert ; la première fois, quelques minutes) :

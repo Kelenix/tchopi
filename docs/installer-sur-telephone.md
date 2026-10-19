@@ -11,6 +11,37 @@ Deux façons de faire, selon ce que vous voulez tester.
 
 iPhone : plus tard (Android d'abord, D-6) ; il faudra un Mac et TestFlight.
 
+## Commandes (mode A)
+
+PowerShell, dans le dossier du projet, Docker Desktop ouvert.
+
+**Une seule fois sur le PC** :
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+irm get.scoop.sh | iex
+scoop bucket add supabase https://github.com/supabase/scoop-bucket.git
+scoop install supabase
+flutter doctor --android-licenses
+flutter pub get
+Copy-Item supabase\functions\.env.example supabase\functions\.env
+supabase start
+Copy-Item env\example.json env\local.json
+supabase status
+notepad env\local.json
+```
+
+Dans `env\local.json`, remplacer la valeur de `SUPABASE_ANON_KEY` par la clé `anon` (ou `Publishable`) affichée
+par `supabase status`. Puis créer les comptes de test : `.\dev-accounts.ps1`.
+
+**À chaque installation** (téléphone branché en USB, débogage USB autorisé — voir Préparation) :
+
+```powershell
+supabase start
+flutter devices
+.\phone.ps1
+```
+
 ---
 
 ## A. Tester tout de suite (Wi-Fi de la maison)
@@ -33,14 +64,7 @@ iPhone : plus tard (Android d'abord, D-6) ; il faudra un Mac et TestFlight.
 
 ### Installer
 
-PowerShell normal, dans le dossier du projet, Docker Desktop ouvert :
-
-```powershell
-supabase start
-.\phone.ps1
-```
-
-Le script lit l'adresse du PC sur le Wi-Fi, compile l'app (2 à 5 minutes) et l'installe sur le téléphone
+Commandes : voir [Commandes](#commandes-mode-a). Le script `.\phone.ps1` lit l'adresse du PC sur le Wi-Fi, compile l'app (2 à 5 minutes) et l'installe sur le téléphone
 branché. Ensuite, débranchez : l'app fonctionne tant que le téléphone est sur le même Wi-Fi et que le PC reste
 allumé avec Supabase démarré.
 

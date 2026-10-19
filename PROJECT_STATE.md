@@ -222,8 +222,8 @@ validation de la maquette → code des écrans à partir de l'Inc-1. Registre de
   (email via modèles FR, SMS via numéros de test en local), profil obligatoire, compte (modification, changement
   d'identifiant, déconnexion, suppression avec anonymisation), accès par rôle (back-office réservé aux admins pour
   l'instant). Preuves : analyse 0 problème ; 47 tests Flutter ; pgTAP 17/17 ; 3 tests d'intégration réels contre
-  Supabase local (email, doublon, téléphone, mot de passe oublié, suppression) ; parcours vérifié sur émulateur
-  (captures docs/design/captures-inc1-*.png). La ville est saisie librement en attendant les zones (Inc-2).
+  Supabase local (email, doublon, téléphone, mot de passe oublié, suppression) ; parcours vérifié sur émulateur.
+  La ville est saisie librement en attendant les zones (Inc-2).
 
 - 2026-10-18 — Supabase local démarré ; migration appliquée ; pgTAP 3/3 verts ; env/local.json créé (non versionné).
 

@@ -11,6 +11,7 @@ $ip = (Get-NetIPConfiguration |
 if (-not $ip) { Write-Host 'ÉCHEC : ce PC n''est connecté à aucun réseau (Wi-Fi ?).' -ForegroundColor Red; exit 1 }
 
 # Même configuration que le PC, avec l'adresse du PC sur le Wi-Fi à la place de 127.0.0.1 (UTF-8 sans BOM).
+if (-not (Test-Path "$PSScriptRoot\env\local.json")) { Write-Host 'ÉCHEC : env\local.json manquant (docs/installer-sur-telephone.md, § Commandes).' -ForegroundColor Red; exit 1 }
 $config = Get-Content "$PSScriptRoot\env\local.json" -Raw | ConvertFrom-Json
 $config.SUPABASE_URL = "http://${ip}:54321"
 [IO.File]::WriteAllText("$PSScriptRoot\env\phone.json", ($config | ConvertTo-Json))
