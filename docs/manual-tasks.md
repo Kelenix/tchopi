@@ -102,10 +102,10 @@
 - **Étapes** : 1. https://console.firebase.google.com → nouveau projet. 2. Ajouter l'app Android
   (`com.tchopi.mobile`) ; dans les paramètres du projet, relever **clé d'API web**, **ID d'application**, **ID de
   l'expéditeur** et **ID du projet** — ✅ fait le 2026-10-20 : valeurs publiques inscrites dans
-  `packages/core/lib/src/config/env.dart`, aucun fichier `google-services.json` n'est nécessaire. 3. Comptes de service → générer une clé privée (JSON) : la saisir
-  vous-même comme secret de la fonction `push` (`FCM_SERVICE_ACCOUNT`) sur le serveur. 4. Dans la base du serveur,
-  enregistrer dans le coffre l'adresse de la fonction (`push_function_url`) et la clé de service
-  (`push_function_key`) ; Claude fournira la commande exacte au déploiement.
+  `packages/core/lib/src/config/env.dart`, aucun fichier `google-services.json` n'est nécessaire. 3. Comptes de service → « Générer une nouvelle clé privée » :
+  ranger le fichier JSON dans `env\` (ignoré par git), jamais dans le chat. 4. `.\vps.ps1 notifications` : le
+  fichier part sur le serveur sans être affiché (`FCM_SERVICE_ACCOUNT`) ; l'adresse et la clé de la fonction `push`
+  sont mises dans le coffre de la base.
 - **Coût** : gratuit.
 - **Vérification** : une notification de test arrive sur le téléphone.
 

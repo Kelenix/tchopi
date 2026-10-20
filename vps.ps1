@@ -8,8 +8,9 @@
 #   .\vps.ps1 demo                           ajoute les restaurants de démonstration (menus, photos)
 #   .\vps.ps1 studio                        tableau de bord Supabase sur http://localhost:8000 (Ctrl+C pour fermer)
 #   .\vps.ps1 cle-paiement <NOM>            saisit une clé Stripe ou nyole (masquée) et l'enregistre sur le VPS
+#   .\vps.ps1 notifications [fichier]       active les notifications (compte de service Firebase rangé dans env\)
 param(
-  [Parameter(Mandatory)][ValidateSet('cle', 'installer', 'deployer', 'ci', 'testeur', 'admin', 'demo', 'studio', 'cle-paiement')][string]$Action,
+  [Parameter(Mandatory)][ValidateSet('cle', 'installer', 'deployer', 'ci', 'testeur', 'admin', 'demo', 'studio', 'cle-paiement', 'notifications')][string]$Action,
   [string]$Valeur,
   [string]$Code
 )
@@ -136,6 +137,22 @@ switch ($Action) {
     $plain | ssh tchopi "sh /opt/tchopi/src/infra/server.sh secret $Valeur"
     if ($LASTEXITCODE -ne 0) { Fail "enregistrement de $Valeur sur le VPS" }
     Write-Host "$Valeur enregistrée ; fonctions de paiement relancées." -ForegroundColor Green
+  }
+  'notifications' {
+    # Compte de service Firebase (docs/manual-tasks.md § 8) lu sur ce PC et envoyé au VPS par SSH, jamais affiché.
+    $file = if ($Valeur) { $Valeur } else {
+      Get-ChildItem (Join-Path $PSScriptRoot 'env') -Filter '*firebase-adminsdk*.json' |
+        Select-Object -First 1 -ExpandProperty FullName
+    }
+    if (-not $file -or -not (Test-Path $file)) { Fail 'compte de service introuvable : fichier JSON de Firebase à ranger dans env\' }
+    $account = Get-Content $file -Raw | ConvertFrom-Json
+    if ($account.type -ne 'service_account' -or $account.project_id -ne 'tchopi') {
+      Fail 'compte de service du projet Firebase « tchopi » attendu'
+    }
+    Send-Source
+    Get-Content $file -Raw | ssh tchopi 'sh /opt/tchopi/src/infra/server.sh fcm'
+    if ($LASTEXITCODE -ne 0) { Fail 'enregistrement du compte de service sur le VPS' }
+    Write-Host 'Notifications actives : chaque téléphone qui les a autorisées les reçoit.' -ForegroundColor Green
   }
   'studio' {
     # Démarré à la demande (mémoire du VPS partagé), arrêté à la fermeture du tunnel.

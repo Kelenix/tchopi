@@ -8,6 +8,7 @@
 #   sh server.sh demo                    ajoute les restaurants de démonstration et leurs photos (une seule fois)
 #   sh server.sh routing                 met à jour la carte des trajets routiers (aussi chaque dimanche, cron)
 #   sh server.sh secret <NOM>            enregistre une clé de paiement lue sur l'entrée standard, puis relance les fonctions
+#   sh server.sh fcm                     active les notifications : compte de service Firebase lu sur l'entrée standard
 # Le pare-feu et SSH du serveur ne sont pas modifiés (déjà limités à 22, 80 et 443).
 set -eu
 
@@ -188,6 +189,25 @@ secret() {
   cd "$APP" && docker compose up -d --force-recreate --wait functions
 }
 
+# Notifications (ADR-025) : compte de service Firebase lu sur l'entrée standard (jamais en argument), puis adresse et
+# clé de la fonction « push » dans le coffre de la base. Les notifications restées en attente, anciennes, ne partent pas.
+fcm() {
+  value=$(jq -ce 'select(.type == "service_account" and .project_id and .client_email and .private_key)') ||
+    { echo 'compte de service invalide' >&2; exit 1; }
+  case "$value" in *"'"*) echo 'compte de service invalide' >&2; exit 1 ;; esac
+  # Entre apostrophes : valeur littérale pour Docker Compose. Réécrit en place : droits du .env conservés.
+  grep -v '^FCM_SERVICE_ACCOUNT=' "$APP/.env" > "$APP/.env.tmp" || true
+  printf "FCM_SERVICE_ACCOUNT='%s'\n" "$value" >> "$APP/.env.tmp"
+  cat "$APP/.env.tmp" > "$APP/.env" && rm "$APP/.env.tmp"
+  key=$(grep '^SERVICE_ROLE_KEY=' "$APP/.env" | cut -d= -f2-)
+  sql -c "update public.notifications set sent_at = now(), error = 'expired' where sent_at is null"
+  sql -c "select vault.create_secret('http://kong:8000/functions/v1/push', 'push_function_url')
+    where not exists (select 1 from vault.secrets where name = 'push_function_url')"
+  sql -c "select vault.create_secret('$key', 'push_function_key')
+    where not exists (select 1 from vault.secrets where name = 'push_function_key')"
+  cd "$APP" && docker compose up -d --force-recreate --wait functions
+}
+
 case "${1:-}" in
   install) install_supabase "$2"; install_nginx "$2"; install_backups; deploy ;;
   deploy) deploy ;;
@@ -197,5 +217,6 @@ case "${1:-}" in
   demo) demo ;;
   routing) routing_data; cd "$APP" && docker compose up -d --force-recreate --wait routing ;;
   secret) secret "$2" ;;
-  *) sed -n '2,11p' "$0"; exit 1 ;;
+  fcm) fcm ;;
+  *) sed -n '2,12p' "$0"; exit 1 ;;
 esac
