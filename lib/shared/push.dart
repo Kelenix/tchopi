@@ -4,10 +4,7 @@ import 'package:core/core.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../router.dart';
 
@@ -15,9 +12,10 @@ part 'push.g.dart';
 
 enum PushState { unavailable, notAsked, denied, granted }
 
-/// Notifications push (NOT-01 à NOT-04, ADR-025) : autorisation demandée au bon moment, appareil enregistré pour
-/// le compte connecté (et oublié à la déconnexion), écran visé ouvert au toucher. Inactif dans le navigateur et
-/// tant que Firebase n'est pas configuré : les écrans ouverts restent à jour par le temps réel.
+/// Notifications push (NOT-01 à NOT-04, ADR-025) : autorisation demandée par le système dès l'ouverture, une fois
+/// connecté (ADR-041) ; appareil enregistré pour le compte connecté (et oublié à la déconnexion), écran visé ouvert au
+/// toucher. Inactif dans le navigateur et tant que Firebase n'est pas configuré : les écrans ouverts restent à jour par
+/// le temps réel.
 ///
 /// Les jetons d'enregistrement FCM restent la cible de la fonction « push » (API HTTP v1) : leurs méthodes sont
 /// marquées dépréciées au profit des identifiants d'installation, que l'envoi serveur n'utilise pas encore.
@@ -46,19 +44,13 @@ class Push extends _$Push {
       await _messaging.deleteToken();
       return PushState.notAsked;
     }
-    final status =
-        (await _messaging.getNotificationSettings()).authorizationStatus;
-    final state = _state(status);
-    if (state == PushState.granted) await _register();
-    return state;
-  }
-
-  /// À appeler après une explication (NOT-04) : demande l'autorisation puis enregistre l'appareil.
-  Future<void> enable() async {
-    final settings = await _messaging.requestPermission();
+    var settings = await _messaging.getNotificationSettings();
+    if (settings.authorizationStatus == AuthorizationStatus.notDetermined) {
+      settings = await _messaging.requestPermission();
+    }
     final state = _state(settings.authorizationStatus);
     if (state == PushState.granted) await _register();
-    this.state = AsyncData(state);
+    return state;
   }
 
   PushState _state(AuthorizationStatus status) => switch (status) {
@@ -106,28 +98,4 @@ class Push extends _$Push {
       ref.read(routerProvider).push(route);
     }
   }
-}
-
-/// NOT-04 : au premier moment utile (commande passée, passage en ligne, écran des commandes du restaurant),
-/// explication puis demande d'autorisation ; une seule fois par installation.
-Future<void> offerPush(
-  BuildContext context,
-  WidgetRef ref, {
-  required String body,
-}) async {
-  const offered = 'push_offered';
-  if (await ref.read(pushProvider.future) != PushState.notAsked) return;
-  final prefs = SharedPreferencesAsync();
-  if (await prefs.getBool(offered) ?? false) return;
-  await prefs.setBool(offered, true);
-  if (!context.mounted) return;
-  final l10n = AppLocalizations.of(context);
-  final accepted = await showConfirmSheet(
-    context,
-    icon: Icons.notifications_active_outlined,
-    title: l10n.pushTitle,
-    body: body,
-    confirmLabel: l10n.pushEnable,
-  );
-  if (accepted) await ref.read(pushProvider.notifier).enable();
 }

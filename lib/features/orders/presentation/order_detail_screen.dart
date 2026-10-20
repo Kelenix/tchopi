@@ -107,7 +107,6 @@ class OrderDetailScreen extends ConsumerWidget {
                 const SizedBox(height: Space.lg),
                 OnlinePaymentPanel(order: o),
               ],
-              if (!status.isClosed && !awaitingPayment) const _PushPrompt(),
               if (push == PushState.denied && !status.isClosed) ...[
                 const SizedBox(height: Space.md),
                 _Notice(
@@ -500,33 +499,6 @@ class _TrackingCardState extends ConsumerState<_TrackingCard> {
       ),
     );
   }
-}
-
-/// NOT-04 : la première fois qu'une commande est suivie, explication puis demande d'autorisation.
-class _PushPrompt extends ConsumerStatefulWidget {
-  const _PushPrompt();
-
-  @override
-  ConsumerState<_PushPrompt> createState() => _PushPromptState();
-}
-
-class _PushPromptState extends ConsumerState<_PushPrompt> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        offerPush(
-          context,
-          ref,
-          body: AppLocalizations.of(context).pushClientBody,
-        );
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) => const SizedBox.shrink();
 }
 
 /// Bandeau d'information discret (connexion perdue, notifications désactivées).

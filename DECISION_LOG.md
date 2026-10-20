@@ -6,6 +6,22 @@
 
 ---
 
+## ADR-041 — Autorisation des notifications demandée à l'ouverture
+
+- **Date** : 2026-10-20
+- **Statut** : Accepté (demande utilisateur ; remplace la demande « au premier moment utile » de NOT-04)
+- **Décideur** : Claude (rôles : flutter-engineer, product-owner)
+- **Contexte** : l'autorisation n'était demandée qu'après une commande, au passage en ligne du livreur ou sur l'écran
+  des commandes du restaurant, précédée d'une explication ; à l'ouverture de l'app, rien n'était demandé.
+- **Décision** : dès l'ouverture, une fois connecté, si l'autorisation n'a jamais été demandée, la fenêtre du système
+  s'affiche (Android 13 et plus, iPhone) ; l'appareil est enregistré dès qu'elle est accordée. Les explications
+  propres à chaque écran sont retirées ; le rappel « Notifications désactivées » du suivi reste.
+- **Alternatives écartées** : explication de l'app avant la fenêtre du système (étape de plus, refusée à l'usage).
+- **Conséquences** : Android 12 et moins n'affichent pas de fenêtre (notifications permises d'office).
+- **Impact** : fonctionnel (faible), technique (réversible).
+
+---
+
 ## ADR-040 — Admin sur alerte seulement ; restaurant prévenu de la livraison
 
 - **Date** : 2026-10-20

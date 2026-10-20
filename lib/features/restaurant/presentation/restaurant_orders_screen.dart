@@ -8,7 +8,6 @@ import 'package:intl/intl.dart';
 
 import '../../../shared/alert_sound.dart';
 import '../../../shared/dialogs.dart';
-import '../../../shared/push.dart';
 import '../../orders/orders_providers.dart';
 import '../../orders/presentation/order_widgets.dart';
 import '../restaurant_providers.dart';
@@ -46,15 +45,6 @@ class _RestaurantOrdersScreenState
       const Duration(seconds: 30),
       (_) => setState(() {}),
     );
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        offerPush(
-          context,
-          ref,
-          body: AppLocalizations.of(context).pushRestaurantBody,
-        );
-      }
-    });
   }
 
   @override
@@ -490,7 +480,10 @@ class _RestaurantOrderCardState extends ConsumerState<_RestaurantOrderCard> {
               strong: true,
             ),
             Text(
-              l10n.paymentCash,
+              o.paymentMethod == PaymentMethod.cash
+                  ? l10n.paymentCash
+                  : '${paymentMethodLabel(l10n, o.paymentMethod)} · '
+                        '${paymentStatusLabel(l10n, o.paymentStatus)}',
               style: text.bodySmall!.copyWith(color: tokens.muted),
             ),
             if (o.closeReason case final reason? when o.status.isClosed) ...[

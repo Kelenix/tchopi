@@ -3999,36 +3999,6 @@ abstract class AppLocalizations {
   /// **'L\'équipe est prévenue et décide de la suite avec le client.'**
   String get missionFailedBody;
 
-  /// No description provided for @pushTitle.
-  ///
-  /// In fr, this message translates to:
-  /// **'Être prévenu'**
-  String get pushTitle;
-
-  /// No description provided for @pushEnable.
-  ///
-  /// In fr, this message translates to:
-  /// **'Activer les notifications'**
-  String get pushEnable;
-
-  /// No description provided for @pushClientBody.
-  ///
-  /// In fr, this message translates to:
-  /// **'Recevez une notification à chaque étape : commande acceptée, livreur en route, livraison.'**
-  String get pushClientBody;
-
-  /// No description provided for @pushCourierBody.
-  ///
-  /// In fr, this message translates to:
-  /// **'Recevez les nouvelles missions même quand l\'app est fermée.'**
-  String get pushCourierBody;
-
-  /// No description provided for @pushRestaurantBody.
-  ///
-  /// In fr, this message translates to:
-  /// **'Recevez les nouvelles commandes même quand l\'app est fermée.'**
-  String get pushRestaurantBody;
-
   /// No description provided for @pushReminder.
   ///
   /// In fr, this message translates to:

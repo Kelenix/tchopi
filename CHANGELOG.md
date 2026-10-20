@@ -9,6 +9,7 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · versions [S
   notification « Commande livrée » sur le téléphone une fois Firebase créé).
 
 ### Modifié
+- Notifications : autorisation demandée dès l'ouverture de l'app, une fois connecté.
 - Admin : « Commandes en cours » devient « Commandes à traiter » et ne liste plus que les commandes qui demandent
   une intervention (sans livreur, restaurant sans réponse, code bloqué, problème).
 

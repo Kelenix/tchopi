@@ -87,6 +87,10 @@ validation de la maquette → code des écrans à partir de l'Inc-1. Registre de
 
 ## Journal de session (résumé court, le plus récent en haut)
 
+- 2026-10-20 — Notifications : autorisation demandée à l'ouverture (ADR-041), configuration Firebase dans `Env`,
+  `vps.ps1 notifications` (compte de service). Audit avant production (`docs/audit-mise-en-production.md`) : 4 points
+  bloquants (inscription publique, signature Play Store, textes juridiques, paiements réels) ; bug corrigé : le
+  restaurant voyait « Espèces » pour les commandes payées en ligne. Plateforme web lancée dans `../tchopi-web`.
 - 2026-10-20 — Retours d'essai (ADR-040) : admin « Commandes à traiter » limité aux commandes en alerte (attribution
   manuelle et confirmation sans code conservées) ; restaurant notifié « Commande livrée » (migration
   `20261020110000`, message à l'écran des commandes). Analyse et tests Flutter verts ; tests de la base (pgTAP)

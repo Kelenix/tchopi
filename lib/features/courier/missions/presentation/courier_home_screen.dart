@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../shared/push.dart';
 import '../../profile/presentation/courier_profile_screen.dart';
 import '../missions_providers.dart';
 import 'history_screen.dart';
@@ -38,9 +37,6 @@ class _CourierHomeScreenState extends ConsumerState<CourierHomeScreen> {
     setState(() => _busy = true);
     try {
       await presence.setOnline(online);
-      if (online && mounted) {
-        await offerPush(context, ref, body: l10n.pushCourierBody);
-      }
     } on PresenceException catch (e) {
       messenger.showSnackBar(
         SnackBar(

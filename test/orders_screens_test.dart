@@ -405,6 +405,8 @@ void main() {
     tester,
   ) async {
     final ready = order('o3', OrderStatus.ready).copyWith(
+      paymentMethod: PaymentMethod.card,
+      paymentStatus: OrderPaymentStatus.paid,
       courierId: 'k1',
       courierInfo: const CourierInfo(
         firstName: 'Koffi',
@@ -440,6 +442,11 @@ void main() {
 
     expect(find.text('Livreur : Koffi · Moto AB-123-CI'), findsOneWidget);
     expect(find.text('Remise au livreur'), findsOneWidget);
+    expect(
+      find.text('Carte bancaire · Payée'),
+      findsOneWidget,
+      reason: 'le restaurant ne doit pas croire à un paiement en espèces',
+    );
   });
 
   testWidgets('restaurant : prévenu de la livraison au client', (tester) async {

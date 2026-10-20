@@ -347,7 +347,7 @@ En tant que **client**, je veux enregistrer une adresse sans connaître le nom d
 - Étant donné l'app Back-office Android, quand une commande arrive ou est annulée, alors une notification sonore est reçue ; quand le livreur l'a livrée au client, alors le restaurant en est notifié ; dans le navigateur, l'alerte sonore fonctionne tant que la page est ouverte.
 
 #### NOT-04 · Autorisation des notifications — Must · S · Inc-9
-- Étant donné le premier moment utile (après la première commande, ou au passage en ligne du livreur), quand l'app demande l'autorisation, alors une explication la précède ; en cas de refus, un rappel discret est affiché dans le suivi.
+- Étant donné un compte connecté, quand l'app s'ouvre et que l'autorisation n'a jamais été demandée, alors le système la demande aussitôt (ADR-041) ; en cas de refus, un rappel discret est affiché dans le suivi.
 
 ---
 
