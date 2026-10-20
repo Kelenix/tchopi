@@ -1,6 +1,7 @@
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'features/admin/people/presentation/couriers_admin_screen.dart';
@@ -42,6 +43,16 @@ GoRouter router(Ref ref) => buildAppRouter(
   ref,
   home: SpaceRoutes.entry,
   roleRedirect: guardSpaces,
+  // Photo de profil : appareil photo ou galerie, réduite avant l'envoi.
+  pickAvatar: (_) async {
+    final file = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 512,
+      maxHeight: 512,
+      imageQuality: 80,
+    );
+    return file?.readAsBytes();
+  },
   accountLinks: [
     AccountLink(
       Icons.swap_horiz,
@@ -49,17 +60,27 @@ GoRouter router(Ref ref) => buildAppRouter(
       SpacesScreen.path,
       visible: _notAdmin,
     ),
+    // Candidature livreur depuis le compte client (même compte, validée par l'admin).
+    AccountLink(
+      Icons.two_wheeler,
+      (l10n) => l10n.spaceBecomeCourier,
+      CourierProfileScreen.path,
+      visible: (roles) =>
+          !roles.isAdmin &&
+          roles.courierStatus == null &&
+          roles.restaurantIds.isEmpty,
+    ),
     AccountLink(
       Icons.receipt_long_outlined,
       (l10n) => l10n.ordersTitle,
       OrdersScreen.path,
-      visible: _notAdmin,
+      visible: _clientOnly,
     ),
     AccountLink(
       Icons.place_outlined,
       (l10n) => l10n.accountAddresses,
       AddressesScreen.path,
-      visible: _notAdmin,
+      visible: _clientOnly,
     ),
   ],
   routes: [
@@ -205,3 +226,7 @@ GoRouter router(Ref ref) => buildAppRouter(
 
 // Un compte admin n'a que l'espace Admin : ni changement d'espace, ni commandes, ni adresses.
 bool _notAdmin(AccountRoles roles) => !roles.isAdmin;
+
+// Commandes et adresses : comptes avec l'espace Client (ni admin, ni établissement).
+bool _clientOnly(AccountRoles roles) =>
+    !roles.isAdmin && roles.restaurantIds.isEmpty;

@@ -2398,6 +2398,12 @@ abstract class AppLocalizations {
   /// **'Aucune livraison pour ces filtres'**
   String get historyNone;
 
+  /// No description provided for @failureAccountBusy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une commande est en cours : attendez qu\'elle soit terminée pour supprimer votre compte.'**
+  String get failureAccountBusy;
+
   /// No description provided for @failureAlreadyAccepted.
   ///
   /// In fr, this message translates to:

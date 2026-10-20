@@ -6,6 +6,17 @@
 
 ---
 
+## ADR-052 — Espace client : photo, sécurité du compte, candidature livreur notifiée
+
+- **Date** : 2026-10-25 · **Statut** : Accepté (demande utilisateur) · **Décideur** : Claude (security, product-owner)
+- **Décision** : existant conservé (création, modification, changement d'identifiant, adresses, suppression,
+  « Devenir livreur » sur le même compte, statuts pending / approved / rejected, bascule d'espace). Ajouts : photo de
+  profil (`profiles.avatar_path`, dossier du titulaire dans `media`) ; « Devenir livreur » aussi dans Mon compte ;
+  chaque décision de l'admin sur la candidature est notifiée (déclencheur sur `couriers.status`, motif compris) ; sur
+  le web, mot de passe actuel exigé avant de changer d'e-mail ou de mot de passe, suppression du compte ; suppression
+  refusée tant qu'une commande du compte est en cours (`anonymize_account`).
+- **Impact** : sécurité (moyen), technique (faible).
+
 ## ADR-051 — Espace livreur : pièce d'identité ou plaque vérifiée, historique filtré, suppression du profil
 
 - **Date** : 2026-10-24 · **Statut** : Accepté (demande utilisateur) · **Décideur** : Claude (security, backend)

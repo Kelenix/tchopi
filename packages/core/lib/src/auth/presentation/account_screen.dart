@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -24,10 +26,33 @@ class AccountLink {
 }
 
 /// Mon compte : identité, identifiant de connexion, déconnexion et suppression (AUTH-06/07/08).
+/// Photo de profil du compte connecté (relue après chaque changement).
+final avatarUrlProvider = FutureProvider.autoDispose<String?>((ref) {
+  final userId = ref.watch(sessionProvider).value?.user.id;
+  return userId == null
+      ? Future.value()
+      : ref.watch(profileRepositoryProvider).avatarUrl(userId);
+});
+
 class AccountScreen extends ConsumerWidget {
-  const AccountScreen({super.key, this.links = const []});
+  const AccountScreen({super.key, this.links = const [], this.pickAvatar});
 
   final List<AccountLink> links;
+
+  /// Choix d'une photo par l'app (JPEG réduit) ; sans lui, la photo n'est pas modifiable.
+  final Future<Uint8List?> Function(BuildContext context)? pickAvatar;
+
+  Future<void> _changeAvatar(BuildContext context, WidgetRef ref) async {
+    final bytes = await pickAvatar!(context);
+    final userId = ref.read(sessionProvider).value?.user.id;
+    if (bytes == null || userId == null) return;
+    await ref
+        .read(formSubmissionProvider('account').notifier)
+        .run(
+          () => ref.read(profileRepositoryProvider).uploadAvatar(userId, bytes),
+        );
+    ref.invalidate(avatarUrlProvider);
+  }
 
   Future<void> _signOut(BuildContext context, WidgetRef ref) async {
     final l10n = AppLocalizations.of(context);
@@ -120,12 +145,23 @@ class AccountScreen extends ConsumerWidget {
             ),
             child: Row(
               children: [
-                CircleAvatar(
-                  radius: 32,
-                  backgroundColor: tokens.surface,
-                  child: Text(
-                    '${profile?.firstName?.characters.first ?? ''}${profile?.lastName?.characters.first ?? ''}',
-                    style: text.titleLarge!.copyWith(color: tokens.primary),
+                GestureDetector(
+                  onTap: pickAvatar == null
+                      ? null
+                      : () => _changeAvatar(context, ref),
+                  child: CircleAvatar(
+                    radius: 32,
+                    backgroundColor: tokens.surface,
+                    foregroundImage: switch (ref
+                        .watch(avatarUrlProvider)
+                        .value) {
+                      final url? => NetworkImage(url),
+                      null => null,
+                    },
+                    child: Text(
+                      '${profile?.firstName?.characters.first ?? ''}${profile?.lastName?.characters.first ?? ''}',
+                      style: text.titleLarge!.copyWith(color: tokens.primary),
+                    ),
                   ),
                 ),
                 const SizedBox(width: Space.lg),

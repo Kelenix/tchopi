@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../domain/app_failure.dart';
@@ -21,6 +23,36 @@ class ProfileRepository {
     if (row == null) throw AppFailure.sessionExpired;
     return Profile.fromJson(row);
   });
+
+  /// Photo de profil (bucket public « media », dossier du titulaire) ; null sans photo.
+  Future<String?> avatarUrl(String userId) => guardCall(() async {
+    final row = await _client
+        .from('profiles')
+        .select('avatar_path')
+        .eq('id', userId)
+        .maybeSingle();
+    final path = row?['avatar_path'] as String?;
+    return path == null
+        ? null
+        : _client.storage.from('media').getPublicUrl(path);
+  });
+
+  Future<void> uploadAvatar(String userId, Uint8List jpeg) =>
+      guardCall(() async {
+        final path =
+            'avatars/$userId/${DateTime.now().millisecondsSinceEpoch}.jpg';
+        await _client.storage
+            .from('media')
+            .uploadBinary(
+              path,
+              jpeg,
+              fileOptions: const FileOptions(contentType: 'image/jpeg'),
+            );
+        await _client
+            .from('profiles')
+            .update({'avatar_path': path})
+            .eq('id', userId);
+      });
 
   Future<Profile> update(Profile profile) => guardCall(() async {
     final row = await _client

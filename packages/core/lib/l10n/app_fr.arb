@@ -507,6 +507,7 @@
   "historySummary": "{count} livraison(s) · {earnings} · {km} km",
   "@historySummary": {"placeholders": {"count": {"type": "int"}, "earnings": {"type": "String"}, "km": {"type": "String"}}},
   "historyNone": "Aucune livraison pour ces filtres",
+  "failureAccountBusy": "Une commande est en cours : attendez qu'elle soit terminée pour supprimer votre compte.",
   "failureAlreadyAccepted": "Le restaurant prépare déjà votre commande. Contactez le support.",
   "failureInvalidTransition": "Cette action n'est plus possible : la commande a changé.",
   "failureCartEmpty": "Votre panier est vide.",

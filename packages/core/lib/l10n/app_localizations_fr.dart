@@ -1273,6 +1273,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get historyNone => 'Aucune livraison pour ces filtres';
 
   @override
+  String get failureAccountBusy =>
+      'Une commande est en cours : attendez qu\'elle soit terminée pour supprimer votre compte.';
+
+  @override
   String get failureAlreadyAccepted =>
       'Le restaurant prépare déjà votre commande. Contactez le support.';
 

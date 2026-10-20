@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -66,6 +68,7 @@ GoRouter buildAppRouter(
   String home = AppRoutes.account,
   List<RouteBase> routes = const [],
   List<AccountLink> accountLinks = const [],
+  Future<Uint8List?> Function(BuildContext context)? pickAvatar,
   String? Function(String location, AccountRoles roles)? roleRedirect,
 }) {
   final refresh = ValueNotifier(0);
@@ -114,7 +117,8 @@ GoRouter buildAppRouter(
       ),
       GoRoute(
         path: AppRoutes.account,
-        builder: (_, _) => AccountScreen(links: accountLinks),
+        builder: (_, _) =>
+            AccountScreen(links: accountLinks, pickAvatar: pickAvatar),
         routes: [
           GoRoute(
             path: 'edit',
