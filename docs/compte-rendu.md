@@ -4,6 +4,20 @@
 
 ---
 
+## 2026-10-20 — Audit avant production et plateforme web
+
+- **Audit** (`docs/audit-mise-en-production.md`) : l'app n'est pas encore prête pour le public. Bloquants :
+  inscription impossible sans SMS ni email, version Play Store non signée, textes juridiques absents, paiements en
+  ligne jamais essayés en réel. Bug corrigé : le restaurant voyait « Espèces » pour les commandes payées en ligne.
+- **Notifications** : autorisation demandée dès l'ouverture de l'app (ADR-041) ; Firebase configuré.
+- **Backend commun** (ADR-042, testé et déployé) : magasins, options de produits, catalogue public, candidatures,
+  retour de paiement vers le site.
+- **Plateforme web** : projet `../tchopi-web` (Next.js, même backend) : accueil, comptes, espace établissement,
+  client, administration, livreur ; CI et déploiement sur le VPS prêts. Reste : dépôt GitHub, DNS, première
+  installation, tests de validation (`../tchopi-web/docs/mise-en-ligne.md`).
+
+---
+
 ## 2026-10-20 — Admin sur alerte, restaurant prévenu de la livraison
 
 - **Admin** : « Commandes en cours » devient **« Commandes à traiter »** : seules les commandes qui demandent une
