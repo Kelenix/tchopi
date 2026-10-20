@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../features/admin/supervision/presentation/dashboard_screen.dart';
+import '../features/client/client_nav_bar.dart';
 import '../features/client/home/client_home_screen.dart';
 import '../features/courier/missions/presentation/courier_home_screen.dart';
 import '../features/courier/profile/presentation/courier_profile_screen.dart';
@@ -39,9 +40,10 @@ enum AppSpace {
   };
 }
 
-/// Espaces ouverts au compte : Client pour tous, les autres selon les droits accordés par le serveur.
+/// Espaces ouverts au compte selon les droits accordés par le serveur. Un établissement n'a pas l'espace Client
+/// (séparation des rôles, ADR-049) ; les autres comptes l'ont (c'est aussi là qu'on devient livreur).
 List<AppSpace> availableSpaces(AccountRoles roles) => [
-  AppSpace.client,
+  if (roles.restaurantIds.isEmpty) AppSpace.client,
   if (roles.courierStatus != null) AppSpace.courier,
   if (roles.restaurantIds.isNotEmpty) AppSpace.restaurant,
 ];
@@ -50,9 +52,10 @@ List<AppSpace> availableSpaces(AccountRoles roles) => [
 /// au compte, ou l'espace Client.
 String spaceHome(AccountRoles roles, AppSpace? lastUsed) {
   if (roles.isAdmin) return DashboardScreen.path;
-  return (lastUsed != null && availableSpaces(roles).contains(lastUsed)
+  final spaces = availableSpaces(roles);
+  return (lastUsed != null && spaces.contains(lastUsed)
           ? lastUsed
-          : AppSpace.client)
+          : spaces.first)
       .home;
 }
 
@@ -65,6 +68,11 @@ String? guardSpaces(String location, AccountRoles roles) {
     return allowed ? null : DashboardScreen.path;
   }
   if (location.startsWith('/admin')) return SpaceRoutes.entry;
+  // Compte établissement : pas d'écrans Client (catalogue, panier, commandes passées, adresses, paiements).
+  if (roles.restaurantIds.isNotEmpty &&
+      _clientPrefixes.any((prefix) => location.startsWith(prefix))) {
+    return RestaurantOrdersScreen.path;
+  }
   if (location.startsWith('/restaurant') && roles.restaurantIds.isEmpty) {
     return SpaceRoutes.entry;
   }
@@ -82,6 +90,15 @@ String? guardSpaces(String location, AccountRoles roles) {
   }
   return null;
 }
+
+const _clientPrefixes = [
+  ClientNavBar.homePath,
+  ClientNavBar.ordersPath,
+  ClientNavBar.paymentsPath,
+  '/parcel',
+  '/cart',
+  '/addresses',
+];
 
 abstract final class SpaceRoutes {
   /// Redirige vers l'accueil de l'espace actif.

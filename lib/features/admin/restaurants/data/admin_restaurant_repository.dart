@@ -74,7 +74,8 @@ class AdminRestaurantRepository {
         final rows = await _client
             .from('restaurant_couriers')
             .select('courier_id')
-            .eq('restaurant_id', restaurantId);
+            .eq('restaurant_id', restaurantId)
+            .eq('status', 'approved');
         return {for (final row in rows) row['courier_id'] as String};
       });
 

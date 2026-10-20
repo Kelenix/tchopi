@@ -30,6 +30,20 @@ void main() {
     expect(spaceHome(courier, null), AppSpace.client.home);
   });
 
+  test("un établissement n'a que ses espaces professionnels", () {
+    const owner = AccountRoles(restaurantIds: ['r1']);
+    expect(availableSpaces(owner), [AppSpace.restaurant]);
+    expect(spaceHome(owner, AppSpace.client), AppSpace.restaurant.home);
+    for (final location in ['/home', '/cart', '/orders/42', '/addresses']) {
+      expect(
+        guardSpaces(location, owner),
+        AppSpace.restaurant.home,
+        reason: location,
+      );
+    }
+    expect(guardSpaces('/restaurant/menu', owner), isNull);
+  });
+
   test("un compte admin arrive toujours dans l'Admin", () {
     expect(spaceHome(admin, AppSpace.client), DashboardScreen.path);
     expect(spaceHome(admin, null), DashboardScreen.path);
@@ -59,7 +73,7 @@ void main() {
 
   test('espace Restaurant réservé aux gérants', () {
     const manager = AccountRoles(restaurantIds: ['r1']);
-    expect(availableSpaces(manager), [AppSpace.client, AppSpace.restaurant]);
+    expect(availableSpaces(manager), [AppSpace.restaurant]);
     expect(spaceHome(manager, AppSpace.restaurant), AppSpace.restaurant.home);
     expect(guardSpaces('/restaurant/menu', client), SpaceRoutes.entry);
     expect(guardSpaces('/restaurant/menu', manager), isNull);

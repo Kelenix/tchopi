@@ -6,6 +6,28 @@
 
 ---
 
+## ADR-050 — Affiliation des livreurs gérée par l'établissement
+
+- **Date** : 2026-10-23 · **Statut** : Accepté (demande utilisateur) · **Décideur** : Claude (product-owner, backend)
+- **Décision** : `restaurant_couriers` porte un statut (`pending`, `approved`, `rejected`, `suspended`, `ended`), une
+  ligne par couple (pas de doublon, historique dans le journal d'audit). Le livreur **validé par l'admin** postule
+  (`courier_request_affiliation`), le restaurant accepte, refuse, suspend ou met fin (`restaurant_set_affiliation`,
+  transitions contrôlées, livreur prévenu). Seules les affiliations approuvées comptent pour l'attribution ; un
+  livreur peut être affilié à plusieurs restaurants. L'écran admin mobile existant reste compatible.
+- **Impact** : métier (moyen), sécurité (un restaurant ne voit et ne modifie que ses affiliations).
+
+## ADR-049 — Espace Établissement : profil complet, périodes, dialogues communs
+
+- **Date** : 2026-10-23 · **Statut** : Accepté (demande utilisateur) · **Décideur** : Claude (product-owner, frontend)
+- **Décision** : un compte établissement n'a plus l'espace Client (web et mobile). Les gérants modifient nom,
+  adresse et position dans le rayon de leur zone (`restaurant_update_profile`), logo et couverture ; ils peuvent
+  désactiver l'établissement s'il n'a pas de commande en cours (`restaurant_request_deactivation`, admins prévenus,
+  suppression définitive réservée à l'admin et seulement sans commande). Indicateurs, graphiques et tableaux viennent
+  d'une seule fonction serveur (`restaurant_stats`) pour la période choisie ; l'historique des commandes est filtré et
+  paginé par le serveur. Toutes les boîtes natives (`confirm`, `prompt`) du site sont remplacées par un composant
+  unique (`components/dialog.tsx` : `<dialog>` modal, Échap, focus, chargement, erreur dans la boîte).
+- **Impact** : métier (moyen), technique (faible).
+
 ## ADR-048 — Séparation stricte des rôles, actions d'administration complètes
 
 - **Date** : 2026-10-22 · **Statut** : Accepté (demande utilisateur) · **Décideur** : Claude (product-owner, security)
