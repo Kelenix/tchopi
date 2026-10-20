@@ -15,10 +15,10 @@ set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000e1","r
 
 select throws_ok(
   $$ select public.submit_courier_profile('44444444-4444-4444-4444-444444444444', 'motorbike', null, '00000000-0000-0000-0000-0000000000e1/photo.jpg') $$,
-  '23514', null, 'une immatriculation est exigée pour une moto'
+  'P0001', 'invalid_plate', 'une immatriculation est exigée pour une moto'
 );
 select throws_ok(
-  $$ select public.submit_courier_profile('44444444-4444-4444-4444-444444444444', 'bicycle', null, 'autre-dossier/photo.jpg') $$,
+  $$ select public.submit_courier_profile('44444444-4444-4444-4444-444444444444', 'bicycle', null, 'autre-dossier/photo.jpg', 'cni', 'CI0012345678') $$,
   '23514', null, 'la photo doit être dans le dossier du livreur'
 );
 select is(

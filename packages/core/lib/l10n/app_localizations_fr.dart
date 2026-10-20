@@ -1190,6 +1190,89 @@ class AppLocalizationsFr extends AppLocalizations {
       'Ce moyen de paiement n\'est pas encore disponible.';
 
   @override
+  String get failureInvalidPlate =>
+      'Immatriculation non reconnue : format ivoirien attendu (ex. 1234 AB 01).';
+
+  @override
+  String get failureInvalidId =>
+      'Numéro non reconnu pour cette pièce d\'identité.';
+
+  @override
+  String get failureCashDue => 'Reversez d\'abord les espèces encaissées.';
+
+  @override
+  String get fieldIdType => 'Pièce d\'identité';
+
+  @override
+  String get fieldIdNumber => 'Numéro de la pièce';
+
+  @override
+  String get fieldResidence => 'Adresse de résidence';
+
+  @override
+  String get courierIdHint =>
+      'À pied ou à vélo, votre pièce d\'identité est vérifiée automatiquement.';
+
+  @override
+  String courierFormatExample(String example) {
+    return 'Exemple : $example';
+  }
+
+  @override
+  String get courierDeleteProfile => 'Supprimer mon profil livreur';
+
+  @override
+  String get courierDeleteTitle => 'Supprimer votre profil livreur ?';
+
+  @override
+  String get courierDeleteBody =>
+      'Votre compte reste actif ; vos missions et gains passés sont conservés. Impossible avec une mission en cours ou des espèces à reverser.';
+
+  @override
+  String get courierDeleteConfirm => 'Supprimer';
+
+  @override
+  String get historyYesterday => 'Hier';
+
+  @override
+  String get historyMonth30 => '30 derniers jours';
+
+  @override
+  String get historyThisMonth => 'Ce mois-ci';
+
+  @override
+  String get historyCustom => 'Période…';
+
+  @override
+  String get historyAllStatuses => 'Tous';
+
+  @override
+  String get historyPending => 'En attente';
+
+  @override
+  String get historyInProgress => 'En cours';
+
+  @override
+  String get historyDelivered => 'Livrées';
+
+  @override
+  String get historyCancelled => 'Annulées';
+
+  @override
+  String get historySearch => 'N° de commande';
+
+  @override
+  String get historyLoadMore => 'Voir plus';
+
+  @override
+  String historySummary(int count, String earnings, String km) {
+    return '$count livraison(s) · $earnings · $km km';
+  }
+
+  @override
+  String get historyNone => 'Aucune livraison pour ces filtres';
+
+  @override
   String get failureAlreadyAccepted =>
       'Le restaurant prépare déjà votre commande. Contactez le support.';
 

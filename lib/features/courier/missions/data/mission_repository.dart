@@ -125,4 +125,47 @@ class MissionRepository {
     final row = await _client.from('settings').select('support_phone').single();
     return row['support_phone'] as String?;
   });
+
+  /// Livraisons du livreur sur une période, filtrées et paginées par le serveur (`courier_deliveries`).
+  Future<DeliveryPage> deliveries({
+    required DateTime from,
+    required DateTime to,
+    String? status,
+    String? query,
+    int offset = 0,
+    int limit = 20,
+  }) => guardCall(() async {
+    final data = await _client.rpc<Map<String, dynamic>>(
+      'courier_deliveries',
+      params: {
+        'p_from': from.toUtc().toIso8601String(),
+        'p_to': to.toUtc().toIso8601String(),
+        'p_status': status,
+        'p_query': query,
+        'p_limit': limit,
+        'p_offset': offset,
+      },
+    );
+    return DeliveryPage(
+      summary: Map<String, num>.from(data['summary'] as Map),
+      total: data['total'] as int,
+      rows: [
+        for (final row in data['rows'] as List)
+          Map<String, dynamic>.from(row as Map),
+      ],
+    );
+  });
+}
+
+/// Page de livraisons : résumé de la période, nombre filtré, lignes (champs de `courier_deliveries`).
+class DeliveryPage {
+  const DeliveryPage({
+    required this.summary,
+    required this.total,
+    required this.rows,
+  });
+
+  final Map<String, num> summary;
+  final int total;
+  final List<Map<String, dynamic>> rows;
 }

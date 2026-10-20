@@ -8,9 +8,11 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../../spaces/spaces.dart';
 import '../courier_providers.dart';
+import '../data/courier_repository.dart';
 import 'courier_status_screen.dart';
 
-/// L-01 : zone, moyen de transport, immatriculation et photo, soumis à validation (COU-01, COU-02).
+/// L-01 : zone, moyen de transport, immatriculation ou pièce d'identité (à pied, à vélo), adresse et photo, soumis à
+/// validation (COU-01, COU-02) ; suppression du profil livreur (le compte reste).
 class CourierProfileScreen extends ConsumerStatefulWidget {
   const CourierProfileScreen({super.key});
 
@@ -24,6 +26,10 @@ class CourierProfileScreen extends ConsumerStatefulWidget {
 class _CourierProfileScreenState extends ConsumerState<CourierProfileScreen> {
   final _form = GlobalKey<FormState>();
   final _plate = TextEditingController();
+  final _idNumber = TextEditingController();
+  final _residence = TextEditingController();
+  String _idType = 'cni';
+  List<IdentityFormat> _formats = const [];
   String? _zoneId;
   VehicleType _vehicle = VehicleType.motorbike;
   Uint8List? _newPhoto;
@@ -42,11 +48,84 @@ class _CourierProfileScreenState extends ConsumerState<CourierProfileScreen> {
       _vehicle = courier.vehicleType;
       _plate.text = courier.plateNumber ?? '';
     }
+    _loadIdentity();
+  }
+
+  /// Formats officiels (vérification immédiate, revérifiée par le serveur) et pièce déjà enregistrée.
+  Future<void> _loadIdentity() async {
+    final repo = ref.read(courierRepositoryProvider);
+    try {
+      final formats = await repo.identityFormats();
+      final mine = _existing == null
+          ? null
+          : await repo.fetchIdentity(ref.read(currentUserIdProvider)!);
+      if (!mounted) return;
+      setState(() {
+        _formats = formats;
+        _idType = mine?.idType ?? _idType;
+        _idNumber.text = mine?.idNumber ?? '';
+        _residence.text = mine?.residence ?? '';
+      });
+    } on AppFailure {
+      // Sans les formats, seul le serveur vérifie (message d'erreur à l'envoi).
+    }
+  }
+
+  IdentityFormat? _format(String code) =>
+      _formats.where((f) => f.code == code).firstOrNull;
+
+  /// Faux seulement si les formats sont chargés et qu'aucun ne correspond.
+  bool _matches(String kind, String value, {String? code}) {
+    final candidates = _formats.where(
+      (f) => f.kind == kind && (code == null || f.code == code),
+    );
+    return candidates.isEmpty ||
+        candidates.any((f) => f.pattern.hasMatch(normalizeIdentity(value)));
+  }
+
+  Future<void> _deleteProfile() async {
+    final l10n = AppLocalizations.of(context);
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.courierDeleteTitle),
+        content: Text(l10n.courierDeleteBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(l10n.actionCancel),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: context.tokens.danger,
+            ),
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(l10n.courierDeleteConfirm),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+    setState(() => _saving = true);
+    try {
+      await ref.read(courierRepositoryProvider).deleteProfile();
+      ref
+        ..invalidate(myCourierProvider)
+        ..invalidate(accountRolesProvider);
+      await ref.read(activeSpaceProvider.notifier).select(AppSpace.client);
+      if (mounted) context.go(SpaceRoutes.entry);
+    } on AppFailure catch (failure) {
+      if (mounted) setState(() => _error = failure);
+    } finally {
+      if (mounted) setState(() => _saving = false);
+    }
   }
 
   @override
   void dispose() {
     _plate.dispose();
+    _idNumber.dispose();
+    _residence.dispose();
     super.dispose();
   }
 
@@ -82,6 +161,9 @@ class _CourierProfileScreenState extends ConsumerState<CourierProfileScreen> {
             zoneId: _zoneId!,
             vehicle: _vehicle,
             plate: _plate.text,
+            idType: _idType,
+            idNumber: _idNumber.text,
+            residence: _residence.text.trim(),
             newPhoto: _newPhoto,
             currentPhotoPath: _existing?.photoPath,
           );
@@ -203,9 +285,63 @@ class _CourierProfileScreenState extends ConsumerState<CourierProfileScreen> {
                   ),
                   validator: (value) => (value?.trim().length ?? 0) < 3
                       ? l10n.errorRequired
+                      : !_matches('plate', value!)
+                      ? l10n.failureInvalidPlate
+                      : null,
+                ),
+              ] else ...[
+                const SizedBox(height: Space.lg),
+                Text(
+                  l10n.courierIdHint,
+                  style: text.bodySmall!.copyWith(color: tokens.muted),
+                ),
+                const SizedBox(height: Space.sm),
+                DropdownButtonFormField<String>(
+                  key: ValueKey(('id', _formats.length, _idType)),
+                  borderRadius: BorderRadius.circular(Radii.field),
+                  icon: const Icon(Icons.expand_more_rounded),
+                  initialValue: _formats.any((f) => f.code == _idType)
+                      ? _idType
+                      : null,
+                  items: [
+                    for (final f in _formats.where((f) => f.kind == 'id'))
+                      DropdownMenuItem(value: f.code, child: Text(f.label)),
+                  ],
+                  onChanged: (code) => setState(() => _idType = code!),
+                  decoration: InputDecoration(
+                    labelText: l10n.fieldIdType,
+                    prefixIcon: const Icon(Icons.badge_outlined),
+                  ),
+                ),
+                const SizedBox(height: Space.lg),
+                TextFormField(
+                  controller: _idNumber,
+                  textCapitalization: TextCapitalization.characters,
+                  decoration: InputDecoration(
+                    labelText: l10n.fieldIdNumber,
+                    helperText: _format(_idType) == null
+                        ? null
+                        : l10n.courierFormatExample(_format(_idType)!.example),
+                    prefixIcon: const Icon(Icons.pin_outlined),
+                  ),
+                  validator: (value) => (value?.trim().isEmpty ?? true)
+                      ? l10n.errorRequired
+                      : !_matches('id', value!, code: _idType)
+                      ? l10n.failureInvalidId
                       : null,
                 ),
               ],
+              const SizedBox(height: Space.lg),
+              TextFormField(
+                controller: _residence,
+                maxLength: 160,
+                decoration: InputDecoration(
+                  labelText: l10n.fieldResidence,
+                  prefixIcon: const Icon(Icons.home_outlined),
+                ),
+                validator: (value) =>
+                    (value?.trim().length ?? 0) < 3 ? l10n.errorRequired : null,
+              ),
               if (_error != null) ...[
                 const SizedBox(height: Space.lg),
                 Text(
@@ -223,6 +359,14 @@ class _CourierProfileScreenState extends ConsumerState<CourierProfileScreen> {
                       )
                     : Text(l10n.courierSubmit),
               ),
+              if (_existing != null) ...[
+                const SizedBox(height: Space.lg),
+                TextButton(
+                  onPressed: _saving ? null : _deleteProfile,
+                  style: TextButton.styleFrom(foregroundColor: tokens.danger),
+                  child: Text(l10n.courierDeleteProfile),
+                ),
+              ],
             ],
           ),
         ),

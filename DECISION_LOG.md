@@ -6,6 +6,20 @@
 
 ---
 
+## ADR-051 — Espace livreur : pièce d'identité ou plaque vérifiée, historique filtré, suppression du profil
+
+- **Date** : 2026-10-24 · **Statut** : Accepté (demande utilisateur) · **Décideur** : Claude (security, backend)
+- **Décision** : à pied ou à vélo (sans plaque), pièce d'identité obligatoire ; sinon immatriculation. Vérification
+  **automatique de forme** contre le référentiel `identity_formats` (CNI biométrique `CI` + 9-10 chiffres, ancienne
+  CNI `C` + 10 chiffres, passeport `00AA00000`, carte de résident, plaque `1234 AB 01`, provisoire `WW`), dans l'app
+  et par le serveur (`submit_courier_profile`). Les formats sont des données modifiables par un admin, sans
+  déploiement. Changer de zone, véhicule, plaque ou pièce repasse le dossier en validation. Historique des livraisons
+  par `courier_deliveries` (période à l'heure d'Abidjan, statut, numéro, pages). Le livreur supprime son profil
+  (`delete_courier_profile`) sans mission en cours ni espèces dues ; son compte client et l'historique restent.
+- **Limite** : aucun service public ivoirien de vérification en ligne n'est utilisé : la forme est contrôlée
+  automatiquement, l'authenticité (pièce, photo) reste vérifiée par l'admin à la validation du dossier.
+- **Impact** : sécurité (moyen), métier (moyen).
+
 ## ADR-050 — Affiliation des livreurs gérée par l'établissement
 
 - **Date** : 2026-10-23 · **Statut** : Accepté (demande utilisateur) · **Décideur** : Claude (product-owner, backend)

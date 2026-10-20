@@ -2248,6 +2248,156 @@ abstract class AppLocalizations {
   /// **'Ce moyen de paiement n\'est pas encore disponible.'**
   String get failurePaymentUnavailable;
 
+  /// No description provided for @failureInvalidPlate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Immatriculation non reconnue : format ivoirien attendu (ex. 1234 AB 01).'**
+  String get failureInvalidPlate;
+
+  /// No description provided for @failureInvalidId.
+  ///
+  /// In fr, this message translates to:
+  /// **'Numéro non reconnu pour cette pièce d\'identité.'**
+  String get failureInvalidId;
+
+  /// No description provided for @failureCashDue.
+  ///
+  /// In fr, this message translates to:
+  /// **'Reversez d\'abord les espèces encaissées.'**
+  String get failureCashDue;
+
+  /// No description provided for @fieldIdType.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pièce d\'identité'**
+  String get fieldIdType;
+
+  /// No description provided for @fieldIdNumber.
+  ///
+  /// In fr, this message translates to:
+  /// **'Numéro de la pièce'**
+  String get fieldIdNumber;
+
+  /// No description provided for @fieldResidence.
+  ///
+  /// In fr, this message translates to:
+  /// **'Adresse de résidence'**
+  String get fieldResidence;
+
+  /// No description provided for @courierIdHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'À pied ou à vélo, votre pièce d\'identité est vérifiée automatiquement.'**
+  String get courierIdHint;
+
+  /// No description provided for @courierFormatExample.
+  ///
+  /// In fr, this message translates to:
+  /// **'Exemple : {example}'**
+  String courierFormatExample(String example);
+
+  /// No description provided for @courierDeleteProfile.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer mon profil livreur'**
+  String get courierDeleteProfile;
+
+  /// No description provided for @courierDeleteTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer votre profil livreur ?'**
+  String get courierDeleteTitle;
+
+  /// No description provided for @courierDeleteBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre compte reste actif ; vos missions et gains passés sont conservés. Impossible avec une mission en cours ou des espèces à reverser.'**
+  String get courierDeleteBody;
+
+  /// No description provided for @courierDeleteConfirm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer'**
+  String get courierDeleteConfirm;
+
+  /// No description provided for @historyYesterday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hier'**
+  String get historyYesterday;
+
+  /// No description provided for @historyMonth30.
+  ///
+  /// In fr, this message translates to:
+  /// **'30 derniers jours'**
+  String get historyMonth30;
+
+  /// No description provided for @historyThisMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce mois-ci'**
+  String get historyThisMonth;
+
+  /// No description provided for @historyCustom.
+  ///
+  /// In fr, this message translates to:
+  /// **'Période…'**
+  String get historyCustom;
+
+  /// No description provided for @historyAllStatuses.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tous'**
+  String get historyAllStatuses;
+
+  /// No description provided for @historyPending.
+  ///
+  /// In fr, this message translates to:
+  /// **'En attente'**
+  String get historyPending;
+
+  /// No description provided for @historyInProgress.
+  ///
+  /// In fr, this message translates to:
+  /// **'En cours'**
+  String get historyInProgress;
+
+  /// No description provided for @historyDelivered.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livrées'**
+  String get historyDelivered;
+
+  /// No description provided for @historyCancelled.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annulées'**
+  String get historyCancelled;
+
+  /// No description provided for @historySearch.
+  ///
+  /// In fr, this message translates to:
+  /// **'N° de commande'**
+  String get historySearch;
+
+  /// No description provided for @historyLoadMore.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir plus'**
+  String get historyLoadMore;
+
+  /// No description provided for @historySummary.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} livraison(s) · {earnings} · {km} km'**
+  String historySummary(int count, String earnings, String km);
+
+  /// No description provided for @historyNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune livraison pour ces filtres'**
+  String get historyNone;
+
   /// No description provided for @failureAlreadyAccepted.
   ///
   /// In fr, this message translates to:

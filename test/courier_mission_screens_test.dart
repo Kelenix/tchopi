@@ -34,6 +34,48 @@ class FakeMissions implements MissionRepository {
   Future<void> confirmCash(String orderId) async => calls.add('cash');
 
   @override
+  Future<DeliveryPage> deliveries({
+    required DateTime from,
+    required DateTime to,
+    String? status,
+    String? query,
+    int offset = 0,
+    int limit = 20,
+  }) async {
+    calls.add('deliveries ${to.difference(from).inDays} $status');
+    return DeliveryPage(
+      summary: const {
+        'total': 2,
+        'pending': 0,
+        'in_progress': 0,
+        'delivered': 1,
+        'cancelled': 1,
+        'earnings': 1100,
+        'distance_m': 3200,
+      },
+      total: 1,
+      rows: [
+        {
+          'id': 'o1',
+          'number': 'R-1',
+          'status': 'delivered',
+          'group': 'delivered',
+          'pickup_name': 'Chez Tantie Rose',
+          'pickup_district': 'Plateau',
+          'pickup_landmark': 'Face à la tour',
+          'dropoff_district': 'Cocody',
+          'dropoff_landmark': 'Pharmacie',
+          'distance_m': 3200,
+          'courier_earning': 1100,
+          'assigned_at': DateTime.now().toUtc().toIso8601String(),
+          'picked_up_at': null,
+          'delivered_at': DateTime.now().toUtc().toIso8601String(),
+        },
+      ],
+    );
+  }
+
+  @override
   Object? noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
@@ -213,44 +255,23 @@ void main() {
     );
   });
 
-  testWidgets('historique : gains du jour et des 7 derniers jours', (
+  testWidgets('historique : livraisons du jour, filtres envoyés au serveur', (
     tester,
   ) async {
-    final now = DateTime.now();
-    MissionRecord record(String number, OrderStatus status, DateTime at) =>
-        MissionRecord(
-          id: number,
-          number: number,
-          type: OrderType.food,
-          status: status,
-          pickupDistrict: 'Plateau',
-          dropoffDistrict: 'Cocody',
-          courierEarning: 1100,
-          assignedAt: at,
-          closedAt: at,
-        );
+    final missions = FakeMissions();
     await tester.pumpWidget(
       app(const HistoryScreen(), [
-        missionHistoryProvider.overrideWith(
-          (ref) async => [
-            record('R-1', OrderStatus.delivered, now),
-            record(
-              'R-2',
-              OrderStatus.delivered,
-              now.subtract(const Duration(days: 3)),
-            ),
-            record('R-3', OrderStatus.failed, now),
-          ],
-        ),
+        missionRepositoryProvider.overrideWithValue(missions),
       ]),
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Aujourd\'hui'), findsOneWidget);
-    expect(find.text(formatMoney(1100)), findsOneWidget);
-    expect(find.text(formatMoney(2200)), findsOneWidget);
-    expect(find.text('Plateau → Cocody'), findsNWidgets(3));
-    expect(find.text('Échec de livraison'), findsOneWidget);
+    expect(missions.calls, ['deliveries 1 null']);
+    expect(find.text('Chez Tantie Rose → Cocody'), findsOneWidget);
+    expect(find.textContaining('1 livraison(s)'), findsOneWidget);
+    await tester.tap(find.text('Livrées (1)'));
+    await tester.pumpAndSettle();
+    expect(missions.calls.last, 'deliveries 1 delivered');
   });
 
   testWidgets('petit écran, grande police : mission sans débordement', (
