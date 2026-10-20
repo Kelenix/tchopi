@@ -302,6 +302,21 @@ void main() {
           isA<AppFailure>().having((f) => f.code, 'code', 'already_paid'),
         ),
       );
+
+      // ADR-039 : annulée après paiement, remboursée par l'équipe nyole (support) → « payment.updated » REFUNDED.
+      await client.cancel(order.id);
+      expect(
+        (await client.fetch(order.id)).paymentStatus,
+        OrderPaymentStatus.refundPending,
+      );
+      providerStatus = 'REFUNDED';
+      expect(await webhook('payment.updated', txId), 200);
+      expect(await webhook('payment.updated', txId), 200);
+      expect(
+        (await client.fetch(order.id)).paymentStatus,
+        OrderPaymentStatus.refunded,
+      );
+      expect((await transaction()).status, TransactionStatus.refunded);
       await clientClient.dispose();
     },
   );

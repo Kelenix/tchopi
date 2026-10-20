@@ -1,4 +1,5 @@
 import 'package:core/core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
@@ -8,15 +9,39 @@ import '../../../../shared/delivery_map.dart';
 import '../../profile/courier_providers.dart';
 import '../missions_providers.dart';
 
-/// L-06 : trajet de la mission, prochaine étape et position du livreur ; itinéraire dans Google Maps ou Waze
-/// (MIS-03).
+/// L-06 : trajet de la mission, prochaine étape et position du livreur ; le guidage se fait dans une application
+/// de navigation du téléphone (MIS-03, ADR-039).
 class MissionMap extends ConsumerWidget {
   const MissionMap({super.key, required this.order});
 
   final Order order;
 
-  Future<void> _open(Uri uri) =>
+  Future<bool> _open(Uri uri) =>
       launchUrl(uri, mode: LaunchMode.externalApplication);
+
+  /// Prochaine étape dans l'application de navigation du téléphone : sur Android, le système propose celles qui
+  /// sont installées (Google Maps, Waze, OsmAnd…) ; sur iPhone, Plans ; à défaut, Google Maps dans le navigateur.
+  Future<void> _navigate(String destination) async {
+    final native = kIsWeb
+        ? null
+        : switch (defaultTargetPlatform) {
+            TargetPlatform.android => Uri.parse(
+              'geo:$destination?q=$destination',
+            ),
+            TargetPlatform.iOS => Uri.parse(
+              'maps://?daddr=$destination&dirflg=d',
+            ),
+            _ => null,
+          };
+    if (native != null && await _open(native).catchError((_) => false)) return;
+    await _open(_googleMaps(destination));
+  }
+
+  Uri _googleMaps(String destination) => Uri.https(
+    'www.google.com',
+    '/maps/dir/',
+    {'api': '1', 'destination': destination},
+  );
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -43,16 +68,17 @@ class MissionMap extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: Space.sm),
+        FilledButton.icon(
+          onPressed: () => _navigate(destination),
+          icon: const Icon(Icons.navigation_rounded),
+          label: Text(l10n.missionNavigate),
+        ),
+        const SizedBox(height: Space.sm),
         Row(
           children: [
             Expanded(
               child: OutlinedButton.icon(
-                onPressed: () => _open(
-                  Uri.https('www.google.com', '/maps/dir/', {
-                    'api': '1',
-                    'destination': destination,
-                  }),
-                ),
+                onPressed: () => _open(_googleMaps(destination)),
                 icon: const Icon(Icons.map_outlined),
                 label: Text(l10n.missionGoogleMaps, maxLines: 1),
               ),

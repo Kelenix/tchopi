@@ -88,5 +88,9 @@ export const refundPayment = (transactionId: string, paymentIntent: string) =>
     `refund-${transactionId}`,
   );
 
+/// Remboursement relu chez Stripe (un webhook n'est jamais cru sur parole).
+export const getRefund = (id: string) =>
+  call<{ id: string; status: string; metadata?: { transaction_id?: string } }>(`/v1/refunds/${encodeURIComponent(id)}`);
+
 export const verifyStripeSignature = (rawBody: string, header: string | null) =>
   verifySignature(rawBody, header, webhookSecret);

@@ -4,9 +4,11 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
 import 'map_tiles.dart';
+import 'place_search.dart';
 
 /// Carte (ADR-019, ADR-033) avec une épingle fixe au centre : on déplace la carte sous l'épingle,
-/// qui se soulève pendant le geste. `onMoved` reçoit la position désignée par la pointe.
+/// qui se soulève pendant le geste. `onMoved` reçoit la position désignée par la pointe. Un lieu peut aussi être
+/// cherché par son nom (ADR-039) : la carte s'y place.
 class PinMap extends StatefulWidget {
   const PinMap({
     super.key,
@@ -64,8 +66,34 @@ class _PinMapState extends State<PinMap> {
           child: Center(child: _Pin(lifted: _moving)),
         ),
         const MapAttribution(),
+        Align(
+          alignment: Alignment.topRight,
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 36, Space.sm, 0),
+              child: IconButton.filled(
+                style: IconButton.styleFrom(
+                  backgroundColor: tokens.surface,
+                  foregroundColor: tokens.ink,
+                  side: BorderSide(color: tokens.border),
+                ),
+                tooltip: AppLocalizations.of(context).placeSearchTooltip,
+                icon: const Icon(Icons.search_rounded),
+                onPressed: _search,
+              ),
+            ),
+          ),
+        ),
       ],
     );
+  }
+
+  Future<void> _search() async {
+    final place = await showPlaceSearch(
+      context,
+      widget.controller.camera.center,
+    );
+    if (place != null) widget.controller.move(place.point, PinMap.zoom);
   }
 }
 

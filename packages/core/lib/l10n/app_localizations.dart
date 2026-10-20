@@ -448,6 +448,30 @@ abstract class AppLocalizations {
   /// **'Supprimer mon compte'**
   String get accountDelete;
 
+  /// No description provided for @placeSearchTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rechercher un lieu'**
+  String get placeSearchTooltip;
+
+  /// No description provided for @placeSearchHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quartier, carrefour, pharmacie, marché…'**
+  String get placeSearchHint;
+
+  /// No description provided for @placeSearchEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun lieu trouvé. Vous pouvez aussi déplacer la carte sous l\'épingle.'**
+  String get placeSearchEmpty;
+
+  /// No description provided for @placeSearchError.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recherche indisponible pour le moment. Déplacez la carte sous l\'épingle.'**
+  String get placeSearchError;
+
   /// No description provided for @cityPickerTitle.
   ///
   /// In fr, this message translates to:
@@ -3584,6 +3608,12 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Itinéraire'**
   String get missionRoute;
+
+  /// No description provided for @missionNavigate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvrir la navigation'**
+  String get missionNavigate;
 
   /// No description provided for @missionGoogleMaps.
   ///

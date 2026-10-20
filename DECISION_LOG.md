@@ -6,6 +6,34 @@
 
 ---
 
+## ADR-039 — Paiements prêts pour les comptes marchands ; cartographie par besoin
+
+- **Date** : 2026-10-20
+- **Statut** : Accepté (demande utilisateur)
+- **Décideur** : Claude (rôles : backend-engineer, security-engineer, mobile-architect)
+- **Contexte** : préparer Stripe et le Mobile Money pour qu'il ne reste qu'à saisir les identifiants marchands ;
+  évaluer la carte en Côte d'Ivoire ; bouton « Ouvrir la navigation » pour le livreur. Le prestataire « ONGAL »
+  cité n'existe pas sous ce nom : le lien fourni est celui de **nyole** (ADR-028), qui est conservé.
+- **Décision** :
+  - **Remboursements signalés par le prestataire** : statut nyole « REFUNDED » (webhook `payment.updated`, remboursement
+    fait par leur support) appliqué à la transaction et à la commande ; s'il n'avait pas été demandé, admin alerté
+    (journal d'audit). Remboursement Stripe refusé après coup (`refund.failed`, `refund.updated`, objet relu chez
+    Stripe) : commande de nouveau « à rembourser », admin alerté. Événements sans effet s'ils sont rejoués.
+  - **Saisie des clés** : `.\vps.ps1 cle-paiement <NOM>` (saisie masquée sur le PC, format vérifié, valeur lue
+    sur l'entrée standard du serveur, jamais en argument) ; les fonctions de paiement sont relancées.
+  - **Cartographie** (évaluation : `docs/cartographie.md`) : affichage OpenFreeMap, **recherche de lieux Photon**
+    (OpenStreetMap, limitée à la Côte d'Ivoire, loupe sur les cartes de sélection), itinéraires OSRM hébergés,
+    **navigation dans l'application du téléphone** (Android : choix parmi les applis installées via `geo:` ; iPhone :
+    Plans ; sinon Google Maps). Couverture OSM mesurée suffisante (quartiers, carrefours, commerces à Abidjan).
+- **Alternatives écartées** : Google Maps Platform (compte de facturation, recherche 2,83 $/1000 et itinéraires
+  5 $/1000 au-delà de 10 000/mois, navigation intégrée 25 $/1000) tant que la couverture OSM suffit ; navigation
+  intégrée dans l'app ; recherche Nominatim (moins tolérante que Photon : 7/9 contre 8/9 lieux trouvés).
+- **Conséquences** : paiements **non opérationnels** tant que les tests réels de `docs/mise-en-service.md` § 5 ne sont pas
+  faits ; Photon public à usage modéré (à héberger ou remplacer selon le volume, `PLACES_SEARCH_URL`).
+- **Impact** : financier (moyen), sécurité (moyen), technique (réversible).
+
+---
+
 ## ADR-038 — Thème sombre, villes et quartiers, carte de livraison
 
 - **Date** : 2026-10-20

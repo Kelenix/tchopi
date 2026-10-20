@@ -48,6 +48,8 @@ void main() {
   final refunds = <Map<String, String>>[];
   var sessionStatus = 'open';
   var paymentStatus = 'unpaid';
+  // Stripe garde le même remboursement pour la même clé : un échec reste un échec.
+  var refundStatus = 'succeeded';
 
   Future<void> serve(HttpRequest request) async {
     final path = request.uri.path;
@@ -83,7 +85,18 @@ void main() {
         jsonEncode({
           'id': 're_test_1',
           'object': 'refund',
-          'status': 'succeeded',
+          'status': refundStatus,
+        }),
+      );
+    } else if (request.method == 'GET' && path == '/v1/refunds/re_test_1') {
+      request.response.write(
+        jsonEncode({
+          'id': 're_test_1',
+          'object': 'refund',
+          'status': refundStatus,
+          'metadata': {
+            'transaction_id': refunds.last['metadata[transaction_id]'],
+          },
         }),
       );
     } else {
@@ -92,15 +105,22 @@ void main() {
     await request.response.close();
   }
 
-  Future<int> webhook(String type, String transactionId, {String? key}) async {
+  Future<int> webhook(
+    String type,
+    String transactionId, {
+    String? key,
+    Map<String, Object?>? object,
+  }) async {
     final body = jsonEncode({
       'id': 'evt_$stamp',
       'type': type,
       'data': {
-        'object': {
-          'object': 'checkout.session',
-          'metadata': {'transaction_id': transactionId},
-        },
+        'object':
+            object ??
+            {
+              'object': 'checkout.session',
+              'metadata': {'transaction_id': transactionId},
+            },
       },
     });
     final timestamp =
@@ -293,6 +313,25 @@ void main() {
       final done = await transaction();
       expect(done.status, TransactionStatus.refunded);
       expect(done.refundReference, 're_test_1');
+
+      // ADR-039 : remboursement refusé après coup par la banque (relu chez Stripe) → de nouveau « à rembourser ».
+      const refundObject = {'id': 're_test_1', 'object': 'refund'};
+      expect(await webhook('refund.updated', txId, object: refundObject), 200);
+      expect(
+        (await client.fetch(order.id)).paymentStatus,
+        OrderPaymentStatus.refunded,
+        reason: 'remboursement réussi chez Stripe : rien ne change',
+      );
+      refundStatus = 'failed';
+      expect(await webhook('refund.failed', txId, object: refundObject), 200);
+      expect(
+        (await client.fetch(order.id)).paymentStatus,
+        OrderPaymentStatus.refundPending,
+      );
+      final reopened = await transaction();
+      expect(reopened.status, TransactionStatus.succeeded);
+      expect(reopened.refundReference, isNull);
+      expect(await webhook('refund.failed', txId, object: refundObject), 200);
       await clientClient.dispose();
     },
     timeout: const Timeout(Duration(minutes: 2)),

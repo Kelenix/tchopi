@@ -1,6 +1,6 @@
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(15);
+select plan(24);
 
 insert into auth.users (id, email, aud, role, email_confirmed_at) values
   ('00000000-0000-0000-0000-0000000000ad', 'admin@exemple.ci', 'authenticated', 'authenticated', now()),
@@ -117,6 +117,34 @@ set local role authenticated;
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000c1');
 select throws_ok($$ select public.record_provider_refund(pg_temp.tx('1'), 're_2') $$,
   '42501', null, 'seul le serveur enregistre un remboursement');
+
+-- ADR-039 : remboursement refusé après coup par la banque → de nouveau « à rembourser », alerte admin.
+reset role;
+select is(public.record_refund_failure(pg_temp.tx('1'), 're_autre'), 'refunded',
+  'échec d''un autre remboursement : sans effet');
+select is(public.record_refund_failure(pg_temp.tx('1'), 're_1'), 'refund_pending', 'échec du remboursement enregistré');
+select is(pg_temp.state('1'), 'cancelled/refund_pending/succeeded', 'commande de nouveau à rembourser');
+select is((select count(*)::int from public.audit_log where action = 'refund_failed' and target_id = pg_temp.tx('1')),
+  1, 'admin alerté');
+select is(public.record_refund_failure(pg_temp.tx('1'), 're_1'), 'refund_pending', 'échec rejoué : sans effet');
+
+-- Remboursement signalé par le fournisseur (nyole : fait par son équipe) : appliqué, tracé s'il n'était pas demandé.
+select is(public.apply_payment_status(pg_temp.tx('1'), 'REFUNDED', null, null, 're_manuel'), 'refunded',
+  'remboursement du fournisseur appliqué');
+select is(pg_temp.state('1'), 'cancelled/refunded/refunded', 'commande remboursée');
+set local role authenticated;
+select pg_temp.as_user('00000000-0000-0000-0000-0000000000c1');
+select pg_temp.place_food('3', 'card');
+reset role;
+select public.record_checkout_session(pg_temp.tx('3'), 'cs_test_3', 'https://checkout.stripe.com/c/pay/cs_test_3',
+  null, 0);
+select public.apply_payment_status(pg_temp.tx('3'), 'SUCCESS',
+  (select total from public.orders where id = pg_temp.order_id('3')), 'XOF', 'pi_3');
+select public.apply_payment_status(pg_temp.tx('3'), 'REFUNDED', null, null, null);
+select is(pg_temp.state('3'), 'pending/refunded/refunded', 'remboursement non demandé appliqué');
+select is((select count(*)::int from public.audit_log
+            where action = 'payment_refunded_by_provider' and target_id = pg_temp.tx('3')),
+  1, 'remboursement non demandé signalé à l''admin');
 
 select * from finish();
 rollback;

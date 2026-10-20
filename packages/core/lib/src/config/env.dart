@@ -36,6 +36,13 @@ abstract final class Env {
     defaultValue: 'https://api.tchopi.com',
   );
 
+  /// Recherche de lieux sur les cartes de sélection (Photon, données OpenStreetMap, ADR-039). Service public par
+  /// défaut, à usage modéré ; à remplacer par une instance hébergée ou un fournisseur payant avant un trafic important.
+  static const placesSearchUrl = String.fromEnvironment(
+    'PLACES_SEARCH_URL',
+    defaultValue: 'https://photon.komoot.io',
+  );
+
   /// Mention exigée par les fournisseurs du fond de carte.
   static const mapAttribution = String.fromEnvironment(
     'MAP_ATTRIBUTION',

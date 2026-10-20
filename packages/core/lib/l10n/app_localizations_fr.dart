@@ -201,6 +201,20 @@ class AppLocalizationsFr extends AppLocalizations {
   String get accountDelete => 'Supprimer mon compte';
 
   @override
+  String get placeSearchTooltip => 'Rechercher un lieu';
+
+  @override
+  String get placeSearchHint => 'Quartier, carrefour, pharmacie, marché…';
+
+  @override
+  String get placeSearchEmpty =>
+      'Aucun lieu trouvé. Vous pouvez aussi déplacer la carte sous l\'épingle.';
+
+  @override
+  String get placeSearchError =>
+      'Recherche indisponible pour le moment. Déplacez la carte sous l\'épingle.';
+
+  @override
   String get cityPickerTitle => 'Choisir une ville';
 
   @override
@@ -1944,6 +1958,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get missionRoute => 'Itinéraire';
+
+  @override
+  String get missionNavigate => 'Ouvrir la navigation';
 
   @override
   String get missionGoogleMaps => 'Google Maps';

@@ -92,6 +92,11 @@ validation de la maquette → code des écrans à partir de l'Inc-1. Registre de
   défaut sur ce serveur. Essai sur le VPS : préparation 2 min 30 (pic 1,2 Go), service 300 Mo, trajet Abidjan
   6,6 km en 200. Preuves : analyse 0 ; 59 + 64 tests Flutter.
 
+- 2026-10-20 — Paiements prêts pour les comptes marchands, cartographie évaluée (ADR-039) : remboursements signalés
+  par nyole (REFUNDED) et refus tardif d'un remboursement Stripe gérés ; `.\vps.ps1 cle-paiement` pour saisir les
+  clés ; recherche de lieux (Photon/OSM) sur les cartes de sélection ; « Ouvrir la navigation » pour le livreur.
+  « ONGAL » introuvable : nyole conservé (lien fourni). Récapitulatif : `docs/mise-en-service.md` ; évaluation :
+  `docs/cartographie.md`. **Paiements non opérationnels** tant que les tests réels ne sont pas faits.
 - 2026-10-20 — Refonte design (ADR-038) : thème sombre de la maquette + sélecteur Apparence mémorisé ; choix de
   ville compact (toutes les villes de CI, recherche sans accents) ; quartiers suggérés (adresses, colis, restaurant) ;
   carte de livraison commune (trajet routier, retrait, destination, livreur orienté et animé, fond clair/sombre) ;
@@ -112,7 +117,7 @@ validation de la maquette → code des écrans à partir de l'Inc-1. Registre de
 - 2026-10-19 — Déploiement continu (ADR-035) : job « Déploiement du serveur » dans la CI (main, après les tests),
   clé SSH réservée à GitHub et empreinte du VPS vérifiée, branché par `vps.ps1 ci`. Constaté : la CI ne déployait
   rien jusqu'ici et ce PC n'a pas d'accès SSH au VPS : l'Inc-12 n'est pas encore sur le serveur. Reste à faire par vous :
-  `.ps.ps1 ci` une fois, depuis le PC qui a accès au VPS. Vérifié : syntaxe de `vps.ps1` et `server.sh` ; le job
+  `.\vps.ps1 ci` une fois, depuis le PC qui a accès au VPS. Vérifié : syntaxe de `vps.ps1` et `server.sh` ; le job
   ne s'exécutera réellement qu'avec les secrets.
 
 - 2026-10-19 — Inc-12 (branche feat/inc-12-carte, ADR-034) : carte par Stripe Checkout (page hébergée, 3-D Secure),
@@ -123,7 +128,7 @@ validation de la maquette → code des écrans à partir de l'Inc-1. Registre de
   Corrigé à cette occasion : « rien ne vous sera facturé » affiché en annulant une commande déjà payée. Puis fusion
   de main (app à la racine, serveur en ligne) : migration carte renumérotée 20261019160000. Preuves :
   `check.ps1 -Integration` vert (analyse 0 ; 43 + 64 tests Flutter ; pgTAP 261/261 ; intégration 3 + 10). Non
-  vérifié : vraie API Stripe (clés de test à fournir), déploiement sur le VPS (`.ps.ps1 deployer`).
+  vérifié : vraie API Stripe (clés de test à fournir), déploiement sur le VPS (`.\vps.ps1 deployer`).
 
 - 2026-10-19 — ADR-033 : zone d'Abidjan et tarifs par migration (déployée), restaurants de démonstration en ligne
   (`vps.ps1 demo` : 3 restaurants, 9 plats, 12 photos) ; carte moderne OpenFreeMap (repli OpenStreetMap), rendu

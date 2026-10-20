@@ -7,8 +7,9 @@
 #   .\vps.ps1 admin +225XXXXXXXXXX           donne le rôle admin à ce compte (déjà inscrit dans l'app)
 #   .\vps.ps1 demo                           ajoute les restaurants de démonstration (menus, photos)
 #   .\vps.ps1 studio                        tableau de bord Supabase sur http://localhost:8000 (Ctrl+C pour fermer)
+#   .\vps.ps1 cle-paiement <NOM>            saisit une clé Stripe ou nyole (masquée) et l'enregistre sur le VPS
 param(
-  [Parameter(Mandatory)][ValidateSet('cle', 'installer', 'deployer', 'ci', 'testeur', 'admin', 'demo', 'studio')][string]$Action,
+  [Parameter(Mandatory)][ValidateSet('cle', 'installer', 'deployer', 'ci', 'testeur', 'admin', 'demo', 'studio', 'cle-paiement')][string]$Action,
   [string]$Valeur,
   [string]$Code
 )
@@ -117,6 +118,24 @@ switch ($Action) {
     Send-Source
     Remote 'sh /opt/tchopi/src/infra/server.sh demo'
     Write-Host 'Restaurants de démonstration en place.' -ForegroundColor Green
+  }
+  'cle-paiement' {
+    # Saisie masquée sur ce PC, envoyée au VPS par SSH : la clé n'apparaît ni à l'écran, ni dans l'historique, ni
+    # dans le code (docs/mise-en-service.md).
+    $formats = @{
+      STRIPE_SECRET_KEY     = '^(sk|rk)_(test|live)_[A-Za-z0-9]+$'
+      STRIPE_WEBHOOK_SECRET = '^whsec_[A-Za-z0-9]+$'
+      NYOLE_SECRET_KEY      = '^af_(test|live)_sec_[A-Za-z0-9_]+$'
+      NYOLE_RETURN_URL      = '^https://[A-Za-z0-9_:/.?=-]+$'
+    }
+    if (-not $formats.ContainsKey($Valeur)) { Fail "nom attendu : $($formats.Keys -join ', ')" }
+    $secure = Read-Host "Valeur de $Valeur (masquée)" -AsSecureString
+    $plain = [Net.NetworkCredential]::new('', $secure).Password
+    if ($plain -notmatch $formats[$Valeur]) { Fail "$Valeur : format inattendu (vérifier la copie)" }
+    if ($plain -match '_test_') { Write-Host 'Clé de TEST : aucun paiement réel ne sera encaissé.' -ForegroundColor Yellow }
+    $plain | ssh tchopi "sh /opt/tchopi/src/infra/server.sh secret $Valeur"
+    if ($LASTEXITCODE -ne 0) { Fail "enregistrement de $Valeur sur le VPS" }
+    Write-Host "$Valeur enregistrée ; fonctions de paiement relancées." -ForegroundColor Green
   }
   'studio' {
     # Démarré à la demande (mémoire du VPS partagé), arrêté à la fermeture du tunnel.

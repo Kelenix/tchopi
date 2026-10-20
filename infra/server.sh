@@ -7,6 +7,7 @@
 #   sh server.sh studio start|stop       démarre ou arrête le tableau de bord (Studio)
 #   sh server.sh demo                    ajoute les restaurants de démonstration et leurs photos (une seule fois)
 #   sh server.sh routing                 met à jour la carte des trajets routiers (aussi chaque dimanche, cron)
+#   sh server.sh secret <NOM>            enregistre une clé de paiement lue sur l'entrée standard, puis relance les fonctions
 # Le pare-feu et SSH du serveur ne sont pas modifiés (déjà limités à 22, 80 et 443).
 set -eu
 
@@ -173,6 +174,20 @@ demo() {
   done
 }
 
+# Clé de paiement (ADR-039) lue sur l'entrée standard (jamais en argument : invisible dans la liste des processus).
+secret() {
+  case "$1" in
+    STRIPE_SECRET_KEY | STRIPE_WEBHOOK_SECRET | NYOLE_SECRET_KEY | NYOLE_RETURN_URL) ;;
+    *) echo "clé inconnue : $1" >&2; exit 1 ;;
+  esac
+  IFS= read -r value
+  value=$(printf %s "$value" | tr -d '\r')
+  # Caractères des clés et adresses seulement : rien qui puisse casser le .env.
+  case "$value" in '' | *[!A-Za-z0-9_:/.?=-]*) echo 'valeur invalide' >&2; exit 1 ;; esac
+  set_env "$1" "$value"
+  cd "$APP" && docker compose up -d --force-recreate --wait functions
+}
+
 case "${1:-}" in
   install) install_supabase "$2"; install_nginx "$2"; install_backups; deploy ;;
   deploy) deploy ;;
@@ -181,5 +196,6 @@ case "${1:-}" in
   studio) studio "$2" ;;
   demo) demo ;;
   routing) routing_data; cd "$APP" && docker compose up -d --force-recreate --wait routing ;;
-  *) sed -n '2,10p' "$0"; exit 1 ;;
+  secret) secret "$2" ;;
+  *) sed -n '2,11p' "$0"; exit 1 ;;
 esac

@@ -9,6 +9,8 @@
 
 ## 1. Ouvrir les comptes de paiement — ⚠️ à démarrer tout de suite
 - **Pourquoi** : encaisser cartes (Stripe, Inc-12) et Mobile Money (Inc-11). La vérification d'entreprise (KYC) peut prendre plusieurs semaines.
+- **Guide complet** (clés, webhooks, tests avant production) : `docs/mise-en-service.md`. Les clés se saisissent avec
+  `.\vps.ps1 cle-paiement <NOM>` (saisie masquée, jamais dans le chat ni le code).
 - **Quand** : maintenant.
 - **Étapes** :
   1. **Stripe** (cartes, ADR-034) : compte au nom de votre société (pays compatible) ; activer les paiements par carte.
@@ -18,8 +20,8 @@
        `STRIPE_WEBHOOK_SECRET` ; puis `supabase stop` et `supabase start`. Carte de test Stripe : 4242 4242 4242 4242.
      - **Serveur** : dans le `.env` du VPS (`/opt/tchopi/supabase/.env`), `STRIPE_SECRET_KEY` (`sk_live_…` après
        vérification) et `STRIPE_WEBHOOK_SECRET` ; dans le tableau de bord Stripe → Développeurs → Webhooks, URL
-       `https://api.tchopi.com/functions/v1/payments-webhook-stripe`, événements `checkout.session.completed` et
-       `checkout.session.expired` ; puis `.ps.ps1 deployer`.
+       `https://api.tchopi.com/functions/v1/payments-webhook-stripe`, événements `checkout.session.completed`,
+       `checkout.session.expired`, `refund.updated` et `refund.failed` ; clés saisies avec `.\vps.ps1 cle-paiement`.
      - Activer « Carte bancaire » dans Admin → Paramètres. Les remboursements par carte sont automatiques.
   2. **Mobile Money — nyole** (retenu, ADR-028) : dans https://app.nyole.com/developer, vérifier que votre compte
      affiche des **clés API** (la doc nyole indique que les comptes ouverts après le 17/10/2026 passent par LinkAfr,
@@ -28,9 +30,10 @@
        (`NYOLE_API_URL=https://app.nyole.com/api`, `NYOLE_SECRET_KEY=…`), puis `supabase stop` et `supabase start`.
        Ne la collez jamais dans le chat ni dans le code. Sur la page de paiement, les boutons « simuler » valident
        ou refusent ; dans l'app, « J'ai payé : vérifier » relit le statut (nyole ne peut pas joindre votre PC).
-     - **Serveur** (avec le VPS) : secrets `NYOLE_SECRET_KEY` (clé `af_live_sec_…` après vérification d'identité) et,
-       si souhaité, `NYOLE_RETURN_URL` ; dans le tableau de bord nyole, URL du webhook :
-       `https://api.<votre-domaine>/functions/v1/payments-webhook-nyole`.
+     - **Serveur** : `.\vps.ps1 cle-paiement NYOLE_SECRET_KEY` (`af_test_sec_…` pour les essais, `af_live_sec_…`
+       après vérification d'identité) et `.\vps.ps1 cle-paiement NYOLE_RETURN_URL` ; dans le tableau de bord nyole,
+       URL du webhook `https://api.tchopi.com/functions/v1/payments-webhook-nyole`, événements `payment.completed`,
+       `payment.failed`, `payment.cancelled` (à cocher) et `payment.updated`.
      - Activer « Mobile Money » dans Admin → Paramètres.
   3. Soumettre les documents demandés (registre de commerce, pièce du dirigeant, compte bancaire) ; les clés de production viendront après le KYC.
   4. Vérifier avec votre conseil les obligations liées à l'encaissement par une société étrangère pour une activité en Côte d'Ivoire.
