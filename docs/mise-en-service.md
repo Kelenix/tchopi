@@ -102,3 +102,29 @@ Puis avec les clés **de production**, petits montants réels :
    remboursement réel de chaque type.
 7. Rapprochement : montants reçus chez Stripe et nyole = transactions de l'admin (frais déduits).
 8. Seulement alors : activer les moyens de paiement pour tous dans Admin → Paramètres.
+
+## 6. Emails par Resend (inscription et récupération par email)
+
+Les codes à 6 chiffres sont générés par Supabase (service d'authentification) ; Resend ne fait que les envoyer.
+
+1. https://resend.com : créer le compte, puis **Domains → Add domain → `tchopi.com`**.
+2. Ajouter dans la zone DNS de `tchopi.com` (hPanel Hostinger) les enregistrements affichés par Resend (DKIM, SPF,
+   MX d'envoi) et attendre l'état **Verified**. Facultatif mais conseillé : un enregistrement DMARC
+   (`_dmarc` → `v=DMARC1; p=none;`).
+3. **API Keys → Create API key** (permission « Sending access », domaine `tchopi.com`).
+4. Sur ce PC : `.\vps.ps1 email`, coller la clé (elle reste masquée). L'inscription par email s'ouvre sur le
+   serveur ; les emails partent de `no-reply@tchopi.com`.
+5. Vérifier : inscription sur le site avec votre email → le code arrive (pas en spam).
+
+## 7. Connexion avec Google
+
+1. https://console.cloud.google.com → projet « Tchopi » → **API et services → Écran de consentement OAuth** :
+   type Externe, nom « Tchopi », logo, email d'assistance, domaine autorisé `tchopi.com`, puis publier.
+2. **Identifiants → Créer → ID client OAuth → Application Web** :
+   - Origines JavaScript autorisées : `https://tchopi.com`
+   - URI de redirection autorisé : `https://api.tchopi.com/auth/v1/callback`
+3. Sur ce PC : `.\vps.ps1 google`, saisir l'identifiant client puis le secret (masqué).
+4. Vérifier : « Continuer avec Google » sur https://tchopi.com/connexion.
+
+Le site renvoie vers `https://tchopi.com` après la connexion (`SITE_URL`, liste `ADDITIONAL_REDIRECT_URLS` réglées à
+chaque déploiement du serveur). La connexion Google dans l'app mobile viendra ensuite (identifiants Android dédiés).

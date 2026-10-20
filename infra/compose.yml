@@ -71,4 +71,18 @@ services:
       GOTRUE_SMS_TEMPLATE: "Tchopi : votre code est {{ .Code }}. Il expire dans 10 minutes."
       # Même règle qu'en local (supabase/config.toml) : 8 caractères, lettres et chiffres.
       GOTRUE_PASSWORD_MIN_LENGTH: 8
+      # Emails envoyés par Resend (SMTP du .env, vps.ps1 email) : codes à 6 chiffres, modèles en français (ADR-045).
+      GOTRUE_MAILER_OTP_LENGTH: 6
+      GOTRUE_MAILER_OTP_EXP: 600
+      GOTRUE_MAILER_TEMPLATES_CONFIRMATION: ${SUPABASE_PUBLIC_URL}/email-templates/confirmation.html
+      GOTRUE_MAILER_TEMPLATES_RECOVERY: ${SUPABASE_PUBLIC_URL}/email-templates/recovery.html
+      GOTRUE_MAILER_TEMPLATES_EMAIL_CHANGE: ${SUPABASE_PUBLIC_URL}/email-templates/email_change.html
+      GOTRUE_MAILER_SUBJECTS_CONFIRMATION: "Votre code de confirmation Tchopi"
+      GOTRUE_MAILER_SUBJECTS_RECOVERY: "Réinitialisation de votre mot de passe Tchopi"
+      GOTRUE_MAILER_SUBJECTS_EMAIL_CHANGE: "Confirmez votre nouvelle adresse email"
+      # Connexion avec un compte Google (vps.ps1 google) ; retour vers le site web ou l'app.
+      GOTRUE_EXTERNAL_GOOGLE_ENABLED: ${GOOGLE_ENABLED:-false}
+      GOTRUE_EXTERNAL_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOTRUE_EXTERNAL_GOOGLE_SECRET: ${GOOGLE_SECRET:-}
+      GOTRUE_EXTERNAL_GOOGLE_REDIRECT_URI: ${API_EXTERNAL_URL}/callback
       GOTRUE_PASSWORD_REQUIRED_CHARACTERS: abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ:0123456789

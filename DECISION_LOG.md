@@ -6,6 +6,38 @@
 
 ---
 
+## ADR-045 — Emails par Resend, connexion avec Google
+
+- **Date** : 2026-10-21 · **Statut** : Accepté (demande utilisateur) · **Décideur** : Claude (backend, security)
+- **Décision** : Supabase garde la génération et la vérification des codes à 6 chiffres ; Resend envoie les emails en
+  SMTP (`smtp.resend.com:465`, clé API saisie par `vps.ps1 email`, jamais dans le code). Modèles en français servis par
+  le site de l'API (`/email-templates/`). Connexion Google (OAuth Supabase, `vps.ps1 google`), retour vers
+  `https://tchopi.com` (`SITE_URL`, `ADDITIONAL_REDIRECT_URLS`).
+- **Alternatives écartées** : API Resend appelée par une fonction (« hook » d'envoi) : plus de code pour le même
+  résultat ; SMTP de la messagerie Hostinger (délivrabilité moindre, pas de suivi).
+- **Conséquences** : domaine `tchopi.com` à vérifier chez Resend (DNS) ; Google dans l'app mobile plus tard.
+- **Impact** : sécurité (moyen), technique (réversible).
+
+## ADR-044 — Inscription des restaurants en libre-service
+
+- **Date** : 2026-10-21 · **Statut** : Accepté (demande utilisateur) · **Décideur** : Claude (product-owner, backend)
+- **Décision** : un compte crée son restaurant (`register_restaurant`) : invisible des clients
+  (`review_status = pending`, inactif) jusqu'à la validation de l'admin (`admin_review_restaurant`, commission
+  fixée), qui prévient le gérant. Le gérant accède tout de suite à son espace pour préparer sa carte. Une demande en
+  attente à la fois par compte.
+- **Alternatives écartées** : formulaire de candidature traité à la main (création par l'admin) : plus lent, conservé
+  pour les demandes déjà reçues.
+- **Impact** : fonctionnel (moyen), sécurité (validation obligatoire avant toute vente).
+
+## ADR-043 — Plateforme spécialisée dans la restauration
+
+- **Date** : 2026-10-21 · **Statut** : Accepté (demande utilisateur) · **Décideur** : utilisateur
+- **Décision** : service colis mis en pause (`settings.parcels_enabled = false`, refus côté serveur ; option `PARCELS`
+  des applications) et magasins retirés des interfaces. Rien n'est supprimé : réactivable sans migration.
+- **Impact** : fonctionnel (fort, choisi), technique (réversible).
+
+---
+
 ## ADR-042 — Backend commun étendu pour la plateforme web
 
 - **Date** : 2026-10-20

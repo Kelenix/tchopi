@@ -166,22 +166,25 @@ class _ClientHomeScreenState extends ConsumerState<ClientHomeScreen> {
                             },
                           ),
                         ),
-                        const SizedBox(width: Space.md),
-                        Expanded(
-                          child: _ServiceCard(
-                            art: ColoredBox(
-                              color: tokens.primarySoft,
-                              child: Icon(
-                                Icons.inventory_2_outlined,
-                                size: 36,
-                                color: tokens.primary,
+                        if (Env.parcelsEnabled) ...[
+                          const SizedBox(width: Space.md),
+                          Expanded(
+                            child: _ServiceCard(
+                              art: ColoredBox(
+                                color: tokens.primarySoft,
+                                child: Icon(
+                                  Icons.inventory_2_outlined,
+                                  size: 36,
+                                  color: tokens.primary,
+                                ),
                               ),
+                              title: l10n.homeServiceParcel,
+                              body: l10n.homeServiceParcelBody,
+                              onTap: () =>
+                                  context.push(ParcelRequestScreen.path),
                             ),
-                            title: l10n.homeServiceParcel,
-                            body: l10n.homeServiceParcelBody,
-                            onTap: () => context.push(ParcelRequestScreen.path),
                           ),
-                        ),
+                        ],
                       ],
                     ),
                   ),

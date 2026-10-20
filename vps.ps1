@@ -9,8 +9,10 @@
 #   .\vps.ps1 studio                        tableau de bord Supabase sur http://localhost:8000 (Ctrl+C pour fermer)
 #   .\vps.ps1 cle-paiement <NOM>            saisit une clé Stripe ou nyole (masquée) et l'enregistre sur le VPS
 #   .\vps.ps1 notifications [fichier]       active les notifications (compte de service Firebase rangé dans env\)
+#   .\vps.ps1 email [domaine]               active les emails par Resend (clé API masquée ; domaine : tchopi.com)
+#   .\vps.ps1 google                        active la connexion avec Google (identifiant et secret OAuth)
 param(
-  [Parameter(Mandatory)][ValidateSet('cle', 'installer', 'deployer', 'ci', 'testeur', 'admin', 'demo', 'studio', 'cle-paiement', 'notifications')][string]$Action,
+  [Parameter(Mandatory)][ValidateSet('cle', 'installer', 'deployer', 'ci', 'testeur', 'admin', 'demo', 'studio', 'cle-paiement', 'notifications', 'email', 'google')][string]$Action,
   [string]$Valeur,
   [string]$Code
 )
@@ -40,7 +42,7 @@ function Send-Source {
     Write-Host 'Attention : modifications non commitées dans infra/ ou supabase/ ; seule la version commitée est envoyée.' -ForegroundColor Yellow
   }
   $tar = Join-Path $env:TEMP 'tchopi-src.tar'
-  git -C $PSScriptRoot archive -o $tar HEAD infra supabase/migrations supabase/functions supabase/demo.sql supabase/seed-media/media
+  git -C $PSScriptRoot archive -o $tar HEAD infra supabase/migrations supabase/functions supabase/templates supabase/demo.sql supabase/seed-media/media
   scp -q $tar tchopi:/tmp/tchopi-src.tar
   if ($LASTEXITCODE -ne 0) { Fail 'envoi vers le VPS : clé de ce PC enregistrée sur le VPS ? (docs/deployer-sur-vps.md § 1)' }
   Remove-Item $tar
@@ -153,6 +155,29 @@ switch ($Action) {
     Get-Content $file -Raw | ssh tchopi 'sh /opt/tchopi/src/infra/server.sh fcm'
     if ($LASTEXITCODE -ne 0) { Fail 'enregistrement du compte de service sur le VPS' }
     Write-Host 'Notifications actives : chaque téléphone qui les a autorisées les reçoit.' -ForegroundColor Green
+  }
+  'email' {
+    # Codes de vérification et emails de compte envoyés par Resend (docs/mise-en-service.md § Emails) ; la clé n'apparaît
+    # ni à l'écran, ni dans l'historique.
+    $domain = if ($Valeur) { $Valeur } else { 'tchopi.com' }
+    $secure = Read-Host 'Clé API Resend (re_..., masquée)' -AsSecureString
+    $plain = [Net.NetworkCredential]::new('', $secure).Password
+    if ($plain -notmatch '^re_[A-Za-z0-9_]+$') { Fail 'clé Resend attendue (elle commence par re_)' }
+    Send-Source
+    $plain | ssh tchopi "sh /opt/tchopi/src/infra/server.sh email $domain"
+    if ($LASTEXITCODE -ne 0) { Fail 'activation des emails sur le VPS' }
+    Write-Host "Emails actifs : envoi depuis no-reply@$domain ; inscription par email ouverte." -ForegroundColor Green
+  }
+  'google' {
+    # Identifiants OAuth « Application Web » de Google Cloud (docs/mise-en-service.md § Google).
+    $id = (Read-Host 'Identifiant client Google (...apps.googleusercontent.com)').Trim()
+    $secure = Read-Host 'Secret client Google (masqué)' -AsSecureString
+    $secret = [Net.NetworkCredential]::new('', $secure).Password
+    if ($id -notmatch '\.apps\.googleusercontent\.com$' -or $secret -notmatch '^[A-Za-z0-9_.-]+$') { Fail 'identifiant ou secret Google invalide' }
+    Send-Source
+    "$id`n$secret" | ssh tchopi 'sh /opt/tchopi/src/infra/server.sh google'
+    if ($LASTEXITCODE -ne 0) { Fail 'activation de Google sur le VPS' }
+    Write-Host 'Connexion avec Google active.' -ForegroundColor Green
   }
   'studio' {
     # Démarré à la demande (mémoire du VPS partagé), arrêté à la fermeture du tunnel.

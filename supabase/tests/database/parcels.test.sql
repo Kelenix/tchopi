@@ -1,6 +1,8 @@
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(15);
+select plan(16);
+-- Colis en pause sur la plateforme (ADR-043) : réactivés pour ces tests.
+update public.settings set parcels_enabled = true;
 
 insert into auth.users (id, email, aud, role, email_confirmed_at) values
   ('00000000-0000-0000-0000-0000000000c1', 'client@exemple.ci', 'authenticated', 'authenticated', now()),
@@ -106,6 +108,20 @@ set local role authenticated;
 select throws_ok(
   $$ select public.cancel_order((select id from public.orders limit 1)) $$,
   'P0001', 'already_picked_up', 'impossible d''annuler un colis récupéré'
+);
+
+-- Service colis en pause (ADR-043, réglage par défaut) : toute nouvelle demande est refusée.
+reset role;
+update public.settings set parcels_enabled = false;
+set local role authenticated;
+select throws_ok(
+  $$ select public.place_parcel_order(
+       '{"lat":6.878,"lng":-6.45,"district":"Commerce","landmark":"Face à la gare"}',
+       '{"lat":6.89,"lng":-6.44,"district":"Lobia","landmark":"Près du marché"}',
+       'Koffi', '+2250700000022', (select id from pt), 'Un sac', true, 'cash',
+       ((public.quote_parcel(6.878, -6.45, 6.89, -6.44, (select id from pt)))->>'total')::integer,
+       '99999999-0000-0000-0000-000000000099') $$,
+  'P0001', 'service_unavailable', 'colis refusés tant que le service est en pause'
 );
 
 select * from finish();

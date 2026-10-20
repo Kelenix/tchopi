@@ -9,6 +9,8 @@
 #   sh server.sh routing                 met à jour la carte des trajets routiers (aussi chaque dimanche, cron)
 #   sh server.sh secret <NOM>            enregistre une clé de paiement lue sur l'entrée standard, puis relance les fonctions
 #   sh server.sh fcm                     active les notifications : compte de service Firebase lu sur l'entrée standard
+#   sh server.sh email <domaine>         active les emails (Resend) : clé API lue sur l'entrée standard
+#   sh server.sh google                  active la connexion Google : identifiant puis secret lus sur l'entrée standard
 # Le pare-feu et SSH du serveur ne sont pas modifiés (déjà limités à 22, 80 et 443).
 set -eu
 
@@ -142,6 +144,10 @@ deploy() {
   sql -c "select vault.create_secret('$key', 'refund_function_key')
     where not exists (select 1 from vault.secrets where name = 'refund_function_key')"
   install_routing
+  # Site web (tchopi-web, ADR-045) : adresse de retour des connexions Google et des liens des emails.
+  web=${WEB_URL:-https://tchopi.com}
+  set_env SITE_URL "$web"
+  set_env ADDITIONAL_REDIRECT_URLS "$web/**,http://localhost:3000/**,com.tchopi.mobile://**"
   # Applique aussi les changements du .env et attend que tous les services soient en bonne santé.
   sh run.sh start
 }
@@ -208,6 +214,39 @@ fcm() {
   cd "$APP" && docker compose up -d --force-recreate --wait functions
 }
 
+# Emails (ADR-045) : envoi par Resend en SMTP ; clé API lue sur l'entrée standard (jamais en argument). L'adresse
+# d'envoi no-reply@<domaine> doit appartenir à un domaine vérifié chez Resend.
+email() {
+  IFS= read -r key
+  key=$(printf %s "$key" | tr -d '\r')
+  case "$key" in re_*) ;; *) echo 'clé Resend attendue (re_…)' >&2; exit 1 ;; esac
+  case "$key" in *[!A-Za-z0-9_]*) echo 'clé invalide' >&2; exit 1 ;; esac
+  case "$1" in *[!a-z0-9.-]* | '') echo 'domaine invalide' >&2; exit 1 ;; esac
+  set_env SMTP_HOST smtp.resend.com
+  set_env SMTP_PORT 465
+  set_env SMTP_USER resend
+  set_env SMTP_PASS "$key"
+  set_env SMTP_ADMIN_EMAIL "no-reply@$1"
+  set_env SMTP_SENDER_NAME Tchopi
+  set_env ENABLE_EMAIL_SIGNUP true
+  set_env ENABLE_EMAIL_AUTOCONFIRM false
+  cd "$APP" && docker compose up -d --force-recreate --wait auth
+}
+
+# Connexion Google (ADR-045) : identifiant client puis secret, lus sur l'entrée standard (Google Cloud → Identifiants).
+google() {
+  IFS= read -r id
+  IFS= read -r secret
+  id=$(printf %s "$id" | tr -d '\r')
+  secret=$(printf %s "$secret" | tr -d '\r')
+  case "$id" in *.apps.googleusercontent.com) ;; *) echo 'identifiant client Google attendu' >&2; exit 1 ;; esac
+  case "$id$secret" in *[!A-Za-z0-9_.-]*) echo 'valeur invalide' >&2; exit 1 ;; esac
+  set_env GOOGLE_ENABLED true
+  set_env GOOGLE_CLIENT_ID "$id"
+  set_env GOOGLE_SECRET "$secret"
+  cd "$APP" && docker compose up -d --force-recreate --wait auth
+}
+
 case "${1:-}" in
   install) install_supabase "$2"; install_nginx "$2"; install_backups; deploy ;;
   deploy) deploy ;;
@@ -218,5 +257,7 @@ case "${1:-}" in
   routing) routing_data; cd "$APP" && docker compose up -d --force-recreate --wait routing ;;
   secret) secret "$2" ;;
   fcm) fcm ;;
-  *) sed -n '2,12p' "$0"; exit 1 ;;
+  email) email "$2" ;;
+  google) google ;;
+  *) sed -n '2,14p' "$0"; exit 1 ;;
 esac
