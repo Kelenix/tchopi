@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -438,6 +440,29 @@ void main() {
 
     expect(find.text('Livreur : Koffi · Moto AB-123-CI'), findsOneWidget);
     expect(find.text('Remise au livreur'), findsOneWidget);
+  });
+
+  testWidgets('restaurant : prévenu de la livraison au client', (tester) async {
+    final orders = StreamController<List<Order>>();
+    addTearDown(orders.close);
+    await tester.pumpWidget(
+      app(const RestaurantOrdersScreen(), [
+        managedRestaurantIdProvider.overrideWithValue('r1'),
+        managedRestaurantProvider(
+          'r1',
+        ).overrideWith((ref) => Completer<Restaurant>().future),
+        restaurantOrdersProvider('r1').overrideWith((ref) => orders.stream),
+        orderItemsProvider('o4').overrideWith((ref) async => const []),
+      ]),
+    );
+    orders.add([order('o4', OrderStatus.inTransit)]);
+    await tester.pump();
+    expect(find.text('Commande R-48K2Q livrée au client.'), findsNothing);
+
+    orders.add([order('o4', OrderStatus.delivered)]);
+    await tester.pump();
+    await tester.pump();
+    expect(find.text('Commande R-48K2Q livrée au client.'), findsOneWidget);
   });
 
   testWidgets('petit écran, grande police : validation sans débordement', (

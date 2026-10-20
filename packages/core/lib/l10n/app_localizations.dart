@@ -3288,7 +3288,7 @@ abstract class AppLocalizations {
   /// No description provided for @adminSupervision.
   ///
   /// In fr, this message translates to:
-  /// **'Commandes en cours'**
+  /// **'Commandes à traiter'**
   String get adminSupervision;
 
   /// No description provided for @adminSettings.
@@ -3318,13 +3318,13 @@ abstract class AppLocalizations {
   /// No description provided for @supervisionEmpty.
   ///
   /// In fr, this message translates to:
-  /// **'Aucune commande en cours'**
+  /// **'Aucune commande à traiter'**
   String get supervisionEmpty;
 
   /// No description provided for @supervisionEmptyBody.
   ///
   /// In fr, this message translates to:
-  /// **'Les nouvelles commandes apparaissent ici en temps réel.'**
+  /// **'Seules les commandes qui demandent votre intervention apparaissent ici : sans livreur, restaurant sans réponse, code bloqué ou problème signalé.'**
   String get supervisionEmptyBody;
 
   /// No description provided for @adminOrderCustomer.
@@ -3920,6 +3920,12 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Livreur : {name}'**
   String restaurantCourier(String name);
+
+  /// No description provided for @restaurantOrderDelivered.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande {number} livrée au client.'**
+  String restaurantOrderDelivered(String number);
 
   /// No description provided for @adminConfirmWithoutCode.
   ///

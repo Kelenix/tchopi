@@ -6,6 +6,28 @@
 
 ---
 
+## ADR-040 — Admin sur alerte seulement ; restaurant prévenu de la livraison
+
+- **Date** : 2026-10-20
+- **Statut** : Accepté (demande utilisateur, option « Alertes seulement » choisie)
+- **Décideur** : Claude (rôles : product-owner, backend-engineer, flutter-engineer)
+- **Contexte** : l'admin n'a pas besoin de suivre toutes les commandes ; le restaurant ne savait pas quand sa
+  commande était remise au client.
+- **Décision** :
+  - **Commandes à traiter** (ex-« Commandes en cours ») : l'admin ne voit que les commandes en alerte (sans livreur
+    après le délai, restaurant sans réponse, code bloqué, problème signalé ou échec). Il garde l'attribution
+    manuelle, l'annulation et la confirmation sans code (cahier des charges § D.4-5). Les remboursements restent
+    dans Transactions.
+  - **Restaurant** : notification « Commande livrée » (type `order_delivered`) à chaque membre quand le livreur saisit
+    le code ou que l'admin confirme la livraison ; message à l'écran des commandes s'il est ouvert.
+- **Alternatives écartées** : retirer toute supervision (plus d'attribution manuelle ni de déblocage) ; garder la
+  liste sans le détail des commandes.
+- **Conséquences** : la notification sur le téléphone attend le projet Firebase (`docs/manual-tasks.md` § 8) ; d'ici
+  là, le restaurant la voit si l'écran des commandes est ouvert.
+- **Impact** : fonctionnel (faible), technique (réversible).
+
+---
+
 ## ADR-039 — Paiements prêts pour les comptes marchands ; cartographie par besoin
 
 - **Date** : 2026-10-20

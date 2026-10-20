@@ -4,6 +4,14 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · versions [S
 
 ## [Non publié]
 
+### Ajouté
+- Restaurant : prévenu quand le livreur a livré la commande au client (message sur l'écran des commandes,
+  notification « Commande livrée » sur le téléphone une fois Firebase créé).
+
+### Modifié
+- Admin : « Commandes en cours » devient « Commandes à traiter » et ne liste plus que les commandes qui demandent
+  une intervention (sans livreur, restaurant sans réponse, code bloqué, problème).
+
 ### Ajouté (Inc-11, ADR-028)
 - Paiement **Mobile Money** par nyole (Orange Money, MTN MoMo, Wave, Moov Money) pour les repas et les colis : page
   de paiement sécurisée, statut en direct, « Réessayer » après un refus, « Changer de moyen de paiement » (panier

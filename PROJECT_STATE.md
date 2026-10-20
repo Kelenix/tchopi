@@ -87,6 +87,10 @@ validation de la maquette → code des écrans à partir de l'Inc-1. Registre de
 
 ## Journal de session (résumé court, le plus récent en haut)
 
+- 2026-10-20 — Retours d'essai (ADR-040) : admin « Commandes à traiter » limité aux commandes en alerte (attribution
+  manuelle et confirmation sans code conservées) ; restaurant notifié « Commande livrée » (migration
+  `20261020110000`, message à l'écran des commandes). Analyse et tests Flutter verts ; tests de la base (pgTAP)
+  exécutés par la CI (Docker absent sur ce PC).
 - 2026-10-20 — Trajets des cartes hébergés (ADR-038) : OSRM v6 sur le VPS (carte Côte d'Ivoire Geofabrik, profil
   voiture, mise à jour chaque dimanche), public sur `https://api.tchopi.com/route/v1/driving/…` ; `ROUTING_URL` par
   défaut sur ce serveur. Essai sur le VPS : préparation 2 min 30 (pic 1,2 Go), service 300 Mo, trajet Abidjan

@@ -291,8 +291,8 @@ Back-office: Connexion → Code → espace selon le rôle
 - **Affiche** : période (jour / semaine / mois) ; indicateurs : commandes par statut et type, chiffre d'affaires, frais, commissions, rémunération livreurs, espèces à rapprocher, livreurs en ligne ; bandeau d'alertes cliquables.
 - **Stories** : ADM-06, ADM-03.
 
-### A-02 · Commandes (supervision)
-- **Affiche** : liste en temps réel filtrable (statut, type, zone, alertes) ; détail : contenu, montants séparés, acteurs, chronologie complète (acteur, date, motif), paiement.
+### A-02 · Commandes à traiter (supervision)
+- **Affiche** : liste en temps réel des seules commandes en alerte (ADR-040), filtrable (alerte, type, statut, zone) ; détail : contenu, montants séparés, acteurs, chronologie complète (acteur, date, motif), paiement.
 - **Actions selon l'état** : attribuer / réattribuer (A-03) · annuler (motif) · confirmer la livraison sans code (motif) · marquer un remboursement effectué.
 - **Stories** : ADM-03, MIS-07, TRX-03.
 

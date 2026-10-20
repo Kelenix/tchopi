@@ -117,21 +117,33 @@ void main() {
     );
   });
 
-  testWidgets('supervision : bandeau d\'alertes et filtres', (tester) async {
+  testWidgets('supervision : commandes en alerte seulement, filtres', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       app(const SupervisionScreen(), [
         order('R-AAAAA', OrderStatus.preparing, alerted: now),
-        order('C-BBBBB', OrderStatus.searchingCourier, type: OrderType.parcel),
+        order(
+          'C-BBBBB',
+          OrderStatus.inTransit,
+          type: OrderType.parcel,
+        ).copyWith(codeLockedAt: now),
         order('R-CCCCC', OrderStatus.pending),
       ]),
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Commandes en cours'), findsOneWidget);
+    expect(find.text('Commandes à traiter'), findsOneWidget);
     expect(find.text('Sans livreur : 1'), findsOneWidget);
+    expect(find.text('Code bloqué : 1'), findsOneWidget);
     expect(find.textContaining('Restaurant sans réponse'), findsNothing);
     expect(find.textContaining('R-AAAAA'), findsOneWidget);
     expect(find.textContaining('C-BBBBB'), findsOneWidget);
+    expect(
+      find.textContaining('R-CCCCC'),
+      findsNothing,
+      reason: 'commande sans alerte : rien à faire pour l\'admin',
+    );
 
     await tester.tap(find.text('Sans livreur : 1'));
     await tester.pumpAndSettle();
@@ -196,6 +208,6 @@ void main() {
     expect(find.text(formatMoney(17500)), findsOneWidget);
     expect(find.text('Livreurs en ligne'), findsOneWidget);
     expect(find.text('Livrée'), findsOneWidget, reason: 'par statut');
-    expect(find.text('Commandes en cours'), findsOneWidget, reason: 'alerte');
+    expect(find.text('Commandes à traiter'), findsOneWidget, reason: 'alerte');
   });
 }

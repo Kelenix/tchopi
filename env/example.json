@@ -1,7 +1,7 @@
 {
   "SUPABASE_URL": "http://127.0.0.1:54321",
   "SUPABASE_ANON_KEY": "coller ici la clé « anon » affichée par `supabase status`",
-  "FIREBASE_API_KEY": "",
+  "FIREBASE_API_KEY": "AIzaSyBCOx3oiKfwy5zz4NKIwg8Ga_sX_Xl807g",
   "FIREBASE_APP_ID": "",
   "FIREBASE_SENDER_ID": "",
   "FIREBASE_PROJECT_ID": ""

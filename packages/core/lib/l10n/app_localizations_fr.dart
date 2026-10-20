@@ -1780,7 +1780,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Aucun livreur en ligne pour l\'instant : vous pouvez commander, un livreur prendra votre commande dès qu\'il sera disponible.';
 
   @override
-  String get adminSupervision => 'Commandes en cours';
+  String get adminSupervision => 'Commandes à traiter';
 
   @override
   String get adminSettings => 'Paramètres';
@@ -1799,11 +1799,11 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get supervisionEmpty => 'Aucune commande en cours';
+  String get supervisionEmpty => 'Aucune commande à traiter';
 
   @override
   String get supervisionEmptyBody =>
-      'Les nouvelles commandes apparaissent ici en temps réel.';
+      'Seules les commandes qui demandent votre intervention apparaissent ici : sans livreur, restaurant sans réponse, code bloqué ou problème signalé.';
 
   @override
   String get adminOrderCustomer => 'Client';
@@ -2135,6 +2135,11 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String restaurantCourier(String name) {
     return 'Livreur : $name';
+  }
+
+  @override
+  String restaurantOrderDelivered(String number) {
+    return 'Commande $number livrée au client.';
   }
 
   @override

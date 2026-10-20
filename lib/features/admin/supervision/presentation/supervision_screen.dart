@@ -12,7 +12,8 @@ import '../../zones/zones_providers.dart';
 import '../supervision_providers.dart';
 import 'admin_order_screen.dart';
 
-/// A-02 : commandes en cours en temps réel, filtrables par statut, type, zone et alerte (ADM-03).
+/// A-02 : seules les commandes qui demandent une intervention de l'admin (alertes ADM-03), en temps réel,
+/// filtrables par alerte, type, statut et zone.
 class SupervisionScreen extends ConsumerStatefulWidget {
   const SupervisionScreen({super.key});
 
@@ -50,8 +51,14 @@ class _SupervisionScreenState extends ConsumerState<SupervisionScreen> {
     final settings = ref.watch(platformSettingsProvider).value;
     final zones = ref.watch(adminZonesProvider).value ?? const <Zone>[];
     final now = DateTime.now();
-    final all = orders.value ?? const <Order>[];
-    final alerts = {for (final o in all) o.id: orderAlerts(o, settings, now)};
+    final alerts = {
+      for (final o in orders.value ?? const <Order>[])
+        o.id: orderAlerts(o, settings, now),
+    }..removeWhere((_, set) => set.isEmpty);
+    final all = [
+      for (final o in orders.value ?? const <Order>[])
+        if (alerts.containsKey(o.id)) o,
+    ];
     final counts = {
       for (final a in OrderAlert.values)
         a: alerts.values.where((set) => set.contains(a)).length,
@@ -158,10 +165,8 @@ class _SupervisionScreenState extends ConsumerState<SupervisionScreen> {
                       itemCount: shown.length,
                       separatorBuilder: (_, _) =>
                           const SizedBox(height: Space.sm),
-                      itemBuilder: (context, index) => _OrderRow(
-                        order: shown[index],
-                        alerted: alerts[shown[index].id]!.isNotEmpty,
-                      ),
+                      itemBuilder: (context, index) =>
+                          _OrderRow(order: shown[index]),
                     ),
             ),
           ],
@@ -173,10 +178,9 @@ class _SupervisionScreenState extends ConsumerState<SupervisionScreen> {
 }
 
 class _OrderRow extends StatelessWidget {
-  const _OrderRow({required this.order, required this.alerted});
+  const _OrderRow({required this.order});
 
   final Order order;
-  final bool alerted;
 
   @override
   Widget build(BuildContext context) {
@@ -187,12 +191,8 @@ class _OrderRow extends StatelessWidget {
       child: ListTile(
         onTap: () => context.push(AdminOrderScreen.location(order.id)),
         leading: Icon(
-          alerted
-              ? Icons.warning_amber_rounded
-              : parcel
-              ? Icons.inventory_2_outlined
-              : Icons.restaurant_rounded,
-          color: alerted ? tokens.warning : tokens.primary,
+          parcel ? Icons.inventory_2_outlined : Icons.restaurant_rounded,
+          color: tokens.warning,
         ),
         title: Text('${order.number} · ${order.title(l10n)}'),
         subtitle: Text(

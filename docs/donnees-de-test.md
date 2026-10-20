@@ -22,7 +22,7 @@ supabase start
 | Restaurant (gérante du Grill du Plateau) | `07 00 00 00 06` | Client + Restaurant |
 
 Commande complète : client (`04`) qui commande, livreur (`05`) « En ligne » avec la localisation autorisée,
-restaurant (`06`) qui accepte ; l'admin (`03`) suit tout dans Commandes en cours.
+restaurant (`06`) qui accepte ; l'admin (`03`) n'intervient que sur alerte (Commandes à traiter).
 
 ## Serveur en ligne (api.tchopi.com)
 

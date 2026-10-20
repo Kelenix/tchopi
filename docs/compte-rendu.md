@@ -4,6 +4,19 @@
 
 ---
 
+## 2026-10-20 — Admin sur alerte, restaurant prévenu de la livraison
+
+- **Admin** : « Commandes en cours » devient **« Commandes à traiter »** : seules les commandes qui demandent une
+  intervention y apparaissent (sans livreur, restaurant sans réponse, code bloqué, problème). L'admin peut toujours
+  attribuer un livreur à la main et confirmer une livraison sans code (cahier des charges § D). Les remboursements
+  restent dans Transactions.
+- **Restaurant** : quand le livreur saisit le code du client (ou que l'admin confirme la livraison), le restaurant
+  reçoit « Commande livrée ». Aujourd'hui : message sur l'écran des commandes s'il est ouvert. Sur le téléphone
+  même app fermée : dès que le projet Firebase est créé (`docs/manual-tasks.md` § 8).
+- Décision : ADR-040.
+
+---
+
 ## 2026-10-20 — Paiements, cartographie, trajets
 
 ### Résumé

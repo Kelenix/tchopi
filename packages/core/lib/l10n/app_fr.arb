@@ -766,7 +766,7 @@
   "eventDispatchAlert": "Alerte : toujours sans livreur",
   "orderNoCourier": "Aucun livreur disponible",
   "noCourierYet": "Aucun livreur en ligne pour l'instant : vous pouvez commander, un livreur prendra votre commande dès qu'il sera disponible.",
-  "adminSupervision": "Commandes en cours",
+  "adminSupervision": "Commandes à traiter",
   "adminSettings": "Paramètres",
   "supervisionAll": "Tous",
   "supervisionAlertNoCourier": "Sans livreur : {count}",
@@ -785,8 +785,8 @@
       }
     }
   },
-  "supervisionEmpty": "Aucune commande en cours",
-  "supervisionEmptyBody": "Les nouvelles commandes apparaissent ici en temps réel.",
+  "supervisionEmpty": "Aucune commande à traiter",
+  "supervisionEmptyBody": "Seules les commandes qui demandent votre intervention apparaissent ici : sans livreur, restaurant sans réponse, code bloqué ou problème signalé.",
   "adminOrderCustomer": "Client",
   "adminOrderCourier": "Livreur",
   "adminOrderNoCourier": "Aucun livreur attribué",
@@ -958,6 +958,14 @@
   "@restaurantCourier": {
     "placeholders": {
       "name": {
+        "type": "String"
+      }
+    }
+  },
+  "restaurantOrderDelivered": "Commande {number} livrée au client.",
+  "@restaurantOrderDelivered": {
+    "placeholders": {
+      "number": {
         "type": "String"
       }
     }

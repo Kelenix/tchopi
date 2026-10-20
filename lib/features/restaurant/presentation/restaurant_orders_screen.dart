@@ -34,6 +34,7 @@ class _RestaurantOrdersScreenState
   int _tab = 0;
   final _seen = <String>{};
   Set<String> _unseen = {};
+  Map<String, OrderStatus> _statuses = {};
   Timer? _alert;
   late final Timer _clock;
 
@@ -76,6 +77,23 @@ class _RestaurantOrdersScreenState
     if (unseen.isNotEmpty) {
       _alert = Timer.periodic(const Duration(seconds: 5), (_) => _ring());
     }
+    _announceDeliveries(orders);
+  }
+
+  /// Commande remise au client par le livreur pendant que l'écran est ouvert : le restaurant en est informé.
+  void _announceDeliveries(List<Order> orders) {
+    final l10n = AppLocalizations.of(context);
+    for (final o in orders) {
+      final before = _statuses[o.id];
+      if (o.status == OrderStatus.delivered &&
+          before != null &&
+          before != OrderStatus.delivered) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.restaurantOrderDelivered(o.number))),
+        );
+      }
+    }
+    _statuses = {for (final o in orders) o.id: o.status};
   }
 
   void _ring() {

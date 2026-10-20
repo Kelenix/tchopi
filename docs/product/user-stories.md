@@ -278,7 +278,7 @@ En tant que **client**, je veux enregistrer une adresse sans connaître le nom d
 - Étant donné un livreur déjà en mission, quand je tente de lui attribuer une autre commande, alors c'est refusé.
 
 #### ADM-03 · Superviser les commandes (admin) — Must · L · Inc-7
-- Étant donné le tableau de supervision, quand il s'affiche, alors je vois en temps réel les commandes en cours filtrables par statut, type et zone, avec un bandeau d'alertes : sans livreur, restaurant sans réponse, code de livraison bloqué, échec signalé, paiement à rembourser.
+- Étant donné le tableau de supervision, quand il s'affiche, alors je vois en temps réel les seules commandes qui demandent mon intervention (ADR-040) : sans livreur, restaurant sans réponse, code de livraison bloqué, échec signalé ; filtrables par alerte, type, statut et zone. Les paiements à rembourser sont dans Transactions.
 - Étant donné une commande, quand je l'ouvre, alors je vois son détail, sa chronologie complète (acteur, date, motif) et les actions possibles selon son état : attribuer, annuler (motif), confirmer la livraison sans code (motif).
 
 ---
@@ -344,7 +344,7 @@ En tant que **client**, je veux enregistrer une adresse sans connaître le nom d
 - Étant donné un livreur en ligne, quand une mission lui est proposée ou attribuée par l'admin, ou qu'une mission est annulée, alors il reçoit une notification prioritaire et sonore.
 
 #### NOT-03 · Notifications du restaurant — Must · S · Inc-9
-- Étant donné l'app Back-office Android, quand une commande arrive ou est annulée, alors une notification sonore est reçue ; dans le navigateur, l'alerte sonore fonctionne tant que la page est ouverte.
+- Étant donné l'app Back-office Android, quand une commande arrive ou est annulée, alors une notification sonore est reçue ; quand le livreur l'a livrée au client, alors le restaurant en est notifié ; dans le navigateur, l'alerte sonore fonctionne tant que la page est ouverte.
 
 #### NOT-04 · Autorisation des notifications — Must · S · Inc-9
 - Étant donné le premier moment utile (après la première commande, ou au passage en ligne du livreur), quand l'app demande l'autorisation, alors une explication la précède ; en cas de refus, un rappel discret est affiché dans le suivi.

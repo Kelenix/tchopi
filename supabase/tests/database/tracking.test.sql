@@ -1,6 +1,6 @@
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(16);
+select plan(17);
 
 insert into auth.users (id, email, aud, role, email_confirmed_at) values
   ('00000000-0000-0000-0000-0000000000f1', 'gerant@exemple.ci', 'authenticated', 'authenticated', now()),
@@ -42,6 +42,10 @@ create function pg_temp.order_id() returns uuid language sql security definer as
 $$;
 create function pg_temp.kinds(p_user text) returns text language sql security definer as $$
   select array_agg(kind order by id)::text from public.notifications where user_id = p_user::uuid
+$$;
+-- Le code n'est lisible que par le client : la fonction de test le lit avec les droits du propriétaire.
+create function pg_temp.code() returns text language sql security definer as $$
+  select code from public.delivery_codes where order_id = pg_temp.order_id()
 $$;
 
 set local role authenticated;
@@ -86,6 +90,14 @@ select is((select count(*) from public.courier_locations)::integer, 0, 'un autre
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000f1');
 select is(pg_temp.kinds('00000000-0000-0000-0000-0000000000f1'), '{new_order,courier_assigned}',
   'le restaurant est prévenu qu''un livreur arrive');
+
+-- Remise au livreur puis livraison au client.
+select public.transition_order(pg_temp.order_id(), 'picked_up');
+select pg_temp.as_user('00000000-0000-0000-0000-0000000000a1');
+select public.start_delivery(pg_temp.order_id());
+select public.confirm_delivery(pg_temp.order_id(), pg_temp.code());
+select is(pg_temp.kinds('00000000-0000-0000-0000-0000000000f1'), '{new_order,courier_assigned,order_delivered}',
+  'le restaurant est prévenu de la livraison au client');
 
 -- Appareils : enregistrés par leur compte, repris par le dernier compte connecté.
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000c1');

@@ -13,7 +13,7 @@
 | 5 | Livreur | **Accepter** | Plus aucun autre livreur ne peut la prendre ; client et restaurant : « Livreur en route vers le restaurant » + nom du livreur |
 | 6 | Livreur + restaurant | Au comptoir, le livreur donne le **numéro de commande** ; le restaurant appuie sur **Remise au livreur** (ou le livreur sur « Commande récupérée ») | Statut « Récupérée » |
 | 7 | Livreur | **En route** | Client : « En route », position du livreur sur la carte |
-| 8 | Client → Livreur | Le client lit son **code de livraison** (écran de la commande) ; le livreur le saisit, puis confirme les espèces | Statut « Livrée » chez les trois |
+| 8 | Client → Livreur | Le client lit son **code de livraison** (écran de la commande) ; le livreur le saisit, puis confirme les espèces | Statut « Livrée » chez les trois ; restaurant : message « Commande R-… livrée au client » (et notification sur le téléphone une fois Firebase créé) |
 
 **Cas à essayer aussi**
 
