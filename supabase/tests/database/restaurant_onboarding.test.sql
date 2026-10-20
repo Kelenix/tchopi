@@ -22,19 +22,19 @@ $$;
 set local role authenticated;
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000f1');
 select lives_ok($$ select pg_temp.register() $$, 'un restaurateur inscrit son restaurant');
-select is((select review_status || '/' || is_active from public.restaurants), 'pending/false', 'en attente, invisible des clients');
-select is((public.my_roles() -> 'restaurant_ids' ->> 0)::uuid, (select id from public.restaurants), 'il accède tout de suite à son espace');
-select is((select login_email from public.restaurant_members), 'gerante@exemple.ci', 'gérant relié à son compte');
-select is((select count(*) from public.opening_hours)::integer, 2, 'horaires enregistrés');
+select is((select review_status || '/' || is_active from public.restaurants where owner_id = '00000000-0000-0000-0000-0000000000f1'), 'pending/false', 'en attente, invisible des clients');
+select is((public.my_roles() -> 'restaurant_ids' ->> 0)::uuid, (select id from public.restaurants where owner_id = '00000000-0000-0000-0000-0000000000f1'), 'il accède tout de suite à son espace');
+select is((select login_email from public.restaurant_members where restaurant_id = (select id from public.restaurants where owner_id = '00000000-0000-0000-0000-0000000000f1')), 'gerante@exemple.ci', 'gérant relié à son compte');
+select is((select count(*) from public.opening_hours where restaurant_id = (select id from public.restaurants where owner_id = '00000000-0000-0000-0000-0000000000f1'))::integer, 2, 'horaires enregistrés');
 select throws_ok($$ select pg_temp.register() $$, 'P0001', 'already_submitted', 'une seule demande en attente par compte');
 select is((select count(*) from public.public_establishments('55555555-5555-5555-5555-555555555555'))::integer, 0,
   'absent du catalogue public avant validation');
-select throws_ok($$ select public.admin_review_restaurant((select id from public.restaurants), true) $$,
+select throws_ok($$ select public.admin_review_restaurant((select id from public.restaurants where owner_id = '00000000-0000-0000-0000-0000000000f1'), true) $$,
   'P0001', 'forbidden', 'seul un admin valide');
 
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000ad');
-select public.admin_review_restaurant((select id from public.restaurants), true, 12);
-select is((select review_status || '/' || is_active || '/' || commission_rate from public.restaurants), 'approved/true/12.00',
+select public.admin_review_restaurant((select id from public.restaurants where owner_id = '00000000-0000-0000-0000-0000000000f1'), true, 12);
+select is((select review_status || '/' || is_active || '/' || commission_rate from public.restaurants where owner_id = '00000000-0000-0000-0000-0000000000f1'), 'approved/true/12.00',
   'validé avec sa commission');
 reset role;
 select is((select kind from public.notifications where user_id = '00000000-0000-0000-0000-0000000000f1'), 'restaurant_approved',
