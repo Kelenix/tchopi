@@ -49,13 +49,23 @@ abstract final class Env {
     defaultValue: '© OpenFreeMap © OpenMapTiles © OpenStreetMap',
   );
 
-  /// Notifications push (ADR-025) : configuration Firebase de l'app, publique par conception. Vide tant que le
-  /// projet Firebase n'est pas créé (docs/manual-tasks.md §8) : les notifications sont alors désactivées.
-  static const firebaseApiKey = String.fromEnvironment('FIREBASE_API_KEY');
-  static const firebaseAppId = String.fromEnvironment('FIREBASE_APP_ID');
-  static const firebaseSenderId = String.fromEnvironment('FIREBASE_SENDER_ID');
+  /// Notifications push (ADR-025) : configuration Firebase de l'app Android `com.tchopi.mobile` (projet « tchopi »),
+  /// publique par conception. L'envoi exige en plus le compte de service, secret du serveur (docs/manual-tasks.md §8).
+  static const firebaseApiKey = String.fromEnvironment(
+    'FIREBASE_API_KEY',
+    defaultValue: 'AIzaSyBCOx3oiKfwy5zz4NKIwg8Ga_sX_Xl807g',
+  );
+  static const firebaseAppId = String.fromEnvironment(
+    'FIREBASE_APP_ID',
+    defaultValue: '1:429017912084:android:bf894fc2de7a57d1f2a801',
+  );
+  static const firebaseSenderId = String.fromEnvironment(
+    'FIREBASE_SENDER_ID',
+    defaultValue: '429017912084',
+  );
   static const firebaseProjectId = String.fromEnvironment(
     'FIREBASE_PROJECT_ID',
+    defaultValue: 'tchopi',
   );
 
   static bool get pushConfigured =>

@@ -101,9 +101,8 @@
 - **Quand** : Inc-9.
 - **Étapes** : 1. https://console.firebase.google.com → nouveau projet. 2. Ajouter l'app Android
   (`com.tchopi.mobile`) ; dans les paramètres du projet, relever **clé d'API web**, **ID d'application**, **ID de
-  l'expéditeur** et **ID du projet**, à reporter dans `env/<environnement>.json` (`FIREBASE_API_KEY`,
-  `FIREBASE_APP_ID`, `FIREBASE_SENDER_ID`, `FIREBASE_PROJECT_ID`) — valeurs publiques, aucun fichier
-  `google-services.json` n'est nécessaire. 3. Comptes de service → générer une clé privée (JSON) : la saisir
+  l'expéditeur** et **ID du projet** — ✅ fait le 2026-10-20 : valeurs publiques inscrites dans
+  `packages/core/lib/src/config/env.dart`, aucun fichier `google-services.json` n'est nécessaire. 3. Comptes de service → générer une clé privée (JSON) : la saisir
   vous-même comme secret de la fonction `push` (`FCM_SERVICE_ACCOUNT`) sur le serveur. 4. Dans la base du serveur,
   enregistrer dans le coffre l'adresse de la fonction (`push_function_url`) et la clé de service
   (`push_function_key`) ; Claude fournira la commande exacte au déploiement.
