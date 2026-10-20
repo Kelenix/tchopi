@@ -47,7 +47,15 @@ jobs:
         with:
           version: 2.116.0
       - run: supabase db start
-      - run: supabase test db
+      # Tests en échec publiés en annotations (lisibles sans ouvrir les journaux).
+      - name: Tests pgTAP
+        shell: bash
+        run: |
+          set +e
+          supabase test db 2>&1 | tee /tmp/pgtap.txt
+          status=${PIPESTATUS[0]}
+          grep -E "not ok|Failed test|ERROR|Dubious|^# +(got|expected|caught|wanted)" /tmp/pgtap.txt | head -40 | while IFS= read -r line; do echo "::error::$line"; done
+          exit $status
 
   build:
     name: Builds de contrôle (Android, web)
