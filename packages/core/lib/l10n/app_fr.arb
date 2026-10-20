@@ -468,6 +468,14 @@
       }
     }
   },
+  "issueOptions": "« {name} » demande un choix d'options : commandez-le sur tchopi.com.",
+  "@issueOptions": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "failurePriceChanged": "Les prix ont changé : vérifiez le nouveau total.",
   "failureCartChanged": "Votre panier a changé : vérifiez-le avant de commander.",
   "failurePaymentUnavailable": "Ce moyen de paiement n'est pas encore disponible.",

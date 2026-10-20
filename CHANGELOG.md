@@ -5,6 +5,8 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · versions [S
 ## [Non publié]
 
 ### Ajouté
+- Backend pour la plateforme web (ADR-042) : magasins, options de produits (taille, suppléments), catalogue public
+  sans compte, candidatures « devenir partenaire ».
 - Restaurant : prévenu quand le livreur a livré la commande au client (message sur l'écran des commandes,
   notification « Commande livrée » sur le téléphone une fois Firebase créé).
 

@@ -2218,6 +2218,12 @@ abstract class AppLocalizations {
   /// **'« {name} » n\'est plus disponible.'**
   String issueProductUnavailable(String name);
 
+  /// No description provided for @issueOptions.
+  ///
+  /// In fr, this message translates to:
+  /// **'« {name} » demande un choix d\'options : commandez-le sur tchopi.com.'**
+  String issueOptions(String name);
+
   /// No description provided for @failurePriceChanged.
   ///
   /// In fr, this message translates to:

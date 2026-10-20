@@ -6,6 +6,31 @@
 
 ---
 
+## ADR-042 — Backend commun étendu pour la plateforme web
+
+- **Date** : 2026-10-20
+- **Statut** : Accepté (mode AUTONOME ; plan `../tchopi-web/docs/plan-de-realisation.md`)
+- **Décideur** : Claude (rôles : database-architect, security-engineer)
+- **Contexte** : le site `tchopi-web` partage ce backend ; il lui faut un catalogue lisible sans compte, des magasins,
+  des options de produits et les candidatures « devenir partenaire ».
+- **Décision** (migration `20261020120000_web_platform`) :
+  - **Magasins** : `restaurants.kind` (`restaurant` / `shop`), même circuit de commande ; `admin_save_restaurant`
+    accepte `p_kind` (absent depuis le mobile : type inchangé).
+  - **Options** : groupes (`min_choices`, `max_choices`) et choix (`price_delta`) ; le devis recalcule le prix et
+    signale `options_required` / `option_unavailable` ; la ligne de commande garde les choix (`options`) et les ajoute
+    à son libellé, donc l'app mobile actuelle les affiche déjà. Le mobile ne sait pas encore choisir d'options : il
+    invite à commander ces produits sur le site.
+  - **Catalogue public** : fonctions en lecture seule pour les visiteurs (`public_zones`, `public_establishments`,
+    `public_featured_products`, `public_establishment`, `public_search`), colonnes sûres seulement ; les tables restent
+    fermées à `anon`.
+  - **Candidatures** : `partner_applications`, envoi sans compte (une en attente par numéro, 30 par heure),
+    examen par l'admin.
+- **Alternatives écartées** : ouvrir les tables aux visiteurs (exposerait commission et téléphones) ; API propre au
+  web (deux logiques métier).
+- **Impact** : sécurité (moyen, couvert par `web_platform.test.sql`), technique (réversible).
+
+---
+
 ## ADR-041 — Autorisation des notifications demandée à l'ouverture
 
 - **Date** : 2026-10-20

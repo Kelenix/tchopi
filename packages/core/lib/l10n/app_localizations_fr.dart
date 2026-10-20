@@ -1170,6 +1170,11 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String issueOptions(String name) {
+    return '« $name » demande un choix d\'options : commandez-le sur tchopi.com.';
+  }
+
+  @override
   String get failurePriceChanged =>
       'Les prix ont changé : vérifiez le nouveau total.';
 

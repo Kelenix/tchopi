@@ -320,7 +320,7 @@ class _IssuesBanner extends ConsumerWidget {
     final tokens = context.tokens;
     final unavailable = [
       for (final issue in issues)
-        if (issue.issue == 'product_unavailable' && issue.productId != null)
+        if (issue.issue != 'restaurant_closed' && issue.productId != null)
           issue.productId!,
     ];
     return Container(
@@ -341,9 +341,14 @@ class _IssuesBanner extends ConsumerWidget {
                   const SizedBox(width: Space.sm),
                   Expanded(
                     child: Text(
-                      issue.issue == 'restaurant_closed'
-                          ? l10n.issueRestaurantClosed
-                          : l10n.issueProductUnavailable(issue.name ?? ''),
+                      switch (issue.issue) {
+                        'restaurant_closed' => l10n.issueRestaurantClosed,
+                        'product_unavailable' => l10n.issueProductUnavailable(
+                          issue.name ?? '',
+                        ),
+                        // Options de produits (ADR-042) : choix pas encore proposé dans l'app.
+                        _ => l10n.issueOptions(issue.name ?? ''),
+                      },
                       style: Theme.of(
                         context,
                       ).textTheme.labelLarge!.copyWith(color: tokens.danger),
