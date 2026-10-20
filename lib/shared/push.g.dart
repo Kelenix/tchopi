@@ -8,9 +8,10 @@ part of 'push.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Notifications push (NOT-01 à NOT-04, ADR-025) : autorisation demandée au bon moment, appareil enregistré pour
-/// le compte connecté (et oublié à la déconnexion), écran visé ouvert au toucher. Inactif dans le navigateur et
-/// tant que Firebase n'est pas configuré : les écrans ouverts restent à jour par le temps réel.
+/// Notifications push (NOT-01 à NOT-04, ADR-025) : autorisation demandée par le système dès l'ouverture, une fois
+/// connecté (ADR-041) ; appareil enregistré pour le compte connecté (et oublié à la déconnexion), écran visé ouvert au
+/// toucher. Inactif dans le navigateur et tant que Firebase n'est pas configuré : les écrans ouverts restent à jour par
+/// le temps réel.
 ///
 /// Les jetons d'enregistrement FCM restent la cible de la fonction « push » (API HTTP v1) : leurs méthodes sont
 /// marquées dépréciées au profit des identifiants d'installation, que l'envoi serveur n'utilise pas encore.
@@ -18,16 +19,18 @@ part of 'push.dart';
 @ProviderFor(Push)
 final pushProvider = PushProvider._();
 
-/// Notifications push (NOT-01 à NOT-04, ADR-025) : autorisation demandée au bon moment, appareil enregistré pour
-/// le compte connecté (et oublié à la déconnexion), écran visé ouvert au toucher. Inactif dans le navigateur et
-/// tant que Firebase n'est pas configuré : les écrans ouverts restent à jour par le temps réel.
+/// Notifications push (NOT-01 à NOT-04, ADR-025) : autorisation demandée par le système dès l'ouverture, une fois
+/// connecté (ADR-041) ; appareil enregistré pour le compte connecté (et oublié à la déconnexion), écran visé ouvert au
+/// toucher. Inactif dans le navigateur et tant que Firebase n'est pas configuré : les écrans ouverts restent à jour par
+/// le temps réel.
 ///
 /// Les jetons d'enregistrement FCM restent la cible de la fonction « push » (API HTTP v1) : leurs méthodes sont
 /// marquées dépréciées au profit des identifiants d'installation, que l'envoi serveur n'utilise pas encore.
 final class PushProvider extends $AsyncNotifierProvider<Push, PushState> {
-  /// Notifications push (NOT-01 à NOT-04, ADR-025) : autorisation demandée au bon moment, appareil enregistré pour
-  /// le compte connecté (et oublié à la déconnexion), écran visé ouvert au toucher. Inactif dans le navigateur et
-  /// tant que Firebase n'est pas configuré : les écrans ouverts restent à jour par le temps réel.
+  /// Notifications push (NOT-01 à NOT-04, ADR-025) : autorisation demandée par le système dès l'ouverture, une fois
+  /// connecté (ADR-041) ; appareil enregistré pour le compte connecté (et oublié à la déconnexion), écran visé ouvert au
+  /// toucher. Inactif dans le navigateur et tant que Firebase n'est pas configuré : les écrans ouverts restent à jour par
+  /// le temps réel.
   ///
   /// Les jetons d'enregistrement FCM restent la cible de la fonction « push » (API HTTP v1) : leurs méthodes sont
   /// marquées dépréciées au profit des identifiants d'installation, que l'envoi serveur n'utilise pas encore.
@@ -50,11 +53,12 @@ final class PushProvider extends $AsyncNotifierProvider<Push, PushState> {
   Push create() => Push();
 }
 
-String _$pushHash() => r'2289b26fbdeb58a9d423b3ff7c4249608283fcb8';
+String _$pushHash() => r'841e606878ac517dafb997b5e6b950f37e06ade3';
 
-/// Notifications push (NOT-01 à NOT-04, ADR-025) : autorisation demandée au bon moment, appareil enregistré pour
-/// le compte connecté (et oublié à la déconnexion), écran visé ouvert au toucher. Inactif dans le navigateur et
-/// tant que Firebase n'est pas configuré : les écrans ouverts restent à jour par le temps réel.
+/// Notifications push (NOT-01 à NOT-04, ADR-025) : autorisation demandée par le système dès l'ouverture, une fois
+/// connecté (ADR-041) ; appareil enregistré pour le compte connecté (et oublié à la déconnexion), écran visé ouvert au
+/// toucher. Inactif dans le navigateur et tant que Firebase n'est pas configuré : les écrans ouverts restent à jour par
+/// le temps réel.
 ///
 /// Les jetons d'enregistrement FCM restent la cible de la fonction « push » (API HTTP v1) : leurs méthodes sont
 /// marquées dépréciées au profit des identifiants d'installation, que l'envoi serveur n'utilise pas encore.
