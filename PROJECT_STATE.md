@@ -87,6 +87,11 @@ validation de la maquette → code des écrans à partir de l'Inc-1. Registre de
 
 ## Journal de session (résumé court, le plus récent en haut)
 
+- 2026-10-20 — Trajets des cartes hébergés (ADR-038) : OSRM v6 sur le VPS (carte Côte d'Ivoire Geofabrik, profil
+  voiture, mise à jour chaque dimanche), public sur `https://api.tchopi.com/route/v1/driving/…` ; `ROUTING_URL` par
+  défaut sur ce serveur. Essai sur le VPS : préparation 2 min 30 (pic 1,2 Go), service 300 Mo, trajet Abidjan
+  6,6 km en 200. Preuves : analyse 0 ; 59 + 64 tests Flutter.
+
 - 2026-10-20 — Refonte design (ADR-038) : thème sombre de la maquette + sélecteur Apparence mémorisé ; choix de
   ville compact (toutes les villes de CI, recherche sans accents) ; quartiers suggérés (adresses, colis, restaurant) ;
   carte de livraison commune (trajet routier, retrait, destination, livreur orienté et animé, fond clair/sombre) ;

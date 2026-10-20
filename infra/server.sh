@@ -6,6 +6,7 @@
 #   sh server.sh admin <numéro>          donne le rôle admin à un compte déjà inscrit
 #   sh server.sh studio start|stop       démarre ou arrête le tableau de bord (Studio)
 #   sh server.sh demo                    ajoute les restaurants de démonstration et leurs photos (une seule fois)
+#   sh server.sh routing                 met à jour la carte des trajets routiers (aussi chaque dimanche, cron)
 # Le pare-feu et SSH du serveur ne sont pas modifiés (déjà limités à 22, 80 et 443).
 set -eu
 
@@ -13,6 +14,9 @@ SUPABASE_REF=self-hosted/v0.8.3
 ROOT=${TCHOPI_ROOT:-/opt/tchopi}
 SRC=$ROOT/src
 APP=$ROOT/supabase
+ROUTING=$ROOT/routing
+# Carte OpenStreetMap de Côte d'Ivoire, mise à jour chaque jour par Geofabrik.
+ROUTING_MAP=https://download.geofabrik.de/africa/ivory-coast-latest.osm.pbf
 
 # Remplace (ou ajoute) une variable du .env de Supabase.
 set_env() {
@@ -52,11 +56,13 @@ EOF
   set_env SITE_URL "https://$1"
   set_env ENABLE_PHONE_AUTOCONFIRM false
   set_env PGRST_DB_EXTRA_SEARCH_PATH public,extensions
+  routing_ready
   sh "$APP/run.sh" start
 }
 
 # Site nginx de l'hôte (à côté des autres sites du serveur), puis HTTPS par certbot.
 install_nginx() {
+  cp "$SRC/infra/nginx-routing.conf" /etc/nginx/snippets/tchopi-routing.conf
   site=/etc/nginx/sites-available/tchopi-api.conf
   if [ ! -f "$site" ]; then
     sed "s/__DOMAIN__/$1/" "$SRC/infra/nginx.conf" > "$site"
@@ -71,6 +77,36 @@ install_backups() {
   cat > /etc/cron.d/tchopi-backup <<EOF
 30 3 * * * root mkdir -p $ROOT/backups && docker exec tchopi-db pg_dump -U supabase_admin -Fc postgres > $ROOT/backups/db-\$(date +\%F).dump && tar -czf $ROOT/backups/storage-\$(date +\%F).tgz -C $APP/volumes storage && find $ROOT/backups -type f -mtime +14 -delete
 EOF
+}
+
+# Trajets routiers des cartes (OSRM, ADR-038) : carte préparée pour le profil voiture (valable pour les motos) dans
+# un dossier neuf, qui ne remplace l'ancien qu'une fois complet.
+routing_data() {
+  rm -rf "$ROUTING.new" "$ROUTING.old"
+  mkdir -p "$ROUTING.new"
+  curl -fsSL -o "$ROUTING.new/ci.osm.pbf" "$ROUTING_MAP"
+  cd "$APP"
+  for step in "osrm-extract -p /opt/car.lua /new/ci.osm.pbf" "osrm-partition /new/ci.osrm" "osrm-customize /new/ci.osrm"; do
+    docker compose run --rm --no-deps -T -v "$ROUTING.new:/new" routing $step
+  done
+  rm "$ROUTING.new/ci.osm.pbf"
+  if [ -d "$ROUTING" ]; then mv "$ROUTING" "$ROUTING.old"; fi
+  mv "$ROUTING.new" "$ROUTING"
+  rm -rf "$ROUTING.old"
+}
+
+# Le service ne démarre qu'avec une carte prête.
+routing_ready() { [ -f "$ROUTING/ci.osrm.cell_metrics" ] || routing_data; }
+
+# Accès public par le site nginx de l'API (ajouté aux sites installés avant ce service) et mise à jour hebdomadaire.
+install_routing() {
+  routing_ready
+  site=/etc/nginx/sites-available/tchopi-api.conf
+  cp "$SRC/infra/nginx-routing.conf" /etc/nginx/snippets/tchopi-routing.conf
+  grep -q tchopi-routing "$site" || sed -i 's|^  location / {|  include snippets/tchopi-routing.conf;\n\n&|' "$site"
+  nginx -t && systemctl reload nginx
+  echo "0 4 * * 0 root TCHOPI_ROOT=$ROOT sh $SRC/infra/server.sh routing > $ROOT/routing.log 2>&1" \
+    > /etc/cron.d/tchopi-routing
 }
 
 deploy() {
@@ -103,6 +139,7 @@ deploy() {
     where not exists (select 1 from vault.secrets where name = 'refund_function_url')"
   sql -c "select vault.create_secret('$key', 'refund_function_key')
     where not exists (select 1 from vault.secrets where name = 'refund_function_key')"
+  install_routing
   # Applique aussi les changements du .env et attend que tous les services soient en bonne santé.
   sh run.sh start
 }
@@ -143,5 +180,6 @@ case "${1:-}" in
   admin) admin "$2" ;;
   studio) studio "$2" ;;
   demo) demo ;;
-  *) sed -n '2,9p' "$0"; exit 1 ;;
+  routing) routing_data; cd "$APP" && docker compose up -d --force-recreate --wait routing ;;
+  *) sed -n '2,10p' "$0"; exit 1 ;;
 esac

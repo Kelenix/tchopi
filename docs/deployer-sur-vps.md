@@ -99,7 +99,10 @@ Tant que ce n'est pas fait, la CI affiche « Serveur non mis à jour ». Retirer
   de fichier, puis `.\vps.ps1 deployer`. Ne jamais les coller dans le chat ni dans le code.
 - **Sauvegardes** : chaque nuit dans `/opt/tchopi/backups` sur le VPS (14 jours). Copie sur le PC, à faire
   régulièrement : `scp -r tchopi:/opt/tchopi/backups .`
-- **Journaux** : `ssh tchopi "cd /opt/tchopi/supabase && docker compose logs --tail 100 auth"` (ou `functions`, `db`).
+- **Journaux** : `ssh tchopi "cd /opt/tchopi/supabase && docker compose logs --tail 100 auth"` (ou `functions`, `db`,
+  `routing`).
+- **Trajets des cartes** (OSRM, ADR-038) : carte routière préparée au premier déploiement, mise à jour chaque
+  dimanche à 4 h (journal : `/opt/tchopi/routing.log`) ; à la demande : `ssh tchopi sh /opt/tchopi/src/infra/server.sh routing`.
 - **Retirer l'accès d'un PC** : supprimer sa ligne `… tchopi` dans `~/.ssh/authorized_keys` (Console web).
 
 ## 7. Limites actuelles

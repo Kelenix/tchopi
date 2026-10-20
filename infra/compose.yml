@@ -30,6 +30,17 @@ services:
     environment:
       ENABLE_IMAGE_TRANSFORMATION: "false"
 
+  # Trajets routiers des cartes (OSRM, ADR-038), derrière le nginx de l'hôte ; données préparées par server.sh.
+  routing:
+    container_name: tchopi-routing
+    image: ghcr.io/project-osrm/osrm-backend:v6.0.0
+    restart: unless-stopped
+    command: osrm-routed --algorithm mld /data/ci.osrm
+    volumes:
+      - ../routing:/data:ro
+    ports:
+      - "127.0.0.1:5010:5000"
+
   db:
     container_name: tchopi-db
   rest:

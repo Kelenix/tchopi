@@ -23,17 +23,26 @@
     sans accents, casse ni séparateurs (« san ped » → San-Pédro).
   - **Quartiers** : suggestions par ville (Abidjan et 10 grandes villes), discrètes sous le champ ; la ville vient
     de la zone qui contient l'épingle ; saisie libre conservée.
-  - **Carte** (`DeliveryMap`, suivi client et mission livreur) : trajet routier OSRM (`ROUTING_URL`, service public
-    de démonstration par défaut, ligne droite si indisponible), calculé une fois par trajet ; retrait en carré foncé
+  - **Carte** (`DeliveryMap`, suivi client et mission livreur) : trajet routier OSRM (`ROUTING_URL`, ligne droite
+    si indisponible), calculé une fois par trajet ; retrait en carré foncé
     (restaurant ou colis), destination en rond vert, livreur avec l'icône de son véhicule, pulsation, flèche de
     direction (seulement au-delà de 5 m) et glissement animé de 0,9 s ; seule la couche du livreur se redessine,
     la carte n'est plus reconstruite à chaque étape (recadrage). Fond « positron » en clair, « dark » en sombre
     (OpenFreeMap), chacun avec son identifiant : sans lui, la bibliothèque mélangeait les deux styles en cache.
-- **Alternatives écartées** : API de lieux (Google Places : clé et coût, pas de quartiers fiables en CI) ; trajet
-  calculé sur le serveur (inutile tant que le service public suffit) ; style « liberty » (chargé, peu lisible sous
-  le trajet).
-- **Conséquences** : le service OSRM public n'a pas de garantie : à héberger sur le VPS avant un trafic important
-  (`ROUTING_URL`). La liste des quartiers s'enrichit dans `places_reference.dart`.
+  - **Trajets hébergés** (2026-10-20, remplace le service public de démonstration, sans garantie ni usage
+    commercial) : OSRM v6 (`tchopi-routing`, `infra/compose.yml`) sur le VPS, carte OpenStreetMap de Côte d'Ivoire
+    (Geofabrik) préparée par `server.sh` (profil voiture, valable pour les motos ; algorithme MLD) au premier
+    déploiement puis chaque dimanche (cron), dans un dossier neuf qui ne remplace l'ancien qu'une fois complet.
+    Public par le nginx de l'API, sur le même domaine (pas de DNS ni de certificat en plus) : seul
+    `/route/v1/driving/<2 points>` est ouvert (`infra/nginx-routing.conf`). `ROUTING_URL` vaut par défaut
+    `https://api.tchopi.com` dans `Env`, comme `SUPABASE_URL` : la CI et les builds sans `--dart-define` l'utilisent.
+- **Alternatives écartées** : API de lieux (Google Places : clé et coût, pas de quartiers fiables en CI) ; style
+  « liberty » (chargé, peu lisible sous le trajet) ; sous-domaine pour les trajets (DNS et certificat en plus, sans
+  gain) ; profil moto dédié (absent d'OSRM, écarts négligeables en ville) ; Valhalla ou GraphHopper (plus lourds
+  pour un VPS partagé de 4 Go).
+- **Conséquences** : préparation de la carte ≈ 1,2 Go de mémoire et 2 à 3 min sur le VPS (premier déploiement,
+  puis chaque dimanche à 4 h), service ≈ 300 Mo ; trajets limités à la Côte d'Ivoire. La liste des quartiers s'enrichit
+  dans `places_reference.dart`.
 - **Impact** : technique et produit (réversible).
 
 ---

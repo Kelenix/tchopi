@@ -29,11 +29,11 @@ abstract final class Env {
     defaultValue: 'https://tiles.openfreemap.org/styles/dark',
   );
 
-  /// Calcul des trajets routiers affichés sur les cartes (OSRM, ADR-038). Service public de démonstration par
-  /// défaut ; à remplacer par une instance hébergée (VPS) avant un trafic important.
+  /// Calcul des trajets routiers affichés sur les cartes (OSRM, ADR-038), hébergé sur le serveur en ligne (Côte
+  /// d'Ivoire seulement).
   static const routingUrl = String.fromEnvironment(
     'ROUTING_URL',
-    defaultValue: 'https://router.project-osrm.org',
+    defaultValue: 'https://api.tchopi.com',
   );
 
   /// Mention exigée par les fournisseurs du fond de carte.
