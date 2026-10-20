@@ -20,7 +20,8 @@ async function call<T>(path: string, init: RequestInit = {}): Promise<T> {
 
 export const nyole: Provider = {
   configured: () => secret !== '',
-  async open(checkout, attempt) {
+  async open(checkout, attempt, returnTo) {
+    const back = returnTo ?? returnUrl;
     const session = await call<{ id: string; url: string; order_id?: string }>('/v1/checkout/sessions', {
       method: 'POST',
       body: JSON.stringify({
@@ -31,7 +32,7 @@ export const nyole: Provider = {
         description: `Commande ${checkout.order_number}`,
         merchant_name: 'Tchopi',
         metadata: { transaction_id: checkout.transaction_id, order_number: checkout.order_number },
-        ...(returnUrl ? { success_url: returnUrl, cancel_url: returnUrl } : {}),
+        ...(back ? { success_url: back, cancel_url: back } : {}),
       }),
       headers: { 'Idempotency-Key': `${checkout.transaction_id}-${attempt}` },
     });

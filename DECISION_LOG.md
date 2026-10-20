@@ -25,6 +25,8 @@
     fermées à `anon`.
   - **Candidatures** : `partner_applications`, envoi sans compte (une en attente par numéro, 30 par heure),
     examen par l'admin.
+  - **Retour de paiement sur le site** : `payments-create` accepte `return_to`, limité aux pages de `WEB_ORIGIN`
+    (`https://tchopi.com` par défaut) ; sans lui, la page de retour de l'app reste utilisée.
 - **Alternatives écartées** : ouvrir les tables aux visiteurs (exposerait commission et téléphones) ; API propre au
   web (deux logiques métier).
 - **Impact** : sécurité (moyen, couvert par `web_platform.test.sql`), technique (réversible).

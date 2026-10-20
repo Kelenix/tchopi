@@ -13,13 +13,21 @@ const admin = createClient(url, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, {
   auth: { persistSession: false, autoRefreshToken: false },
 });
 const providers: Record<string, Provider> = { nyole, stripe };
+// Site web (tchopi-web) : seules ses pages sont acceptées comme retour après paiement (pas de redirection ouverte).
+const webOrigin = (Deno.env.get('WEB_ORIGIN') ?? 'https://tchopi.com').replace(/\/$/, '');
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
   if (req.method !== 'POST') return json({ code: 'method_not_allowed' }, 405);
 
-  const { order_id: orderId } = (await req.json().catch(() => ({}))) as { order_id?: string };
+  const { order_id: orderId, return_to: returnTo } = (await req.json().catch(() => ({}))) as {
+    order_id?: string;
+    return_to?: string;
+  };
   if (!orderId) return json({ code: 'invalid_request' }, 400);
+  if (returnTo !== undefined && (typeof returnTo !== 'string' || !returnTo.startsWith(`${webOrigin}/`))) {
+    return json({ code: 'invalid_return_url' }, 400);
+  }
   // Vérifié au nom du client : seule sa commande, en attente de paiement.
   const asCaller = createClient(url, anonKey, {
     global: { headers: { Authorization: req.headers.get('Authorization') ?? '' } },
@@ -45,7 +53,7 @@ Deno.serve(async (req) => {
       // Session annulée ou expirée chez le fournisseur : une nouvelle est ouverte.
       attempt += 1;
     }
-    const session = await provider.open(checkout, attempt);
+    const session = await provider.open(checkout, attempt, returnTo);
     await record(checkout, session.id, session.url, session.reference ?? null, attempt);
     return json({ status: 'pending', url: session.url });
   } catch (e) {

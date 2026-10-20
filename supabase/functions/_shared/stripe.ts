@@ -37,7 +37,7 @@ async function call<T>(path: string, params?: Record<string, string>, idempotenc
 
 export const stripe: Provider = {
   configured: () => secret !== '' && webhookSecret !== '' && returnUrl !== '',
-  async open(checkout, attempt) {
+  async open(checkout, attempt, returnTo) {
     // Durée minimale imposée par Stripe (30 min), arrondie aux 10 min suivantes pour qu'un double envoi garde les
     // mêmes paramètres. Payée après l'annulation de la commande, la session est remboursée automatiquement.
     const expiresAt = Math.ceil((Date.now() / 1000 + 30 * 60) / 600) * 600;
@@ -56,8 +56,8 @@ export const stripe: Provider = {
         'metadata[order_number]': checkout.order_number,
         'payment_intent_data[metadata][transaction_id]': checkout.transaction_id,
         locale: 'fr',
-        success_url: returnUrl,
-        cancel_url: returnUrl,
+        success_url: returnTo ?? returnUrl,
+        cancel_url: returnTo ?? returnUrl,
         expires_at: String(expiresAt),
       },
       `${checkout.transaction_id}-${attempt}`,

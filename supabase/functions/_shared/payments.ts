@@ -26,8 +26,9 @@ export type ProviderStatus = {
 
 export type Provider = {
   configured: () => boolean;
-  /// Ouvre une session ; la même tentative rend la même session (clé d'idempotence).
-  open: (checkout: Checkout, attempt: number) => Promise<{ id: string; url: string; reference?: string }>;
+  /// Ouvre une session ; la même tentative rend la même session (clé d'idempotence). [returnTo] : page du site web
+  /// où revenir après le paiement (déjà vérifiée) ; sinon la page de retour configurée pour l'app.
+  open: (checkout: Checkout, attempt: number, returnTo?: string) => Promise<{ id: string; url: string; reference?: string }>;
   status: (sessionId: string) => Promise<ProviderStatus>;
 };
 
