@@ -3,6 +3,8 @@ create extension if not exists pgtap with schema extensions;
 select plan(35);
 -- Colis en pause sur la plateforme (ADR-043) : réactivés pour ces tests.
 update public.settings set parcels_enabled = true;
+-- Réglage de préparation : hors de la modification tracée vérifiée plus bas.
+delete from public.audit_log where action = 'settings_updated';
 
 insert into auth.users (id, email, aud, role, email_confirmed_at) values
   ('00000000-0000-0000-0000-0000000000ad', 'admin@exemple.ci', 'authenticated', 'authenticated', now()),
