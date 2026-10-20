@@ -126,6 +126,9 @@ deploy() {
     { cat "$f"; printf "\ninsert into supabase_migrations.schema_migrations (version, name) values ('%s', '%s');\n" \
       "$version" "${file#*_}"; } | sql -1 -f -
   done
+  # Frais de livraison sur la distance routière (ADR-046) : la base interroge le serveur de trajets du réseau interne.
+  sql -c "insert into private.config (key, value) values ('routing_url', 'http://routing:5000')
+    on conflict (key) do update set value = excluded.value"
   # Fonctions : à côté du routeur officiel (main), qui partage une import map entre toutes les fonctions.
   rm -rf volumes/functions/hello
   for dir in "$SRC"/supabase/functions/*/; do

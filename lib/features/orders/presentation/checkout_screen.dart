@@ -385,6 +385,13 @@ class _Summary extends StatelessWidget {
     return Column(
       children: [
         AmountRow(label: l10n.checkoutSubtotal, value: amount(value?.subtotal)),
+        if (value != null)
+          AmountRow(
+            label: l10n.checkoutDistance,
+            value: l10n.parcelDistanceValue(
+              formatDecimal(value.distanceM / 1000),
+            ),
+          ),
         AmountRow(
           label: l10n.checkoutDeliveryFee,
           value: amount(value?.deliveryFee),

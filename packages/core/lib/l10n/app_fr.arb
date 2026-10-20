@@ -446,6 +446,7 @@
   "orderLatePayment": "Paiement reçu après l'annulation",
   "checkoutSubtotal": "Sous-total",
   "checkoutDeliveryFee": "Frais de livraison",
+  "checkoutDistance": "Distance par la route",
   "checkoutTotal": "Total",
   "checkoutToConfirm": "À confirmer",
   "checkoutConfirm": "Commander · {total}",

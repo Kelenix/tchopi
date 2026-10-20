@@ -6,6 +6,38 @@
 
 ---
 
+## ADR-048 — Séparation stricte des rôles, actions d'administration complètes
+
+- **Date** : 2026-10-22 · **Statut** : Accepté (demande utilisateur) · **Décideur** : Claude (product-owner, security)
+- **Décision** : sur le web, un compte admin ne voit que l'administration et son profil (plus d'« Activité client » ni
+  d'« Activité livreur » ; les autres pages le renvoient vers l'administration), comme l'app mobile. Ajouts : modifier
+  le nom d'un compte, le supprimer (`admin_delete_account` : ni soi-même, ni un admin, ni un compte avec une commande
+  en cours ; profil anonymisé, historique conservé, connexion supprimée par `admin-users`), supprimer un restaurant
+  sans commande (`admin_delete_restaurant`, sinon le désactiver), gérer la carte de n'importe quel restaurant.
+- **Alternatives écartées** : suppression physique des comptes (casserait l'historique des commandes et la compta).
+- **Impact** : sécurité (moyen), métier (faible).
+
+## ADR-047 — Statistiques sur données réelles ; « Espèces à reverser » conservé
+
+- **Date** : 2026-10-22 · **Statut** : Accepté · **Décideur** : Claude (data, backend)
+- **Contexte** : « Espèces à reverser » = espèces encaissées par les livreurs à la livraison (`cash_ledger`) moins
+  leurs versements : argent réellement dû à la plateforme, qui paie ensuite restaurants et livreurs.
+- **Décision** : conservé comme suivi financier, déplacé de « Livreurs » vers « Paiements ». Tableau de bord
+  (`admin_dashboard`) et paiements (`admin_payment_stats`) calculés par le serveur, période libre (jour, 7 j, 30 j,
+  12 mois, dates choisies), série complétée de zéros, répartitions par ville et par moyen de paiement. Statut d'un
+  paiement lu sur la commande (espèces comprises) : réussi, en attente, échoué (jamais payé puis annulé), remboursé.
+- **Impact** : métier (moyen), technique (faible).
+
+## ADR-046 — Frais de livraison sur la distance routière
+
+- **Date** : 2026-10-22 · **Statut** : Accepté (demande utilisateur) · **Décideur** : Claude (backend)
+- **Décision** : frais = 500 F + 100 F × km par la route (grille modifiable par zone dans l'admin), arrondis à 5 F,
+  entre minimum et maximum. La base interroge le serveur d'itinéraires OSRM du VPS (`private.road_distance_m`, extension
+  `http`, délai 2,5 s) à chaque devis et à la commande ; distance et frais enregistrés avec la commande. Si le serveur ne
+  répond pas : vol d'oiseau × détour, signalé « distance estimée » au client.
+- **Alternatives écartées** : calcul côté app (falsifiable) ; service de cartographie payant.
+- **Impact** : financier (moyen : nouveaux tarifs pour toutes les zones), technique (réversible).
+
 ## ADR-045 — Emails par Resend, connexion avec Google
 
 - **Date** : 2026-10-21 · **Statut** : Accepté (demande utilisateur) · **Décideur** : Claude (backend, security)

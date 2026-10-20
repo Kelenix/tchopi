@@ -1141,6 +1141,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get checkoutDeliveryFee => 'Frais de livraison';
 
   @override
+  String get checkoutDistance => 'Distance par la route';
+
+  @override
   String get checkoutTotal => 'Total';
 
   @override

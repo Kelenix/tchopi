@@ -2170,6 +2170,12 @@ abstract class AppLocalizations {
   /// **'Frais de livraison'**
   String get checkoutDeliveryFee;
 
+  /// No description provided for @checkoutDistance.
+  ///
+  /// In fr, this message translates to:
+  /// **'Distance par la route'**
+  String get checkoutDistance;
+
   /// No description provided for @checkoutTotal.
   ///
   /// In fr, this message translates to:

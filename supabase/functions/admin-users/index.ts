@@ -1,5 +1,6 @@
 // Actions admin sur les comptes (ADM-02) : suspension avec blocage de la connexion, réactivation,
-// changement d'identifiant de connexion. Chaque action est vérifiée (admin) et tracée.
+// changement d'identifiant de connexion, suppression (profil anonymisé, historique conservé). Chaque action est
+// vérifiée (admin) et tracée.
 import { createClient } from '@supabase/supabase-js';
 import { corsHeaders, json } from '../_shared/http.ts';
 
@@ -63,6 +64,15 @@ Deno.serve(async (req) => {
         target_id: body.user_id,
         details: email ? { channel: 'email' } : { channel: 'phone' },
       });
+      return json({ ok: true });
+    }
+    case 'delete': {
+      // Règles (pas soi-même ni un admin, aucune commande en cours) et anonymisation dans la base, puis suppression
+      // « douce » du compte de connexion, comme la suppression demandée par l'utilisateur (account-delete).
+      const { error } = await asCaller.rpc('admin_delete_account', { p_user_id: body.user_id });
+      if (error) return json({ code: error.code === 'P0001' ? error.message : 'admin_action_failed' }, 409);
+      const { error: deleteError } = await admin.auth.admin.deleteUser(body.user_id, true);
+      if (deleteError) return json({ code: 'admin_action_failed' }, 500);
       return json({ ok: true });
     }
     default:
