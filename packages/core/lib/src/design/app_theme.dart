@@ -10,28 +10,6 @@ abstract final class AppTheme {
   static final light = _build(AppTokens.light, Brightness.light);
   static final dark = _build(AppTokens.dark, Brightness.dark);
 
-  /// Thème aux couleurs du logo (orange Tchopi) pour les écrans de marque : accès et démarrage. Orange foncé pour
-  /// un texte blanc lisible sur les boutons (contraste ≥ 4,5:1).
-  static ThemeData brand(Brightness brightness) {
-    final base = brightness == Brightness.dark
-        ? AppTokens.dark
-        : AppTokens.light;
-    return _build(
-      base.copyWith(
-        primary: brightness == Brightness.dark
-            ? const Color(0xFFFF8A3D)
-            : const Color(0xFFC2410C),
-        onPrimary: brightness == Brightness.dark
-            ? const Color(0xFF1A0D04)
-            : Colors.white,
-        primarySoft: brightness == Brightness.dark
-            ? const Color(0xFF3A2112)
-            : const Color(0xFFFFF1E6),
-      ),
-      brightness,
-    );
-  }
-
   static ThemeData _build(AppTokens t, Brightness brightness) {
     final scheme = ColorScheme(
       brightness: brightness,

@@ -27,7 +27,7 @@ String? redirect(
 
 void main() {
   test('visiteur : écrans publics seulement', () {
-    expect(redirect(AppRoutes.signUp, signedIn: false), isNull);
+    expect(redirect(AppRoutes.verify, signedIn: false), isNull);
     expect(redirect(AppRoutes.account, signedIn: false), AppRoutes.welcome);
   });
 
@@ -49,7 +49,7 @@ void main() {
   });
 
   test('profil complet : les écrans d\'accès renvoient à l\'accueil', () {
-    expect(redirect(AppRoutes.signIn), AppRoutes.account);
+    expect(redirect(AppRoutes.welcome), AppRoutes.account);
     expect(redirect(AppRoutes.profileSetup), AppRoutes.account);
     expect(redirect(AppRoutes.account), isNull);
   });

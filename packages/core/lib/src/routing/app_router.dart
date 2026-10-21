@@ -10,22 +10,18 @@ import '../auth/presentation/account_screen.dart';
 import '../auth/presentation/login_change_screen.dart';
 import '../auth/presentation/profile_form_screen.dart';
 import '../auth/presentation/reset_password_screen.dart';
-import '../auth/presentation/sign_in_screen.dart';
-import '../auth/presentation/sign_up_screen.dart';
 import '../auth/presentation/status_screens.dart';
 import '../auth/presentation/verify_code_screen.dart';
 
 abstract final class AppRoutes {
   static const welcome = '/welcome';
-  static const signUp = '/sign-up';
-  static const signIn = '/sign-in';
   static const verify = '/verify';
   static const reset = '/reset';
   static const loading = '/loading';
   static const profileSetup = '/profile-setup';
   static const account = '/account';
 
-  static const public = {welcome, signUp, signIn, verify, reset};
+  static const public = {welcome, verify, reset};
   // Écrans de transition : quand la situation du compte est réglée, on en sort vers l'accueil.
   static const gates = {...public, loading, profileSetup};
 }
@@ -96,8 +92,6 @@ GoRouter buildAppRouter(
         path: AppRoutes.welcome,
         builder: (context, _) => welcome(context),
       ),
-      GoRoute(path: AppRoutes.signUp, builder: (_, _) => const SignUpScreen()),
-      GoRoute(path: AppRoutes.signIn, builder: (_, _) => const SignInScreen()),
       GoRoute(
         path: AppRoutes.verify,
         builder: (_, state) =>

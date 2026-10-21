@@ -70,10 +70,19 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Saisissez un numéro de mobile valide'), findsOneWidget);
 
-      expect(find.text('Se connecter avec un e-mail'), findsNothing);
+      expect(find.text('Email'), findsNothing);
       await tester.tap(find.text('Autres méthodes'));
       await tester.pumpAndSettle();
-      expect(find.text('Se connecter avec un e-mail'), findsOneWidget);
+      // Formulaire e-mail déplié sur le même écran : connexion par défaut, création au choix.
+      expect(find.text('Email'), findsOneWidget);
+      expect(find.text('Créer un compte'), findsOneWidget);
+      await tester.ensureVisible(find.text('Créer un compte'));
+      await tester.tap(find.text('Créer un compte'));
+      await tester.pumpAndSettle();
+      expect(
+        find.text('8 caractères minimum, avec des lettres et des chiffres.'),
+        findsOneWidget,
+      );
     },
   );
 

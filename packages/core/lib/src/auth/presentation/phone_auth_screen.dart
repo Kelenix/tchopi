@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 
 import '../../../l10n/app_localizations.dart';
-import '../../design/app_theme.dart';
 import '../../design/tokens.dart';
 import '../../design/widgets.dart';
 import '../../supabase/supabase_setup.dart';
@@ -13,7 +12,9 @@ import '../application/auth_controllers.dart';
 import '../application/auth_providers.dart';
 import '../domain/login_identifier.dart';
 import '../domain/models.dart';
+import '../domain/app_failure.dart';
 import 'widgets/auth_form_scaffold.dart';
+import 'widgets/form_fields.dart';
 
 /// Bannière et vérification WhatsApp, réglées par l'admin (`public_auth_config`, lisible sans compte).
 final authEntryConfigProvider = FutureProvider.autoDispose<AuthEntryConfig>((
@@ -67,10 +68,17 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
   var _country = _countries.first;
   bool _invalid = false;
   bool _others = false;
+  // « Autres méthodes » : e-mail et mot de passe, connexion ou création de compte sur le même écran.
+  final _emailForm = GlobalKey<FormState>();
+  final _email = TextEditingController();
+  final _password = TextEditingController();
+  bool _creating = false;
 
   @override
   void dispose() {
     _phone.dispose();
+    _email.dispose();
+    _password.dispose();
     super.dispose();
   }
 
@@ -111,6 +119,27 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
     }
   }
 
+  Future<void> _submitEmail() async {
+    if (!_emailForm.currentState!.validate()) return;
+    final id = LoginIdentifier.email(_email.text.trim().toLowerCase());
+    final flows = ref.read(authFlowsProvider);
+    final submission = ref.read(formSubmissionProvider(_form).notifier);
+    final ok = await submission.run(
+      () => _creating
+          ? flows.signUp(id, _password.text)
+          : flows.signIn(id, _password.text),
+    );
+    final error = ref.read(formSubmissionProvider(_form)).error;
+    // Création, ou compte jamais confirmé (nouveau code envoyé) : saisie du code reçu par e-mail.
+    final confirm = ok
+        ? _creating
+        : error is AppFailure && error.code == 'not_confirmed';
+    if (confirm && mounted) {
+      submission.clearError();
+      await context.push('/verify', extra: CodeTarget(id, CodePurpose.signup));
+    }
+  }
+
   Future<void> _google() => ref
       .read(formSubmissionProvider(_form).notifier)
       .run(
@@ -126,13 +155,7 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
     final phoneEnabled = ref.watch(loginMethodsProvider).value?.phone ?? false;
     final busy = submission.isLoading;
 
-    return Theme(
-      data: AppTheme.brand(Theme.of(context).brightness),
-      child: Builder(
-        builder: (context) =>
-            _body(context, l10n, submission, config, phoneEnabled, busy),
-      ),
-    );
+    return _body(context, l10n, submission, config, phoneEnabled, busy);
   }
 
   Widget _body(
@@ -373,21 +396,88 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
                             ),
                             label: Text(l10n.authOtherMethods),
                           ),
-                          if (_others) ...[
-                            OutlinedButton(
-                              onPressed: busy
-                                  ? null
-                                  : () => context.push('/sign-in'),
-                              child: Text(l10n.authEmailSignIn),
+                          if (_others)
+                            Form(
+                              key: _emailForm,
+                              child: AutofillGroup(
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    SegmentedButton<bool>(
+                                      segments: [
+                                        ButtonSegment(
+                                          value: false,
+                                          label: Text(l10n.actionSignIn),
+                                        ),
+                                        ButtonSegment(
+                                          value: true,
+                                          label: Text(l10n.actionCreateAccount),
+                                        ),
+                                      ],
+                                      selected: {_creating},
+                                      showSelectedIcon: false,
+                                      onSelectionChanged: busy
+                                          ? null
+                                          : (v) => setState(
+                                              () => _creating = v.first,
+                                            ),
+                                    ),
+                                    const SizedBox(height: Space.lg),
+                                    TextFormField(
+                                      controller: _email,
+                                      enabled: !busy,
+                                      keyboardType: TextInputType.emailAddress,
+                                      autofillHints: const [
+                                        AutofillHints.email,
+                                      ],
+                                      decoration: InputDecoration(
+                                        labelText: l10n.fieldEmail,
+                                        prefixIcon: const Icon(
+                                          Icons.mail_outline,
+                                        ),
+                                      ),
+                                      validator: (v) => isValidEmail(v ?? '')
+                                          ? null
+                                          : l10n.errorEmail,
+                                    ),
+                                    const SizedBox(height: Space.md),
+                                    PasswordField(
+                                      controller: _password,
+                                      label: l10n.fieldPassword,
+                                      helper: _creating
+                                          ? l10n.fieldPasswordRule
+                                          : null,
+                                      validator: (v) => (v ?? '').isEmpty
+                                          ? l10n.errorRequired
+                                          : _creating && !isValidPassword(v!)
+                                          ? l10n.errorPassword
+                                          : null,
+                                      onSubmitted: (_) => _submitEmail(),
+                                    ),
+                                    if (!_creating)
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: TextButton(
+                                          onPressed: () =>
+                                              context.push('/reset'),
+                                          child: Text(l10n.signInForgot),
+                                        ),
+                                      )
+                                    else
+                                      const SizedBox(height: Space.md),
+                                    FilledButton(
+                                      onPressed: busy ? null : _submitEmail,
+                                      child: Text(
+                                        _creating
+                                            ? l10n.actionCreateAccount
+                                            : l10n.actionSignIn,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
-                            const SizedBox(height: Space.sm),
-                            OutlinedButton(
-                              onPressed: busy
-                                  ? null
-                                  : () => context.push('/sign-up'),
-                              child: Text(l10n.authEmailSignUp),
-                            ),
-                          ],
                           const SizedBox(height: Space.xl),
                           Text(
                             l10n.authTerms,

@@ -60,7 +60,7 @@ class _VerifyCodeScreenState extends ConsumerState<VerifyCodeScreen> {
         title: l10n.verifyTitle,
         subtitle: l10n.verifyMissing,
         primaryLabel: l10n.actionSignIn,
-        onPrimary: () => context.go('/sign-in'),
+        onPrimary: () => context.go('/welcome'),
         children: const [],
       );
     }
