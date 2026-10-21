@@ -70,6 +70,9 @@ class AuthRepository {
       OAuthProvider.google,
       redirectTo: redirectTo,
       authScreenLaunchMode: LaunchMode.externalApplication,
+      // Choix du compte Google à chaque fois : sinon le navigateur reprend en silence le dernier compte utilisé
+      // (téléphone partagé, compte supprimé puis recréé).
+      queryParams: const {'prompt': 'select_account'},
     ),
   );
 
