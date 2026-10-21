@@ -1,6 +1,6 @@
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(16);
+select plan(18);
 
 insert into auth.users (id, email, aud, role, email_confirmed_at) values
   ('00000000-0000-0000-0000-0000000000ad', 'admin@exemple.ci', 'authenticated', 'authenticated', now()),
@@ -58,6 +58,13 @@ select is((select count(*) from public.notifications where user_id = '00000000-0
 set local role authenticated;
 select public.restaurant_set_affiliation('66666666-6666-6666-6666-666666666666', '00000000-0000-0000-0000-0000000000d1', 'suspended');
 select is((select status from public.restaurant_couriers), 'suspended', 'affiliation suspendue');
+
+-- Annuaire : livreur validé de la zone, ajouté directement par le restaurant.
+select public.restaurant_set_affiliation('66666666-6666-6666-6666-666666666666', '00000000-0000-0000-0000-0000000000d1', 'ended');
+select is((select count(*) from public.restaurant_available_couriers('66666666-6666-6666-6666-666666666666'))::integer, 1,
+  'livreur validé de la zone proposé (pas le livreur en attente de validation)');
+select public.restaurant_add_courier('66666666-6666-6666-6666-666666666666', '00000000-0000-0000-0000-0000000000d1');
+select is((select status from public.restaurant_couriers), 'approved', 'livreur ajouté par le restaurant');
 
 -- Profil : modification dans la zone ; hors zone refusée ; autre restaurant refusé.
 select lives_ok($$ select public.restaurant_update_profile('66666666-6666-6666-6666-666666666666', 'Chez Tantie Rose & Fils',
