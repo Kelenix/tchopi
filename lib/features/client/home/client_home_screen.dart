@@ -23,6 +23,9 @@ class ClientHomeScreen extends ConsumerStatefulWidget {
 
   static const path = ClientNavBar.homePath;
 
+  /// Demande venue du bouton « + » : remonter en haut de l'accueil et ouvrir la recherche.
+  static final searchRequests = ValueNotifier(0);
+
   @override
   ConsumerState<ClientHomeScreen> createState() => _ClientHomeScreenState();
 }
@@ -30,6 +33,33 @@ class ClientHomeScreen extends ConsumerStatefulWidget {
 class _ClientHomeScreenState extends ConsumerState<ClientHomeScreen> {
   String _query = '';
   String? _cuisine;
+  final _searchFocus = FocusNode();
+  final _scroll = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    ClientHomeScreen.searchRequests.addListener(_openSearch);
+  }
+
+  @override
+  void dispose() {
+    ClientHomeScreen.searchRequests.removeListener(_openSearch);
+    _searchFocus.dispose();
+    _scroll.dispose();
+    super.dispose();
+  }
+
+  void _openSearch() {
+    if (_scroll.hasClients) {
+      _scroll.animateTo(
+        0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
+    _searchFocus.requestFocus();
+  }
 
   /// Recherche insensible à la casse et aux accents (ORD-03).
   static String _plain(String value) {
@@ -116,6 +146,7 @@ class _ClientHomeScreenState extends ConsumerState<ClientHomeScreen> {
           return ref.refresh(catalogRestaurantsProvider.future);
         },
         child: CustomScrollView(
+          controller: _scroll,
           slivers: [
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(
@@ -129,6 +160,7 @@ class _ClientHomeScreenState extends ConsumerState<ClientHomeScreen> {
                   const _AddressCard(),
                   const SizedBox(height: Space.md),
                   TextField(
+                    focusNode: _searchFocus,
                     onChanged: (value) => setState(() => _query = value),
                     textInputAction: TextInputAction.search,
                     decoration: InputDecoration(

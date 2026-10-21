@@ -203,6 +203,21 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('bouton + : panier vide, la recherche est ouverte', (
+    tester,
+  ) async {
+    tester.view
+      ..physicalSize = const Size(800, 2400)
+      ..devicePixelRatio = 2;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(app(const ClientHomeScreen()));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byIcon(Icons.add_rounded));
+    await tester.pumpAndSettle();
+    final field = tester.widget<TextField>(find.byType(TextField));
+    expect(field.focusNode!.hasFocus, isTrue);
+  });
+
   testWidgets('fiche restaurant : menu par catégorie, produit indisponible', (
     tester,
   ) async {

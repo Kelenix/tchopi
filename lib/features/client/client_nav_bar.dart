@@ -1,10 +1,15 @@
+import 'dart:async';
+
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../shared/back_to_root.dart';
+import '../orders/cart.dart';
 import '../orders/orders_providers.dart';
+import '../orders/presentation/checkout_screen.dart';
+import 'home/client_home_screen.dart';
 
 /// Navigation basse de l'espace Client (maquette C-01) : Accueil, Commandes, bouton central « + »,
 /// Paiements, Profil.
@@ -18,6 +23,16 @@ class ClientNavBar extends ConsumerWidget {
   /// 0 = Accueil, 1 = Commandes, 2 = Paiements.
   final int current;
 
+  /// Bouton « + » : panier en cours → la commande ; sinon l'accueil, recherche ouverte.
+  static void _newOrder(BuildContext context, int inCart) {
+    if (inCart > 0) {
+      unawaited(context.push(CheckoutScreen.path));
+      return;
+    }
+    GoRouter.maybeOf(context)?.go(homePath);
+    ClientHomeScreen.searchRequests.value++;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
@@ -25,6 +40,7 @@ class ClientNavBar extends ConsumerWidget {
     final active = (ref.watch(myOrdersProvider).value ?? const <Order>[])
         .where((o) => !o.status.isClosed)
         .length;
+    final inCart = ref.watch(cartControllerProvider).value?.count ?? 0;
 
     return BackToRoot(
       root: homePath,
@@ -67,9 +83,11 @@ class ClientNavBar extends ConsumerWidget {
                         ),
                         child: InkWell(
                           customBorder: const CircleBorder(),
-                          onTap: () => context.go(homePath),
+                          onTap: () => _newOrder(context, inCart),
                           child: Tooltip(
-                            message: l10n.newOrderFood,
+                            message: inCart > 0
+                                ? l10n.cartView
+                                : l10n.homeSearchHint,
                             child: SizedBox.square(
                               dimension: 58,
                               child: Icon(
