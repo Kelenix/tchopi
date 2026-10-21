@@ -66,7 +66,10 @@ class ProfileRepository {
         .eq('id', profile.id)
         .select(_columns)
         .single();
-    return Profile.fromJson(row);
+    final saved = Profile.fromJson(row);
+    // Inscription terminée sur le mobile : le web ne repropose pas l'onboarding (sans effet si déjà fait).
+    if (saved.isComplete) await _client.rpc<void>('complete_onboarding');
+    return saved;
   });
 
   Future<AccountRoles> roles() => guardCall(() async {

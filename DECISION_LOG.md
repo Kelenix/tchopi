@@ -1119,3 +1119,7 @@
 - **Impact** : technique / financier / métier / sécurité (et niveau)
 
 -->
+
+## ADR-062 — Un compte, un profil pour le web et le mobile
+- **Cause** : le mobile exigeait un profil complet (prénom, nom, téléphone, ville) que le web ne demandait jamais ; le web reproposait l'onboarding aux comptes créés sur le mobile (`onboarded_at` jamais posé).
+- **Décision** : règle unique tenue par le serveur (`private.profile_complete`, exposée par `my_roles.profile_complete`). Le web demande le profil complet avant toute suite (villes desservies, comme le mobile) ; le mobile marque le parcours choisi quand le profil est complet. Prénom et nom repris du fournisseur (Google) à l'inscription ; comptes existants complétés uniquement sur les champs vides (métadonnées Google, numéro de connexion, ville de l'établissement). Aucune donnée supprimée.
