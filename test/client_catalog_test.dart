@@ -121,7 +121,7 @@ void main() {
     expect(find.text('Ce soir, on mange quoi ?'), findsOneWidget);
     expect(find.text('Alloco'), findsOneWidget);
     expect(find.text('Maquis Chez Tante'), findsWidgets);
-    expect(find.text('Ivoirien · Cocody'), findsOneWidget);
+    expect(find.textContaining('Ivoirien · Cocody'), findsOneWidget);
     expect(find.text('Ouvert'), findsOneWidget);
     expect(
       tester.getTopLeft(find.text('Restaurants près de vous')).dy,

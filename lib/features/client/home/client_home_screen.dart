@@ -161,15 +161,11 @@ class _ClientHomeScreenState extends ConsumerState<ClientHomeScreen> {
                 ],
               ),
             ),
-            SliverPadding(
-              padding: const EdgeInsets.fromLTRB(
-                Space.screen,
-                0,
-                Space.screen,
-                Space.huge,
-              ),
-              sliver: switch (restaurants) {
-                AsyncData() when shown.isEmpty => SliverToBoxAdapter(
+            // Restaurants en carrousel horizontal, jusqu'au bord de l'écran.
+            SliverToBoxAdapter(
+              child: switch (restaurants) {
+                AsyncData() when shown.isEmpty => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: Space.screen),
                   child: EmptyState(
                     icon: all.isEmpty
                         ? Icons.storefront_outlined
@@ -179,13 +175,8 @@ class _ClientHomeScreenState extends ConsumerState<ClientHomeScreen> {
                         : l10n.homeNoMatch,
                   ),
                 ),
-                AsyncData() => SliverList.separated(
-                  itemCount: shown.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: Space.sm),
-                  itemBuilder: (context, index) =>
-                      RestaurantCard(restaurant: shown[index]),
-                ),
-                AsyncError(:final error) => SliverToBoxAdapter(
+                AsyncError(:final error) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: Space.screen),
                   child: EmptyState(
                     danger: true,
                     icon: Icons.wifi_off_rounded,
@@ -197,17 +188,26 @@ class _ClientHomeScreenState extends ConsumerState<ClientHomeScreen> {
                     ),
                   ),
                 ),
-                _ => SliverList.separated(
-                  itemCount: 2,
-                  separatorBuilder: (_, _) => const SizedBox(height: Space.lg),
-                  itemBuilder: (_, _) => const _CardSkeleton(),
+                _ => SizedBox(
+                  height: RestaurantCard.height,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: Space.screen,
+                    ),
+                    itemCount: restaurants.hasValue ? shown.length : 3,
+                    separatorBuilder: (_, _) => const SizedBox(width: Space.md),
+                    itemBuilder: (context, index) => restaurants.hasValue
+                        ? RestaurantCard(restaurant: shown[index])
+                        : const _CardSkeleton(),
+                  ),
                 ),
               },
             ),
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(
                 Space.screen,
-                Space.lg,
+                Space.xl,
                 Space.screen,
                 Space.huge,
               ),
@@ -365,8 +365,12 @@ class _AddressCard extends ConsumerWidget {
 }
 
 /// Carte restaurant : état d'ouverture, quartier et délai disponibles en un coup d'œil.
+/// Restaurant dans le carrousel de l'accueil : photo et statut, nom, cuisine, quartier et délai.
 class RestaurantCard extends StatelessWidget {
   const RestaurantCard({super.key, required this.restaurant});
+
+  static const width = 220.0;
+  static const height = 210.0;
 
   final Restaurant restaurant;
 
@@ -376,30 +380,47 @@ class RestaurantCard extends StatelessWidget {
     final tokens = context.tokens;
     final text = Theme.of(context).textTheme;
     final r = restaurant;
-    final details = [?r.category, r.district].join(' · ');
+    final details = [
+      ?r.category,
+      r.district,
+      l10n.restaurantPrepRange(r.prepTimeMin, r.prepTimeMin + 15),
+    ].join(' · ');
 
-    return Card(
-      margin: EdgeInsets.zero,
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: () =>
-            context.push(RestaurantDetailScreen.location(r.id), extra: r),
-        child: Padding(
-          padding: const EdgeInsets.all(Space.sm),
-          child: Row(
+    return SizedBox(
+      width: width,
+      child: Card(
+        margin: EdgeInsets.zero,
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () =>
+              context.push(RestaurantDetailScreen.location(r.id), extra: r),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(Radii.field),
-                child: SizedBox.square(
-                  dimension: 76,
-                  child: Hero(
-                    tag: 'cover-${r.id}',
-                    child: MediaImage(path: r.coverPath, seed: r.id),
-                  ),
+              Expanded(
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Hero(
+                      tag: 'cover-${r.id}',
+                      child: MediaImage(path: r.coverPath, seed: r.id),
+                    ),
+                    Positioned(
+                      left: Space.sm,
+                      top: Space.sm,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: tokens.surface,
+                          borderRadius: BorderRadius.circular(Radii.chip),
+                        ),
+                        child: OpenBadge(restaurant: r),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(width: Space.md),
-              Expanded(
+              Padding(
+                padding: const EdgeInsets.all(Space.md),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -407,7 +428,7 @@ class RestaurantCard extends StatelessWidget {
                       r.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: text.titleMedium,
+                      style: text.titleSmall,
                     ),
                     const SizedBox(height: 2),
                     Text(
@@ -416,30 +437,9 @@ class RestaurantCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: text.bodySmall!.copyWith(color: tokens.muted),
                     ),
-                    const SizedBox(height: Space.sm),
-                    OpenBadge(restaurant: r),
-                    const SizedBox(height: Space.xs),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.schedule_rounded,
-                          size: 16,
-                          color: tokens.ink,
-                        ),
-                        const SizedBox(width: Space.xs),
-                        Text(
-                          l10n.restaurantPrepRange(
-                            r.prepTimeMin,
-                            r.prepTimeMin + 15,
-                          ),
-                          style: text.labelLarge,
-                        ),
-                      ],
-                    ),
                   ],
                 ),
               ),
-              Icon(Icons.chevron_right_rounded, color: tokens.muted),
             ],
           ),
         ),
@@ -452,44 +452,15 @@ class _CardSkeleton extends StatelessWidget {
   const _CardSkeleton();
 
   @override
-  Widget build(BuildContext context) {
-    final tokens = context.tokens;
-    Widget bar(double width) => Container(
-      width: width,
-      height: 12,
+  Widget build(BuildContext context) => SizedBox(
+    width: RestaurantCard.width,
+    child: DecoratedBox(
       decoration: BoxDecoration(
-        color: tokens.surfaceAlt,
-        borderRadius: BorderRadius.circular(6),
+        color: context.tokens.surfaceAlt,
+        borderRadius: BorderRadius.circular(Radii.field),
       ),
-    );
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(Space.sm),
-        child: Row(
-          children: [
-            Container(
-              width: 76,
-              height: 76,
-              decoration: BoxDecoration(
-                color: tokens.surfaceAlt,
-                borderRadius: BorderRadius.circular(Radii.field),
-              ),
-            ),
-            const SizedBox(width: Space.md),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                bar(160),
-                const SizedBox(height: Space.sm),
-                bar(100),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+    ),
+  );
 }
 
 /// Commandes en cours en tête de l'accueil (ORD-01) : grande carte photo, statut et progression.

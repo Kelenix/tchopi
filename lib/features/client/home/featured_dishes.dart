@@ -51,22 +51,25 @@ class FeaturedDishes extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final dishes = ref.watch(featuredDishesProvider(zoneId)).value ?? const [];
-    if (dishes.length < 3) return const SizedBox.shrink();
+    if (dishes.isEmpty) return const SizedBox.shrink();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SectionHeader(title: l10n.homeFeaturedTitle),
-        SizedBox(
-          height: 206,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            clipBehavior: Clip.none,
-            itemCount: dishes.length,
-            separatorBuilder: (_, _) => const SizedBox(width: Space.md),
-            itemBuilder: (context, i) => _DishCard(dish: dishes[i]),
+        // Deux plats par ligne ; c'est la page qui défile, pas la grille.
+        GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.zero,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: Space.md,
+            crossAxisSpacing: Space.md,
+            mainAxisExtent: 206,
           ),
+          itemCount: dishes.length,
+          itemBuilder: (context, i) => _DishCard(dish: dishes[i]),
         ),
-        const SizedBox(height: Space.lg),
       ],
     );
   }
@@ -82,7 +85,7 @@ class _DishCard extends StatelessWidget {
     final tokens = context.tokens;
     final text = Theme.of(context).textTheme;
     return SizedBox(
-      width: 150,
+      width: double.infinity,
       child: Card(
         margin: EdgeInsets.zero,
         clipBehavior: Clip.antiAlias,
