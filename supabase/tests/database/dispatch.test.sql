@@ -1,6 +1,6 @@
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(35);
+select plan(38);
 -- Colis en pause sur la plateforme (ADR-043) : réactivés pour ces tests.
 update public.settings set parcels_enabled = true;
 -- Réglage de préparation : hors de la modification tracée vérifiée plus bas.
@@ -162,6 +162,13 @@ insert into ids select 'b2', id from public.delivery_offers where order_id = pg_
 set local role authenticated;
 set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000a2","role":"authenticated"}';
 select lives_ok($$ select public.respond_to_offer((select id from ids where name = 'b2'), false) $$, 'le livreur refuse');
+select is((select reopenable from public.courier_declined_offers()), true, 'le refus reste visible et réversible');
+select public.courier_reconsider_offer((select id from ids where name = 'b2'));
+select is((select status::text from public.delivery_offers where id = (select id from ids where name = 'b2')), 'pending',
+  'retour sur le refus : l''offre est de nouveau proposée');
+select is((public.courier_deliveries(now() - interval '1 day', now() + interval '1 hour') #>> '{summary,declined}'), '0',
+  'refus annulé : plus compté');
+select public.respond_to_offer((select id from ids where name = 'b2'), false);
 set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000a3","role":"authenticated"}';
 select public.set_courier_online(true);
 select public.report_location(6.9000, -6.4300);

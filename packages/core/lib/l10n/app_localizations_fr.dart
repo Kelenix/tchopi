@@ -2259,6 +2259,28 @@ class AppLocalizationsFr extends AppLocalizations {
   String get kpiCash => 'Espèces à reverser';
 
   @override
+  String get declinedTitle => 'Offres refusées';
+
+  @override
+  String get declinedEmpty => 'Aucune offre refusée ces 7 derniers jours';
+
+  @override
+  String get declinedReconsider => 'Revenir sur mon refus';
+
+  @override
+  String get declinedTaken =>
+      'Plus disponible : un autre livreur l\'a prise, ou elle est terminée.';
+
+  @override
+  String get declinedReopened =>
+      'Offre de nouveau proposée : acceptez-la depuis l\'accueil.';
+
+  @override
+  String historyDeclinedCount(int count) {
+    return '$count refusée(s)';
+  }
+
+  @override
   String get courierHistory => 'Historique';
 
   @override

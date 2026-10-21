@@ -20,6 +20,7 @@ import 'features/client/home/restaurant_detail_screen.dart';
 import 'features/client/payments/payments_screen.dart';
 import 'features/parcels/parcel_request_screen.dart';
 import 'features/courier/missions/presentation/courier_home_screen.dart';
+import 'features/courier/missions/presentation/declined_offers_screen.dart';
 import 'features/courier/missions/presentation/history_screen.dart';
 import 'features/courier/missions/presentation/mission_screen.dart';
 import 'features/courier/profile/presentation/courier_profile_screen.dart';
@@ -142,6 +143,10 @@ GoRouter router(Ref ref) => buildAppRouter(
           MissionScreen(orderId: state.pathParameters['id']!),
     ),
     GoRoute(path: HistoryScreen.path, builder: (_, _) => const HistoryScreen()),
+    GoRoute(
+      path: DeclinedOffersScreen.path,
+      builder: (_, _) => const DeclinedOffersScreen(),
+    ),
     GoRoute(
       path: CourierStatusScreen.path,
       builder: (_, _) => const CourierStatusScreen(),

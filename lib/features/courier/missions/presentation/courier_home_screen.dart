@@ -1,3 +1,4 @@
+import 'declined_offers_screen.dart';
 import 'package:core/core.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
@@ -117,6 +118,11 @@ class _CourierHomeScreenState extends ConsumerState<CourierHomeScreen> {
               : l10n.homeGreeting(firstName),
         ),
         actions: [
+          IconButton(
+            tooltip: l10n.declinedTitle,
+            icon: const Icon(Icons.do_not_disturb_on_outlined),
+            onPressed: () => context.push(DeclinedOffersScreen.path),
+          ),
           IconButton(
             tooltip: l10n.courierHistory,
             icon: const Icon(Icons.history),

@@ -4137,6 +4137,42 @@ abstract class AppLocalizations {
   /// **'Espèces à reverser'**
   String get kpiCash;
 
+  /// No description provided for @declinedTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Offres refusées'**
+  String get declinedTitle;
+
+  /// No description provided for @declinedEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune offre refusée ces 7 derniers jours'**
+  String get declinedEmpty;
+
+  /// No description provided for @declinedReconsider.
+  ///
+  /// In fr, this message translates to:
+  /// **'Revenir sur mon refus'**
+  String get declinedReconsider;
+
+  /// No description provided for @declinedTaken.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus disponible : un autre livreur l\'a prise, ou elle est terminée.'**
+  String get declinedTaken;
+
+  /// No description provided for @declinedReopened.
+  ///
+  /// In fr, this message translates to:
+  /// **'Offre de nouveau proposée : acceptez-la depuis l\'accueil.'**
+  String get declinedReopened;
+
+  /// No description provided for @historyDeclinedCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} refusée(s)'**
+  String historyDeclinedCount(int count);
+
   /// No description provided for @courierHistory.
   ///
   /// In fr, this message translates to:

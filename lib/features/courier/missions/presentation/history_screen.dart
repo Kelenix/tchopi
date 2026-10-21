@@ -215,6 +215,10 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                   ),
                 ),
               ),
+              Text(
+                l10n.historyDeclinedCount((summary['declined'] ?? 0).toInt()),
+                style: text.bodySmall!.copyWith(color: tokens.muted),
+              ),
             ],
             const SizedBox(height: Space.md),
             if (_error != null)

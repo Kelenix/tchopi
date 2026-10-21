@@ -7,6 +7,7 @@ import 'package:tchopi/features/courier/missions/data/mission_repository.dart';
 import 'package:tchopi/features/courier/missions/missions_providers.dart';
 import 'package:tchopi/features/courier/missions/presentation/code_screen.dart';
 import 'package:tchopi/features/courier/missions/presentation/history_screen.dart';
+import 'package:tchopi/features/courier/missions/presentation/declined_offers_screen.dart';
 import 'package:tchopi/features/courier/missions/presentation/mission_screen.dart';
 import 'package:tchopi/features/orders/orders_providers.dart';
 
@@ -32,6 +33,33 @@ class FakeMissions implements MissionRepository {
 
   @override
   Future<void> confirmCash(String orderId) async => calls.add('cash');
+
+  @override
+  Future<List<DeclinedOffer>> declinedOffers() async => [
+    (
+      id: 'f1',
+      summary: const OfferSummary(
+        number: 'R-9',
+        type: 'food',
+        pickupName: 'Chez Tantie Rose',
+        pickupDistrict: 'Plateau',
+        pickupLandmark: 'Tour',
+        recipientName: 'Aïcha',
+        dropoffDistrict: 'Cocody',
+        dropoffLandmark: 'Pharmacie',
+        earning: 900,
+        toPickupM: 800,
+        tripM: 3200,
+        cashAmount: 0,
+      ),
+      respondedAt: DateTime(2026, 10, 21, 10),
+      reopenable: true,
+    ),
+  ];
+
+  @override
+  Future<void> reconsider(String offerId) async =>
+      calls.add('reconsider $offerId');
 
   @override
   Future<DeliveryPage> deliveries({
@@ -272,6 +300,22 @@ void main() {
     await tester.tap(find.text('Livrées (1)'));
     await tester.pumpAndSettle();
     expect(missions.calls.last, 'deliveries 1 delivered');
+  });
+
+  testWidgets('offres refusées : le livreur revient sur son refus', (
+    tester,
+  ) async {
+    final missions = FakeMissions();
+    await tester.pumpWidget(
+      app(const DeclinedOffersScreen(), [
+        missionRepositoryProvider.overrideWithValue(missions),
+      ]),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Chez Tantie Rose → Cocody'), findsOneWidget);
+    await tester.tap(find.text('Revenir sur mon refus'));
+    await tester.pump();
+    expect(missions.calls, contains('reconsider f1'));
   });
 
   testWidgets('petit écran, grande police : mission sans débordement', (

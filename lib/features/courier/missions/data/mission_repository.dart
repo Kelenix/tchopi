@@ -126,6 +126,28 @@ class MissionRepository {
     return row['support_phone'] as String?;
   });
 
+  /// Offres refusées des 7 derniers jours ; `reopenable` : la commande attend encore un livreur.
+  Future<List<DeclinedOffer>> declinedOffers() => guardCall(() async {
+    final rows = await _client.rpc<List<dynamic>>('courier_declined_offers');
+    return [
+      for (final r in rows.cast<Map<String, dynamic>>())
+        (
+          id: r['id'] as String,
+          summary: OfferSummary.fromJson(r['summary'] as Map<String, dynamic>),
+          respondedAt: DateTime.parse(r['responded_at'] as String),
+          reopenable: r['reopenable'] as bool,
+        ),
+    ];
+  });
+
+  /// Revenir sur un refus : l'offre redevient en attente (acceptée ensuite comme les autres).
+  Future<void> reconsider(String offerId) => guardCall(
+    () => _client.rpc<void>(
+      'courier_reconsider_offer',
+      params: {'p_offer_id': offerId},
+    ),
+  );
+
   /// Livraisons du livreur sur une période, filtrées et paginées par le serveur (`courier_deliveries`).
   Future<DeliveryPage> deliveries({
     required DateTime from,
@@ -156,6 +178,13 @@ class MissionRepository {
     );
   });
 }
+
+typedef DeclinedOffer = ({
+  String id,
+  OfferSummary summary,
+  DateTime respondedAt,
+  bool reopenable,
+});
 
 /// Page de livraisons : résumé de la période, nombre filtré, lignes (champs de `courier_deliveries`).
 class DeliveryPage {
