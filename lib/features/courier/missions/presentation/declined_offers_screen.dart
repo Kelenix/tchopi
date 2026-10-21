@@ -1,8 +1,10 @@
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../courier_nav_bar.dart';
 import '../data/mission_repository.dart';
 import '../missions_providers.dart';
 
@@ -37,7 +39,7 @@ class _DeclinedOffersScreenState extends ConsumerState<DeclinedOffersScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(AppLocalizations.of(context).declinedReopened)),
       );
-      await Navigator.of(context).maybePop();
+      GoRouter.maybeOf(context)?.go(CourierNavBar.paths.first);
     } on AppFailure catch (failure) {
       if (mounted) {
         setState(() {
@@ -58,7 +60,11 @@ class _DeclinedOffersScreenState extends ConsumerState<DeclinedOffersScreen> {
     final date = DateFormat('d MMM, HH:mm', 'fr');
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.declinedTitle)),
+      bottomNavigationBar: const CourierNavBar(current: 2),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(l10n.declinedTitle),
+      ),
       body: FutureBuilder(
         future: _offers,
         builder: (context, snapshot) {

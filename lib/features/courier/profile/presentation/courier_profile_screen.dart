@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../spaces/spaces.dart';
+import '../../courier_nav_bar.dart';
 import '../courier_providers.dart';
 import '../data/courier_repository.dart';
 import 'courier_status_screen.dart';
@@ -37,11 +38,11 @@ class _CourierProfileScreenState extends ConsumerState<CourierProfileScreen> {
   Object? _error;
 
   Courier? get _existing => ref.read(myCourierProvider).value;
+  bool _initialized = false;
 
-  @override
-  void initState() {
-    super.initState();
-    final courier = _existing;
+  /// Formulaire rempli une fois le dossier chargé : un livreur existant ne voit jamais « Devenir livreur » vide.
+  void _initFrom(Courier? courier) {
+    _initialized = true;
     if (courier != null) {
       _zoneId = courier.zoneId;
       _vehicle = courier.vehicleType;
@@ -190,8 +191,22 @@ class _CourierProfileScreenState extends ConsumerState<CourierProfileScreen> {
       VehicleType.onFoot: (Icons.directions_walk, l10n.vehicleOnFoot),
     };
 
+    final courierState = ref.watch(myCourierProvider);
+    if (!courierState.hasValue) {
+      return Scaffold(
+        appBar: AppBar(),
+        body: courierState.hasError
+            ? Center(child: Text(failureMessage(l10n, courierState.error)))
+            : const Center(child: CircularProgressIndicator()),
+      );
+    }
+    if (!_initialized) _initFrom(courierState.value);
+    final approved = courierState.value?.status == CourierStatus.approved;
+
     return Scaffold(
+      bottomNavigationBar: approved ? const CourierNavBar(current: 3) : null,
       appBar: AppBar(
+        automaticallyImplyLeading: !approved,
         title: Text(
           _existing == null
               ? l10n.courierProfileTitle

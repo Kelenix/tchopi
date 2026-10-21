@@ -1063,7 +1063,7 @@ abstract class AppLocalizations {
   /// No description provided for @courierProfileEditTitle.
   ///
   /// In fr, this message translates to:
-  /// **'Mon profil livreur'**
+  /// **'Mon dossier livreur'**
   String get courierProfileEditTitle;
 
   /// No description provided for @courierProfileSubtitle.
@@ -4172,6 +4172,42 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'{count} refusée(s)'**
   String historyDeclinedCount(int count);
+
+  /// No description provided for @courierTabHome.
+  ///
+  /// In fr, this message translates to:
+  /// **'Accueil'**
+  String get courierTabHome;
+
+  /// No description provided for @courierTabDeclined.
+  ///
+  /// In fr, this message translates to:
+  /// **'Refusées'**
+  String get courierTabDeclined;
+
+  /// No description provided for @courierTabProfile.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mon dossier'**
+  String get courierTabProfile;
+
+  /// No description provided for @courierReadyTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prêt à livrer ?'**
+  String get courierReadyTitle;
+
+  /// No description provided for @courierReadyBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Touchez la carte ci-dessus pour passer en ligne et recevoir des missions.'**
+  String get courierReadyBody;
+
+  /// No description provided for @courierTodayTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aujourd\'hui'**
+  String get courierTodayTitle;
 
   /// No description provided for @courierHistory.
   ///

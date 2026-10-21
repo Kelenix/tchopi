@@ -2,10 +2,10 @@ import 'package:core/core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('franc CFA : séparateur de milliers insécable et « F »', () {
-    expect(formatMoney(1300), '1 300 F');
-    expect(formatMoney(500), '500 F');
-    expect(formatMoney(125000), '125 000 F');
+  test('franc CFA : séparateur de milliers insécable et « FCFA »', () {
+    expect(formatMoney(1300), '1 300 FCFA');
+    expect(formatMoney(500), '500 FCFA');
+    expect(formatMoney(125000), '125 000 FCFA');
   });
 
   test('autre devise : code affiché', () {

@@ -1,13 +1,11 @@
-import 'declined_offers_screen.dart';
 import 'package:core/core.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../profile/presentation/courier_profile_screen.dart';
+import '../../courier_nav_bar.dart';
 import '../missions_providers.dart';
-import 'history_screen.dart';
 import 'mission_screen.dart';
 import 'offer_screen.dart';
 
@@ -111,28 +109,15 @@ class _CourierHomeScreenState extends ConsumerState<CourierHomeScreen> {
     final offers = ref.watch(pendingOffersProvider).value ?? const [];
 
     return Scaffold(
+      bottomNavigationBar: const CourierNavBar(current: 0),
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(
           firstName == null
               ? l10n.homeGreetingAnonymous
               : l10n.homeGreeting(firstName),
         ),
         actions: [
-          IconButton(
-            tooltip: l10n.declinedTitle,
-            icon: const Icon(Icons.do_not_disturb_on_outlined),
-            onPressed: () => context.push(DeclinedOffersScreen.path),
-          ),
-          IconButton(
-            tooltip: l10n.courierHistory,
-            icon: const Icon(Icons.history),
-            onPressed: () => context.push(HistoryScreen.path),
-          ),
-          IconButton(
-            tooltip: l10n.courierEditProfile,
-            icon: const Icon(Icons.badge_outlined),
-            onPressed: () => context.push(CourierProfileScreen.path),
-          ),
           IconButton(
             tooltip: l10n.accountTitle,
             icon: const Icon(Icons.person_outline),
@@ -143,78 +128,126 @@ class _CourierHomeScreenState extends ConsumerState<CourierHomeScreen> {
       body: ListView(
         padding: const EdgeInsets.all(Space.screen),
         children: [
-          Material(
-            color: online ? tokens.primary : tokens.surface,
-            shape: RoundedRectangleBorder(
+          // Carte d'état : dégradé de la marque en ligne, carte neutre hors ligne ; un appui bascule l'état.
+          DecoratedBox(
+            decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(Radii.card),
-              side: BorderSide(color: online ? tokens.primary : tokens.border),
-            ),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(Radii.card),
-              onTap: _busy ? null : () => _toggle(!online),
-              child: Padding(
-                padding: const EdgeInsets.all(Space.xl),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            online ? l10n.courierOnline : l10n.courierOffline,
-                            style: text.headlineMedium!.copyWith(
-                              color: online ? tokens.onPrimary : tokens.ink,
-                            ),
-                          ),
+              border: Border.all(
+                color: online ? Colors.transparent : tokens.border,
+              ),
+              gradient: online
+                  ? LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        tokens.primary,
+                        Color.alphaBlend(
+                          Colors.black.withValues(alpha: 0.25),
+                          tokens.primary,
                         ),
-                        if (_busy)
-                          SizedBox.square(
-                            dimension: 28,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 3,
-                              color: online ? tokens.onPrimary : tokens.primary,
-                            ),
-                          )
-                        else
-                          Switch(
-                            value: online,
-                            onChanged: _toggle,
-                            activeThumbColor: tokens.primary,
-                            activeTrackColor: tokens.onPrimary,
-                          ),
                       ],
-                    ),
-                    const SizedBox(height: Space.sm),
-                    Text(
-                      online ? l10n.courierOnlineBody : l10n.courierOfflineBody,
-                      style: text.bodyMedium!.copyWith(
-                        color: online ? tokens.onPrimary : tokens.muted,
+                    )
+                  : null,
+              color: online ? null : tokens.surface,
+              boxShadow: online
+                  ? [
+                      BoxShadow(
+                        color: tokens.primary.withValues(alpha: 0.35),
+                        blurRadius: 24,
+                        offset: const Offset(0, 10),
                       ),
-                    ),
-                  ],
+                    ]
+                  : null,
+            ),
+            child: Material(
+              type: MaterialType.transparency,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(Radii.card),
+                onTap: _busy ? null : () => _toggle(!online),
+                child: Padding(
+                  padding: const EdgeInsets.all(Space.xl),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 12,
+                            height: 12,
+                            margin: const EdgeInsets.only(right: Space.md),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: online ? tokens.onPrimary : tokens.muted,
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              online ? l10n.courierOnline : l10n.courierOffline,
+                              style: text.headlineMedium!.copyWith(
+                                color: online ? tokens.onPrimary : tokens.ink,
+                              ),
+                            ),
+                          ),
+                          if (_busy)
+                            SizedBox.square(
+                              dimension: 28,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 3,
+                                color: online
+                                    ? tokens.onPrimary
+                                    : tokens.primary,
+                              ),
+                            )
+                          else
+                            Switch(
+                              value: online,
+                              onChanged: _toggle,
+                              activeThumbColor: tokens.primary,
+                              activeTrackColor: tokens.onPrimary,
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: Space.sm),
+                      Text(
+                        online
+                            ? l10n.courierOnlineBody
+                            : l10n.courierOfflineBody,
+                        style: text.bodyMedium!.copyWith(
+                          color: online ? tokens.onPrimary : tokens.muted,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-          const SizedBox(height: Space.lg),
-          if (summary != null)
+          const SizedBox(height: Space.xl),
+          if (summary != null) ...[
+            SectionHeader(title: l10n.courierTodayTitle),
             Row(
               children: [
                 _Kpi(
+                  icon: Icons.payments_outlined,
                   value: formatMoney(summary.earningsToday),
                   label: l10n.kpiEarnings,
                 ),
+                const SizedBox(width: Space.sm),
                 _Kpi(
+                  icon: Icons.check_circle_outline,
                   value: '${summary.deliveriesToday}',
                   label: l10n.kpiDeliveries,
                 ),
+                const SizedBox(width: Space.sm),
                 _Kpi(
+                  icon: Icons.account_balance_wallet_outlined,
                   value: formatMoney(summary.cashDue),
                   label: l10n.kpiCash,
                   warn: summary.cashDue > 0,
                 ),
               ],
             ),
+          ],
           const SizedBox(height: Space.xl),
           if (mission != null)
             _MissionCard(order: mission)
@@ -222,11 +255,13 @@ class _CourierHomeScreenState extends ConsumerState<CourierHomeScreen> {
             SectionHeader(title: l10n.courierAvailableTitle),
             for (final offer in offers)
               _OfferTile(offer: offer, onTap: () => _showOffer(offer)),
-          ] else if (online)
+          ] else
             EmptyState(
-              icon: Icons.notifications_active_outlined,
-              title: l10n.courierWaitingTitle,
-              body: l10n.courierWaitingBody,
+              icon: online
+                  ? Icons.notifications_active_outlined
+                  : Icons.power_settings_new_rounded,
+              title: online ? l10n.courierWaitingTitle : l10n.courierReadyTitle,
+              body: online ? l10n.courierWaitingBody : l10n.courierReadyBody,
             ),
         ],
       ),
@@ -321,8 +356,14 @@ class _MissionCard extends StatelessWidget {
 
 /// Indicateur du jour (MIS-01) ; en orange s'il appelle une action (espèces à reverser).
 class _Kpi extends StatelessWidget {
-  const _Kpi({required this.value, required this.label, this.warn = false});
+  const _Kpi({
+    required this.icon,
+    required this.value,
+    required this.label,
+    this.warn = false,
+  });
 
+  final IconData icon;
   final String value;
   final String label;
   final bool warn;
@@ -333,12 +374,19 @@ class _Kpi extends StatelessWidget {
     final text = Theme.of(context).textTheme;
     return Expanded(
       child: Card(
+        margin: EdgeInsets.zero,
         color: warn ? tokens.warningSoft : null,
         child: Padding(
           padding: const EdgeInsets.all(Space.md),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Icon(
+                icon,
+                size: 20,
+                color: warn ? tokens.warning : tokens.primary,
+              ),
+              const SizedBox(height: Space.sm),
               FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(value, style: text.titleLarge),

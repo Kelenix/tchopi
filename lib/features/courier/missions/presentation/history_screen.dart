@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../courier_nav_bar.dart';
 import '../data/mission_repository.dart';
 import '../missions_providers.dart';
 
@@ -142,7 +143,11 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
         : time.format(DateTime.parse(iso as String).toLocal());
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.historyTitle)),
+      bottomNavigationBar: const CourierNavBar(current: 1),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(l10n.historyTitle),
+      ),
       body: RefreshIndicator(
         onRefresh: () => _load(reset: true),
         child: ListView(

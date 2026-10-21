@@ -535,7 +535,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get courierProfileTitle => 'Devenir livreur';
 
   @override
-  String get courierProfileEditTitle => 'Mon profil livreur';
+  String get courierProfileEditTitle => 'Mon dossier livreur';
 
   @override
   String get courierProfileSubtitle =>
@@ -2279,6 +2279,25 @@ class AppLocalizationsFr extends AppLocalizations {
   String historyDeclinedCount(int count) {
     return '$count refusée(s)';
   }
+
+  @override
+  String get courierTabHome => 'Accueil';
+
+  @override
+  String get courierTabDeclined => 'Refusées';
+
+  @override
+  String get courierTabProfile => 'Mon dossier';
+
+  @override
+  String get courierReadyTitle => 'Prêt à livrer ?';
+
+  @override
+  String get courierReadyBody =>
+      'Touchez la carte ci-dessus pour passer en ligne et recevoir des missions.';
+
+  @override
+  String get courierTodayTitle => 'Aujourd\'hui';
 
   @override
   String get courierHistory => 'Historique';
