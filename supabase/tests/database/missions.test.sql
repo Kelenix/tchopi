@@ -1,6 +1,6 @@
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(35);
+select plan(40);
 -- Colis en pause sur la plateforme (ADR-043) : réactivés pour ces tests.
 update public.settings set parcels_enabled = true;
 
@@ -206,6 +206,24 @@ select public.respond_to_offer(pg_temp.pending_offer(), true);
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000f1');
 select is((public.transition_order(pg_temp.order_id('5'), 'picked_up')).status, 'picked_up'::public.order_status,
   'le restaurant déclare la remise au livreur');
+
+-- Évaluation du livreur après la livraison de la commande 1.
+reset role;
+select is((select count(*) from public.notifications
+            where user_id = '00000000-0000-0000-0000-0000000000c1' and kind = 'rate_courier'
+              and order_id = pg_temp.order_id('1'))::integer, 1,
+  'à la livraison, le client est invité à noter son livreur');
+set local role authenticated;
+select pg_temp.as_user('00000000-0000-0000-0000-0000000000a1');
+select throws_ok($$ select public.rate_courier(pg_temp.order_id('1'), 5) $$, 'P0001', 'not_found',
+  'seul le client de la commande la note');
+select pg_temp.as_user('00000000-0000-0000-0000-0000000000c1');
+select lives_ok($$ select public.rate_courier(pg_temp.order_id('1'), 4, array['fast', 'inconnu'], ' Merci ') $$,
+  'le client note son livreur');
+select throws_ok($$ select public.rate_courier(pg_temp.order_id('1'), 5) $$, 'P0001', 'already_rated',
+  'une seule note par commande');
+select pg_temp.as_user('00000000-0000-0000-0000-0000000000a1');
+select is(public.my_courier_rating(), '{"average": 4.0, "count": 1}'::jsonb, 'le livreur voit sa moyenne');
 
 select * from finish();
 rollback;

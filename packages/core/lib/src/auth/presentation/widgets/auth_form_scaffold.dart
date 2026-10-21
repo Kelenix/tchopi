@@ -42,6 +42,8 @@ String failureMessage(AppLocalizations l10n, Object? error) {
     'invalid_id_number' => l10n.failureInvalidId,
     'cash_due' => l10n.failureCashDue,
     'account_busy' => l10n.failureAccountBusy,
+    'rating_closed' => l10n.failureRatingClosed,
+    'already_rated' => l10n.failureAlreadyRated,
     'invalid_transition' => l10n.failureInvalidTransition,
     'different_zones' => l10n.failureDifferentZones,
     'same_location' => l10n.failureSameLocation,

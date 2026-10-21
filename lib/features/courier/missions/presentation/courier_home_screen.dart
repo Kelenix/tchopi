@@ -12,6 +12,18 @@ import 'offer_screen.dart';
 /// L-03 : tableau de bord du livreur approuvé — interrupteur En ligne / Hors ligne, gains et livraisons du
 /// jour, espèces à reverser, mission en cours, commandes prêtes à récupérer ; chaque nouvelle commande proposée
 /// s'ouvre aussi en plein écran (COU-05, DIS-02, MIS-01).
+/// Note moyenne du livreur connecté (`my_courier_rating`).
+final _myRatingProvider =
+    FutureProvider.autoDispose<({double average, int count})>((ref) async {
+      final data = await ref
+          .watch(supabaseClientProvider)
+          .rpc<Map<String, dynamic>>('my_courier_rating');
+      return (
+        average: (data['average'] as num?)?.toDouble() ?? 0,
+        count: data['count'] as int? ?? 0,
+      );
+    });
+
 class CourierHomeScreen extends ConsumerStatefulWidget {
   const CourierHomeScreen({super.key});
 
@@ -118,6 +130,18 @@ class _CourierHomeScreenState extends ConsumerState<CourierHomeScreen> {
               : l10n.homeGreeting(firstName),
         ),
         actions: [
+          // Note moyenne donnée par les clients (affichée dès la première note).
+          if (ref.watch(_myRatingProvider).value case (
+            average: final avg,
+            count: final n,
+          ) when n > 0)
+            Padding(
+              padding: const EdgeInsets.only(right: Space.xs),
+              child: Chip(
+                avatar: Icon(Icons.star_rounded, color: tokens.primary),
+                label: Text('${formatDecimal(avg)} ($n)'),
+              ),
+            ),
           IconButton(
             tooltip: l10n.accountTitle,
             icon: const Icon(Icons.person_outline),

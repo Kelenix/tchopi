@@ -2518,6 +2518,114 @@ abstract class AppLocalizations {
   /// **'Vos plats préférés, livrés chez vous'**
   String get splashTagline;
 
+  /// No description provided for @rateYourCourier.
+  ///
+  /// In fr, this message translates to:
+  /// **'votre livreur'**
+  String get rateYourCourier;
+
+  /// No description provided for @rateTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Comment était {name} ?'**
+  String rateTitle(String name);
+
+  /// No description provided for @rateBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Touchez une étoile pour noter la livraison.'**
+  String get rateBody;
+
+  /// No description provided for @rateThanks.
+  ///
+  /// In fr, this message translates to:
+  /// **'Merci pour votre note !'**
+  String get rateThanks;
+
+  /// No description provided for @rateThanksBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Elle aide les livreurs à progresser et les restaurants à bien choisir.'**
+  String get rateThanksBody;
+
+  /// No description provided for @rateStars.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} étoile(s)'**
+  String rateStars(int count);
+
+  /// No description provided for @rateComment.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un mot pour le livreur (facultatif)'**
+  String get rateComment;
+
+  /// No description provided for @rateSubmit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer ma note'**
+  String get rateSubmit;
+
+  /// No description provided for @rateTagFast.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rapide'**
+  String get rateTagFast;
+
+  /// No description provided for @rateTagFriendly.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aimable'**
+  String get rateTagFriendly;
+
+  /// No description provided for @rateTagCareful.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande intacte'**
+  String get rateTagCareful;
+
+  /// No description provided for @rateTagOnTime.
+  ///
+  /// In fr, this message translates to:
+  /// **'À l\'heure'**
+  String get rateTagOnTime;
+
+  /// No description provided for @rateTagLate.
+  ///
+  /// In fr, this message translates to:
+  /// **'En retard'**
+  String get rateTagLate;
+
+  /// No description provided for @rateTagDamaged.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande abîmée'**
+  String get rateTagDamaged;
+
+  /// No description provided for @rateTagRude.
+  ///
+  /// In fr, this message translates to:
+  /// **'Peu aimable'**
+  String get rateTagRude;
+
+  /// No description provided for @failureRatingClosed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Il n\'est plus possible de noter cette livraison.'**
+  String get failureRatingClosed;
+
+  /// No description provided for @failureAlreadyRated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vous avez déjà noté cette livraison.'**
+  String get failureAlreadyRated;
+
+  /// No description provided for @courierRatingLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ma note'**
+  String get courierRatingLabel;
+
   /// No description provided for @failureAlreadyAccepted.
   ///
   /// In fr, this message translates to:

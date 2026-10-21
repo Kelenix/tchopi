@@ -1340,6 +1340,66 @@ class AppLocalizationsFr extends AppLocalizations {
   String get splashTagline => 'Vos plats préférés, livrés chez vous';
 
   @override
+  String get rateYourCourier => 'votre livreur';
+
+  @override
+  String rateTitle(String name) {
+    return 'Comment était $name ?';
+  }
+
+  @override
+  String get rateBody => 'Touchez une étoile pour noter la livraison.';
+
+  @override
+  String get rateThanks => 'Merci pour votre note !';
+
+  @override
+  String get rateThanksBody =>
+      'Elle aide les livreurs à progresser et les restaurants à bien choisir.';
+
+  @override
+  String rateStars(int count) {
+    return '$count étoile(s)';
+  }
+
+  @override
+  String get rateComment => 'Un mot pour le livreur (facultatif)';
+
+  @override
+  String get rateSubmit => 'Envoyer ma note';
+
+  @override
+  String get rateTagFast => 'Rapide';
+
+  @override
+  String get rateTagFriendly => 'Aimable';
+
+  @override
+  String get rateTagCareful => 'Commande intacte';
+
+  @override
+  String get rateTagOnTime => 'À l\'heure';
+
+  @override
+  String get rateTagLate => 'En retard';
+
+  @override
+  String get rateTagDamaged => 'Commande abîmée';
+
+  @override
+  String get rateTagRude => 'Peu aimable';
+
+  @override
+  String get failureRatingClosed =>
+      'Il n\'est plus possible de noter cette livraison.';
+
+  @override
+  String get failureAlreadyRated => 'Vous avez déjà noté cette livraison.';
+
+  @override
+  String get courierRatingLabel => 'Ma note';
+
+  @override
   String get failureAlreadyAccepted =>
       'Le restaurant prépare déjà votre commande. Contactez le support.';
 
