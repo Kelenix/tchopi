@@ -1,6 +1,6 @@
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(5);
+select plan(6);
 
 insert into auth.users (id, email, aud, role, email_confirmed_at) values
   ('00000000-0000-0000-0000-0000000000ad', 'admin@exemple.ci', 'authenticated', 'authenticated', now()),
@@ -35,6 +35,8 @@ select throws_ok($$ update public.profiles set avatar_path = 'avatars/autre/a.jp
 reset role;
 select lives_ok($$ select public.anonymize_account('00000000-0000-0000-0000-0000000000c1') $$,
   'sans commande en cours : compte anonymisé');
+select is((select count(*) from public.couriers where user_id = '00000000-0000-0000-0000-0000000000c1')::integer, 0,
+  'la fiche livreur part avec le compte');
 
 select * from finish();
 rollback;
