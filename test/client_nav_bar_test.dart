@@ -51,7 +51,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Envoyer un colis'), findsNothing);
-    await tester.tap(find.byTooltip('Commander un repas'));
+    await tester.tap(find.byIcon(Icons.add_rounded));
     await tester.pumpAndSettle();
 
     expect(find.text('Restaurants'), findsOneWidget);
