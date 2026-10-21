@@ -200,7 +200,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                                     quantity: line.quantity,
                                     onChanged: (value) => ref
                                         .read(cartControllerProvider.notifier)
-                                        .setQuantity(line.productId, value),
+                                        .setQuantity(line.key, value),
                                   ),
                                 ],
                               ),

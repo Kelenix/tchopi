@@ -408,6 +408,12 @@
     }
   },
   "cartReplaceConfirm": "Vider et ajouter",
+  "optionsRequired": "Obligatoire",
+  "optionsOptional": "Facultatif",
+  "optionsUpTo": "Jusqu'à {count}",
+  "@optionsUpTo": {"placeholders": {"count": {"type": "int"}}},
+  "optionsInCart": "{count} dans le panier",
+  "@optionsInCart": {"placeholders": {"count": {"type": "int"}}},
   "productAddTooltip": "Ajouter au panier",
   "checkoutTitle": "Votre commande",
   "checkoutDeliverTo": "Livrer à",

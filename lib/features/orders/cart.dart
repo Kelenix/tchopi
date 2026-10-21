@@ -7,6 +7,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 part 'cart.g.dart';
 
+/// Option choisie pour un produit (taille, supplément…).
+typedef ChosenOption = ({String id, String name, int priceDelta});
+
 @immutable
 class CartLine {
   const CartLine({
@@ -15,15 +18,22 @@ class CartLine {
     required this.unitPrice,
     required this.quantity,
     this.photoPath,
+    this.optionIds = const [],
   });
 
-  CartLine.of(Product product)
+  /// [options] : choix faits (taille, suppléments) ; ajoutés au nom et au prix affichés.
+  CartLine.of(Product product, {List<ChosenOption> options = const []})
     : this(
         productId: product.id!,
-        name: product.name,
-        unitPrice: product.price,
+        name: options.isEmpty
+            ? product.name
+            : '${product.name} (${options.map((o) => o.name).join(', ')})',
+        unitPrice:
+            product.price +
+            options.fold<int>(0, (sum, o) => sum + o.priceDelta),
         quantity: 1,
         photoPath: product.photoPath,
+        optionIds: [for (final o in options) o.id]..sort(),
       );
 
   factory CartLine.fromJson(Map<String, dynamic> json) => CartLine(
@@ -32,6 +42,9 @@ class CartLine {
     unitPrice: json['unit_price'] as int,
     quantity: json['quantity'] as int,
     photoPath: json['photo_path'] as String?,
+    optionIds: [
+      for (final id in json['options'] as List? ?? const []) id as String,
+    ],
   );
 
   final String productId;
@@ -42,6 +55,12 @@ class CartLine {
   final int quantity;
   final String? photoPath;
 
+  /// Options choisies (identifiants triés), envoyées au serveur qui recalcule le prix.
+  final List<String> optionIds;
+
+  /// Une ligne par produit et par combinaison d'options.
+  String get key => [productId, ...optionIds].join('+');
+
   int get lineTotal => unitPrice * quantity;
 
   CartLine withQuantity(int value) => CartLine(
@@ -50,6 +69,7 @@ class CartLine {
     unitPrice: unitPrice,
     quantity: value,
     photoPath: photoPath,
+    optionIds: optionIds,
   );
 
   Map<String, Object?> toJson() => {
@@ -58,6 +78,7 @@ class CartLine {
     'unit_price': unitPrice,
     'quantity': quantity,
     'photo_path': photoPath,
+    'options': optionIds,
   };
 }
 
@@ -86,8 +107,10 @@ class Cart {
   int get count => lines.fold(0, (sum, line) => sum + line.quantity);
   int get subtotal => lines.fold(0, (sum, line) => sum + line.lineTotal);
 
-  int quantityOf(String productId) =>
-      lines.where((l) => l.productId == productId).firstOrNull?.quantity ?? 0;
+  /// Quantité d'un produit, toutes options confondues.
+  int quantityOf(String productId) => lines
+      .where((l) => l.productId == productId)
+      .fold(0, (sum, l) => sum + l.quantity);
 
   Map<String, Object?> toJson() => {
     'restaurant_id': restaurantId,
@@ -125,34 +148,43 @@ class CartController extends _$CartController {
   }
 
   /// Faux si le panier contient déjà un autre restaurant : l'interface demande alors de le vider ([replaceWith]).
-  bool add(Restaurant restaurant, Product product) {
+  bool add(
+    Restaurant restaurant,
+    Product product, {
+    List<ChosenOption> options = const [],
+  }) {
     final cart = state.value;
     if (cart != null && cart.restaurantId != restaurant.id) return false;
-    final current = cart?.quantityOf(product.id!) ?? 0;
-    if (current == 0) {
+    final line = CartLine.of(product, options: options);
+    final existing = cart?.lines.where((l) => l.key == line.key).firstOrNull;
+    if (existing == null) {
       _save(
         Cart(
           restaurantId: restaurant.id,
           restaurantName: restaurant.name,
-          lines: [...?cart?.lines, CartLine.of(product)],
+          lines: [...?cart?.lines, line],
         ),
       );
     } else {
-      setQuantity(product.id!, current + 1);
+      setQuantity(line.key, existing.quantity + 1);
     }
     return true;
   }
 
-  void replaceWith(Restaurant restaurant, Product product) => _save(
+  void replaceWith(
+    Restaurant restaurant,
+    Product product, {
+    List<ChosenOption> options = const [],
+  }) => _save(
     Cart(
       restaurantId: restaurant.id,
       restaurantName: restaurant.name,
-      lines: [CartLine.of(product)],
+      lines: [CartLine.of(product, options: options)],
     ),
   );
 
-  /// 0 retire le produit ; un panier vide disparaît.
-  void setQuantity(String productId, int quantity) {
+  /// [key] : clé de la ligne ([CartLine.key]) ; 0 retire la ligne, un panier vide disparaît.
+  void setQuantity(String key, int quantity) {
     final cart = state.value;
     if (cart == null) return;
     final value = quantity.clamp(0, maxQuantity);
@@ -162,7 +194,7 @@ class CartController extends _$CartController {
         restaurantName: cart.restaurantName,
         lines: [
           for (final line in cart.lines)
-            if (line.productId != productId)
+            if (line.key != key)
               line
             else if (value > 0)
               line.withQuantity(value),

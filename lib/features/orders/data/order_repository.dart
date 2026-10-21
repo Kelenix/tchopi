@@ -23,7 +23,11 @@ class OrderRepository {
 
   List<Map<String, Object>> _items(Cart cart) => [
     for (final line in cart.lines)
-      {'product_id': line.productId, 'quantity': line.quantity},
+      {
+        'product_id': line.productId,
+        'quantity': line.quantity,
+        if (line.optionIds.isNotEmpty) 'options': line.optionIds,
+      },
   ];
 
   Future<FoodQuote> quote(Cart cart, String addressId) => guardCall(() async {

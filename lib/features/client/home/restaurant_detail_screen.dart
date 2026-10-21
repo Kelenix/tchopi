@@ -9,6 +9,7 @@ import '../../orders/cart.dart';
 import '../../orders/presentation/checkout_screen.dart';
 import '../../orders/presentation/order_widgets.dart';
 import '../../restaurant/restaurant_providers.dart';
+import 'product_options.dart';
 import 'catalog_providers.dart';
 
 /// C-03 : fiche restaurant — grande photo, ouverture, temps de préparation, menu par catégorie ;
@@ -288,7 +289,16 @@ class _ProductTile extends ConsumerWidget {
 
   Future<void> _add(BuildContext context, WidgetRef ref, Restaurant r) async {
     final cart = ref.read(cartControllerProvider.notifier);
-    if (cart.add(r, product)) {
+    // Produit avec options (taille, suppléments) : choix avant l'ajout.
+    final groups =
+        ref.read(productOptionsProvider(r.id)).value?[product.id] ?? const [];
+    var options = const <ChosenOption>[];
+    if (groups.isNotEmpty) {
+      final picked = await pickOptions(context, product, groups);
+      if (picked == null || !context.mounted) return;
+      options = picked;
+    }
+    if (cart.add(r, product, options: options)) {
       await HapticFeedback.lightImpact();
       return;
     }
@@ -301,7 +311,7 @@ class _ProductTile extends ConsumerWidget {
       body: l10n.cartReplaceBody(current),
       confirmLabel: l10n.cartReplaceConfirm,
     );
-    if (replace) cart.replaceWith(r, product);
+    if (replace) cart.replaceWith(r, product, options: options);
   }
 
   @override
@@ -313,6 +323,13 @@ class _ProductTile extends ConsumerWidget {
     final quantity = cart != null && cart.restaurantId == r?.id
         ? cart.quantityOf(product.id!)
         : 0;
+    final hasOptions =
+        r != null &&
+        (ref
+                .watch(productOptionsProvider(r.id))
+                .value?[product.id]
+                ?.isNotEmpty ??
+            false);
     final l10n = AppLocalizations.of(context);
     final tokens = context.tokens;
     final text = Theme.of(context).textTheme;
@@ -350,7 +367,14 @@ class _ProductTile extends ConsumerWidget {
                       fontFeatures: const [FontFeature.tabularFigures()],
                     ),
                   ),
-                  if (quantity > 0) ...[
+                  // Avec options : chaque ajout ouvre le choix ; les quantités se règlent dans le panier.
+                  if (quantity > 0 && hasOptions) ...[
+                    const SizedBox(height: Space.sm),
+                    Text(
+                      l10n.optionsInCart(quantity),
+                      style: text.labelLarge!.copyWith(color: tokens.primary),
+                    ),
+                  ] else if (quantity > 0) ...[
                     const SizedBox(height: Space.sm),
                     QuantityStepper(
                       quantity: quantity,
@@ -378,7 +402,7 @@ class _ProductTile extends ConsumerWidget {
                     ),
                   ),
                 ),
-                if (orderable && quantity == 0)
+                if (orderable && (quantity == 0 || hasOptions))
                   Positioned(
                     right: -Space.xs,
                     bottom: -Space.xs,

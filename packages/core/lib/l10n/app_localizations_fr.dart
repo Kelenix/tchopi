@@ -1023,6 +1023,22 @@ class AppLocalizationsFr extends AppLocalizations {
   String get cartReplaceConfirm => 'Vider et ajouter';
 
   @override
+  String get optionsRequired => 'Obligatoire';
+
+  @override
+  String get optionsOptional => 'Facultatif';
+
+  @override
+  String optionsUpTo(int count) {
+    return 'Jusqu\'à $count';
+  }
+
+  @override
+  String optionsInCart(int count) {
+    return '$count dans le panier';
+  }
+
+  @override
   String get productAddTooltip => 'Ajouter au panier';
 
   @override

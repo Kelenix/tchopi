@@ -44,6 +44,22 @@ void main() {
     expect(container.read(cartControllerProvider).value, isNull);
   });
 
+  test('options : prix et ligne propres à chaque combinaison', () async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    await container.read(cartControllerProvider.future);
+    final cart = container.read(cartControllerProvider.notifier);
+    const grand = (id: 'o-grand', name: 'Grand', priceDelta: 500);
+    cart.add(restaurant('r1'), product('p1', 1500), options: [grand]);
+    cart.add(restaurant('r1'), product('p1', 1500), options: [grand]);
+    cart.add(restaurant('r1'), product('p1', 1500));
+    final value = container.read(cartControllerProvider).value!;
+    expect(value.lines.length, 2);
+    expect(value.lines.first.name, contains('Grand'));
+    expect(value.subtotal, 2000 * 2 + 1500);
+    expect(value.quantityOf('p1'), 3);
+  });
+
   test('un seul restaurant : un autre restaurant demande de vider', () async {
     final container = ProviderContainer();
     addTearDown(container.dispose);

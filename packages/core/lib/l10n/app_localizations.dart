@@ -1966,6 +1966,30 @@ abstract class AppLocalizations {
   /// **'Vider et ajouter'**
   String get cartReplaceConfirm;
 
+  /// No description provided for @optionsRequired.
+  ///
+  /// In fr, this message translates to:
+  /// **'Obligatoire'**
+  String get optionsRequired;
+
+  /// No description provided for @optionsOptional.
+  ///
+  /// In fr, this message translates to:
+  /// **'Facultatif'**
+  String get optionsOptional;
+
+  /// No description provided for @optionsUpTo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Jusqu\'à {count}'**
+  String optionsUpTo(int count);
+
+  /// No description provided for @optionsInCart.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} dans le panier'**
+  String optionsInCart(int count);
+
   /// No description provided for @productAddTooltip.
   ///
   /// In fr, this message translates to:
