@@ -2,6 +2,8 @@ import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../shared/back_to_root.dart';
+
 /// Navigation basse de l'espace Livreur : Accueil (missions), Historique, Refusées, Mon dossier.
 class CourierNavBar extends StatelessWidget {
   const CourierNavBar({super.key, required this.current});
@@ -19,32 +21,35 @@ class CourierNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return NavigationBar(
-      selectedIndex: current,
-      onDestinationSelected: (i) {
-        if (i != current) context.go(paths[i]);
-      },
-      destinations: [
-        NavigationDestination(
-          icon: const Icon(Icons.two_wheeler_outlined),
-          selectedIcon: const Icon(Icons.two_wheeler),
-          label: l10n.courierTabHome,
-        ),
-        NavigationDestination(
-          icon: const Icon(Icons.history),
-          label: l10n.courierHistory,
-        ),
-        NavigationDestination(
-          icon: const Icon(Icons.do_not_disturb_on_outlined),
-          selectedIcon: const Icon(Icons.do_not_disturb_on),
-          label: l10n.courierTabDeclined,
-        ),
-        NavigationDestination(
-          icon: const Icon(Icons.badge_outlined),
-          selectedIcon: const Icon(Icons.badge),
-          label: l10n.courierTabProfile,
-        ),
-      ],
+    return BackToRoot(
+      root: paths.first,
+      child: NavigationBar(
+        selectedIndex: current,
+        onDestinationSelected: (i) {
+          if (i != current) context.go(paths[i]);
+        },
+        destinations: [
+          NavigationDestination(
+            icon: const Icon(Icons.two_wheeler_outlined),
+            selectedIcon: const Icon(Icons.two_wheeler),
+            label: l10n.courierTabHome,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.history),
+            label: l10n.courierHistory,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.do_not_disturb_on_outlined),
+            selectedIcon: const Icon(Icons.do_not_disturb_on),
+            label: l10n.courierTabDeclined,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.badge_outlined),
+            selectedIcon: const Icon(Icons.badge),
+            label: l10n.courierTabProfile,
+          ),
+        ],
+      ),
     );
   }
 }

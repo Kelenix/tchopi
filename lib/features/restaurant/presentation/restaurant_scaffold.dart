@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../shared/back_to_root.dart';
 import '../../../shared/restaurant_cover.dart';
 import '../restaurant_providers.dart';
 import 'menu_screen.dart';
@@ -91,26 +92,29 @@ class RestaurantScaffold extends ConsumerWidget {
       ),
       floatingActionButton: fab,
       body: body,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _tabs.indexOf(current),
-        onDestinationSelected: (index) => context.go(_tabs[index]),
-        destinations: [
-          NavigationDestination(
-            icon: const Icon(Icons.receipt_long_outlined),
-            selectedIcon: const Icon(Icons.receipt_long_rounded),
-            label: l10n.restaurantOrders,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.restaurant_menu_outlined),
-            selectedIcon: const Icon(Icons.restaurant_menu_rounded),
-            label: l10n.restaurantMenu,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.storefront_outlined),
-            selectedIcon: const Icon(Icons.storefront_rounded),
-            label: l10n.restaurantProfile,
-          ),
-        ],
+      bottomNavigationBar: BackToRoot(
+        root: _tabs.first,
+        child: NavigationBar(
+          selectedIndex: _tabs.indexOf(current),
+          onDestinationSelected: (index) => context.go(_tabs[index]),
+          destinations: [
+            NavigationDestination(
+              icon: const Icon(Icons.receipt_long_outlined),
+              selectedIcon: const Icon(Icons.receipt_long_rounded),
+              label: l10n.restaurantOrders,
+            ),
+            NavigationDestination(
+              icon: const Icon(Icons.restaurant_menu_outlined),
+              selectedIcon: const Icon(Icons.restaurant_menu_rounded),
+              label: l10n.restaurantMenu,
+            ),
+            NavigationDestination(
+              icon: const Icon(Icons.storefront_outlined),
+              selectedIcon: const Icon(Icons.storefront_rounded),
+              label: l10n.restaurantProfile,
+            ),
+          ],
+        ),
       ),
     );
   }

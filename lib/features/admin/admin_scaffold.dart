@@ -2,6 +2,8 @@ import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../shared/back_to_root.dart';
+
 /// Section de l'espace Admin, accessible depuis le menu.
 class AdminSection {
   const AdminSection(this.icon, this.label, this.path);
@@ -50,35 +52,38 @@ class AdminScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final section = adminSections.firstWhere((s) => s.path == current);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(section.label(l10n)),
-        bottom: bottom,
-        actions: [
-          IconButton(
-            tooltip: l10n.accountTitle,
-            icon: const Icon(Icons.person_outline),
-            onPressed: () => context.push(AppRoutes.account),
-          ),
-        ],
-      ),
-      drawer: NavigationDrawer(
-        selectedIndex: adminSections.indexOf(section),
-        onDestinationSelected: (index) {
-          Navigator.pop(context);
-          context.go(adminSections[index].path);
-        },
-        children: [
-          const SizedBox(height: Space.xl),
-          for (final s in adminSections)
-            NavigationDrawerDestination(
-              icon: Icon(s.icon),
-              label: Text(s.label(l10n)),
+    return BackToRoot(
+      root: adminSections.first.path,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(section.label(l10n)),
+          bottom: bottom,
+          actions: [
+            IconButton(
+              tooltip: l10n.accountTitle,
+              icon: const Icon(Icons.person_outline),
+              onPressed: () => context.push(AppRoutes.account),
             ),
-        ],
+          ],
+        ),
+        drawer: NavigationDrawer(
+          selectedIndex: adminSections.indexOf(section),
+          onDestinationSelected: (index) {
+            Navigator.pop(context);
+            context.go(adminSections[index].path);
+          },
+          children: [
+            const SizedBox(height: Space.xl),
+            for (final s in adminSections)
+              NavigationDrawerDestination(
+                icon: Icon(s.icon),
+                label: Text(s.label(l10n)),
+              ),
+          ],
+        ),
+        floatingActionButton: floatingActionButton,
+        body: body,
       ),
-      floatingActionButton: floatingActionButton,
-      body: body,
     );
   }
 }

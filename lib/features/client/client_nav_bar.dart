@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../shared/back_to_root.dart';
 import '../orders/orders_providers.dart';
 
 /// Navigation basse de l'espace Client (maquette C-01) : Accueil, Commandes, bouton central « + »,
@@ -96,52 +97,55 @@ class ClientNavBar extends ConsumerWidget {
         .where((o) => !o.status.isClosed)
         .length;
 
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: tokens.surface,
-        border: Border(top: BorderSide(color: tokens.border)),
-      ),
-      child: SafeArea(
-        top: false,
-        child: SizedBox(
-          height: 70,
-          child: Row(
-            children: [
-              _NavItem(
-                icon: Icons.home_outlined,
-                selectedIcon: Icons.home_rounded,
-                label: l10n.navHome,
-                selected: current == 0,
-                onTap: () => context.go(homePath),
-              ),
-              _NavItem(
-                icon: Icons.shopping_bag_outlined,
-                selectedIcon: Icons.shopping_bag_rounded,
-                label: l10n.navOrders,
-                selected: current == 1,
-                count: active,
-                onTap: () => context.go(ordersPath),
-              ),
-              Expanded(
-                child: Center(
-                  child: Transform.translate(
-                    offset: const Offset(0, -14),
-                    child: Material(
-                      color: tokens.primary,
-                      shape: const CircleBorder(),
-                      elevation: 6,
-                      shadowColor: tokens.primary.withValues(alpha: 0.6),
-                      child: InkWell(
-                        customBorder: const CircleBorder(),
-                        onTap: () => _newOrder(context),
-                        child: Tooltip(
-                          message: l10n.newOrderTitle,
-                          child: SizedBox.square(
-                            dimension: 58,
-                            child: Icon(
-                              Icons.add_rounded,
-                              size: 30,
-                              color: tokens.onPrimary,
+    return BackToRoot(
+      root: homePath,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: tokens.surface,
+          border: Border(top: BorderSide(color: tokens.border)),
+        ),
+        child: SafeArea(
+          top: false,
+          child: SizedBox(
+            height: 70,
+            child: Row(
+              children: [
+                _NavItem(
+                  icon: Icons.home_outlined,
+                  selectedIcon: Icons.home_rounded,
+                  label: l10n.navHome,
+                  selected: current == 0,
+                  onTap: () => context.go(homePath),
+                ),
+                _NavItem(
+                  icon: Icons.shopping_bag_outlined,
+                  selectedIcon: Icons.shopping_bag_rounded,
+                  label: l10n.navOrders,
+                  selected: current == 1,
+                  count: active,
+                  onTap: () => context.go(ordersPath),
+                ),
+                Expanded(
+                  child: Center(
+                    child: Transform.translate(
+                      offset: const Offset(0, -14),
+                      child: Material(
+                        color: tokens.primary,
+                        shape: const CircleBorder(),
+                        elevation: 6,
+                        shadowColor: tokens.primary.withValues(alpha: 0.6),
+                        child: InkWell(
+                          customBorder: const CircleBorder(),
+                          onTap: () => _newOrder(context),
+                          child: Tooltip(
+                            message: l10n.newOrderTitle,
+                            child: SizedBox.square(
+                              dimension: 58,
+                              child: Icon(
+                                Icons.add_rounded,
+                                size: 30,
+                                color: tokens.onPrimary,
+                              ),
                             ),
                           ),
                         ),
@@ -149,22 +153,22 @@ class ClientNavBar extends ConsumerWidget {
                     ),
                   ),
                 ),
-              ),
-              _NavItem(
-                icon: Icons.account_balance_wallet_outlined,
-                selectedIcon: Icons.account_balance_wallet_rounded,
-                label: l10n.navPayments,
-                selected: current == 2,
-                onTap: () => context.go(paymentsPath),
-              ),
-              _NavItem(
-                icon: Icons.person_outline_rounded,
-                selectedIcon: Icons.person_rounded,
-                label: l10n.navAccount,
-                selected: false,
-                onTap: () => context.push(AppRoutes.account),
-              ),
-            ],
+                _NavItem(
+                  icon: Icons.account_balance_wallet_outlined,
+                  selectedIcon: Icons.account_balance_wallet_rounded,
+                  label: l10n.navPayments,
+                  selected: current == 2,
+                  onTap: () => context.go(paymentsPath),
+                ),
+                _NavItem(
+                  icon: Icons.person_outline_rounded,
+                  selectedIcon: Icons.person_rounded,
+                  label: l10n.navAccount,
+                  selected: false,
+                  onTap: () => context.push(AppRoutes.account),
+                ),
+              ],
+            ),
           ),
         ),
       ),
