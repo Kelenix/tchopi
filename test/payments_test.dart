@@ -247,7 +247,7 @@ void main() {
     expect(find.text('Encaissement R-48K2Q'), findsOneWidget);
 
     await tester.enterText(
-      find.widgetWithText(TextField, 'Montant versé (F)'),
+      find.widgetWithText(TextField, 'Montant versé (FCFA)'),
       '10000',
     );
     await tester.enterText(

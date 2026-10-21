@@ -483,28 +483,28 @@ class AppLocalizationsFr extends AppLocalizations {
   String get pricingParcel => 'Tarifs colis';
 
   @override
-  String get fieldBaseFee => 'Base (F)';
+  String get fieldBaseFee => 'Base (FCFA)';
 
   @override
-  String get fieldPerKm => 'Prix par km (F)';
+  String get fieldPerKm => 'Prix par km (FCFA)';
 
   @override
-  String get fieldMinFee => 'Plancher (F)';
+  String get fieldMinFee => 'Plancher (FCFA)';
 
   @override
-  String get fieldMaxFee => 'Plafond (F)';
+  String get fieldMaxFee => 'Plafond (FCFA)';
 
   @override
   String get fieldDetour => 'Coefficient de détour';
 
   @override
-  String get fieldRounding => 'Arrondi (F)';
+  String get fieldRounding => 'Arrondi (FCFA)';
 
   @override
-  String get fieldCourierBase => 'Livreur : fixe (F)';
+  String get fieldCourierBase => 'Livreur : fixe (FCFA)';
 
   @override
-  String get fieldCourierPerKm => 'Livreur : par km (F)';
+  String get fieldCourierPerKm => 'Livreur : par km (FCFA)';
 
   @override
   String get simulatorTitle => 'Simulateur';
@@ -2401,7 +2401,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get cashRecord => 'Enregistrer un versement';
 
   @override
-  String get cashAmount => 'Montant versé (F)';
+  String get cashAmount => 'Montant versé (FCFA)';
 
   @override
   String get cashReference => 'Référence (reçu, note)';

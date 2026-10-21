@@ -967,25 +967,25 @@ abstract class AppLocalizations {
   /// No description provided for @fieldBaseFee.
   ///
   /// In fr, this message translates to:
-  /// **'Base (F)'**
+  /// **'Base (FCFA)'**
   String get fieldBaseFee;
 
   /// No description provided for @fieldPerKm.
   ///
   /// In fr, this message translates to:
-  /// **'Prix par km (F)'**
+  /// **'Prix par km (FCFA)'**
   String get fieldPerKm;
 
   /// No description provided for @fieldMinFee.
   ///
   /// In fr, this message translates to:
-  /// **'Plancher (F)'**
+  /// **'Plancher (FCFA)'**
   String get fieldMinFee;
 
   /// No description provided for @fieldMaxFee.
   ///
   /// In fr, this message translates to:
-  /// **'Plafond (F)'**
+  /// **'Plafond (FCFA)'**
   String get fieldMaxFee;
 
   /// No description provided for @fieldDetour.
@@ -997,19 +997,19 @@ abstract class AppLocalizations {
   /// No description provided for @fieldRounding.
   ///
   /// In fr, this message translates to:
-  /// **'Arrondi (F)'**
+  /// **'Arrondi (FCFA)'**
   String get fieldRounding;
 
   /// No description provided for @fieldCourierBase.
   ///
   /// In fr, this message translates to:
-  /// **'Livreur : fixe (F)'**
+  /// **'Livreur : fixe (FCFA)'**
   String get fieldCourierBase;
 
   /// No description provided for @fieldCourierPerKm.
   ///
   /// In fr, this message translates to:
-  /// **'Livreur : par km (F)'**
+  /// **'Livreur : par km (FCFA)'**
   String get fieldCourierPerKm;
 
   /// No description provided for @simulatorTitle.
@@ -4386,7 +4386,7 @@ abstract class AppLocalizations {
   /// No description provided for @cashAmount.
   ///
   /// In fr, this message translates to:
-  /// **'Montant versé (F)'**
+  /// **'Montant versé (FCFA)'**
   String get cashAmount;
 
   /// No description provided for @cashReference.
