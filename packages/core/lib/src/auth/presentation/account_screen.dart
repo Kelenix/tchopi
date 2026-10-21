@@ -126,22 +126,12 @@ class AccountScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(Space.screen),
         children: [
-          // En-tête de profil : initiales sur pastille verte, nom, téléphone et ville.
+          // En-tête de profil : initiales sur pastille, nom, téléphone et ville.
           Container(
             padding: const EdgeInsets.all(Space.xl),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(Radii.card),
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  tokens.primary,
-                  Color.alphaBlend(
-                    tokens.ink.withValues(alpha: 0.35),
-                    tokens.primary,
-                  ),
-                ],
-              ),
+              color: tokens.primaryAction,
             ),
             child: Row(
               children: [
@@ -172,14 +162,14 @@ class AccountScreen extends ConsumerWidget {
                       Text(
                         '${profile?.firstName ?? ''} ${profile?.lastName ?? ''}',
                         style: text.titleLarge!.copyWith(
-                          color: tokens.onPrimary,
+                          color: tokens.onPrimaryAction,
                         ),
                       ),
                       const SizedBox(height: 2),
                       Text(
                         '${profile?.phone ?? ''} · ${profile?.city ?? ''}',
                         style: text.bodySmall!.copyWith(
-                          color: tokens.onPrimary.withValues(alpha: 0.8),
+                          color: tokens.onPrimaryAction,
                         ),
                       ),
                     ],

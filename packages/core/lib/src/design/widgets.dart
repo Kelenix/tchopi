@@ -99,7 +99,7 @@ class SectionHeader extends StatelessWidget {
   );
 }
 
-/// Nom de l'app suivi d'un point vert : logo typographique en attendant le logo de marque.
+/// Nom de l'app suivi d'un point orange : logo typographique en attendant le logo de marque.
 class BrandWordmark extends StatelessWidget {
   const BrandWordmark({super.key, this.size = 22, this.color});
 
@@ -117,7 +117,7 @@ class BrandWordmark extends StatelessWidget {
         children: [
           TextSpan(
             text: '.',
-            style: TextStyle(color: tokens.success),
+            style: TextStyle(color: tokens.primaryAction),
           ),
         ],
       ),

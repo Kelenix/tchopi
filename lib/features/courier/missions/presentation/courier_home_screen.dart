@@ -152,31 +152,18 @@ class _CourierHomeScreenState extends ConsumerState<CourierHomeScreen> {
       body: ListView(
         padding: const EdgeInsets.all(Space.screen),
         children: [
-          // Carte d'état : dégradé de la marque en ligne, carte neutre hors ligne ; un appui bascule l'état.
+          // Carte d'état : orange de marque en ligne, carte neutre hors ligne ; un appui bascule l'état.
           DecoratedBox(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(Radii.card),
               border: Border.all(
                 color: online ? Colors.transparent : tokens.border,
               ),
-              gradient: online
-                  ? LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        tokens.primary,
-                        Color.alphaBlend(
-                          Colors.black.withValues(alpha: 0.25),
-                          tokens.primary,
-                        ),
-                      ],
-                    )
-                  : null,
-              color: online ? null : tokens.surface,
+              color: online ? tokens.primaryAction : tokens.surface,
               boxShadow: online
                   ? [
                       BoxShadow(
-                        color: tokens.primary.withValues(alpha: 0.35),
+                        color: tokens.primaryAction.withValues(alpha: 0.35),
                         blurRadius: 24,
                         offset: const Offset(0, 10),
                       ),
@@ -201,14 +188,18 @@ class _CourierHomeScreenState extends ConsumerState<CourierHomeScreen> {
                             margin: const EdgeInsets.only(right: Space.md),
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: online ? tokens.onPrimary : tokens.muted,
+                              color: online
+                                  ? tokens.onPrimaryAction
+                                  : tokens.muted,
                             ),
                           ),
                           Expanded(
                             child: Text(
                               online ? l10n.courierOnline : l10n.courierOffline,
                               style: text.headlineMedium!.copyWith(
-                                color: online ? tokens.onPrimary : tokens.ink,
+                                color: online
+                                    ? tokens.onPrimaryAction
+                                    : tokens.ink,
                               ),
                             ),
                           ),
@@ -218,7 +209,7 @@ class _CourierHomeScreenState extends ConsumerState<CourierHomeScreen> {
                               child: CircularProgressIndicator(
                                 strokeWidth: 3,
                                 color: online
-                                    ? tokens.onPrimary
+                                    ? tokens.onPrimaryAction
                                     : tokens.primary,
                               ),
                             )
@@ -226,8 +217,8 @@ class _CourierHomeScreenState extends ConsumerState<CourierHomeScreen> {
                             Switch(
                               value: online,
                               onChanged: _toggle,
-                              activeThumbColor: tokens.primary,
-                              activeTrackColor: tokens.onPrimary,
+                              activeThumbColor: tokens.surface,
+                              activeTrackColor: tokens.onPrimaryAction,
                             ),
                         ],
                       ),
@@ -237,7 +228,7 @@ class _CourierHomeScreenState extends ConsumerState<CourierHomeScreen> {
                             ? l10n.courierOnlineBody
                             : l10n.courierOfflineBody,
                         style: text.bodyMedium!.copyWith(
-                          color: online ? tokens.onPrimary : tokens.muted,
+                          color: online ? tokens.onPrimaryAction : tokens.muted,
                         ),
                       ),
                     ],
@@ -351,7 +342,7 @@ class _MissionCard extends StatelessWidget {
                     order.pickupLandmark,
                   ),
                   stop(
-                    tokens.primary,
+                    tokens.primaryAction,
                     l10n.offerDropoff(order.recipientName),
                     order.dropoffDistrict,
                     order.dropoffLandmark,

@@ -282,17 +282,12 @@ class _DaySummary extends StatelessWidget {
         .toList();
     final sales = counted.fold(0, (sum, o) => sum + o.subtotal);
     final commission = counted.fold(0, (sum, o) => sum + o.commissionAmount);
-    final onPrimary = tokens.onPrimary;
+    final onPrimary = tokens.onPrimaryAction;
     Widget figure(String label, int amount) => Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label,
-            style: text.bodySmall!.copyWith(
-              color: onPrimary.withValues(alpha: 0.75),
-            ),
-          ),
+          Text(label, style: text.bodySmall!.copyWith(color: onPrimary)),
           const SizedBox(height: 2),
           FittedBox(
             fit: BoxFit.scaleDown,
@@ -309,17 +304,7 @@ class _DaySummary extends StatelessWidget {
       padding: const EdgeInsets.all(Space.lg),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(Radii.card),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            tokens.primary,
-            Color.alphaBlend(
-              tokens.ink.withValues(alpha: 0.35),
-              tokens.primary,
-            ),
-          ],
-        ),
+        color: tokens.primaryAction,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

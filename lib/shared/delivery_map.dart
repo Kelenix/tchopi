@@ -126,7 +126,7 @@ class _DeliveryMapState extends ConsumerState<DeliveryMap> {
                 Polyline(
                   points: route,
                   strokeWidth: 5,
-                  color: tokens.primary,
+                  color: tokens.primaryAction,
                   borderStrokeWidth: 2,
                   borderColor: tokens.surface,
                   strokeCap: StrokeCap.round,
@@ -198,11 +198,11 @@ class _DropoffMarker extends StatelessWidget {
     final tokens = context.tokens;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: tokens.primary,
+        color: tokens.primaryAction,
         shape: BoxShape.circle,
         border: Border.all(color: tokens.surface, width: 3),
       ),
-      child: Icon(Icons.home_rounded, size: 16, color: tokens.onPrimary),
+      child: Icon(Icons.home_rounded, size: 16, color: tokens.onPrimaryAction),
     );
   }
 }

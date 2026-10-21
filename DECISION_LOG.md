@@ -1138,3 +1138,14 @@
 - **Alternatives écartées** : Garder un sélecteur de services avec une seule option ; laisser le formulaire colis accessible par lien direct.
 - **Conséquences** : Parcours client mobile restaurant uniquement. Les modèles et données historiques côté backend restent compatibles avec les anciennes commandes.
 - **Impact** : fonctionnel / produit.
+
+## ADR-065 — Palette orange accessible dans les deux thèmes
+
+- **Date** : 2026-10-21
+- **Statut** : Accepté
+- **Décideur** : Propriétaire du produit
+- **Contexte** : La palette précédente mélangeait les accents verts et oranges ; les oranges clairs perdaient en lisibilité avec du texte blanc.
+- **Décision** : Utiliser `#F47B20` en clair et `#FF8A3D` en sombre pour les boutons et illustrations. Poser du texte bleu nuit sur les boutons orange. Garder un orange plus profond pour les liens, petits textes et icônes sur fond, et harmoniser fonds, surfaces, texte et statuts avec `docs/design/design-system.md`.
+- **Alternatives écartées** : Texte blanc sur les boutons orange, dont le contraste est insuffisant ; appliquer l'orange vif aux petits textes sur surface claire.
+- **Conséquences** : Les thèmes clair et sombre partagent la même identité orange ; les textes et contrôles conservent une couleur de premier plan lisible.
+- **Impact** : ergonomie / accessibilité / présentation.

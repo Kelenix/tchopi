@@ -31,7 +31,7 @@ class MediaImage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final tokens = context.tokens;
     final tints = [
-      (tokens.primarySoft, tokens.primary),
+      (tokens.primarySoft, tokens.primaryAction),
       (tokens.warningSoft, tokens.warning),
       (tokens.dangerSoft, tokens.danger),
     ];

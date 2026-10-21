@@ -102,8 +102,8 @@ class _StatusCard extends StatelessWidget {
       ),
       CourierStatus.approved => (
         Icons.verified_outlined,
-        tokens.primary,
-        tokens.primarySoft,
+        tokens.success,
+        tokens.successSoft,
         l10n.courierApprovedTitle,
         l10n.courierApprovedBody,
       ),

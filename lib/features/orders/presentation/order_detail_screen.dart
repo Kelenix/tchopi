@@ -413,8 +413,8 @@ class _CourierCard extends ConsumerWidget {
             ? null
             : IconButton.filled(
                 style: IconButton.styleFrom(
-                  backgroundColor: tokens.primary,
-                  foregroundColor: tokens.onPrimary,
+                  backgroundColor: tokens.primaryAction,
+                  foregroundColor: tokens.onPrimaryAction,
                 ),
                 tooltip: l10n.orderCourierCall,
                 icon: const Icon(Icons.call_outlined),

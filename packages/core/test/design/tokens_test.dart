@@ -24,6 +24,11 @@ void main() {
         'texte secondaire / surface': (t.muted, t.surface),
         'texte secondaire / fond': (t.muted, t.background),
         'texte sur action principale': (t.onPrimary, t.primary),
+        'texte de bouton principal': (t.onPrimaryAction, t.primaryAction),
+        'accent principal sur fond': (t.primary, t.background),
+        'accent principal sur surface': (t.primary, t.surface),
+        'accent principal sur pastille': (t.primary, t.primarySoft),
+        'succès sur fond de réussite': (t.success, t.successSoft),
         'texte sur bouton encre': (t.onInk, t.ink),
         'pastille active': (t.primary, t.primarySoft),
         'pastille attente': (t.warning, t.warningSoft),
@@ -44,5 +49,23 @@ void main() {
 
   test('le thème expose ses jetons', () {
     expect(AppTheme.light.extension<AppTokens>(), AppTokens.light);
+  });
+
+  test('la palette Tchopi demandée est présente dans les deux thèmes', () {
+    expect(AppTokens.light.primaryAction, const Color(0xFFF47B20));
+    expect(AppTokens.light.background, const Color(0xFFFAF8F5));
+    expect(AppTokens.light.surface, const Color(0xFFFFFFFF));
+    expect(AppTokens.light.ink, const Color(0xFF16202A));
+    expect(AppTokens.dark.primaryAction, const Color(0xFFFF8A3D));
+    expect(AppTokens.dark.background, const Color(0xFF101418));
+  });
+
+  test('les boutons principaux utilisent les couleurs lisibles des jetons', () {
+    for (final theme in [AppTheme.light, AppTheme.dark]) {
+      final style = theme.filledButtonTheme.style!;
+      final tokens = theme.extension<AppTokens>()!;
+      expect(style.backgroundColor!.resolve({}), tokens.primaryAction);
+      expect(style.foregroundColor!.resolve({}), tokens.onPrimaryAction);
+    }
   });
 }

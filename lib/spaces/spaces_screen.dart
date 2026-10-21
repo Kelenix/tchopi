@@ -32,10 +32,10 @@ class SpacesScreen extends ConsumerWidget {
           vertical: Space.sm,
         ),
         leading: CircleAvatar(
-          backgroundColor: selected ? tokens.primary : tokens.primarySoft,
+          backgroundColor: selected ? tokens.primaryAction : tokens.primarySoft,
           child: Icon(
             icon,
-            color: selected ? tokens.onPrimary : tokens.primary,
+            color: selected ? tokens.onPrimaryAction : tokens.primary,
           ),
         ),
         title: Text(title, style: Theme.of(context).textTheme.titleMedium),

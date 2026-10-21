@@ -18,7 +18,7 @@ Future<bool> showConfirmSheet(
     builder: (context) {
       final tokens = context.tokens;
       final text = Theme.of(context).textTheme;
-      final accent = destructive ? tokens.danger : tokens.primary;
+      final accent = destructive ? tokens.danger : tokens.primaryAction;
       return SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(
@@ -61,7 +61,7 @@ Future<bool> showConfirmSheet(
                         backgroundColor: accent,
                         foregroundColor: destructive
                             ? tokens.surface
-                            : tokens.onPrimary,
+                            : tokens.onPrimaryAction,
                       ),
                       onPressed: () => Navigator.pop(context, true),
                       child: Text(confirmLabel),

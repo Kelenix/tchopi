@@ -59,10 +59,12 @@ class ClientNavBar extends ConsumerWidget {
                     child: Transform.translate(
                       offset: const Offset(0, -14),
                       child: Material(
-                        color: tokens.primary,
+                        color: tokens.primaryAction,
                         shape: const CircleBorder(),
                         elevation: 6,
-                        shadowColor: tokens.primary.withValues(alpha: 0.6),
+                        shadowColor: tokens.primaryAction.withValues(
+                          alpha: 0.6,
+                        ),
                         child: InkWell(
                           customBorder: const CircleBorder(),
                           onTap: () => context.go(homePath),
@@ -73,7 +75,7 @@ class ClientNavBar extends ConsumerWidget {
                               child: Icon(
                                 Icons.add_rounded,
                                 size: 30,
-                                color: tokens.onPrimary,
+                                color: tokens.onPrimaryAction,
                               ),
                             ),
                           ),

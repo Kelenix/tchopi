@@ -455,7 +455,7 @@ class _ProductTile extends ConsumerWidget {
                     right: -Space.xs,
                     bottom: -Space.xs,
                     child: Material(
-                      color: tokens.primary,
+                      color: tokens.primaryAction,
                       shape: CircleBorder(
                         side: BorderSide(color: tokens.surface, width: 3),
                       ),
@@ -470,7 +470,7 @@ class _ProductTile extends ConsumerWidget {
                             dimension: 40,
                             child: Icon(
                               hasOptions ? Icons.tune_rounded : Icons.add,
-                              color: tokens.onPrimary,
+                              color: tokens.onPrimaryAction,
                             ),
                           ),
                         ),
@@ -561,7 +561,7 @@ class _CartBar extends ConsumerWidget {
             children: [
               DecoratedBox(
                 decoration: BoxDecoration(
-                  color: tokens.onPrimary.withValues(alpha: 0.18),
+                  color: tokens.surface.withValues(alpha: 0.18),
                   borderRadius: BorderRadius.circular(Radii.chip),
                 ),
                 child: Padding(

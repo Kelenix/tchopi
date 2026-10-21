@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Couleurs du design system (`docs/design/design-system.md` §1), en clair et en sombre (maquette, ADR-038).
+/// Couleurs du design system (`docs/design/design-system.md` §1), en clair et en sombre (ADR-038, ADR-065).
 /// Les écrans les lisent via `context.tokens` ; aucune couleur n'est écrite en dur ailleurs.
 @immutable
 class AppTokens extends ThemeExtension<AppTokens> {
@@ -14,8 +14,11 @@ class AppTokens extends ThemeExtension<AppTokens> {
     required this.muted,
     required this.primary,
     required this.onPrimary,
+    required this.primaryAction,
+    required this.onPrimaryAction,
     required this.primarySoft,
     required this.success,
+    required this.successSoft,
     required this.progress,
     required this.warning,
     required this.warningSoft,
@@ -32,8 +35,11 @@ class AppTokens extends ThemeExtension<AppTokens> {
   final Color muted;
   final Color primary;
   final Color onPrimary;
+  final Color primaryAction;
+  final Color onPrimaryAction;
   final Color primarySoft;
   final Color success;
+  final Color successSoft;
   final Color progress;
   final Color warning;
   final Color warningSoft;
@@ -41,37 +47,43 @@ class AppTokens extends ThemeExtension<AppTokens> {
   final Color dangerSoft;
 
   static const light = AppTokens(
-    background: Color(0xFFF5F6F3),
+    background: Color(0xFFFAF8F5),
     surface: Color(0xFFFFFFFF),
-    surfaceAlt: Color(0xFFEEF1EC),
-    border: Color(0xFFE4E7E2),
-    ink: Color(0xFF0F1412),
+    surfaceAlt: Color(0xFFF2EEE8),
+    border: Color(0xFFE5DED7),
+    ink: Color(0xFF16202A),
     onInk: Color(0xFFFFFFFF),
-    muted: Color(0xFF646B78),
-    primary: Color(0xFFC2410C),
+    muted: Color(0xFF59636E),
+    primary: Color(0xFFB94A12),
     onPrimary: Color(0xFFFFFFFF),
-    primarySoft: Color(0xFFFFF1E6),
-    success: Color(0xFF16A34A),
+    primaryAction: Color(0xFFF47B20),
+    onPrimaryAction: Color(0xFF16202A),
+    primarySoft: Color(0xFFFFF0E4),
+    success: Color(0xFF15803D),
+    successSoft: Color(0xFFEAF6EE),
     progress: Color(0xFF22C55E),
     warning: Color(0xFF9A4A07),
     warningSoft: Color(0xFFFCEFD9),
-    danger: Color(0xFFC81E1E),
+    danger: Color(0xFFB42318),
     dangerSoft: Color(0xFFFDE7E7),
   );
 
-  /// Thème sombre de la maquette (`docs/design/maquette.html`) : fond presque noir, vert éclairci.
+  /// Thème sombre : fond bleu nuit, texte clair et accent orange à contraste renforcé.
   static const dark = AppTokens(
-    background: Color(0xFF0C110E),
-    surface: Color(0xFF151B17),
-    surfaceAlt: Color(0xFF1E2621),
-    border: Color(0xFF2A332D),
-    ink: Color(0xFFEEF2EE),
-    onInk: Color(0xFF0F1412),
-    muted: Color(0xFF9AA39C),
-    primary: Color(0xFFFF8A3D),
-    onPrimary: Color(0xFF1A0D04),
-    primarySoft: Color(0xFF3A2112),
+    background: Color(0xFF101418),
+    surface: Color(0xFF1A222B),
+    surfaceAlt: Color(0xFF232C36),
+    border: Color(0xFF37424D),
+    ink: Color(0xFFF6F7F8),
+    onInk: Color(0xFF101418),
+    muted: Color(0xFFA7B0BA),
+    primary: Color(0xFFFF9F5C),
+    onPrimary: Color(0xFF201109),
+    primaryAction: Color(0xFFFF8A3D),
+    onPrimaryAction: Color(0xFF201109),
+    primarySoft: Color(0xFF3A2518),
     success: Color(0xFF4ADE80),
+    successSoft: Color(0xFF163123),
     progress: Color(0xFF22C55E),
     warning: Color(0xFFFBBF24),
     warningSoft: Color(0xFF33270F),
@@ -81,25 +93,33 @@ class AppTokens extends ThemeExtension<AppTokens> {
 
   // Les jetons sont fixes : aucune variante locale n'est prévue.
   @override
-  AppTokens copyWith({Color? primary, Color? onPrimary, Color? primarySoft}) =>
-      AppTokens(
-        background: background,
-        surface: surface,
-        surfaceAlt: surfaceAlt,
-        border: border,
-        ink: ink,
-        onInk: onInk,
-        muted: muted,
-        primary: primary ?? this.primary,
-        onPrimary: onPrimary ?? this.onPrimary,
-        primarySoft: primarySoft ?? this.primarySoft,
-        success: success,
-        progress: progress,
-        warning: warning,
-        warningSoft: warningSoft,
-        danger: danger,
-        dangerSoft: dangerSoft,
-      );
+  AppTokens copyWith({
+    Color? primary,
+    Color? onPrimary,
+    Color? primaryAction,
+    Color? onPrimaryAction,
+    Color? primarySoft,
+  }) => AppTokens(
+    background: background,
+    surface: surface,
+    surfaceAlt: surfaceAlt,
+    border: border,
+    ink: ink,
+    onInk: onInk,
+    muted: muted,
+    primary: primary ?? this.primary,
+    onPrimary: onPrimary ?? this.onPrimary,
+    primaryAction: primaryAction ?? this.primaryAction,
+    onPrimaryAction: onPrimaryAction ?? this.onPrimaryAction,
+    primarySoft: primarySoft ?? this.primarySoft,
+    success: success,
+    successSoft: successSoft,
+    progress: progress,
+    warning: warning,
+    warningSoft: warningSoft,
+    danger: danger,
+    dangerSoft: dangerSoft,
+  );
 
   @override
   AppTokens lerp(AppTokens? other, double t) {
@@ -115,8 +135,11 @@ class AppTokens extends ThemeExtension<AppTokens> {
       muted: mix(muted, other.muted),
       primary: mix(primary, other.primary),
       onPrimary: mix(onPrimary, other.onPrimary),
+      primaryAction: mix(primaryAction, other.primaryAction),
+      onPrimaryAction: mix(onPrimaryAction, other.onPrimaryAction),
       primarySoft: mix(primarySoft, other.primarySoft),
       success: mix(success, other.success),
+      successSoft: mix(successSoft, other.successSoft),
       progress: mix(progress, other.progress),
       warning: mix(warning, other.warning),
       warningSoft: mix(warningSoft, other.warningSoft),

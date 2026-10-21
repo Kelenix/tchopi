@@ -163,7 +163,7 @@ class OrderStatusChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final tokens = context.tokens;
     final (color, soft) = switch (status) {
-      OrderStatus.delivered => (tokens.success, tokens.primarySoft),
+      OrderStatus.delivered => (tokens.success, tokens.successSoft),
       OrderStatus.rejected ||
       OrderStatus.cancelled ||
       OrderStatus.failed => (tokens.danger, tokens.dangerSoft),

@@ -1,33 +1,36 @@
 # Design system
 
-> Phase 3 (rôle : UI/UX Designer). **Valeurs définitives** (elles remplacent la proposition de `direction.md` §3).
+> Phase 3 (rôle : UI/UX Designer). Valeurs actuelles de la palette Tchopi, ajustées pour garder un contraste lisible dans les deux thèmes.
 > Implémentation : `packages/core/lib/src/design/` — `ThemeData` Material 3 **clair et sombre** au choix de l’utilisateur (ADR-038) + extension de thème `AppTokens`.
 > Aucune couleur, taille ou durée en dur dans les écrans. Maquette : `docs/design/maquette.html`.
 
 ## 1. Couleurs
 
-| Jeton | Valeur | Usage |
-|-------|--------|-------|
-| `background` | `#F5F6F3` | Fond des écrans |
-| `surface` | `#FFFFFF` | Cartes, feuilles, barres |
-| `surfaceAlt` | `#EEF1EC` | Champs, pastilles, tuiles d'icône |
-| `border` | `#E4E7E2` | Séparateurs, contours |
-| `ink` | `#0F1412` | Texte principal ; bouton pilule secondaire |
-| `onInk` | `#FFFFFF` | Texte sur `ink` |
-| `muted` | `#646B78` | Texte secondaire (AA sur `surface` et `background`) |
-| `primary` | `#0B5D3B` | Action principale, éléments actifs |
-| `onPrimary` | `#FFFFFF` | Texte sur `primary` (≥ 7:1) |
-| `primarySoft` | `#E3F1E9` | Fond d'élément actif, pastilles de statut |
-| `success` | `#16A34A` | Réussite, montants encaissés, action centrale |
-| `progress` | `#22C55E` | Remplissage des barres (jamais de texte dessus) |
-| `warning` | `#9A4A07` | En attente, alertes |
-| `warningSoft` | `#FCEFD9` | Fond des pastilles « en attente » |
-| `danger` | `#C81E1E` | Annulation, erreurs, montants remboursés |
-| `dangerSoft` | `#FDE7E7` | Fond des pastilles et feuilles d'annulation |
+| Jeton | Clair | Sombre | Usage |
+|-------|-------|--------|-------|
+| `background` | `#FAF8F5` | `#101418` | Fond des écrans |
+| `surface` | `#FFFFFF` | `#1A222B` | Cartes, feuilles, barres |
+| `surfaceAlt` | `#F2EEE8` | `#232C36` | Champs, pastilles, tuiles d'icône |
+| `border` | `#E5DED7` | `#37424D` | Séparateurs, contours |
+| `ink` | `#16202A` | `#F6F7F8` | Texte principal ; bouton secondaire |
+| `onInk` | `#FFFFFF` | `#101418` | Texte sur `ink` |
+| `muted` | `#59636E` | `#A7B0BA` | Texte secondaire |
+| `primary` | `#B94A12` | `#FF9F5C` | Icônes et texte de marque, contrastés sur les surfaces |
+| `onPrimary` | `#FFFFFF` | `#201109` | Contenu sur `primary` |
+| `primaryAction` | `#F47B20` | `#FF8A3D` | Boutons principaux, accents et illustrations |
+| `onPrimaryAction` | `#16202A` | `#201109` | Libellé et icône sur bouton orange |
+| `primarySoft` | `#FFF0E4` | `#3A2518` | Fonds d'éléments actifs et pastilles de marque |
+| `success` | `#15803D` | `#4ADE80` | Réussite et montants encaissés |
+| `successSoft` | `#EAF6EE` | `#163123` | Fond des indicateurs de réussite |
+| `progress` | `#22C55E` | `#22C55E` | Remplissage des barres (jamais de texte dessus) |
+| `warning` | `#9A4A07` | `#FBBF24` | En attente, alertes |
+| `warningSoft` | `#FCEFD9` | `#33270F` | Fond des pastilles « en attente » |
+| `danger` | `#B42318` | `#F87171` | Annulation, erreurs, montants remboursés |
+| `dangerSoft` | `#FDE7E7` | `#3A1717` | Fond des pastilles et feuilles d'annulation |
 
-Les contrastes texte / fond de ce tableau sont vérifiés automatiquement (`packages/core/test/design/tokens_test.dart`).
+Les contrastes du texte et des boutons sur leurs fonds sont vérifiés automatiquement (`packages/core/test/design/tokens_test.dart`). Les boutons orange utilisent un texte bleu nuit foncé afin de rester lisibles avec les oranges de marque.
 
-Règles : une seule action `primary` par écran ; les états (réussi, attente, erreur) combinent toujours couleur **et**
+Règles : une seule action `primaryAction` par écran ; les états (réussi, attente, erreur) combinent toujours couleur **et**
 icône ou texte (jamais la couleur seule) ; les photos ne portent jamais de texte sans dégradé de lisibilité.
 
 ## 2. Typographie — Plus Jakarta Sans (embarquée)
@@ -67,7 +70,7 @@ Retour haptique léger : ajout au panier, acceptation d'une offre, code juste ; 
 
 | Composant | Variantes | États |
 |-----------|-----------|-------|
-| `AppButton` | plein `primary` · pilule `ink` · contour · texte · danger | normal, appuyé, désactivé, chargement (indicateur, libellé conservé) |
+| `AppButton` | plein `primaryAction` · pilule `ink` · contour · texte · danger | normal, appuyé, désactivé, chargement (indicateur, libellé conservé) |
 | `AppTextField` | texte · téléphone (indicatif) · mot de passe · montant | vide, focus, rempli, erreur (message sous le champ), désactivé |
 | `CodeInput` | 4 cases (livraison) · 6 cases (OTP) | saisie, erreur (secousse), succès, verrouillé |
 | `HeroOrderCard` | repas · colis | en attente, en cours (barre de progression), alerte (recherche longue) |

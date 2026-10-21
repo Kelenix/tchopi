@@ -289,8 +289,8 @@ class _Stop extends StatelessWidget {
             ? null
             : IconButton.filled(
                 style: IconButton.styleFrom(
-                  backgroundColor: tokens.primary,
-                  foregroundColor: tokens.onPrimary,
+                  backgroundColor: tokens.primaryAction,
+                  foregroundColor: tokens.onPrimaryAction,
                 ),
                 tooltip: l10n.missionCall,
                 icon: const Icon(Icons.call_outlined),

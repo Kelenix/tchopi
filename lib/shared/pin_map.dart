@@ -142,7 +142,7 @@ class _Pin extends StatelessWidget {
                     width: _head,
                     height: _head,
                     decoration: BoxDecoration(
-                      color: tokens.primary,
+                      color: tokens.primaryAction,
                       shape: BoxShape.circle,
                       border: Border.all(color: tokens.surface, width: 3),
                       boxShadow: [
@@ -164,7 +164,11 @@ class _Pin extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Container(width: 3, height: _stem, color: tokens.primary),
+                  Container(
+                    width: 3,
+                    height: _stem,
+                    color: tokens.primaryAction,
+                  ),
                 ],
               ),
             ),
