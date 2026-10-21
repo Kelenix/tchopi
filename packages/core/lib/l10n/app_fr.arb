@@ -491,7 +491,7 @@
   "failureCashDue": "Reversez d'abord les espèces encaissées.",
   "fieldIdType": "Pièce d'identité",
   "fieldIdNumber": "Numéro de la pièce",
-  "fieldResidence": "Adresse de résidence",
+  "courierPersonalInfo": "Nom, téléphone et ville : dans Mon compte",
   "courierIdHint": "À pied ou à vélo, votre pièce d'identité est vérifiée automatiquement.",
   "courierFormatExample": "Exemple : {example}",
   "@courierFormatExample": {"placeholders": {"example": {"type": "String"}}},

@@ -27,7 +27,6 @@ class _CourierProfileScreenState extends ConsumerState<CourierProfileScreen> {
   final _form = GlobalKey<FormState>();
   final _plate = TextEditingController();
   final _idNumber = TextEditingController();
-  final _residence = TextEditingController();
   String _idType = 'cni';
   List<IdentityFormat> _formats = const [];
   String? _zoneId;
@@ -64,7 +63,6 @@ class _CourierProfileScreenState extends ConsumerState<CourierProfileScreen> {
         _formats = formats;
         _idType = mine?.idType ?? _idType;
         _idNumber.text = mine?.idNumber ?? '';
-        _residence.text = mine?.residence ?? '';
       });
     } on AppFailure {
       // Sans les formats, seul le serveur vérifie (message d'erreur à l'envoi).
@@ -125,7 +123,6 @@ class _CourierProfileScreenState extends ConsumerState<CourierProfileScreen> {
   void dispose() {
     _plate.dispose();
     _idNumber.dispose();
-    _residence.dispose();
     super.dispose();
   }
 
@@ -163,7 +160,6 @@ class _CourierProfileScreenState extends ConsumerState<CourierProfileScreen> {
             plate: _plate.text,
             idType: _idType,
             idNumber: _idNumber.text,
-            residence: _residence.text.trim(),
             newPhoto: _newPhoto,
             currentPhotoPath: _existing?.photoPath,
           );
@@ -333,16 +329,14 @@ class _CourierProfileScreenState extends ConsumerState<CourierProfileScreen> {
                       : null,
                 ),
               ],
+              // Nom, téléphone et ville : ceux du compte (une seule fiche personnelle), modifiables dans Mon compte.
               const SizedBox(height: Space.lg),
-              TextFormField(
-                controller: _residence,
-                maxLength: 160,
-                decoration: InputDecoration(
-                  labelText: l10n.fieldResidence,
-                  prefixIcon: const Icon(Icons.home_outlined),
-                ),
-                validator: (value) =>
-                    (value?.trim().length ?? 0) < 3 ? l10n.errorRequired : null,
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Icon(Icons.badge_outlined, color: tokens.primary),
+                title: Text(l10n.courierPersonalInfo),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.push(AppRoutes.account),
               ),
               if (_error != null) ...[
                 const SizedBox(height: Space.lg),

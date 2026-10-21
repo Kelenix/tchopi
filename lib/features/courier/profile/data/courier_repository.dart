@@ -28,7 +28,6 @@ class CourierRepository {
     String? plate,
     String? idType,
     String? idNumber,
-    String? residence,
     Uint8List? newPhoto,
     String? currentPhotoPath,
   }) => guardCall(() async {
@@ -52,7 +51,6 @@ class CourierRepository {
         'p_photo_path': photoPath,
         'p_id_type': vehicle.needsPlate ? null : idType,
         'p_id_number': vehicle.needsPlate ? null : idNumber,
-        'p_residence': residence,
       },
     );
     return Courier.fromJson(row);
@@ -63,11 +61,11 @@ class CourierRepository {
     () => _client.storage.from(_bucket).createSignedUrl(path, 3600),
   );
 
-  /// Pièce d'identité et adresse enregistrées (hors du modèle partagé `Courier`).
+  /// Pièce d'identité enregistrée (hors du modèle partagé `Courier`).
   Future<CourierIdentity?> fetchIdentity(String userId) => guardCall(() async {
     final row = await _client
         .from('couriers')
-        .select('id_type, id_number, residence')
+        .select('id_type, id_number')
         .eq('user_id', userId)
         .maybeSingle();
     return row == null
@@ -75,7 +73,6 @@ class CourierRepository {
         : (
             idType: row['id_type'] as String?,
             idNumber: row['id_number'] as String?,
-            residence: row['residence'] as String?,
           );
   });
 
@@ -103,11 +100,7 @@ class CourierRepository {
       guardCall(() => _client.rpc<void>('delete_courier_profile'));
 }
 
-typedef CourierIdentity = ({
-  String? idType,
-  String? idNumber,
-  String? residence,
-});
+typedef CourierIdentity = ({String? idType, String? idNumber});
 typedef IdentityFormat = ({
   String code,
   String kind,

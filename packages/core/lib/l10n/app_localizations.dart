@@ -2302,11 +2302,11 @@ abstract class AppLocalizations {
   /// **'Numéro de la pièce'**
   String get fieldIdNumber;
 
-  /// No description provided for @fieldResidence.
+  /// No description provided for @courierPersonalInfo.
   ///
   /// In fr, this message translates to:
-  /// **'Adresse de résidence'**
-  String get fieldResidence;
+  /// **'Nom, téléphone et ville : dans Mon compte'**
+  String get courierPersonalInfo;
 
   /// No description provided for @courierIdHint.
   ///

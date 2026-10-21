@@ -1223,7 +1223,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get fieldIdNumber => 'Numéro de la pièce';
 
   @override
-  String get fieldResidence => 'Adresse de résidence';
+  String get courierPersonalInfo => 'Nom, téléphone et ville : dans Mon compte';
 
   @override
   String get courierIdHint =>

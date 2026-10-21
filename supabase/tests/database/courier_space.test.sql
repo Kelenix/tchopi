@@ -27,8 +27,9 @@ select throws_ok($$ select pg_temp.submit('on_foot', null, 'cni', '12345') $$, '
 select throws_ok($$ select pg_temp.submit('bicycle', null, 'passport', 'CI0012345678') $$, 'P0001', 'invalid_id_number',
   'numéro qui ne correspond pas au type de pièce refusé');
 select lives_ok($$ select pg_temp.submit('on_foot', null, 'cni', 'CI 001 234 5678') $$, 'CNI biométrique acceptée');
-select is((select id_number || ' / ' || coalesce(plate_number, '-') || ' / ' || residence from public.couriers),
-  'CI0012345678 / - / Lobia, près du marché', 'pièce normalisée, sans plaque, adresse enregistrée');
+select is((select c.id_number || ' / ' || coalesce(c.plate_number, '-') || ' / ' || p.city
+             from public.couriers c join public.profiles p on p.id = c.user_id),
+  'CI0012345678 / - / Lobia, près du marché', 'pièce normalisée, sans plaque, ville enregistrée sur le compte');
 
 -- Changement sensible d'un livreur approuvé : revalidation.
 reset role;
