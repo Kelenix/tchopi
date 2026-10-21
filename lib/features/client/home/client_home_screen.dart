@@ -469,8 +469,8 @@ class _CardSkeleton extends StatelessWidget {
         child: Row(
           children: [
             Container(
-            width: 76,
-            height: 76,
+              width: 76,
+              height: 76,
               decoration: BoxDecoration(
                 color: tokens.surfaceAlt,
                 borderRadius: BorderRadius.circular(Radii.field),

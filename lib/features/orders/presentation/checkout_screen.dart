@@ -276,20 +276,16 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                           _Summary(quote: quote),
                           if (method != null) ...[
                             const Divider(height: Space.lg),
-                            Row(
-                              children: [
-                                Icon(
-                                  paymentIcon(method),
-                                  color: tokens.primary,
-                                ),
-                                const SizedBox(width: Space.sm),
-                                Expanded(
-                                  child: Text(
-                                    selectedPaymentLabel!,
-                                    style: text.labelLarge,
-                                  ),
-                                ),
-                              ],
+                            ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: Icon(
+                                paymentIcon(method),
+                                color: tokens.primary,
+                              ),
+                              title: Text(
+                                selectedPaymentLabel!,
+                                style: text.labelLarge,
+                              ),
                             ),
                           ],
                         ],
