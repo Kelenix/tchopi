@@ -57,7 +57,7 @@ class FeaturedDishes extends ConsumerWidget {
       children: [
         SectionHeader(title: l10n.homeFeaturedTitle),
         SizedBox(
-          height: 184,
+          height: 206,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             clipBehavior: Clip.none,
