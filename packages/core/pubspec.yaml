@@ -1,5 +1,5 @@
 name: core
-description: Code partagé par les apps Client, Livreur et Back-office.
+description: Code partagé par les espaces Client, Livreur, Établissement et Administration de Tchopi.
 publish_to: none
 resolution: workspace
 

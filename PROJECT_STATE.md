@@ -6,7 +6,7 @@
 ## Snapshot
 
 - **Phase courante** : 5 — Qualité & performance faite · Inc-12 (carte Stripe) livré, à brancher sur vos clés · back-end en ligne sur https://api.tchopi.com (VPS partagé, ADR-031) ; app web sur tchopi.com et Play Store à venir
-- **Dernière mise à jour** : 2026-10-20
+- **Dernière mise à jour** : 2026-10-21
 - **Santé** : 🟢 OK · serveur en ligne ; inscriptions réservées aux numéros autorisés (pas encore de SMS)
 - **Prochaine action** : phase 6 (publication : signature, fiche Play Store) ; essais réels Stripe et nyole dès réception de vos clés de test (tâche manuelle n° 1)
 - **Plan de référence** : `docs/plan-de-realisation.md` · Design : `docs/design/design-system.md`
@@ -43,7 +43,7 @@ Flutter 3.41.9 · Dart 3.11.5 · Supabase CLI 2.116.0 · Docker 29.8.2 · Java 2
 | Inc-3 | Profils livreurs, validation admin, gestion utilisateurs | COU-01 à 04, ADM-02 | §2.3, §6.D | M | ✅ |
 | Inc-4 | Restaurants et catalogue | RES-01 à 05 | §3.1, §6.C | M | ✅ |
 | Inc-5 | Commande de repas (client + restaurant) | ORD-01 à 13 | §3.1, §6.A | L | ✅ |
-| Inc-6 | Livraison de colis | PAR-01 à 05 | §3.2 | M | ✅ |
+| Inc-6 | Livraison de colis | PAR-01 à 05 | §3.2 | M | ⏸️ Exclu du produit actuel (ADR-064) ; données historiques conservées |
 | Inc-7 | En ligne, attribution, supervision, paramètres | COU-05, DIS-01 à 04, ADM-03, ADM-05 | §4.1 | L | ✅ |
 | Inc-8 | Mission livreur, code de livraison, échecs | MIS-01 à 10 | §4.2, §4.5 | L | ✅ |
 | Inc-9 | Suivi temps réel, chronologie, notifications | TRK-01 à 03, NOT-01 à 04 | §4.3, §4.4, §4.6 | L | ✅ (push : Firebase à créer) |
@@ -60,7 +60,7 @@ TRV-01, TRV-05 et TRV-07 (réseau, erreurs, API documentée) s'appliquent à cha
 |-------|-------|---------------|
 | J0 | Inc-0 | Les 3 apps démarrent avec le design system ; API en HTTPS sur le VPS ; CI verte |
 | J1 — fin INTAKE phase 1 | Inc-3 | Inscription email / téléphone, adresses validées par zone, livreur approuvé par l'admin |
-| J2 — fin INTAKE phase 2 | Inc-6 | Commande de repas reçue et préparée par le restaurant ; demande de colis estimée et confirmée (espèces) |
+| J2 — fin INTAKE phase 2 | Inc-5 | Commande de repas reçue et préparée par le restaurant |
 | J3 — fin INTAKE phase 3 | Inc-9 | Scénarios S1, S2 et S5 de bout en bout en espèces, avec suivi temps réel et notifications |
 | J4 — fin INTAKE phase 4 | Inc-13 | Scénarios S3, S4, S6 ; **MVP complet** |
 | J5 | Phases 5–7 | Mesures de performance, revue sécurité, builds signés, test interne Google Play |
@@ -87,6 +87,7 @@ validation de la maquette → code des écrans à partir de l'Inc-1. Registre de
 
 ## Journal de session (résumé court, le plus récent en haut)
 
+- 2026-10-21 — Parcours mobile restaurant uniquement (ADR-064) : bouton central redirigé directement vers le catalogue, points d'entrée colis retirés et anciens liens renvoyés vers l'accueil. L'action « Personnaliser » est maintenant visible pour les produits avec options. Palette de marque à valider avant harmonisation du thème.
 - 2026-10-20 — Notifications : autorisation demandée à l'ouverture (ADR-041), configuration Firebase dans `Env`,
   `vps.ps1 notifications` (compte de service). Audit avant production (`docs/audit-mise-en-production.md`) : 4 points
   bloquants (inscription publique, signature Play Store, textes juridiques, paiements réels) ; bug corrigé : le

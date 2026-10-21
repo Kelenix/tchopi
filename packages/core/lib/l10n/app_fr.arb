@@ -416,6 +416,7 @@
   "optionsInCart": "{count} dans le panier",
   "@optionsInCart": {"placeholders": {"count": {"type": "int"}}},
   "productAddTooltip": "Ajouter au panier",
+  "productCustomize": "Personnaliser",
   "checkoutTitle": "Votre commande",
   "checkoutDeliverTo": "Livrer à",
   "checkoutChangeAddress": "Changer",
@@ -647,11 +648,7 @@
       }
     }
   },
-  "newOrderTitle": "Que voulez-vous faire ?",
   "newOrderFood": "Commander un repas",
-  "newOrderFoodBody": "Les restaurants ouverts près de vous",
-  "newOrderParcel": "Envoyer un colis",
-  "newOrderParcelBody": "D'un point à un autre, en ville",
   "paymentsTitle": "Paiements",
   "paymentsMethods": "Moyens de paiement",
   "paymentsHistory": "Historique",

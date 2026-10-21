@@ -1,5 +1,5 @@
 name: tchopi
-description: App Tchopi — livraison de repas et de colis (espaces Client, Livreur, Restaurant, Admin).
+description: App Tchopi — livraison de repas (espaces Client, Livreur, Établissement et Administration).
 publish_to: 'none'
 version: 0.1.0+1
 

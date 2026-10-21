@@ -9,7 +9,6 @@ import '../../orders/orders_providers.dart';
 import '../../orders/presentation/checkout_screen.dart';
 import '../../orders/presentation/order_detail_screen.dart';
 import '../../orders/presentation/order_widgets.dart';
-import '../../parcels/parcel_request_screen.dart';
 import '../addresses/application/addresses_providers.dart';
 import '../addresses/presentation/addresses_screen.dart';
 import '../client_nav_bar.dart';
@@ -29,8 +28,6 @@ class ClientHomeScreen extends ConsumerStatefulWidget {
 }
 
 class _ClientHomeScreenState extends ConsumerState<ClientHomeScreen> {
-  /// Titre de la liste des restaurants, cible de la tuile « Repas ».
-  final _restaurantsKey = GlobalKey();
   String _query = '';
   String? _cuisine;
 
@@ -141,60 +138,8 @@ class _ClientHomeScreenState extends ConsumerState<ClientHomeScreen> {
                   ),
                   const SizedBox(height: Space.lg),
                   const _ActiveOrders(),
-                  if (Env.parcelsEnabled)
-                    IntrinsicHeight(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Expanded(
-                            child: _ServiceCard(
-                              art: Image.asset(
-                                'assets/images/welcome-hero.jpg',
-                                package: 'core',
-                                fit: BoxFit.cover,
-                                alignment: const Alignment(-0.4, 0.55),
-                              ),
-                              title: l10n.homeServiceFood,
-                              body: l10n.homeServiceFoodBody,
-                              onTap: () {
-                                final target = _restaurantsKey.currentContext;
-                                if (target != null) {
-                                  Scrollable.ensureVisible(
-                                    target,
-                                    duration: Motion.emphasis,
-                                    curve: Motion.curve,
-                                  );
-                                }
-                              },
-                            ),
-                          ),
-                          if (Env.parcelsEnabled) ...[
-                            const SizedBox(width: Space.md),
-                            Expanded(
-                              child: _ServiceCard(
-                                art: ColoredBox(
-                                  color: tokens.primarySoft,
-                                  child: Icon(
-                                    Icons.inventory_2_outlined,
-                                    size: 36,
-                                    color: tokens.primary,
-                                  ),
-                                ),
-                                title: l10n.homeServiceParcel,
-                                body: l10n.homeServiceParcelBody,
-                                onTap: () =>
-                                    context.push(ParcelRequestScreen.path),
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
                   if (all.isNotEmpty) FeaturedDishes(zoneId: all.first.zoneId),
-                  SectionHeader(
-                    key: _restaurantsKey,
-                    title: l10n.homeRestaurants,
-                  ),
+                  SectionHeader(title: l10n.homeRestaurants),
                   if (cuisines.length > 1)
                     SizedBox(
                       height: 44,
@@ -399,48 +344,6 @@ class _AddressCard extends ConsumerWidget {
                 ),
               ),
               Icon(Icons.keyboard_arrow_down_rounded, color: tokens.primary),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Tuile de service (maquette) : illustration, titre, description.
-class _ServiceCard extends StatelessWidget {
-  const _ServiceCard({
-    required this.art,
-    required this.title,
-    required this.body,
-    this.onTap,
-  });
-
-  final Widget art;
-  final String title;
-  final String body;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final tokens = context.tokens;
-    final text = Theme.of(context).textTheme;
-    return Card(
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(Space.md),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(Radii.field),
-                child: SizedBox(height: 88, child: art),
-              ),
-              const SizedBox(height: Space.md),
-              Text(title, style: text.titleMedium),
-              const SizedBox(height: 2),
-              Text(body, style: text.bodySmall!.copyWith(color: tokens.muted)),
             ],
           ),
         ),

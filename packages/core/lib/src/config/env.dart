@@ -68,10 +68,6 @@ abstract final class Env {
     defaultValue: 'tchopi',
   );
 
-  /// Service colis (ADR-043) : en pause, la plateforme se concentre sur la restauration ; le serveur refuse aussi
-  /// les colis tant que `settings.parcels_enabled` est faux.
-  static const parcelsEnabled = bool.fromEnvironment('PARCELS');
-
   static bool get pushConfigured =>
       firebaseApiKey.isNotEmpty &&
       firebaseAppId.isNotEmpty &&

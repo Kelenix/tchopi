@@ -14,80 +14,9 @@ class ClientNavBar extends ConsumerWidget {
   static const homePath = '/home';
   static const ordersPath = '/orders';
   static const paymentsPath = '/payments';
-  static const parcelPath = '/parcel/new';
 
   /// 0 = Accueil, 1 = Commandes, 2 = Paiements.
   final int current;
-
-  Future<void> _newOrder(BuildContext context) async {
-    final l10n = AppLocalizations.of(context);
-    final tokens = context.tokens;
-    Widget option({
-      required IconData icon,
-      required String title,
-      required String body,
-      required VoidCallback onTap,
-    }) => Card(
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: Space.lg,
-          vertical: Space.sm,
-        ),
-        leading: CircleAvatar(
-          radius: 24,
-          backgroundColor: tokens.primarySoft,
-          child: Icon(icon, color: tokens.primary),
-        ),
-        title: Text(title),
-        subtitle: Text(body),
-        trailing: const Icon(Icons.chevron_right_rounded),
-        onTap: onTap,
-      ),
-    );
-    await showModalBottomSheet<void>(
-      context: context,
-      builder: (sheet) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(
-            Space.screen,
-            0,
-            Space.screen,
-            Space.lg,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                l10n.newOrderTitle,
-                style: Theme.of(sheet).textTheme.titleLarge,
-              ),
-              const SizedBox(height: Space.lg),
-              option(
-                icon: Icons.ramen_dining_outlined,
-                title: l10n.newOrderFood,
-                body: l10n.newOrderFoodBody,
-                onTap: () {
-                  Navigator.pop(sheet);
-                  context.go(homePath);
-                },
-              ),
-              const SizedBox(height: Space.md),
-              option(
-                icon: Icons.inventory_2_outlined,
-                title: l10n.newOrderParcel,
-                body: l10n.newOrderParcelBody,
-                onTap: () {
-                  Navigator.pop(sheet);
-                  context.push(parcelPath);
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -136,9 +65,9 @@ class ClientNavBar extends ConsumerWidget {
                         shadowColor: tokens.primary.withValues(alpha: 0.6),
                         child: InkWell(
                           customBorder: const CircleBorder(),
-                          onTap: () => _newOrder(context),
+                          onTap: () => context.go(homePath),
                           child: Tooltip(
-                            message: l10n.newOrderTitle,
+                            message: l10n.newOrderFood,
                             child: SizedBox.square(
                               dimension: 58,
                               child: Icon(

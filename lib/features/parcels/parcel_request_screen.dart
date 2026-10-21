@@ -8,7 +8,6 @@ import 'package:uuid/uuid.dart';
 
 import '../../shared/pin_map.dart';
 import '../client/addresses/application/addresses_providers.dart';
-import '../client/client_nav_bar.dart';
 import '../client/payments/payments_providers.dart';
 import '../client/payments/presentation/payment_choice.dart';
 import '../orders/orders_providers.dart';
@@ -19,7 +18,7 @@ import '../orders/presentation/order_widgets.dart';
 class ParcelRequestScreen extends ConsumerStatefulWidget {
   const ParcelRequestScreen({super.key});
 
-  static const path = ClientNavBar.parcelPath;
+  static const path = '/parcel/new';
 
   @override
   ConsumerState<ParcelRequestScreen> createState() =>

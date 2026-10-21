@@ -288,14 +288,27 @@ class _ProductTile extends ConsumerWidget {
   final Restaurant? restaurant;
 
   Future<void> _add(BuildContext context, WidgetRef ref, Restaurant r) async {
+    // Attendre les options : un appui pendant leur chargement ne doit jamais ajouter le plat
+    // directement sans les choix obligatoires ou les suppléments.
+    final List<OptionGroup> groups;
+    try {
+      groups =
+          (await ref.read(productOptionsProvider(r.id).future))[product.id] ??
+          const [];
+    } catch (error) {
+      if (!context.mounted) return;
+      final l10n = AppLocalizations.of(context);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(failureMessage(l10n, error))));
+      return;
+    }
+    if (!context.mounted) return;
     final cart = ref.read(cartControllerProvider.notifier);
-    // Produit avec options (taille, suppléments) : choix avant l'ajout.
-    final groups =
-        ref.read(productOptionsProvider(r.id)).value?[product.id] ?? const [];
     var options = const <ChosenOption>[];
     if (groups.isNotEmpty) {
       final picked = await pickOptions(context, product, groups);
-      if (picked == null || !context.mounted) return;
+      if (!context.mounted || picked == null) return;
       options = picked;
     }
     if (cart.add(r, product, options: options)) {
@@ -367,6 +380,41 @@ class _ProductTile extends ConsumerWidget {
                       fontFeatures: const [FontFeature.tabularFigures()],
                     ),
                   ),
+                  if (hasOptions) ...[
+                    const SizedBox(height: Space.xs),
+                    Semantics(
+                      button: orderable,
+                      label: l10n.productCustomize,
+                      child: InkWell(
+                        onTap: orderable ? () => _add(context, ref, r) : null,
+                        borderRadius: BorderRadius.circular(Radii.chip),
+                        child: SizedBox(
+                          height: 48,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.tune_rounded,
+                                size: 18,
+                                color: orderable
+                                    ? tokens.primary
+                                    : tokens.muted,
+                              ),
+                              const SizedBox(width: Space.xs),
+                              Text(
+                                l10n.productCustomize,
+                                style: text.labelLarge!.copyWith(
+                                  color: orderable
+                                      ? tokens.primary
+                                      : tokens.muted,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                   // Avec options : chaque ajout ouvre le choix ; les quantités se règlent dans le panier.
                   if (quantity > 0 && hasOptions) ...[
                     const SizedBox(height: Space.sm),
@@ -415,10 +463,15 @@ class _ProductTile extends ConsumerWidget {
                         customBorder: const CircleBorder(),
                         onTap: () => _add(context, ref, r),
                         child: Tooltip(
-                          message: l10n.productAddTooltip,
+                          message: hasOptions
+                              ? l10n.productCustomize
+                              : l10n.productAddTooltip,
                           child: SizedBox.square(
                             dimension: 40,
-                            child: Icon(Icons.add, color: tokens.onPrimary),
+                            child: Icon(
+                              hasOptions ? Icons.tune_rounded : Icons.add,
+                              color: tokens.onPrimary,
+                            ),
                           ),
                         ),
                       ),

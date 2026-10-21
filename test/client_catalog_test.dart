@@ -6,6 +6,7 @@ import 'package:tchopi/features/client/addresses/application/addresses_providers
 import 'package:tchopi/features/client/home/catalog_providers.dart';
 import 'package:tchopi/features/client/home/client_home_screen.dart';
 import 'package:tchopi/features/client/home/featured_dishes.dart';
+import 'package:tchopi/features/client/home/product_options.dart';
 import 'package:tchopi/features/client/home/restaurant_detail_screen.dart';
 import 'package:tchopi/features/restaurant/restaurant_providers.dart';
 
@@ -43,7 +44,11 @@ class _FakeAddresses extends Addresses {
   ];
 }
 
-Widget app(Widget home) => ProviderScope(
+Widget app(
+  Widget home, {
+  Map<String, List<OptionGroup>> options = const {},
+  Duration optionsDelay = Duration.zero,
+}) => ProviderScope(
   overrides: [
     currentProfileProvider.overrideWith(_FakeProfile.new),
     addressesProvider.overrideWith(_FakeAddresses.new),
@@ -63,6 +68,12 @@ Widget app(Widget home) => ProviderScope(
       ],
     ),
     catalogRestaurantProvider('r1').overrideWith((ref) async => restaurant),
+    productOptionsProvider('r1').overrideWith((ref) async {
+      if (optionsDelay != Duration.zero) {
+        await Future<void>.delayed(optionsDelay);
+      }
+      return options;
+    }),
     restaurantMenuProvider('r1').overrideWith(
       (ref) async => (
         categories: [const MenuCategory(id: 'c1', name: 'Plats')],
@@ -112,6 +123,78 @@ void main() {
     expect(find.text('Maquis Chez Tante'), findsWidgets);
     expect(find.text('Ivoirien · Cocody'), findsOneWidget);
     expect(find.text('Ouvert'), findsOneWidget);
+    expect(find.text('Envoyer un colis'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('un produit personnalisable affiche son action et ses choix', (
+    tester,
+  ) async {
+    tester.view
+      ..physicalSize = const Size(800, 2400)
+      ..devicePixelRatio = 2;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      app(
+        const RestaurantDetailScreen(restaurantId: 'r1'),
+        options: {
+          'p1': [
+            (
+              id: 'g1',
+              name: 'Suppléments',
+              minChoices: 0,
+              maxChoices: 2,
+              options: [
+                (id: 'o1', name: 'Avocat', priceDelta: 200, isAvailable: true),
+              ],
+            ),
+          ],
+        },
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Personnaliser'), findsOneWidget);
+    await tester.tap(find.text('Personnaliser'));
+    await tester.pumpAndSettle();
+    expect(find.text('Suppléments'), findsOneWidget);
+    expect(find.text('Avocat'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('un appui pendant le chargement attend les options du produit', (
+    tester,
+  ) async {
+    tester.view
+      ..physicalSize = const Size(800, 2400)
+      ..devicePixelRatio = 2;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      app(
+        const RestaurantDetailScreen(restaurantId: 'r1'),
+        options: {
+          'p1': [
+            (
+              id: 'g1',
+              name: 'Taille',
+              minChoices: 1,
+              maxChoices: 1,
+              options: [
+                (id: 'o1', name: 'Grande', priceDelta: 500, isAvailable: true),
+              ],
+            ),
+          ],
+        },
+        optionsDelay: const Duration(seconds: 1),
+      ),
+    );
+    await tester.pump();
+    await tester.tap(find.byTooltip('Ajouter au panier'));
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Taille'), findsOneWidget);
+    expect(find.text('Grande'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 

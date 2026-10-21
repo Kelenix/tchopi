@@ -2002,6 +2002,12 @@ abstract class AppLocalizations {
   /// **'Ajouter au panier'**
   String get productAddTooltip;
 
+  /// No description provided for @productCustomize.
+  ///
+  /// In fr, this message translates to:
+  /// **'Personnaliser'**
+  String get productCustomize;
+
   /// No description provided for @checkoutTitle.
   ///
   /// In fr, this message translates to:
@@ -3028,35 +3034,11 @@ abstract class AppLocalizations {
   /// **'Étape {step} sur {total}'**
   String orderStep(int step, int total);
 
-  /// No description provided for @newOrderTitle.
-  ///
-  /// In fr, this message translates to:
-  /// **'Que voulez-vous faire ?'**
-  String get newOrderTitle;
-
   /// No description provided for @newOrderFood.
   ///
   /// In fr, this message translates to:
   /// **'Commander un repas'**
   String get newOrderFood;
-
-  /// No description provided for @newOrderFoodBody.
-  ///
-  /// In fr, this message translates to:
-  /// **'Les restaurants ouverts près de vous'**
-  String get newOrderFoodBody;
-
-  /// No description provided for @newOrderParcel.
-  ///
-  /// In fr, this message translates to:
-  /// **'Envoyer un colis'**
-  String get newOrderParcel;
-
-  /// No description provided for @newOrderParcelBody.
-  ///
-  /// In fr, this message translates to:
-  /// **'D\'un point à un autre, en ville'**
-  String get newOrderParcelBody;
 
   /// No description provided for @paymentsTitle.
   ///

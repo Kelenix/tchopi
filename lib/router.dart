@@ -18,7 +18,6 @@ import 'features/client/addresses/presentation/addresses_screen.dart';
 import 'features/client/home/client_home_screen.dart';
 import 'features/client/home/restaurant_detail_screen.dart';
 import 'features/client/payments/payments_screen.dart';
-import 'features/parcels/parcel_request_screen.dart';
 import 'features/courier/missions/presentation/courier_home_screen.dart';
 import 'features/courier/missions/presentation/declined_offers_screen.dart';
 import 'features/courier/missions/presentation/history_screen.dart';
@@ -123,10 +122,8 @@ GoRouter router(Ref ref) => buildAppRouter(
       path: PaymentsScreen.path,
       builder: (_, _) => const PaymentsScreen(),
     ),
-    GoRoute(
-      path: ParcelRequestScreen.path,
-      builder: (_, _) => const ParcelRequestScreen(),
-    ),
+    // Ancien lien mobile : le service colis est retiré, on revient au catalogue de restaurants.
+    GoRoute(path: '/parcel/new', redirect: (_, _) => ClientHomeScreen.path),
     GoRoute(
       path: OrderDetailScreen.path,
       builder: (_, state) =>

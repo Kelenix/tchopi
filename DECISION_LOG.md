@@ -1127,3 +1127,14 @@
 ## ADR-063 — Adresses publiques lisibles (slugs)
 - **Décision** : `restaurants.slug` et `zones.slug` générés par le serveur à partir du nom (sans accent, tirets), uniques (homonyme : `-ville`, puis `-ville-2`…). Les UUID restent les clés internes. Un renommage change le slug et garde l'ancien dans `restaurant_slug_redirects`, réservé à cet établissement.
 - **Web** : `/etablissements/<slug>`, `/?ville=<slug>`, `?categorie=<slug>`, ancres `#boissons` et `#plat-garba`. Le proxy répond 301 pour les anciens liens (UUID, ancien nom, ville en UUID) ; les anciennes ancres `#cat-<uuid>` / `#produit-<uuid>` restent posées dans la page.
+
+## ADR-064 — Parcours mobile limité à la restauration
+
+- **Date** : 2026-10-21
+- **Statut** : Accepté
+- **Décideur** : Propriétaire du produit
+- **Contexte** : Le service colis est écarté ; l'application mobile se concentre sur la commande et la livraison de repas.
+- **Décision** : Retirer les points d'entrée colis de l'accueil et du bouton central. Le bouton central ouvre directement le catalogue des restaurants. Les anciens liens mobiles `/parcel/new` redirigent vers l'accueil restaurant.
+- **Alternatives écartées** : Garder un sélecteur de services avec une seule option ; laisser le formulaire colis accessible par lien direct.
+- **Conséquences** : Parcours client mobile restaurant uniquement. Les modèles et données historiques côté backend restent compatibles avec les anciennes commandes.
+- **Impact** : fonctionnel / produit.

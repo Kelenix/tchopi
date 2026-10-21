@@ -1045,6 +1045,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get productAddTooltip => 'Ajouter au panier';
 
   @override
+  String get productCustomize => 'Personnaliser';
+
+  @override
   String get checkoutTitle => 'Votre commande';
 
   @override
@@ -1615,19 +1618,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get newOrderTitle => 'Que voulez-vous faire ?';
-
-  @override
   String get newOrderFood => 'Commander un repas';
-
-  @override
-  String get newOrderFoodBody => 'Les restaurants ouverts près de vous';
-
-  @override
-  String get newOrderParcel => 'Envoyer un colis';
-
-  @override
-  String get newOrderParcelBody => 'D\'un point à un autre, en ville';
 
   @override
   String get paymentsTitle => 'Paiements';
