@@ -48,7 +48,6 @@ class _SplashOverlayState extends State<SplashOverlay>
   @override
   Widget build(BuildContext context) {
     if (_done) return widget.child;
-    final tokens = context.tokens;
     return Stack(
       children: [
         widget.child,
@@ -69,14 +68,26 @@ class _SplashOverlayState extends State<SplashOverlay>
             final bump = t < 0.5 ? math.sin(t * 60) * 2.5 * (1 - t / 0.5) : 0.0;
             return Opacity(
               opacity: fade,
-              child: ColoredBox(
-                color: Colors.white,
+              // Fond aux couleurs du logo (dégradé orange chaud), logo en grand.
+              child: DecoratedBox(
+                decoration: const BoxDecoration(
+                  gradient: RadialGradient(
+                    center: Alignment(0, -0.2),
+                    radius: 1.1,
+                    colors: [
+                      Color(0xFFFFB347),
+                      Color(0xFFF26B0F),
+                      Color(0xFF8A2E06),
+                    ],
+                    stops: [0, 0.55, 1],
+                  ),
+                ),
                 child: LayoutBuilder(
                   builder: (context, box) {
-                    final width = math.min(box.maxWidth * 0.78, 360.0);
+                    final width = math.min(box.maxWidth * 0.92, 460.0);
                     final x =
                         (box.maxWidth - width) / 2 - (1 - ride) * box.maxWidth;
-                    final top = box.maxHeight * 0.36;
+                    final top = box.maxHeight * 0.3;
                     return Stack(
                       children: [
                         for (final (dy, len) in const [
@@ -97,10 +108,8 @@ class _SplashOverlayState extends State<SplashOverlay>
                                   borderRadius: BorderRadius.circular(3),
                                   gradient: LinearGradient(
                                     colors: [
-                                      const Color(
-                                        0xFFFFB300,
-                                      ).withValues(alpha: 0),
-                                      const Color(0xFFFF8A00),
+                                      Colors.white.withValues(alpha: 0),
+                                      Colors.white.withValues(alpha: 0.9),
                                     ],
                                   ),
                                 ),
@@ -124,7 +133,10 @@ class _SplashOverlayState extends State<SplashOverlay>
                                 AppLocalizations.of(context).splashTagline,
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context).textTheme.titleMedium!
-                                    .copyWith(color: tokens.muted),
+                                    .copyWith(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w700,
+                                    ),
                               ),
                             ),
                           ),

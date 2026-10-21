@@ -145,247 +145,265 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
   ) {
     final tokens = context.tokens;
     final text = Theme.of(context).textTheme;
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    // Voile sur la photo dans la couleur du fond : clair en thème clair, sombre en thème sombre.
+    final veil = tokens.surface;
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.dark,
+      value: dark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
       child: Scaffold(
         backgroundColor: tokens.surface,
-        body: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: SizedBox(
-                height: 280,
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Image.asset(
-                      'assets/images/welcome-hero.jpg',
-                      package: 'core',
-                      fit: BoxFit.cover,
-                    ),
-                    DecoratedBox(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.white.withValues(alpha: 0.55),
-                            Colors.white.withValues(alpha: 0.8),
-                          ],
+        // Photo et logo sur ~45 % de l'écran, puis la feuille de connexion qui la chevauche et descend jusqu'en bas.
+        body: LayoutBuilder(
+          builder: (context, box) => SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: box.maxHeight * 0.45,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Image.asset(
+                        'assets/images/welcome-hero.jpg',
+                        package: 'core',
+                        fit: BoxFit.cover,
+                      ),
+                      DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              veil.withValues(alpha: 0.35),
+                              veil.withValues(alpha: 0.85),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    const SafeArea(child: Center(child: BrandLogo(width: 240))),
-                  ],
+                      const SafeArea(
+                        child: Center(child: BrandLogo(width: 280)),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: Transform.translate(
-                offset: const Offset(0, -Radii.sheet),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: tokens.surface,
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(Radii.sheet),
+                Container(
+                  transform: Matrix4.translationValues(0, -Radii.sheet, 0),
+                  constraints: BoxConstraints(
+                    minHeight: box.maxHeight * 0.55 + Radii.sheet,
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: tokens.surface,
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(Radii.sheet),
+                      ),
                     ),
-                  ),
-                  padding: const EdgeInsets.fromLTRB(
-                    Space.xl,
-                    Space.xl,
-                    Space.xl,
-                    Space.lg,
-                  ),
-                  child: SafeArea(
-                    top: false,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        if (config?.bannerTitle != null) ...[
-                          _Banner(
-                            title: config!.bannerTitle!,
-                            body: config.bannerBody,
+                    padding: const EdgeInsets.fromLTRB(
+                      Space.xl,
+                      Space.xl,
+                      Space.xl,
+                      Space.lg,
+                    ),
+                    child: SafeArea(
+                      top: false,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          if (config?.bannerTitle != null) ...[
+                            _Banner(
+                              title: config!.bannerTitle!,
+                              body: config.bannerBody,
+                            ),
+                            const SizedBox(height: Space.xl),
+                          ],
+                          Text(
+                            l10n.authWelcome,
+                            textAlign: TextAlign.center,
+                            style: text.headlineMedium!.copyWith(
+                              fontSize: 32,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: -0.8,
+                            ),
+                          ),
+                          const SizedBox(height: Space.xs),
+                          Text(
+                            l10n.authPhonePrompt,
+                            textAlign: TextAlign.center,
+                            style: text.bodyMedium!.copyWith(
+                              color: tokens.muted,
+                            ),
                           ),
                           const SizedBox(height: Space.xl),
-                        ],
-                        Text(
-                          l10n.authWelcome,
-                          textAlign: TextAlign.center,
-                          style: text.headlineMedium,
-                        ),
-                        const SizedBox(height: Space.xs),
-                        Text(
-                          l10n.authPhonePrompt,
-                          textAlign: TextAlign.center,
-                          style: text.bodyMedium!.copyWith(color: tokens.muted),
-                        ),
-                        const SizedBox(height: Space.xl),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: 124,
-                              child:
-                                  DropdownButtonFormField<
-                                    (IsoCode, String, String)
-                                  >(
-                                    initialValue: _country,
-                                    isExpanded: true,
-                                    borderRadius: BorderRadius.circular(
-                                      Radii.field,
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: 124,
+                                child:
+                                    DropdownButtonFormField<
+                                      (IsoCode, String, String)
+                                    >(
+                                      initialValue: _country,
+                                      isExpanded: true,
+                                      borderRadius: BorderRadius.circular(
+                                        Radii.field,
+                                      ),
+                                      decoration: InputDecoration(
+                                        labelText: l10n.authCountry,
+                                      ),
+                                      items: [
+                                        for (final c in _countries)
+                                          DropdownMenuItem(
+                                            value: c,
+                                            child: Text('${c.$2} ${c.$3}'),
+                                          ),
+                                      ],
+                                      onChanged: busy
+                                          ? null
+                                          : (c) =>
+                                                setState(() => _country = c!),
                                     ),
-                                    decoration: InputDecoration(
-                                      labelText: l10n.authCountry,
+                              ),
+                              const SizedBox(width: Space.md),
+                              Expanded(
+                                child: TextField(
+                                  controller: _phone,
+                                  enabled: !busy,
+                                  keyboardType: TextInputType.phone,
+                                  autofillHints: const [
+                                    AutofillHints.telephoneNumberNational,
+                                  ],
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                      RegExp(r'[0-9 ]'),
                                     ),
-                                    items: [
-                                      for (final c in _countries)
-                                        DropdownMenuItem(
-                                          value: c,
-                                          child: Text('${c.$2} ${c.$3}'),
-                                        ),
-                                    ],
-                                    onChanged: busy
-                                        ? null
-                                        : (c) => setState(() => _country = c!),
+                                  ],
+                                  decoration: InputDecoration(
+                                    labelText: l10n.authPhone,
+                                    errorText: _invalid
+                                        ? l10n.authPhoneInvalid
+                                        : null,
                                   ),
-                            ),
-                            const SizedBox(width: Space.md),
-                            Expanded(
-                              child: TextField(
-                                controller: _phone,
-                                enabled: !busy,
-                                keyboardType: TextInputType.phone,
-                                autofillHints: const [
-                                  AutofillHints.telephoneNumberNational,
-                                ],
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                    RegExp(r'[0-9 ]'),
-                                  ),
-                                ],
-                                decoration: InputDecoration(
-                                  labelText: l10n.authPhone,
-                                  errorText: _invalid
-                                      ? l10n.authPhoneInvalid
+                                  onChanged: (_) => _invalid
+                                      ? setState(() => _invalid = false)
                                       : null,
                                 ),
-                                onChanged: (_) => _invalid
-                                    ? setState(() => _invalid = false)
-                                    : null,
+                              ),
+                            ],
+                          ),
+                          if (!phoneEnabled) ...[
+                            const SizedBox(height: Space.sm),
+                            Text(
+                              l10n.authPhoneUnavailable,
+                              style: text.bodySmall!.copyWith(
+                                color: tokens.muted,
                               ),
                             ),
                           ],
-                        ),
-                        if (!phoneEnabled) ...[
-                          const SizedBox(height: Space.sm),
+                          const SizedBox(height: Space.lg),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: config?.whatsapp ?? false
+                                    ? OutlinedButton(
+                                        onPressed: busy || !phoneEnabled
+                                            ? null
+                                            : () => _sendCode(whatsapp: false),
+                                        child: Text(l10n.authBySms),
+                                      )
+                                    : FilledButton(
+                                        onPressed: busy || !phoneEnabled
+                                            ? null
+                                            : () => _sendCode(whatsapp: false),
+                                        child: Text(l10n.authBySms),
+                                      ),
+                              ),
+                              if (config?.whatsapp ?? false) ...[
+                                const SizedBox(width: Space.md),
+                                Expanded(
+                                  child: FilledButton(
+                                    onPressed: busy || !phoneEnabled
+                                        ? null
+                                        : () => _sendCode(whatsapp: true),
+                                    child: Text(l10n.authByWhatsapp),
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                          if (submission.hasError) ...[
+                            const SizedBox(height: Space.md),
+                            Text(
+                              failureMessage(l10n, submission.error),
+                              textAlign: TextAlign.center,
+                              style: text.labelLarge!.copyWith(
+                                color: tokens.danger,
+                              ),
+                            ),
+                          ],
+                          const SizedBox(height: Space.xl),
+                          Row(
+                            children: [
+                              const Expanded(child: Divider()),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: Space.md,
+                                ),
+                                child: Text(
+                                  l10n.authOr,
+                                  style: text.bodySmall!.copyWith(
+                                    color: tokens.muted,
+                                  ),
+                                ),
+                              ),
+                              const Expanded(child: Divider()),
+                            ],
+                          ),
+                          const SizedBox(height: Space.xl),
+                          OutlinedButton.icon(
+                            onPressed: busy ? null : _google,
+                            icon: const _GoogleMark(),
+                            label: Text(l10n.authGoogle),
+                          ),
+                          const SizedBox(height: Space.md),
+                          TextButton.icon(
+                            onPressed: () => setState(() => _others = !_others),
+                            iconAlignment: IconAlignment.end,
+                            icon: Icon(
+                              _others ? Icons.expand_less : Icons.expand_more,
+                            ),
+                            label: Text(l10n.authOtherMethods),
+                          ),
+                          if (_others) ...[
+                            OutlinedButton(
+                              onPressed: busy
+                                  ? null
+                                  : () => context.push('/sign-in'),
+                              child: Text(l10n.authEmailSignIn),
+                            ),
+                            const SizedBox(height: Space.sm),
+                            OutlinedButton(
+                              onPressed: busy
+                                  ? null
+                                  : () => context.push('/sign-up'),
+                              child: Text(l10n.authEmailSignUp),
+                            ),
+                          ],
+                          const SizedBox(height: Space.xl),
                           Text(
-                            l10n.authPhoneUnavailable,
+                            l10n.authTerms,
+                            textAlign: TextAlign.center,
                             style: text.bodySmall!.copyWith(
                               color: tokens.muted,
                             ),
                           ),
                         ],
-                        const SizedBox(height: Space.lg),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: config?.whatsapp ?? false
-                                  ? OutlinedButton(
-                                      onPressed: busy || !phoneEnabled
-                                          ? null
-                                          : () => _sendCode(whatsapp: false),
-                                      child: Text(l10n.authBySms),
-                                    )
-                                  : FilledButton(
-                                      onPressed: busy || !phoneEnabled
-                                          ? null
-                                          : () => _sendCode(whatsapp: false),
-                                      child: Text(l10n.authBySms),
-                                    ),
-                            ),
-                            if (config?.whatsapp ?? false) ...[
-                              const SizedBox(width: Space.md),
-                              Expanded(
-                                child: FilledButton(
-                                  onPressed: busy || !phoneEnabled
-                                      ? null
-                                      : () => _sendCode(whatsapp: true),
-                                  child: Text(l10n.authByWhatsapp),
-                                ),
-                              ),
-                            ],
-                          ],
-                        ),
-                        if (submission.hasError) ...[
-                          const SizedBox(height: Space.md),
-                          Text(
-                            failureMessage(l10n, submission.error),
-                            textAlign: TextAlign.center,
-                            style: text.labelLarge!.copyWith(
-                              color: tokens.danger,
-                            ),
-                          ),
-                        ],
-                        const SizedBox(height: Space.xl),
-                        Row(
-                          children: [
-                            const Expanded(child: Divider()),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: Space.md,
-                              ),
-                              child: Text(
-                                l10n.authOr,
-                                style: text.bodySmall!.copyWith(
-                                  color: tokens.muted,
-                                ),
-                              ),
-                            ),
-                            const Expanded(child: Divider()),
-                          ],
-                        ),
-                        const SizedBox(height: Space.xl),
-                        OutlinedButton.icon(
-                          onPressed: busy ? null : _google,
-                          icon: const _GoogleMark(),
-                          label: Text(l10n.authGoogle),
-                        ),
-                        const SizedBox(height: Space.md),
-                        TextButton.icon(
-                          onPressed: () => setState(() => _others = !_others),
-                          iconAlignment: IconAlignment.end,
-                          icon: Icon(
-                            _others ? Icons.expand_less : Icons.expand_more,
-                          ),
-                          label: Text(l10n.authOtherMethods),
-                        ),
-                        if (_others) ...[
-                          OutlinedButton(
-                            onPressed: busy
-                                ? null
-                                : () => context.push('/sign-in'),
-                            child: Text(l10n.authEmailSignIn),
-                          ),
-                          const SizedBox(height: Space.sm),
-                          OutlinedButton(
-                            onPressed: busy
-                                ? null
-                                : () => context.push('/sign-up'),
-                            child: Text(l10n.authEmailSignUp),
-                          ),
-                        ],
-                        const SizedBox(height: Space.xl),
-                        Text(
-                          l10n.authTerms,
-                          textAlign: TextAlign.center,
-                          style: text.bodySmall!.copyWith(color: tokens.muted),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Écran natif affiché avant Flutter : logo Tchopi centré sur fond blanc, relayé par l'animation (SplashOverlay). -->
+<!-- Écran natif affiché avant Flutter : logo Tchopi centré sur fond orange, relayé par l'animation (SplashOverlay). -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@android:color/white" />
+    <item><color android:color="#F26B0F" /></item>
     <item>
         <bitmap
             android:gravity="center"
