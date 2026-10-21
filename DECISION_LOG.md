@@ -6,6 +6,15 @@
 
 ---
 
+## ADR-054 — Onboarding après l'inscription (web)
+
+- **Date** : 2026-10-21 · **Statut** : Accepté (demande utilisateur) · **Décideur** : Claude (product-owner)
+- **Décision** : un nouveau compte (ni admin, ni établissement, ni livreur) choisit son parcours avant d'entrer dans
+  son espace : commander (client), inscrire son restaurant (assistant existant), devenir livreur (candidature sur le
+  web, même dossier que le mobile, validée par l'admin). `profiles.onboarded_at` (comptes existants : déjà orientés),
+  `complete_onboarding()`, champ `onboarded` dans `my_roles`.
+- **Impact** : métier (moyen), technique (faible).
+
 ## ADR-053 — Démarrage mobile : animation, connexion obligatoire, accès par téléphone
 
 - **Date** : 2026-10-21 · **Statut** : Accepté (demande utilisateur, remplace la navigation mobile sans compte) ·
