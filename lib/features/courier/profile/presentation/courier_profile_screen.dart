@@ -109,9 +109,9 @@ class _CourierProfileScreenState extends ConsumerState<CourierProfileScreen> {
     setState(() => _saving = true);
     try {
       await ref.read(courierRepositoryProvider).deleteProfile();
-      ref
-        ..invalidate(myCourierProvider)
-        ..invalidate(accountRolesProvider);
+      ref.invalidate(myCourierProvider);
+      ref.invalidate(accountRolesProvider);
+      await ref.read(accountRolesProvider.future);
       await ref.read(activeSpaceProvider.notifier).select(AppSpace.client);
       if (mounted) context.go(SpaceRoutes.entry);
     } on AppFailure catch (failure) {
@@ -167,9 +167,11 @@ class _CourierProfileScreenState extends ConsumerState<CourierProfileScreen> {
             newPhoto: _newPhoto,
             currentPhotoPath: _existing?.photoPath,
           );
-      ref
-        ..invalidate(myCourierProvider)
-        ..invalidate(accountRolesProvider);
+      // Rôles relus et attendus avant de naviguer : sinon la garde des écrans voit encore « pas de profil
+      // livreur » et renvoie au formulaire.
+      ref.invalidate(myCourierProvider);
+      ref.invalidate(accountRolesProvider);
+      await ref.read(accountRolesProvider.future);
       await ref.read(activeSpaceProvider.notifier).select(AppSpace.courier);
       if (mounted) context.go(CourierStatusScreen.path);
     } on AppFailure catch (failure) {
