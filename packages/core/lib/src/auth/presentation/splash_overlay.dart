@@ -1,13 +1,15 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../design/tokens.dart';
 import '../../design/widgets.dart';
 
-/// Animation de démarrage (ADR-053) : le livreur à moto traverse l'écran en laissant une traînée, puis le nom
-/// Tchopi apparaît. Pendant ce temps la session est relue (stockage sécurisé) et la navigation se décide en
-/// dessous : à la fin, l'accueil (session valide) ou l'écran d'accès s'affiche directement. Une fois par lancement ;
-/// réduite à un fondu si l'appareil limite les animations.
+/// Animation de démarrage (ADR-053) : le logo (livreur à moto) arrive en roulant depuis la gauche avec des traits de
+/// vitesse, freine en léger rebond, puis le slogan apparaît. Pendant ce temps la session est relue (stockage sécurisé)
+/// et la navigation se décide en dessous : à la fin, l'accueil (session valide) ou l'écran d'accès. Une fois par
+/// lancement ; réduite à un fondu si l'appareil limite les animations.
 class SplashOverlay extends StatefulWidget {
   const SplashOverlay({super.key, required this.child});
 
@@ -21,7 +23,7 @@ class _SplashOverlayState extends State<SplashOverlay>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 2400),
+    duration: const Duration(milliseconds: 2600),
   );
   bool _done = false;
 
@@ -54,81 +56,75 @@ class _SplashOverlayState extends State<SplashOverlay>
           animation: _controller,
           builder: (context, _) {
             final t = _controller.value;
-            // 0–55 % : la moto traverse ; 35–70 % : le nom apparaît ; 85–100 % : fondu vers l'app.
-            final ride = Curves.easeInOutCubic.transform(
-              (t / 0.55).clamp(0, 1),
-            );
-            final word = Curves.easeOut.transform(
-              ((t - 0.35) / 0.35).clamp(0, 1),
+            // 0–50 % : arrivée (rebond à l'arrêt) ; 30–50 % : traits de vitesse qui s'effacent ;
+            // 45–70 % : slogan ; 88–100 % : fondu vers l'app.
+            final ride = Curves.easeOutBack.transform((t / 0.5).clamp(0, 1));
+            final lines = 1 - ((t - 0.3) / 0.2).clamp(0.0, 1.0);
+            final tagline = Curves.easeOut.transform(
+              ((t - 0.45) / 0.25).clamp(0, 1),
             );
             final fade =
-                1 - Curves.easeIn.transform(((t - 0.85) / 0.15).clamp(0, 1));
+                1 - Curves.easeIn.transform(((t - 0.88) / 0.12).clamp(0, 1));
+            // Petit tressautement de la moto pendant l'arrivée.
+            final bump = t < 0.5 ? math.sin(t * 60) * 2.5 * (1 - t / 0.5) : 0.0;
             return Opacity(
               opacity: fade,
               child: ColoredBox(
-                color: tokens.primary,
+                color: Colors.white,
                 child: LayoutBuilder(
                   builder: (context, box) {
-                    final x = -120 + (box.maxWidth + 240) * ride;
+                    final width = math.min(box.maxWidth * 0.78, 360.0);
+                    final x =
+                        (box.maxWidth - width) / 2 - (1 - ride) * box.maxWidth;
+                    final top = box.maxHeight * 0.36;
                     return Stack(
                       children: [
-                        // Traînée derrière la moto.
-                        Positioned(
-                          left: 0,
-                          width: (x + 20).clamp(0, box.maxWidth),
-                          top: box.maxHeight * 0.42 + 46,
-                          height: 4,
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(2),
-                              gradient: LinearGradient(
-                                colors: [
-                                  tokens.onPrimary.withValues(alpha: 0),
-                                  tokens.onPrimary.withValues(alpha: 0.6),
-                                ],
+                        for (final (dy, len) in const [
+                          (0.18, 0.9),
+                          (0.3, 0.6),
+                          (0.42, 1.0),
+                          (0.54, 0.7),
+                        ])
+                          Positioned(
+                            left: x - width * 0.55 * len,
+                            top: top + width * 0.66 * dy,
+                            width: width * 0.55 * len,
+                            height: 6,
+                            child: Opacity(
+                              opacity: lines,
+                              child: DecoratedBox(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(3),
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      const Color(
+                                        0xFFFFB300,
+                                      ).withValues(alpha: 0),
+                                      const Color(0xFFFF8A00),
+                                    ],
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
                         Positioned(
                           left: x,
-                          top: box.maxHeight * 0.42 - 20,
-                          child: Transform.rotate(
-                            angle: -0.04 * (1 - ride),
-                            child: Icon(
-                              Icons.delivery_dining,
-                              size: 88,
-                              color: tokens.onPrimary,
-                            ),
-                          ),
+                          top: top + bump,
+                          child: BrandLogo(width: width),
                         ),
                         Positioned(
                           left: 0,
                           right: 0,
-                          top: box.maxHeight * 0.42 + 80,
+                          top: top + width * 0.7 + Space.xl,
                           child: Opacity(
-                            opacity: word,
+                            opacity: tagline,
                             child: Transform.translate(
-                              offset: Offset(0, 16 * (1 - word)),
-                              child: Column(
-                                children: [
-                                  BrandWordmark(
-                                    size: 44,
-                                    color: tokens.onPrimary,
-                                  ),
-                                  const SizedBox(height: Space.sm),
-                                  Text(
-                                    AppLocalizations.of(context).splashTagline,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(
-                                          color: tokens.onPrimary.withValues(
-                                            alpha: 0.85,
-                                          ),
-                                        ),
-                                  ),
-                                ],
+                              offset: Offset(0, 12 * (1 - tagline)),
+                              child: Text(
+                                AppLocalizations.of(context).splashTagline,
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.titleMedium!
+                                    .copyWith(color: tokens.muted),
                               ),
                             ),
                           ),

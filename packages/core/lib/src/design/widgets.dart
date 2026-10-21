@@ -130,3 +130,19 @@ class BrandWordmark extends StatelessWidget {
     );
   }
 }
+
+/// Logo officiel Tchopi (livreur à moto et nom), fond transparent.
+class BrandLogo extends StatelessWidget {
+  const BrandLogo({super.key, this.width = 220});
+
+  final double width;
+
+  @override
+  Widget build(BuildContext context) => Image.asset(
+    'assets/images/logo.png',
+    package: 'core',
+    width: width,
+    semanticLabel: AppLocalizations.of(context).appBrand,
+    filterQuality: FilterQuality.medium,
+  );
+}

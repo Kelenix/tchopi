@@ -1286,7 +1286,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get authCountry => 'Indicatif';
 
   @override
-  String get authPhone => 'Numéro de téléphone';
+  String get authPhone => 'Numéro';
 
   @override
   String get authPhoneInvalid => 'Saisissez un numéro de mobile valide';

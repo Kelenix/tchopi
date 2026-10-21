@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../../design/app_theme.dart';
 import '../../design/tokens.dart';
 import '../../design/widgets.dart';
 import '../../supabase/supabase_setup.dart';
@@ -120,15 +121,32 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final tokens = context.tokens;
-    final text = Theme.of(context).textTheme;
     final submission = ref.watch(formSubmissionProvider(_form));
     final config = ref.watch(authEntryConfigProvider).value;
     final phoneEnabled = ref.watch(loginMethodsProvider).value?.phone ?? false;
     final busy = submission.isLoading;
 
+    return Theme(
+      data: AppTheme.brand(Theme.of(context).brightness),
+      child: Builder(
+        builder: (context) =>
+            _body(context, l10n, submission, config, phoneEnabled, busy),
+      ),
+    );
+  }
+
+  Widget _body(
+    BuildContext context,
+    AppLocalizations l10n,
+    AsyncValue<void> submission,
+    AuthEntryConfig? config,
+    bool phoneEnabled,
+    bool busy,
+  ) {
+    final tokens = context.tokens;
+    final text = Theme.of(context).textTheme;
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.light,
+      value: SystemUiOverlayStyle.dark,
       child: Scaffold(
         backgroundColor: tokens.surface,
         body: CustomScrollView(
@@ -150,15 +168,13 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           colors: [
-                            Colors.black.withValues(alpha: 0.15),
-                            Colors.black.withValues(alpha: 0.55),
+                            Colors.white.withValues(alpha: 0.55),
+                            Colors.white.withValues(alpha: 0.8),
                           ],
                         ),
                       ),
                     ),
-                    const Center(
-                      child: BrandWordmark(size: 52, color: Colors.white),
-                    ),
+                    const SafeArea(child: Center(child: BrandLogo(width: 240))),
                   ],
                 ),
               ),

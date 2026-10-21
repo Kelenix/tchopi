@@ -81,7 +81,25 @@ class AppTokens extends ThemeExtension<AppTokens> {
 
   // Les jetons sont fixes : aucune variante locale n'est prévue.
   @override
-  AppTokens copyWith() => this;
+  AppTokens copyWith({Color? primary, Color? onPrimary, Color? primarySoft}) =>
+      AppTokens(
+        background: background,
+        surface: surface,
+        surfaceAlt: surfaceAlt,
+        border: border,
+        ink: ink,
+        onInk: onInk,
+        muted: muted,
+        primary: primary ?? this.primary,
+        onPrimary: onPrimary ?? this.onPrimary,
+        primarySoft: primarySoft ?? this.primarySoft,
+        success: success,
+        progress: progress,
+        warning: warning,
+        warningSoft: warningSoft,
+        danger: danger,
+        dangerSoft: dangerSoft,
+      );
 
   @override
   AppTokens lerp(AppTokens? other, double t) {

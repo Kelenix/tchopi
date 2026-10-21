@@ -511,7 +511,7 @@
   "authWelcome": "Bienvenue !",
   "authPhonePrompt": "Commençons par votre numéro de téléphone",
   "authCountry": "Indicatif",
-  "authPhone": "Numéro de téléphone",
+  "authPhone": "Numéro",
   "authPhoneInvalid": "Saisissez un numéro de mobile valide",
   "authBySms": "SMS",
   "authByWhatsapp": "WhatsApp",

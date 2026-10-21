@@ -2425,7 +2425,7 @@ abstract class AppLocalizations {
   /// No description provided for @authPhone.
   ///
   /// In fr, this message translates to:
-  /// **'Numéro de téléphone'**
+  /// **'Numéro'**
   String get authPhone;
 
   /// No description provided for @authPhoneInvalid.
