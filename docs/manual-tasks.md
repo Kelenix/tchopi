@@ -77,8 +77,13 @@
 - **Coût** : inclus dans la messagerie Hostinger, ou offre gratuite du service choisi.
 - **Vérification** : le code arrive en boîte de réception (pas en spam).
 
-## 6. Configurer l'envoi de SMS (optionnel au lancement)
-- **Pourquoi** : inscription et récupération par téléphone. Sans SMS, seule la connexion email est proposée.
+## 6. Configurer l'envoi de SMS (⚠️ requis pour l'écran d'accès mobile)
+- **Pourquoi** : l'app mobile se connecte d'abord par téléphone + code (ADR-053). Sans fournisseur SMS, le bouton
+  « SMS » reste grisé et seuls Google et l'e-mail (« Autres méthodes ») fonctionnent.
+- **WhatsApp** : une fois l'envoi WhatsApp actif chez Twilio, cocher « Proposer le code par WhatsApp » dans
+  Administration → Zones et paramètres (même endroit que la bannière promotionnelle de l'écran de connexion).
+- **Google dans l'app** : `.ps.ps1 google` (déjà requis pour le site) ; le retour `com.tchopi.mobile://login-callback`
+  est déjà autorisé par le serveur.
 - **Quand** : quand vous souhaitez activer la connexion par téléphone.
 - **Étapes** : 1. Twilio (Verify, canal SMS ou WhatsApp) **ou** une passerelle SMS locale disposant d'une API HTTP.
   2. Saisir les identifiants dans le `.env` du VPS. 3. Déclarer des **numéros de test** (code fixe) pour la revue des stores.

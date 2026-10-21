@@ -2404,6 +2404,96 @@ abstract class AppLocalizations {
   /// **'Une commande est en cours : attendez qu\'elle soit terminée pour supprimer votre compte.'**
   String get failureAccountBusy;
 
+  /// No description provided for @authWelcome.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bienvenue !'**
+  String get authWelcome;
+
+  /// No description provided for @authPhonePrompt.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commençons par votre numéro de téléphone'**
+  String get authPhonePrompt;
+
+  /// No description provided for @authCountry.
+  ///
+  /// In fr, this message translates to:
+  /// **'Indicatif'**
+  String get authCountry;
+
+  /// No description provided for @authPhone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Numéro de téléphone'**
+  String get authPhone;
+
+  /// No description provided for @authPhoneInvalid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Saisissez un numéro de mobile valide'**
+  String get authPhoneInvalid;
+
+  /// No description provided for @authBySms.
+  ///
+  /// In fr, this message translates to:
+  /// **'SMS'**
+  String get authBySms;
+
+  /// No description provided for @authByWhatsapp.
+  ///
+  /// In fr, this message translates to:
+  /// **'WhatsApp'**
+  String get authByWhatsapp;
+
+  /// No description provided for @authOr.
+  ///
+  /// In fr, this message translates to:
+  /// **'ou avec'**
+  String get authOr;
+
+  /// No description provided for @authGoogle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Continuer avec Google'**
+  String get authGoogle;
+
+  /// No description provided for @authOtherMethods.
+  ///
+  /// In fr, this message translates to:
+  /// **'Autres méthodes'**
+  String get authOtherMethods;
+
+  /// No description provided for @authEmailSignIn.
+  ///
+  /// In fr, this message translates to:
+  /// **'Se connecter avec un e-mail'**
+  String get authEmailSignIn;
+
+  /// No description provided for @authEmailSignUp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Créer un compte avec un e-mail'**
+  String get authEmailSignUp;
+
+  /// No description provided for @authPhoneUnavailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'La connexion par SMS arrive bientôt : utilisez Google ou un e-mail en attendant.'**
+  String get authPhoneUnavailable;
+
+  /// No description provided for @authTerms.
+  ///
+  /// In fr, this message translates to:
+  /// **'En continuant, vous acceptez les conditions d\'utilisation et la politique de confidentialité de Tchopi.'**
+  String get authTerms;
+
+  /// No description provided for @splashTagline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vos plats préférés, livrés chez vous'**
+  String get splashTagline;
+
   /// No description provided for @failureAlreadyAccepted.
   ///
   /// In fr, this message translates to:

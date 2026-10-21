@@ -53,6 +53,26 @@ class AuthRepository {
         : _auth.signInWithPassword(phone: id.value, password: password),
   );
 
+  /// Connexion ou inscription par téléphone : un seul parcours, le compte est créé s'il n'existe pas (sans doublon,
+  /// le numéro est unique). Le code arrive par SMS ou, si le serveur l'a activé, par WhatsApp.
+  Future<void> sendPhoneCode(String phone, {bool whatsapp = false}) =>
+      guardCall(
+        () => _auth.signInWithOtp(
+          phone: phone,
+          channel: whatsapp ? OtpChannel.whatsapp : OtpChannel.sms,
+        ),
+      );
+
+  /// Google (OAuth Supabase) : retrouve le compte lié à l'adresse Google ou le crée ; retour dans l'app par
+  /// [redirectTo] (lien profond déclaré dans l'app et autorisé sur le serveur).
+  Future<void> signInWithGoogle(String redirectTo) => guardCall(
+    () => _auth.signInWithOAuth(
+      OAuthProvider.google,
+      redirectTo: redirectTo,
+      authScreenLaunchMode: LaunchMode.externalApplication,
+    ),
+  );
+
   Future<void> verifyCode(CodeTarget target, String code) => guardCall(
     () async {
       final id = target.identifier;
@@ -61,6 +81,7 @@ class AuthRepository {
         (CodePurpose.recovery, IdentifierKind.email) => OtpType.recovery,
         (CodePurpose.loginChange, IdentifierKind.email) => OtpType.emailChange,
         (CodePurpose.loginChange, IdentifierKind.phone) => OtpType.phoneChange,
+        (CodePurpose.phoneLogin, IdentifierKind.email) => OtpType.email,
         (_, IdentifierKind.phone) => OtpType.sms,
       };
       await (id.isEmail
@@ -73,6 +94,10 @@ class AuthRepository {
     final id = target.identifier;
     return switch (target.purpose) {
       CodePurpose.recovery => requestPasswordReset(id),
+      CodePurpose.phoneLogin => sendPhoneCode(
+        id.value,
+        whatsapp: target.whatsapp,
+      ),
       CodePurpose.signup => guardCall(
         () => id.isEmail
             ? _auth.resend(type: OtpType.signup, email: id.value)

@@ -46,6 +46,13 @@ class AuthFlows {
     }
   }
 
+  Future<void> sendPhoneCode(String phone, {bool whatsapp = false}) => _ref
+      .read(authRepositoryProvider)
+      .sendPhoneCode(phone, whatsapp: whatsapp);
+
+  Future<void> signInWithGoogle(String redirectTo) =>
+      _ref.read(authRepositoryProvider).signInWithGoogle(redirectTo);
+
   Future<void> verify(CodeTarget target, String code) =>
       _ref.read(authRepositoryProvider).verifyCode(target, code);
 

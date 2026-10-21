@@ -4,20 +4,25 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tchopi/main.dart';
 
 void main() {
-  testWidgets("sans session, démarre sur l'écran de bienvenue en français", (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [sessionProvider.overrideWith((ref) => Stream.value(null))],
-        child: const MobileApp(),
-      ),
-    );
-    await tester.pumpAndSettle();
+  testWidgets(
+    "sans session : animation, puis écran d'accès (connexion obligatoire)",
+    (tester) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            sessionProvider.overrideWith((ref) => Stream.value(null)),
+          ],
+          child: const MobileApp(),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 1500));
+      expect(find.text('Vos plats préférés, livrés chez vous'), findsOneWidget);
 
-    expect(
-      find.text('Vos plats et vos colis, livrés partout dans votre ville.'),
-      findsOneWidget,
-    );
-  });
+      await tester.pumpAndSettle();
+      expect(find.text('Vos plats préférés, livrés chez vous'), findsNothing);
+      expect(find.text('Bienvenue !'), findsOneWidget);
+      expect(find.text('Continuer avec Google'), findsOneWidget);
+      expect(find.text('🇨🇮 +225'), findsOneWidget);
+    },
+  );
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../auth/presentation/splash_overlay.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../l10n/app_localizations.dart';
@@ -22,6 +23,9 @@ class AppRoot extends ConsumerWidget {
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       routerConfig: router,
+      // Animation de démarrage au-dessus de la navigation (la session se relit pendant ce temps).
+      builder: (context, child) =>
+          SplashOverlay(child: child ?? const SizedBox.shrink()),
       debugShowCheckedModeBanner: false,
     );
   }

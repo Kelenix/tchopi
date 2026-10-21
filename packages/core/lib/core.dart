@@ -10,7 +10,8 @@ export 'src/auth/domain/app_failure.dart';
 export 'src/auth/domain/login_identifier.dart';
 export 'src/auth/domain/models.dart';
 export 'src/auth/presentation/account_screen.dart' show AccountLink;
-export 'src/auth/presentation/welcome_screen.dart';
+export 'src/auth/presentation/phone_auth_screen.dart' show PhoneAuthScreen;
+export 'src/auth/presentation/splash_overlay.dart';
 export 'src/auth/presentation/widgets/auth_form_scaffold.dart'
     show failureMessage, RoundBackButton;
 export 'src/auth/presentation/widgets/confirm_sheet.dart';

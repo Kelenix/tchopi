@@ -1277,6 +1277,53 @@ class AppLocalizationsFr extends AppLocalizations {
       'Une commande est en cours : attendez qu\'elle soit terminée pour supprimer votre compte.';
 
   @override
+  String get authWelcome => 'Bienvenue !';
+
+  @override
+  String get authPhonePrompt => 'Commençons par votre numéro de téléphone';
+
+  @override
+  String get authCountry => 'Indicatif';
+
+  @override
+  String get authPhone => 'Numéro de téléphone';
+
+  @override
+  String get authPhoneInvalid => 'Saisissez un numéro de mobile valide';
+
+  @override
+  String get authBySms => 'SMS';
+
+  @override
+  String get authByWhatsapp => 'WhatsApp';
+
+  @override
+  String get authOr => 'ou avec';
+
+  @override
+  String get authGoogle => 'Continuer avec Google';
+
+  @override
+  String get authOtherMethods => 'Autres méthodes';
+
+  @override
+  String get authEmailSignIn => 'Se connecter avec un e-mail';
+
+  @override
+  String get authEmailSignUp => 'Créer un compte avec un e-mail';
+
+  @override
+  String get authPhoneUnavailable =>
+      'La connexion par SMS arrive bientôt : utilisez Google ou un e-mail en attendant.';
+
+  @override
+  String get authTerms =>
+      'En continuant, vous acceptez les conditions d\'utilisation et la politique de confidentialité de Tchopi.';
+
+  @override
+  String get splashTagline => 'Vos plats préférés, livrés chez vous';
+
+  @override
   String get failureAlreadyAccepted =>
       'Le restaurant prépare déjà votre commande. Contactez le support.';
 

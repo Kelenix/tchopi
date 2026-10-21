@@ -210,18 +210,10 @@ GoRouter router(Ref ref) => buildAppRouter(
       builder: (_, _) => const UsersAdminScreen(),
     ),
   ],
-  welcome: (context) {
-    final l10n = AppLocalizations.of(context);
-    return WelcomeScreen(
-      headline: l10n.welcomeClientHeadline,
-      subtitle: l10n.welcomeClientSubtitle,
-      features: [
-        WelcomeFeature(Icons.storefront_outlined, l10n.featureRestaurants),
-        WelcomeFeature(Icons.inventory_2_outlined, l10n.featureParcels),
-        WelcomeFeature(Icons.near_me_outlined, l10n.featureTracking),
-      ],
-    );
-  },
+  // Écran d'accès (ADR-053) ; retour de Google par le lien profond de l'app.
+  welcome: (_) => const PhoneAuthScreen(
+    oauthRedirect: 'com.tchopi.mobile://login-callback',
+  ),
 );
 
 // Un compte admin n'a que l'espace Admin : ni changement d'espace, ni commandes, ni adresses.

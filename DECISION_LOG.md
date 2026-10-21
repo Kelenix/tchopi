@@ -6,6 +6,22 @@
 
 ---
 
+## ADR-053 — Démarrage mobile : animation, connexion obligatoire, accès par téléphone
+
+- **Date** : 2026-10-21 · **Statut** : Accepté (demande utilisateur, remplace la navigation mobile sans compte) ·
+  **Décideur** : Claude (mobile, security)
+- **Décision** : animation du livreur à moto puis du nom Tchopi à chaque lancement (2,4 s, fondu court si les
+  animations sont réduites) pendant que la session est relue ; ensuite accueil (session valide) ou écran d'accès.
+  L'écran d'accès s'inspire de Glovo aux couleurs Tchopi : photo et marque en haut, bannière administrable
+  (`settings.auth_banner_*`, lue sans compte par `public_auth_config`), « Bienvenue ! », indicatif (+225 par défaut) et
+  numéro, code par SMS ou WhatsApp (si `whatsapp_otp_enabled`), Google, puis « Autres méthodes » (e-mail et mot de
+  passe). Un seul parcours téléphone (`signInWithOtp`) : connexion si le numéro existe, sinon création puis profil à
+  compléter — jamais de doublon (numéro et e-mail uniques côté Auth). Session conservée dans le stockage sécurisé et
+  renouvelée automatiquement ; renouvellement impossible ou déconnexion → écran d'accès. Le site web est inchangé.
+- **Limite** : le logo officiel n'a toujours pas été fourni en fichier : l'animation utilise un livreur vectoriel et
+  le nom Tchopi, à remplacer par le logo dès réception (`assets/brand/`).
+- **Impact** : métier (fort : connexion obligatoire), sécurité (moyen).
+
 ## ADR-052 — Espace client : photo, sécurité du compte, candidature livreur notifiée
 
 - **Date** : 2026-10-25 · **Statut** : Accepté (demande utilisateur) · **Décideur** : Claude (security, product-owner)

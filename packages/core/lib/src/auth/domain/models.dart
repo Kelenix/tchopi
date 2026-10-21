@@ -45,12 +45,23 @@ abstract class AccountRoles with _$AccountRoles {
 }
 
 /// Pourquoi un code de vérification est demandé.
-enum CodePurpose { signup, recovery, loginChange }
+/// `phoneLogin` : connexion ou inscription par code, sans mot de passe (écran d'accès, ADR-053).
+enum CodePurpose { signup, recovery, loginChange, phoneLogin }
 
 /// Destinataire et motif d'un code à 6 chiffres (écran S-03).
 class CodeTarget {
-  const CodeTarget(this.identifier, this.purpose);
+  const CodeTarget(this.identifier, this.purpose, {this.whatsapp = false});
 
   final LoginIdentifier identifier;
   final CodePurpose purpose;
+
+  /// Code envoyé par WhatsApp plutôt que par SMS (connexion par téléphone).
+  final bool whatsapp;
 }
+
+/// Écran d'accès : bannière administrable et vérification WhatsApp disponible.
+typedef AuthEntryConfig = ({
+  String? bannerTitle,
+  String? bannerBody,
+  bool whatsapp,
+});
