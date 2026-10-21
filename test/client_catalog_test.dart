@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tchopi/features/client/addresses/application/addresses_providers.dart';
 import 'package:tchopi/features/client/home/catalog_providers.dart';
 import 'package:tchopi/features/client/home/client_home_screen.dart';
+import 'package:tchopi/features/client/home/featured_dishes.dart';
 import 'package:tchopi/features/client/home/restaurant_detail_screen.dart';
 import 'package:tchopi/features/restaurant/restaurant_providers.dart';
 
@@ -47,6 +48,20 @@ Widget app(Widget home) => ProviderScope(
     currentProfileProvider.overrideWith(_FakeProfile.new),
     addressesProvider.overrideWith(_FakeAddresses.new),
     catalogRestaurantsProvider.overrideWith((ref) async => [restaurant]),
+    featuredDishesProvider('z').overrideWith(
+      (ref) async => [
+        for (final n in ['Garba', 'Alloco', 'Poulet braisé'])
+          (
+            id: n,
+            establishmentId: 'r1',
+            establishmentName: 'Maquis Chez Tante',
+            name: n,
+            price: 1500,
+            photoPath: null,
+            isOpen: true,
+          ),
+      ],
+    ),
     catalogRestaurantProvider('r1').overrideWith((ref) async => restaurant),
     restaurantMenuProvider('r1').overrideWith(
       (ref) async => (
@@ -92,8 +107,9 @@ void main() {
 
     expect(find.text('Bonjour Awa'), findsOneWidget);
     expect(find.text('Riviera 2 · Maison'), findsOneWidget);
-    expect(find.text('Repas'), findsOneWidget);
-    expect(find.text('Maquis Chez Tante'), findsOneWidget);
+    expect(find.text('Ce soir, on mange quoi ?'), findsOneWidget);
+    expect(find.text('Alloco'), findsOneWidget);
+    expect(find.text('Maquis Chez Tante'), findsWidgets);
     expect(find.text('Ivoirien · Cocody'), findsOneWidget);
     expect(find.text('Ouvert'), findsOneWidget);
     expect(tester.takeException(), isNull);

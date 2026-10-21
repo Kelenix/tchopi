@@ -1882,6 +1882,12 @@ abstract class AppLocalizations {
   /// **'Bientôt'**
   String get homeSoon;
 
+  /// No description provided for @homeFeaturedTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce soir, on mange quoi ?'**
+  String get homeFeaturedTitle;
+
   /// No description provided for @homeRestaurants.
   ///
   /// In fr, this message translates to:

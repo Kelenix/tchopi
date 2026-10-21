@@ -14,6 +14,7 @@ import '../addresses/application/addresses_providers.dart';
 import '../addresses/presentation/addresses_screen.dart';
 import '../client_nav_bar.dart';
 import 'catalog_providers.dart';
+import 'featured_dishes.dart';
 import 'restaurant_detail_screen.dart';
 
 /// C-01 : accueil client — adresse de livraison, recherche, commandes en cours, services, restaurants
@@ -140,54 +141,56 @@ class _ClientHomeScreenState extends ConsumerState<ClientHomeScreen> {
                   ),
                   const SizedBox(height: Space.lg),
                   const _ActiveOrders(),
-                  IntrinsicHeight(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Expanded(
-                          child: _ServiceCard(
-                            art: Image.asset(
-                              'assets/images/welcome-hero.jpg',
-                              package: 'core',
-                              fit: BoxFit.cover,
-                              alignment: const Alignment(-0.4, 0.55),
-                            ),
-                            title: l10n.homeServiceFood,
-                            body: l10n.homeServiceFoodBody,
-                            onTap: () {
-                              final target = _restaurantsKey.currentContext;
-                              if (target != null) {
-                                Scrollable.ensureVisible(
-                                  target,
-                                  duration: Motion.emphasis,
-                                  curve: Motion.curve,
-                                );
-                              }
-                            },
-                          ),
-                        ),
-                        if (Env.parcelsEnabled) ...[
-                          const SizedBox(width: Space.md),
+                  if (Env.parcelsEnabled)
+                    IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
                           Expanded(
                             child: _ServiceCard(
-                              art: ColoredBox(
-                                color: tokens.primarySoft,
-                                child: Icon(
-                                  Icons.inventory_2_outlined,
-                                  size: 36,
-                                  color: tokens.primary,
-                                ),
+                              art: Image.asset(
+                                'assets/images/welcome-hero.jpg',
+                                package: 'core',
+                                fit: BoxFit.cover,
+                                alignment: const Alignment(-0.4, 0.55),
                               ),
-                              title: l10n.homeServiceParcel,
-                              body: l10n.homeServiceParcelBody,
-                              onTap: () =>
-                                  context.push(ParcelRequestScreen.path),
+                              title: l10n.homeServiceFood,
+                              body: l10n.homeServiceFoodBody,
+                              onTap: () {
+                                final target = _restaurantsKey.currentContext;
+                                if (target != null) {
+                                  Scrollable.ensureVisible(
+                                    target,
+                                    duration: Motion.emphasis,
+                                    curve: Motion.curve,
+                                  );
+                                }
+                              },
                             ),
                           ),
+                          if (Env.parcelsEnabled) ...[
+                            const SizedBox(width: Space.md),
+                            Expanded(
+                              child: _ServiceCard(
+                                art: ColoredBox(
+                                  color: tokens.primarySoft,
+                                  child: Icon(
+                                    Icons.inventory_2_outlined,
+                                    size: 36,
+                                    color: tokens.primary,
+                                  ),
+                                ),
+                                title: l10n.homeServiceParcel,
+                                body: l10n.homeServiceParcelBody,
+                                onTap: () =>
+                                    context.push(ParcelRequestScreen.path),
+                              ),
+                            ),
+                          ],
                         ],
-                      ],
+                      ),
                     ),
-                  ),
+                  if (all.isNotEmpty) FeaturedDishes(zoneId: all.first.zoneId),
                   SectionHeader(
                     key: _restaurantsKey,
                     title: l10n.homeRestaurants,
@@ -235,7 +238,7 @@ class _ClientHomeScreenState extends ConsumerState<ClientHomeScreen> {
                 ),
                 AsyncData() => SliverList.separated(
                   itemCount: shown.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: Space.lg),
+                  separatorBuilder: (_, _) => const SizedBox(height: Space.sm),
                   itemBuilder: (context, index) =>
                       RestaurantCard(restaurant: shown[index]),
                 ),
@@ -461,64 +464,69 @@ class RestaurantCard extends StatelessWidget {
     final details = [?r.category, r.district].join(' · ');
 
     return Card(
+      margin: EdgeInsets.zero,
+      clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () =>
             context.push(RestaurantDetailScreen.location(r.id), extra: r),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            AspectRatio(
-              aspectRatio: 16 / 9,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Hero(
+        child: Padding(
+          padding: const EdgeInsets.all(Space.sm),
+          child: Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(Radii.field),
+                child: SizedBox.square(
+                  dimension: 92,
+                  child: Hero(
                     tag: 'cover-${r.id}',
                     child: MediaImage(path: r.coverPath, seed: r.id),
                   ),
-                  Positioned(
-                    left: Space.md,
-                    top: Space.md,
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: tokens.surface,
-                        borderRadius: BorderRadius.circular(Radii.chip),
-                      ),
-                      child: OpenBadge(restaurant: r),
+                ),
+              ),
+              const SizedBox(width: Space.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      r.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: text.titleMedium,
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(Space.lg),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(r.name, style: text.titleMedium),
-                  const SizedBox(height: 2),
-                  Text(
-                    details,
-                    style: text.bodySmall!.copyWith(color: tokens.muted),
-                  ),
-                  const SizedBox(height: Space.md),
-                  Row(
-                    children: [
-                      Icon(Icons.schedule_rounded, size: 16, color: tokens.ink),
-                      const SizedBox(width: Space.xs),
-                      Text(
-                        l10n.restaurantPrepRange(
-                          r.prepTimeMin,
-                          r.prepTimeMin + 15,
+                    const SizedBox(height: 2),
+                    Text(
+                      details,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: text.bodySmall!.copyWith(color: tokens.muted),
+                    ),
+                    const SizedBox(height: Space.sm),
+                    OpenBadge(restaurant: r),
+                    const SizedBox(height: Space.xs),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.schedule_rounded,
+                          size: 16,
+                          color: tokens.ink,
                         ),
-                        style: text.labelLarge,
-                      ),
-                    ],
-                  ),
-                ],
+                        const SizedBox(width: Space.xs),
+                        Text(
+                          l10n.restaurantPrepRange(
+                            r.prepTimeMin,
+                            r.prepTimeMin + 15,
+                          ),
+                          style: text.labelLarge,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+              Icon(Icons.chevron_right_rounded, color: tokens.muted),
+            ],
+          ),
         ),
       ),
     );
@@ -540,16 +548,21 @@ class _CardSkeleton extends StatelessWidget {
       ),
     );
     return Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AspectRatio(
-            aspectRatio: 16 / 9,
-            child: ColoredBox(color: tokens.surfaceAlt),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(Space.lg),
-            child: Column(
+      margin: EdgeInsets.zero,
+      child: Padding(
+        padding: const EdgeInsets.all(Space.sm),
+        child: Row(
+          children: [
+            Container(
+              width: 92,
+              height: 92,
+              decoration: BoxDecoration(
+                color: tokens.surfaceAlt,
+                borderRadius: BorderRadius.circular(Radii.field),
+              ),
+            ),
+            const SizedBox(width: Space.md),
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 bar(160),
@@ -557,8 +570,8 @@ class _CardSkeleton extends StatelessWidget {
                 bar(100),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

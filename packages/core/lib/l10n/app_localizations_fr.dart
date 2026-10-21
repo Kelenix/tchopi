@@ -968,6 +968,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get homeSoon => 'Bientôt';
 
   @override
+  String get homeFeaturedTitle => 'Ce soir, on mange quoi ?';
+
+  @override
   String get homeRestaurants => 'Restaurants près de vous';
 
   @override
