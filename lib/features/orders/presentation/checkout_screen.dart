@@ -288,6 +288,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                                     selectedPaymentLabel!,
                                     style: text.labelLarge,
                                   ),
+                                ),
                               ],
                             ),
                           ],

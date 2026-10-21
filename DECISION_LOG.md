@@ -1149,3 +1149,14 @@
 - **Alternatives écartées** : Texte blanc sur les boutons orange, dont le contraste est insuffisant ; appliquer l'orange vif aux petits textes sur surface claire.
 - **Conséquences** : Les thèmes clair et sombre partagent la même identité orange ; les textes et contrôles conservent une couleur de premier plan lisible.
 - **Impact** : ergonomie / accessibilité / présentation.
+
+## ADR-066 — Priorité des actions dans les espaces mobiles
+
+- **Date** : 2026-10-21
+- **Statut** : Accepté
+- **Décideur** : Propriétaire du produit
+- **Contexte** : Les écrans empilaient des informations secondaires avant les principales actions de commande et de traitement.
+- **Décision** : Placer les restaurants et leurs données disponibles (ouverture, quartier, préparation) avant le suivi et les sélections ; garder le récapitulatif du prix et du moyen de paiement visible au paiement ; placer mission, statut, prochaine action, adresses et gain avant les indicateurs du livreur ; afficher les nouvelles commandes avant le bilan du jour et rendre les commandes terminées accessibles dans leur onglet ; regrouper le menu admin par opérations, comptes et établissements, configuration. Les saisies utilisent une feuille commune et les suppressions une confirmation commune.
+- **Alternatives écartées** : Ajouter de nouveaux éléments de catalogue ou estimations qui ne proviennent pas déjà du serveur ; retirer les historiques et fonctions de refus existants.
+- **Conséquences** : Les actions principales apparaissent plus tôt et les données restent issues des sources actuelles. L’historique restaurant suit le flux existant, limité à ses 100 commandes les plus récentes.
+- **Impact** : ergonomie / accessibilité / comportement produit.

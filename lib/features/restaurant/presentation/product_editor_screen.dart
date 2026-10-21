@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../shared/dialogs.dart';
 import '../../../shared/media.dart';
 import '../restaurant_providers.dart';
 
@@ -51,40 +52,28 @@ class _ProductEditorScreenState extends ConsumerState<ProductEditorScreen> {
   String get _restaurantId => ref.read(managedRestaurantIdProvider)!;
 
   Future<void> _newCategory() async {
+    if (_saving) return;
     final l10n = AppLocalizations.of(context);
-    final controller = TextEditingController();
-    final name = await showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.categoryNew),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          textCapitalization: TextCapitalization.sentences,
-          decoration: InputDecoration(labelText: l10n.fieldCategoryName),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(l10n.actionCancel),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, controller.text.trim()),
-            child: Text(l10n.actionSave),
-          ),
-        ],
-      ),
-    ).whenComplete(controller.dispose);
+    final name = await askText(
+      context,
+      title: l10n.categoryNew,
+      label: l10n.fieldCategoryName,
+      confirmLabel: l10n.actionSave,
+      textCapitalization: TextCapitalization.sentences,
+    );
     if (name == null || name.isEmpty) return;
+    setState(() => _saving = true);
     try {
       final menu = await ref.read(restaurantMenuProvider(_restaurantId).future);
       final category = await ref
           .read(restaurantRepositoryProvider)
           .addCategory(_restaurantId, name, menu.categories.length);
       ref.invalidate(restaurantMenuProvider(_restaurantId));
-      setState(() => _categoryId = category.id);
+      if (mounted) setState(() => _categoryId = category.id);
     } on AppFailure catch (failure) {
-      setState(() => _error = failure);
+      if (mounted) setState(() => _error = failure);
+    } finally {
+      if (mounted) setState(() => _saving = false);
     }
   }
 
@@ -258,8 +247,13 @@ class _ProductEditorScreenState extends ConsumerState<ProductEditorScreen> {
                 ),
                 IconButton(
                   tooltip: l10n.categoryNew,
-                  icon: const Icon(Icons.add),
-                  onPressed: _newCategory,
+                  icon: _saving
+                      ? const SizedBox.square(
+                          dimension: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(Icons.add),
+                  onPressed: _saving ? null : _newCategory,
                 ),
               ],
             ),

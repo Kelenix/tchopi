@@ -146,8 +146,40 @@ class _MissionScreenState extends ConsumerState<MissionScreen> {
           ),
         ),
         const SizedBox(height: Space.md),
-        MissionMap(order: o),
-        const SizedBox(height: Space.lg),
+        Card(
+          color: tokens.primarySoft,
+          child: Padding(
+            padding: const EdgeInsets.all(Space.lg),
+            child: Row(
+              children: [
+                Icon(Icons.payments_outlined, color: tokens.primary),
+                const SizedBox(width: Space.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.courierMissionEarning(
+                          formatMoney(o.courierEarning),
+                        ),
+                        style: text.titleMedium,
+                      ),
+                      if (o.paymentMethod == PaymentMethod.cash &&
+                          o.paymentStatus == OrderPaymentStatus.unpaid)
+                        Text(
+                          l10n.missionCashToCollect(formatMoney(o.total)),
+                          style: text.bodyMedium!.copyWith(
+                            color: tokens.warning,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: Space.md),
         _Stop(
           title: l10n.missionPickupTitle,
           name: o.pickupName,
@@ -164,6 +196,29 @@ class _MissionScreenState extends ConsumerState<MissionScreen> {
           instructions: o.dropoffInstructions,
           phone: o.recipientPhone,
         ),
+        const SizedBox(height: Space.lg),
+        FilledButton(
+          onPressed: _busy
+              ? null
+              : !pickedUp
+              ? () => _pickup(o)
+              : o.status == OrderStatus.pickedUp
+              ? () => _run(
+                  () => ref.read(missionRepositoryProvider).startDelivery(o.id),
+                )
+              : () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(builder: (_) => CodeScreen(order: o)),
+                ),
+          child: Text(
+            !pickedUp
+                ? l10n.missionPickedUp
+                : o.status == OrderStatus.pickedUp
+                ? l10n.missionStart
+                : l10n.missionEnterCode,
+          ),
+        ),
+        const SizedBox(height: Space.md),
+        MissionMap(order: o),
         const SizedBox(height: Space.lg),
         SectionHeader(title: l10n.missionContents),
         Card(
@@ -182,14 +237,6 @@ class _MissionScreenState extends ConsumerState<MissionScreen> {
                     o.parcelDescription ?? l10n.orderParcelTitle,
                     style: text.bodyLarge,
                   ),
-                if (o.paymentMethod == PaymentMethod.cash &&
-                    o.paymentStatus == OrderPaymentStatus.unpaid) ...[
-                  const SizedBox(height: Space.sm),
-                  Text(
-                    l10n.missionCashToCollect(formatMoney(o.total)),
-                    style: text.titleMedium!.copyWith(color: tokens.warning),
-                  ),
-                ],
               ],
             ),
           ),
@@ -200,30 +247,7 @@ class _MissionScreenState extends ConsumerState<MissionScreen> {
           SectionHeader(title: l10n.orderTimeline),
           OrderTimeline(events: events),
         ],
-        const SizedBox(height: Space.xl),
-        if (!pickedUp)
-          FilledButton(
-            onPressed: _busy ? null : () => _pickup(o),
-            child: Text(l10n.missionPickedUp),
-          )
-        else if (o.status == OrderStatus.pickedUp)
-          FilledButton(
-            onPressed: _busy
-                ? null
-                : () => _run(
-                    () =>
-                        ref.read(missionRepositoryProvider).startDelivery(o.id),
-                  ),
-            child: Text(l10n.missionStart),
-          )
-        else
-          FilledButton(
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(builder: (_) => CodeScreen(order: o)),
-            ),
-            child: Text(l10n.missionEnterCode),
-          ),
-        const SizedBox(height: Space.sm),
+        const SizedBox(height: Space.lg),
         OutlinedButton(
           onPressed: _busy
               ? null

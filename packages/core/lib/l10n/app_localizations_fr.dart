@@ -1495,7 +1495,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get ordersInProgressEmpty => 'Aucune commande en cours';
 
   @override
-  String get ordersDoneEmpty => 'Aucune commande terminée aujourd\'hui';
+  String get ordersDoneEmpty => 'Aucune commande terminée dans l\'historique';
 
   @override
   String get orderAccept => 'Accepter';

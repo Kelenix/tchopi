@@ -13,8 +13,7 @@ import '../../orders/presentation/order_widgets.dart';
 import '../restaurant_providers.dart';
 import 'restaurant_scaffold.dart';
 
-/// R-01 / R-02 : commandes reçues en direct — nouvelles (délai de réponse), en cours, terminées du jour,
-/// et totaux du jour (ORD-08, ORD-09, ORD-10, ORD-13).
+/// R-01 / R-02 : commandes reçues en direct — nouvelles, en cours, historique récent et totaux du jour.
 class RestaurantOrdersScreen extends ConsumerStatefulWidget {
   const RestaurantOrdersScreen({super.key});
 
@@ -168,10 +167,11 @@ class _Body extends StatelessWidget {
       (
         l10n.ordersDone,
         l10n.ordersDoneEmpty,
-        orders.where((o) => o.status.isClosed && today(o)).toList(),
+        orders.where((o) => o.status.isClosed).toList(),
       ),
     ];
-    final (_, empty, shown) = groups[tab];
+    final (_, empty, list) = groups[tab];
+    final shown = [...list]..sort((a, b) => b.createdAt.compareTo(a.createdAt));
     const emptyIcons = [
       Icons.notifications_none_rounded,
       Icons.soup_kitchen_outlined,
@@ -216,10 +216,6 @@ class _Body extends StatelessWidget {
             Space.screen,
             Space.sm,
           ),
-          child: _DaySummary(orders: orders.where(today).toList()),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Space.screen),
           child: SegmentedButton<int>(
             showSelectedIcon: false,
             segments: [
@@ -237,25 +233,42 @@ class _Body extends StatelessWidget {
             onSelectionChanged: (value) => onTab(value.first),
           ),
         ),
+        if (tab != 0)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              Space.screen,
+              0,
+              Space.screen,
+              Space.sm,
+            ),
+            child: _DaySummary(orders: orders.where(today).toList()),
+          ),
         Expanded(
-          child: shown.isEmpty
-              ? EmptyState(
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(
+              Space.screen,
+              Space.md,
+              Space.screen,
+              Space.huge,
+            ),
+            children: [
+              if (shown.isEmpty)
+                EmptyState(
                   icon: emptyIcons[tab],
                   title: empty,
                   body: emptyBodies[tab],
                 )
-              : ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(
-                    Space.screen,
-                    Space.md,
-                    Space.screen,
-                    Space.huge,
-                  ),
-                  itemCount: shown.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: Space.md),
-                  itemBuilder: (_, index) =>
-                      _RestaurantOrderCard(order: shown[index]),
-                ),
+              else
+                for (final (index, order) in shown.indexed) ...[
+                  if (index > 0) const SizedBox(height: Space.md),
+                  _RestaurantOrderCard(order: order),
+                ],
+              if (tab == 0) ...[
+                const SizedBox(height: Space.lg),
+                _DaySummary(orders: orders.where(today).toList()),
+              ],
+            ],
+          ),
         ),
       ],
     );

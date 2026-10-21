@@ -2803,7 +2803,7 @@ abstract class AppLocalizations {
   /// No description provided for @ordersDoneEmpty.
   ///
   /// In fr, this message translates to:
-  /// **'Aucune commande terminée aujourd\'hui'**
+  /// **'Aucune commande terminée dans l\'historique'**
   String get ordersDoneEmpty;
 
   /// No description provided for @orderAccept.

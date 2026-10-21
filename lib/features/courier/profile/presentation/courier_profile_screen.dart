@@ -84,27 +84,15 @@ class _CourierProfileScreenState extends ConsumerState<CourierProfileScreen> {
 
   Future<void> _deleteProfile() async {
     final l10n = AppLocalizations.of(context);
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.courierDeleteTitle),
-        content: Text(l10n.courierDeleteBody),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(l10n.actionCancel),
-          ),
-          FilledButton(
-            style: FilledButton.styleFrom(
-              backgroundColor: context.tokens.danger,
-            ),
-            onPressed: () => Navigator.pop(context, true),
-            child: Text(l10n.courierDeleteConfirm),
-          ),
-        ],
-      ),
+    final confirmed = await showConfirmSheet(
+      context,
+      icon: Icons.person_remove_outlined,
+      title: l10n.courierDeleteTitle,
+      body: l10n.courierDeleteBody,
+      confirmLabel: l10n.courierDeleteConfirm,
+      destructive: true,
     );
-    if (confirmed != true || !mounted) return;
+    if (!confirmed || !mounted) return;
     setState(() => _saving = true);
     try {
       await ref.read(courierRepositoryProvider).deleteProfile();

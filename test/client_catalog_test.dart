@@ -123,6 +123,11 @@ void main() {
     expect(find.text('Maquis Chez Tante'), findsWidgets);
     expect(find.text('Ivoirien · Cocody'), findsOneWidget);
     expect(find.text('Ouvert'), findsOneWidget);
+    expect(
+      tester.getTopLeft(find.text('Restaurants près de vous')).dy,
+      lessThan(tester.getTopLeft(find.text('Ce soir, on mange quoi ?')).dy),
+      reason: 'la liste des restaurants doit précéder les sélections',
+    );
     expect(find.text('Envoyer un colis'), findsNothing);
     expect(tester.takeException(), isNull);
   });

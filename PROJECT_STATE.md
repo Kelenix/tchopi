@@ -87,6 +87,7 @@ validation de la maquette → code des écrans à partir de l'Inc-1. Registre de
 
 ## Journal de session (résumé court, le plus récent en haut)
 
+- 2026-10-21 — Priorité et cohérence des espaces mobiles (ADR-066) : restaurants avant les sélections, récapitulatif du paiement toujours visible, mission livreur et prochaine action mises en tête, commandes terminées accessibles depuis l'onglet Historique, nouvelles commandes restaurant prioritaires, menu Admin regroupé par tâche. Saisies et suppressions harmonisées dans les feuilles communes. Vérifié : analyse Flutter sans problème ; 77 tests réussis, 7 tests d'intégration ignorés car Supabase local n'est pas démarré.
 - 2026-10-21 — Parcours mobile restaurant uniquement (ADR-064) : bouton central redirigé directement vers le catalogue, points d'entrée colis retirés et anciens liens renvoyés vers l'accueil. L'action « Personnaliser » est maintenant visible pour les produits avec options. Palette Tchopi orange harmonisée sur les thèmes clair et sombre (ADR-065).
 - 2026-10-20 — Notifications : autorisation demandée à l'ouverture (ADR-041), configuration Firebase dans `Env`,
   `vps.ps1 notifications` (compte de service). Audit avant production (`docs/audit-mise-en-production.md`) : 4 points

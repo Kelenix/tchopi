@@ -592,7 +592,7 @@
   "ordersDone": "Terminées",
   "ordersNewEmpty": "Aucune nouvelle commande",
   "ordersInProgressEmpty": "Aucune commande en cours",
-  "ordersDoneEmpty": "Aucune commande terminée aujourd'hui",
+  "ordersDoneEmpty": "Aucune commande terminée dans l'historique",
   "orderAccept": "Accepter",
   "orderReject": "Refuser",
   "orderStartPreparing": "Lancer la préparation",

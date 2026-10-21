@@ -13,6 +13,7 @@ Future<bool> showConfirmSheet(
   required String confirmLabel,
   bool destructive = false,
 }) async {
+  var completed = false;
   final confirmed = await showModalBottomSheet<bool>(
     context: context,
     builder: (context) {
@@ -50,7 +51,11 @@ Future<bool> showConfirmSheet(
                 children: [
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: () => Navigator.pop(context, false),
+                      onPressed: () {
+                        if (completed) return;
+                        completed = true;
+                        Navigator.pop(context, false);
+                      },
                       child: Text(AppLocalizations.of(context).actionCancel),
                     ),
                   ),
@@ -63,7 +68,11 @@ Future<bool> showConfirmSheet(
                             ? tokens.surface
                             : tokens.onPrimaryAction,
                       ),
-                      onPressed: () => Navigator.pop(context, true),
+                      onPressed: () {
+                        if (completed) return;
+                        completed = true;
+                        Navigator.pop(context, true);
+                      },
                       child: Text(confirmLabel),
                     ),
                   ),

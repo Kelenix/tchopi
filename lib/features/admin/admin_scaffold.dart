@@ -16,12 +16,21 @@ class AdminSection {
 const adminSections = [
   AdminSection(Icons.insights_outlined, _dashboard, '/admin/dashboard'),
   AdminSection(Icons.receipt_long_outlined, _orders, '/admin/orders'),
-  AdminSection(Icons.radar, _zones, '/admin/zones'),
+  AdminSection(Icons.payments_outlined, _payments, '/admin/transactions'),
   AdminSection(Icons.storefront_outlined, _restaurants, '/admin/restaurants'),
   AdminSection(Icons.two_wheeler, _couriers, '/admin/couriers'),
   AdminSection(Icons.group_outlined, _users, '/admin/users'),
-  AdminSection(Icons.payments_outlined, _payments, '/admin/transactions'),
+  AdminSection(Icons.radar, _zones, '/admin/zones'),
   AdminSection(Icons.tune, _settings, '/admin/settings'),
+];
+
+final adminSectionGroups = <(String, List<AdminSection>)>[
+  ('Opérations', [adminSections[0], adminSections[1], adminSections[2]]),
+  (
+    'Comptes et établissements',
+    [adminSections[3], adminSections[4], adminSections[5]],
+  ),
+  ('Configuration', [adminSections[6], adminSections[7]]),
 ];
 
 String _dashboard(AppLocalizations l10n) => l10n.adminDashboard;
@@ -74,11 +83,29 @@ class AdminScaffold extends StatelessWidget {
           },
           children: [
             const SizedBox(height: Space.xl),
-            for (final s in adminSections)
-              NavigationDrawerDestination(
-                icon: Icon(s.icon),
-                label: Text(s.label(l10n)),
+            for (final (title, sections) in adminSectionGroups) ...[
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  Space.lg,
+                  Space.md,
+                  Space.lg,
+                  Space.xs,
+                ),
+                child: Text(
+                  title.toUpperCase(),
+                  style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                    color: context.tokens.muted,
+                    letterSpacing: 0.7,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               ),
+              for (final s in sections)
+                NavigationDrawerDestination(
+                  icon: Icon(s.icon),
+                  label: Text(s.label(l10n)),
+                ),
+            ],
           ],
         ),
         floatingActionButton: floatingActionButton,

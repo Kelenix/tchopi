@@ -138,7 +138,12 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Maison · Riviera 2'), findsOneWidget);
-    expect(find.text('Espèces à la livraison'), findsOneWidget);
+    expect(
+      find.text('Espèces à la livraison'),
+      findsNWidgets(2),
+      reason:
+          'le moyen choisi reste visible dans les options et le récapitulatif',
+    );
     expect(find.text(formatMoney(500)), findsOneWidget);
     final button = find.widgetWithText(
       FilledButton,
@@ -377,11 +382,16 @@ void main() {
           (ref) => Stream.value([
             order('o1', OrderStatus.pending),
             order('o2', OrderStatus.accepted),
+            order('old', OrderStatus.delivered).copyWith(
+              number: 'R-OLD',
+              createdAt: DateTime.now().subtract(const Duration(days: 3)),
+            ),
           ]),
         ),
         orderItemsProvider(
           'o1',
         ).overrideWith((ref) async => order('o1', OrderStatus.pending).items),
+        orderItemsProvider('old').overrideWith((ref) async => const []),
       ]),
     );
     await tester.pump();
@@ -399,6 +409,10 @@ void main() {
     await tester.tap(find.text('Nouvelle commande !'));
     await tester.pump();
     expect(find.text('Nouvelle commande !'), findsNothing);
+
+    await tester.tap(find.text('Terminées'));
+    await tester.pumpAndSettle();
+    expect(find.text('R-OLD'), findsOneWidget);
   });
 
   testWidgets('restaurant : livreur attribué, remise au livreur', (

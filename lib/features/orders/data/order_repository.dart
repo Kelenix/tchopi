@@ -131,7 +131,7 @@ class OrderRepository {
       .from('orders')
       .stream(primaryKey: ['id'])
       .eq('restaurant_id', restaurantId)
-      .order('created_at')
+      .order('created_at', ascending: false)
       .limit(100)
       .map(
         (rows) => [
