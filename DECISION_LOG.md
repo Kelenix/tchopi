@@ -1123,3 +1123,7 @@
 ## ADR-062 — Un compte, un profil pour le web et le mobile
 - **Cause** : le mobile exigeait un profil complet (prénom, nom, téléphone, ville) que le web ne demandait jamais ; le web reproposait l'onboarding aux comptes créés sur le mobile (`onboarded_at` jamais posé).
 - **Décision** : règle unique tenue par le serveur (`private.profile_complete`, exposée par `my_roles.profile_complete`). Le web demande le profil complet avant toute suite (villes desservies, comme le mobile) ; le mobile marque le parcours choisi quand le profil est complet. Prénom et nom repris du fournisseur (Google) à l'inscription ; comptes existants complétés uniquement sur les champs vides (métadonnées Google, numéro de connexion, ville de l'établissement). Aucune donnée supprimée.
+
+## ADR-063 — Adresses publiques lisibles (slugs)
+- **Décision** : `restaurants.slug` et `zones.slug` générés par le serveur à partir du nom (sans accent, tirets), uniques (homonyme : `-ville`, puis `-ville-2`…). Les UUID restent les clés internes. Un renommage change le slug et garde l'ancien dans `restaurant_slug_redirects`, réservé à cet établissement.
+- **Web** : `/etablissements/<slug>`, `/?ville=<slug>`, `?categorie=<slug>`, ancres `#boissons` et `#plat-garba`. Le proxy répond 301 pour les anciens liens (UUID, ancien nom, ville en UUID) ; les anciennes ancres `#cat-<uuid>` / `#produit-<uuid>` restent posées dans la page.
