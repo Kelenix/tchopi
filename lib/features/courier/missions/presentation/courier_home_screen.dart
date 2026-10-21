@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../courier_nav_bar.dart';
+import '../../../orders/presentation/order_widgets.dart';
 import '../missions_providers.dart';
 import 'mission_screen.dart';
 import 'offer_screen.dart';
@@ -238,7 +239,14 @@ class _CourierHomeScreenState extends ConsumerState<CourierHomeScreen> {
             ),
           ),
           const SizedBox(height: Space.xl),
+          if (mission != null) _MissionCard(order: mission),
+          if (mission == null && offers.isNotEmpty) ...[
+            SectionHeader(title: l10n.courierAvailableTitle),
+            for (final offer in offers)
+              _OfferTile(offer: offer, onTap: () => _showOffer(offer)),
+          ],
           if (summary != null) ...[
+            const SizedBox(height: Space.xl),
             SectionHeader(title: l10n.courierTodayTitle),
             Row(
               children: [
@@ -263,14 +271,8 @@ class _CourierHomeScreenState extends ConsumerState<CourierHomeScreen> {
               ],
             ),
           ],
-          const SizedBox(height: Space.xl),
-          if (mission != null)
-            _MissionCard(order: mission)
-          else if (offers.isNotEmpty) ...[
-            SectionHeader(title: l10n.courierAvailableTitle),
-            for (final offer in offers)
-              _OfferTile(offer: offer, onTap: () => _showOffer(offer)),
-          ] else
+          if (mission == null && offers.isEmpty) ...[
+            const SizedBox(height: Space.xl),
             EmptyState(
               icon: online
                   ? Icons.notifications_active_outlined
@@ -278,13 +280,14 @@ class _CourierHomeScreenState extends ConsumerState<CourierHomeScreen> {
               title: online ? l10n.courierWaitingTitle : l10n.courierReadyTitle,
               body: online ? l10n.courierWaitingBody : l10n.courierReadyBody,
             ),
+          ],
         ],
       ),
     );
   }
 }
 
-/// Mission en cours : retrait, destination, gain et espèces à encaisser (le déroulé arrive à l'Inc-8).
+/// Mission en cours : statut, prochaine action, adresses et gain visibles avant les indicateurs du jour.
 class _MissionCard extends StatelessWidget {
   const _MissionCard({required this.order});
 
@@ -296,6 +299,14 @@ class _MissionCard extends StatelessWidget {
     final tokens = context.tokens;
     final text = Theme.of(context).textTheme;
     final small = text.bodySmall!.copyWith(color: tokens.muted);
+    final pickedUp =
+        order.status == OrderStatus.pickedUp ||
+        order.status == OrderStatus.inTransit;
+    final nextAction = switch (order.status) {
+      OrderStatus.pickedUp => l10n.missionStart,
+      OrderStatus.inTransit => l10n.missionEnterCode,
+      _ => l10n.missionPickedUp,
+    };
     Widget stop(Color color, String label, String district, String landmark) =>
         ListTile(
           contentPadding: EdgeInsets.zero,
@@ -326,14 +337,15 @@ class _MissionCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        l10n.courierMissionEarning(
-                          formatMoney(order.courierEarning),
-                        ),
-                        style: text.titleMedium!.copyWith(
-                          color: tokens.success,
-                        ),
+                        formatMoney(order.courierEarning),
+                        style: text.titleLarge!.copyWith(color: tokens.success),
                       ),
                     ],
+                  ),
+                  const SizedBox(height: Space.sm),
+                  OrderStatusChip(
+                    status: order.status,
+                    parcel: order.type == OrderType.parcel,
                   ),
                   stop(
                     tokens.ink,
@@ -357,7 +369,18 @@ class _MissionCard extends StatelessWidget {
                   FilledButton(
                     onPressed: () =>
                         context.push(MissionScreen.location(order.id)),
-                    child: Text(l10n.missionOpen),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          pickedUp
+                              ? Icons.delivery_dining_rounded
+                              : Icons.storefront_outlined,
+                        ),
+                        const SizedBox(width: Space.sm),
+                        Text(nextAction),
+                      ],
+                    ),
                   ),
                 ],
               ),

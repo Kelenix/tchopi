@@ -16,7 +16,7 @@ import 'catalog_providers.dart';
 import 'featured_dishes.dart';
 import 'restaurant_detail_screen.dart';
 
-/// C-01 : accueil client — adresse de livraison, recherche, commandes en cours, services, restaurants
+/// C-01 : accueil client — adresse, recherche et restaurants en priorité ; suivi et sélections ensuite.
 /// filtrables par cuisine (ORD-01 à ORD-03).
 class ClientHomeScreen extends ConsumerStatefulWidget {
   const ClientHomeScreen({super.key});
@@ -136,9 +136,7 @@ class _ClientHomeScreenState extends ConsumerState<ClientHomeScreen> {
                       prefixIcon: const Icon(Icons.search_rounded),
                     ),
                   ),
-                  const SizedBox(height: Space.lg),
-                  const _ActiveOrders(),
-                  if (all.isNotEmpty) FeaturedDishes(zoneId: all.first.zoneId),
+                  const SizedBox(height: Space.md),
                   SectionHeader(title: l10n.homeRestaurants),
                   if (cuisines.length > 1)
                     SizedBox(
@@ -205,6 +203,20 @@ class _ClientHomeScreenState extends ConsumerState<ClientHomeScreen> {
                   itemBuilder: (_, _) => const _CardSkeleton(),
                 ),
               },
+            ),
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(
+                Space.screen,
+                Space.lg,
+                Space.screen,
+                Space.huge,
+              ),
+              sliver: SliverList.list(
+                children: [
+                  const _ActiveOrders(),
+                  if (all.isNotEmpty) FeaturedDishes(zoneId: all.first.zoneId),
+                ],
+              ),
             ),
           ],
         ),
@@ -352,7 +364,7 @@ class _AddressCard extends ConsumerWidget {
   }
 }
 
-/// Carte restaurant : grande photo, état d'ouverture, nom, cuisine, quartier, temps de préparation.
+/// Carte restaurant : état d'ouverture, quartier et délai disponibles en un coup d'œil.
 class RestaurantCard extends StatelessWidget {
   const RestaurantCard({super.key, required this.restaurant});
 
@@ -379,7 +391,7 @@ class RestaurantCard extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(Radii.field),
                 child: SizedBox.square(
-                  dimension: 92,
+                  dimension: 76,
                   child: Hero(
                     tag: 'cover-${r.id}',
                     child: MediaImage(path: r.coverPath, seed: r.id),
@@ -457,8 +469,8 @@ class _CardSkeleton extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              width: 92,
-              height: 92,
+            width: 76,
+            height: 76,
               decoration: BoxDecoration(
                 color: tokens.surfaceAlt,
                 borderRadius: BorderRadius.circular(Radii.field),

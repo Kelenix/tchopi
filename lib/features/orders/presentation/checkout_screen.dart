@@ -126,6 +126,12 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       options,
       ref.watch(preferredPaymentProvider).value,
     );
+    final selectedOption = method == null
+        ? null
+        : options.where((o) => o.method == method).firstOrNull;
+    final selectedPaymentLabel = selectedOption == null
+        ? (method == null ? null : paymentMethodLabel(l10n, method))
+        : paymentOptionLabel(l10n, selectedOption);
     final canOrder =
         cart != null &&
         address != null &&
@@ -249,8 +255,6 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                   const SizedBox(height: Space.xxl),
                   _SectionTitle(l10n.checkoutPayment),
                   const PaymentChoice(),
-                  const SizedBox(height: Space.xxl),
-                  _Summary(quote: quote),
                 ],
               ),
             ),
@@ -263,6 +267,35 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
               ),
               child: Column(
                 children: [
+                  Card(
+                    margin: EdgeInsets.zero,
+                    child: Padding(
+                      padding: const EdgeInsets.all(Space.md),
+                      child: Column(
+                        children: [
+                          _Summary(quote: quote),
+                          if (method != null) ...[
+                            const Divider(height: Space.lg),
+                            Row(
+                              children: [
+                                Icon(
+                                  paymentIcon(method),
+                                  color: tokens.primary,
+                                ),
+                                const SizedBox(width: Space.sm),
+                                Expanded(
+                                  child: Text(
+                                    selectedPaymentLabel!,
+                                    style: text.labelLarge,
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: Space.sm),
                   if (_error != null) ...[
                     Text(
                       failureMessage(l10n, _error),
