@@ -2003,10 +2003,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get orderNoCourier => 'Aucun livreur disponible';
 
   @override
-  String get noCourierYet =>
-      'Aucun livreur en ligne pour l\'instant : vous pouvez commander, un livreur prendra votre commande dès qu\'il sera disponible.';
-
-  @override
   String get adminSupervision => 'Commandes à traiter';
 
   @override

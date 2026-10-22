@@ -219,10 +219,6 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                     const SizedBox(height: Space.lg),
                     _IssuesBanner(issues: ready.issues),
                   ],
-                  if (ready != null && !ready.couriersAvailable) ...[
-                    const SizedBox(height: Space.lg),
-                    const NoCourierBanner(),
-                  ],
                   const SizedBox(height: Space.xxl),
                   _SectionTitle(l10n.checkoutDeliverTo),
                   Card(

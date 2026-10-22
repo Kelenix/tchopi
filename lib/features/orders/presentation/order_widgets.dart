@@ -357,33 +357,3 @@ class OrderTimeline extends StatelessWidget {
     );
   }
 }
-
-/// Aucun livreur en ligne : la commande reste possible et sera prise en charge dès qu'un livreur est disponible.
-class NoCourierBanner extends StatelessWidget {
-  const NoCourierBanner({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    final tokens = context.tokens;
-    return Container(
-      padding: const EdgeInsets.all(Space.lg),
-      decoration: BoxDecoration(
-        color: tokens.warningSoft,
-        borderRadius: BorderRadius.circular(Radii.card),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.two_wheeler, color: tokens.warning),
-          const SizedBox(width: Space.md),
-          Expanded(
-            child: Text(
-              l10n.noCourierYet,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

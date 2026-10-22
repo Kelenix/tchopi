@@ -685,10 +685,6 @@ class _ParcelRequestScreenState extends ConsumerState<ParcelRequestScreen> {
             else if (quote == null)
               const Center(child: CircularProgressIndicator())
             else ...[
-              if (!quote.couriersAvailable) ...[
-                const NoCourierBanner(),
-                const SizedBox(height: Space.lg),
-              ],
               AmountRow(
                 label: l10n.parcelDistance,
                 value: l10n.parcelDistanceValue(

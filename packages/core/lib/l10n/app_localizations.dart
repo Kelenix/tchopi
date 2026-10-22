@@ -3687,12 +3687,6 @@ abstract class AppLocalizations {
   /// **'Aucun livreur disponible'**
   String get orderNoCourier;
 
-  /// No description provided for @noCourierYet.
-  ///
-  /// In fr, this message translates to:
-  /// **'Aucun livreur en ligne pour l\'instant : vous pouvez commander, un livreur prendra votre commande dès qu\'il sera disponible.'**
-  String get noCourierYet;
-
   /// No description provided for @adminSupervision.
   ///
   /// In fr, this message translates to:

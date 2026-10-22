@@ -846,7 +846,6 @@
   "eventCourierReleased": "Livreur retiré",
   "eventDispatchAlert": "Alerte : toujours sans livreur",
   "orderNoCourier": "Aucun livreur disponible",
-  "noCourierYet": "Aucun livreur en ligne pour l'instant : vous pouvez commander, un livreur prendra votre commande dès qu'il sera disponible.",
   "adminSupervision": "Commandes à traiter",
   "adminSettings": "Paramètres",
   "supervisionAll": "Tous",
