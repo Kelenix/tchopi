@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../shared/more_pages.dart';
 import '../../../orders/presentation/order_widgets.dart';
 import '../../admin_scaffold.dart';
 import '../../zones/zones_providers.dart';
@@ -51,6 +52,26 @@ class _TransactionsState extends ConsumerState<_Transactions> {
   PaymentMethod? _method;
   int? _days;
   String? _zoneId;
+  // Transactions plus anciennes que la première page, chargées à la demande.
+  late final _more = MorePages<PaymentTransaction>(
+    (offset, limit) => ref
+        .read(adminPaymentsRepositoryProvider)
+        .transactions(offset: offset, limit: limit),
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    _more.addListener(_changed);
+  }
+
+  void _changed() => setState(() {});
+
+  @override
+  void dispose() {
+    _more.dispose();
+    super.dispose();
+  }
 
   bool _keep(PaymentTransaction t, DateTime now) {
     final status = switch (_status) {
@@ -147,9 +168,9 @@ class _TransactionsState extends ConsumerState<_Transactions> {
       ),
     );
     return switch (ref.watch(adminTransactionsProvider)) {
-      AsyncData(value: final all) => () {
+      AsyncData(value: final first) => () {
         final list = [
-          for (final t in all)
+          for (final t in [...first, ..._more.items])
             if (_keep(t, now)) t,
         ];
         return Column(
@@ -162,14 +183,22 @@ class _TransactionsState extends ConsumerState<_Transactions> {
                       title: l10n.txEmpty,
                     )
                   : RefreshIndicator(
-                      onRefresh: () =>
-                          ref.refresh(adminTransactionsProvider.future),
+                      onRefresh: () {
+                        _more.reset();
+                        return ref.refresh(adminTransactionsProvider.future);
+                      },
                       child: ListView.separated(
                         padding: const EdgeInsets.all(Space.screen),
-                        itemCount: list.length,
+                        itemCount: list.length + 1,
                         separatorBuilder: (_, _) =>
                             const SizedBox(height: Space.sm),
                         itemBuilder: (context, index) {
+                          if (index == list.length) {
+                            return MorePagesFooter(
+                              pages: _more,
+                              firstPage: first.length,
+                            );
+                          }
                           final t = list[index];
                           final (status, color) = transactionStatus(context, t);
                           return Card(

@@ -4,19 +4,37 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../shared/more_pages.dart';
 import '../../client/client_nav_bar.dart';
 import '../orders_providers.dart';
 import 'order_detail_screen.dart';
 import 'order_widgets.dart';
 
 /// C-10 : mes commandes — en cours en haut, puis l'historique (ORD-12).
-class OrdersScreen extends ConsumerWidget {
+class OrdersScreen extends ConsumerStatefulWidget {
   const OrdersScreen({super.key});
 
   static const path = ClientNavBar.ordersPath;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<OrdersScreen> createState() => _OrdersScreenState();
+}
+
+class _OrdersScreenState extends ConsumerState<OrdersScreen> {
+  // Commandes plus anciennes que la première page, chargées à la demande.
+  late final _more = MorePages<Order>(
+    (offset, limit) =>
+        ref.read(orderRepositoryProvider).mine(offset: offset, limit: limit),
+  );
+
+  @override
+  void dispose() {
+    _more.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final text = Theme.of(context).textTheme;
     final orders = ref.watch(myOrdersProvider);
@@ -30,34 +48,44 @@ class OrdersScreen extends ConsumerWidget {
           title: l10n.ordersEmpty,
           body: l10n.ordersEmptyBody,
         ),
-        AsyncData(:final value) => RefreshIndicator(
-          onRefresh: () => ref.refresh(myOrdersProvider.future),
-          child: ListView(
-            padding: const EdgeInsets.fromLTRB(
-              Space.screen,
-              Space.sm,
-              Space.screen,
-              Space.huge,
-            ),
-            children: [
-              for (final (title, group) in [
-                (l10n.ordersActive, value.where((o) => !o.status.isClosed)),
-                (l10n.ordersPast, value.where((o) => o.status.isClosed)),
-              ])
-                if (group.isNotEmpty) ...[
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: Space.lg,
-                      bottom: Space.sm,
-                    ),
-                    child: Text(title, style: text.titleMedium),
-                  ),
-                  for (final order in group) ...[
-                    OrderTile(order: order),
-                    const SizedBox(height: Space.md),
-                  ],
+        AsyncData(value: final first) => RefreshIndicator(
+          onRefresh: () {
+            _more.reset();
+            return ref.refresh(myOrdersProvider.future);
+          },
+          child: ListenableBuilder(
+            listenable: _more,
+            builder: (context, _) {
+              final value = [...first, ..._more.items];
+              return ListView(
+                padding: const EdgeInsets.fromLTRB(
+                  Space.screen,
+                  Space.sm,
+                  Space.screen,
+                  Space.huge,
+                ),
+                children: [
+                  for (final (title, group) in [
+                    (l10n.ordersActive, value.where((o) => !o.status.isClosed)),
+                    (l10n.ordersPast, value.where((o) => o.status.isClosed)),
+                  ])
+                    if (group.isNotEmpty) ...[
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: Space.lg,
+                          bottom: Space.sm,
+                        ),
+                        child: Text(title, style: text.titleMedium),
+                      ),
+                      for (final order in group) ...[
+                        OrderTile(order: order),
+                        const SizedBox(height: Space.md),
+                      ],
+                    ],
+                  MorePagesFooter(pages: _more, firstPage: first.length),
                 ],
-            ],
+              );
+            },
           ),
         ),
         AsyncError(:final error) => Center(

@@ -1,6 +1,8 @@
 import 'package:core/core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../../shared/more_pages.dart';
+
 /// Moyens de paiement et transactions du client (PAY-01, TRX-01) ; la RLS ne livre que les siennes.
 class PaymentRepository {
   PaymentRepository(this._client);
@@ -47,12 +49,15 @@ class PaymentRepository {
     return row['payment_timeout_s'] as int;
   });
 
-  Future<List<PaymentTransaction>> mine() => guardCall(() async {
+  Future<List<PaymentTransaction>> mine({
+    int offset = 0,
+    int limit = pageSize,
+  }) => guardCall(() async {
     final rows = await _client
         .from('transactions')
         .select('*, order:orders(number, status, payment_status)')
         .order('created_at', ascending: false)
-        .limit(100);
+        .range(offset, offset + limit - 1);
     return rows.map(PaymentTransaction.fromJson).toList();
   });
 }

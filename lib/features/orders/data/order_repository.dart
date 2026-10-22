@@ -2,6 +2,7 @@ import 'package:core/core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../cart.dart';
+import '../../../shared/more_pages.dart';
 
 /// Ce qui change en direct sur une commande : statut, livreur attribué, alerte « toujours sans livreur »,
 /// paiement (encaissé, à rembourser, remboursé).
@@ -65,15 +66,16 @@ class OrderRepository {
   });
 
   /// Mes commandes, les plus récentes d'abord (un gérant voit aussi celles de son restaurant : filtre explicite).
-  Future<List<Order>> mine() => guardCall(() async {
-    final rows = await _client
-        .from('orders')
-        .select(_withItems)
-        .eq('customer_id', _client.auth.currentUser!.id)
-        .order('created_at', ascending: false)
-        .limit(50);
-    return rows.map(Order.fromJson).toList();
-  });
+  Future<List<Order>> mine({int offset = 0, int limit = pageSize}) =>
+      guardCall(() async {
+        final rows = await _client
+            .from('orders')
+            .select(_withItems)
+            .eq('customer_id', _client.auth.currentUser!.id)
+            .order('created_at', ascending: false)
+            .range(offset, offset + limit - 1);
+        return rows.map(Order.fromJson).toList();
+      });
 
   Future<Order> fetch(String id) => guardCall(() async {
     final row = await _client

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../../shared/more_pages.dart';
 import '../../orders/presentation/order_widgets.dart';
 import '../client_nav_bar.dart';
 import 'payments_providers.dart';
@@ -23,6 +24,17 @@ class PaymentsScreen extends ConsumerStatefulWidget {
 
 class _PaymentsScreenState extends ConsumerState<PaymentsScreen> {
   _Filter _filter = _Filter.all;
+  // Paiements plus anciens que la première page, chargés à la demande.
+  late final _more = MorePages<PaymentTransaction>(
+    (offset, limit) =>
+        ref.read(paymentRepositoryProvider).mine(offset: offset, limit: limit),
+  );
+
+  @override
+  void dispose() {
+    _more.dispose();
+    super.dispose();
+  }
 
   bool _keep(PaymentTransaction t) => switch (_filter) {
     _Filter.all => true,
@@ -43,14 +55,22 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _more.addListener(_changed);
+  }
+
+  void _changed() => setState(() {});
+
+  @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final tokens = context.tokens;
     final options = ref.watch(paymentOptionsProvider).value ?? const [];
+    final first =
+        ref.watch(myTransactionsProvider).value ?? const <PaymentTransaction>[];
     final transactions = [
-      for (final t
-          in ref.watch(myTransactionsProvider).value ??
-              const <PaymentTransaction>[])
+      for (final t in [...first, ..._more.items])
         if (_keep(t)) t,
     ];
     final days = <String, List<PaymentTransaction>>{};
@@ -62,7 +82,10 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen> {
       appBar: AppBar(title: Text(l10n.paymentsTitle)),
       bottomNavigationBar: const ClientNavBar(current: 2),
       body: RefreshIndicator(
-        onRefresh: () => ref.refresh(myTransactionsProvider.future),
+        onRefresh: () {
+          _more.reset();
+          return ref.refresh(myTransactionsProvider.future);
+        },
         child: ListView(
           padding: const EdgeInsets.fromLTRB(
             Space.screen,
@@ -134,6 +157,7 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen> {
                   ),
                 ),
               ],
+            MorePagesFooter(pages: _more, firstPage: first.length),
           ],
         ),
       ),

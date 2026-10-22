@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../shared/dialogs.dart';
+import '../../../../shared/more_pages.dart';
 import '../../admin_scaffold.dart';
 import '../data/admin_people_repository.dart';
 import '../people_providers.dart';
@@ -19,6 +20,26 @@ class UsersAdminScreen extends ConsumerStatefulWidget {
 
 class _UsersAdminScreenState extends ConsumerState<UsersAdminScreen> {
   String _query = '';
+  // Comptes au-delà de la première page de résultats, chargés à la demande.
+  late final _more = MorePages<UserEntry>(
+    (offset, limit) => ref
+        .read(adminPeopleRepositoryProvider)
+        .searchUsers(_query, offset: offset, limit: limit),
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    _more.addListener(_changed);
+  }
+
+  void _changed() => setState(() {});
+
+  @override
+  void dispose() {
+    _more.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +60,10 @@ class _UsersAdminScreenState extends ConsumerState<UsersAdminScreen> {
                 labelText: l10n.usersSearch,
                 prefixIcon: const Icon(Icons.search),
               ),
-              onSubmitted: (value) => setState(() => _query = value),
+              onSubmitted: (value) {
+                _more.reset();
+                setState(() => _query = value);
+              },
             ),
           ),
           Expanded(
@@ -48,16 +72,23 @@ class _UsersAdminScreenState extends ConsumerState<UsersAdminScreen> {
                 icon: Icons.group_outlined,
                 title: l10n.usersEmpty,
               ),
-              AsyncData(:final value) => ListView.separated(
+              AsyncData(value: final first) => ListView.separated(
                 padding: const EdgeInsets.fromLTRB(
                   Space.screen,
                   0,
                   Space.screen,
                   Space.screen,
                 ),
-                itemCount: value.length,
+                itemCount: first.length + _more.items.length + 1,
                 separatorBuilder: (_, _) => const SizedBox(height: Space.sm),
                 itemBuilder: (context, index) {
+                  final value = [...first, ..._more.items];
+                  if (index == value.length) {
+                    return MorePagesFooter(
+                      pages: _more,
+                      firstPage: first.length,
+                    );
+                  }
                   final user = value[index];
                   return Card(
                     child: ListTile(

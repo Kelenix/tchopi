@@ -1,6 +1,8 @@
 import 'package:core/core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../../shared/more_pages.dart';
+
 /// Moyens de paiement, transactions et espèces des livreurs (admins seulement, garanti par la RLS).
 class AdminPaymentsRepository {
   AdminPaymentsRepository(this._client);
@@ -23,12 +25,15 @@ class AdminPaymentsRepository {
     ),
   );
 
-  Future<List<PaymentTransaction>> transactions() => guardCall(() async {
+  Future<List<PaymentTransaction>> transactions({
+    int offset = 0,
+    int limit = pageSize,
+  }) => guardCall(() async {
     final rows = await _client
         .from('transactions')
         .select('*, order:orders(number, status, zone_id, payment_status)')
         .order('created_at', ascending: false)
-        .limit(200);
+        .range(offset, offset + limit - 1);
     return rows.map(PaymentTransaction.fromJson).toList();
   });
 

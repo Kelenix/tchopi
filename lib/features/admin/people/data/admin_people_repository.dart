@@ -1,6 +1,8 @@
 import 'package:core/core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../../shared/more_pages.dart';
+
 /// Livreur vu par l'admin : profil livreur + identité + zone.
 typedef CourierEntry = ({
   Courier courier,
@@ -72,8 +74,12 @@ class AdminPeopleRepository {
     () => _client.storage.from('couriers').createSignedUrl(path, 3600),
   );
 
-  /// Recherche par prénom, nom ou téléphone (50 résultats au plus, les plus récents d'abord).
-  Future<List<UserEntry>> searchUsers(String query) => guardCall(() async {
+  /// Recherche par prénom, nom ou téléphone, les plus récents d'abord, page par page.
+  Future<List<UserEntry>> searchUsers(
+    String query, {
+    int offset = 0,
+    int limit = pageSize,
+  }) => guardCall(() async {
     final term = query.trim().replaceAll(RegExp(r'[,()*%]'), '');
     var request = _client
         .from('profiles')
@@ -86,7 +92,7 @@ class AdminPeopleRepository {
     final rows = await request
         .isFilter('deleted_at', null)
         .order('created_at', ascending: false)
-        .limit(50);
+        .range(offset, offset + limit - 1);
     return [
       for (final row in rows)
         (
