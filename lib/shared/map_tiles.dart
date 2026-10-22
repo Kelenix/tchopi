@@ -31,11 +31,16 @@ class MapTiles extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) => switch (ref.watch(
     mapStyleProvider(dark: Theme.of(context).brightness == Brightness.dark),
   )) {
+    // Tuiles de 512 px (zoom décalé de 1, recommandation Mapbox) : quatre fois moins de tuiles à télécharger et à
+    // dessiner ; caches mémoire plus larges pour réafficher sans recalcul les zones déjà vues.
     AsyncData(value: final style) => vector.VectorTileLayer(
       theme: style.theme,
       sprites: style.sprites,
       tileProviders: style.providers,
       maximumZoom: 22,
+      tileOffset: vector.TileOffset.mapbox,
+      memoryTileCacheMaxSize: 30 * 1024 * 1024,
+      memoryTileDataCacheMaxSize: 60,
     ),
     AsyncError() => TileLayer(
       urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
