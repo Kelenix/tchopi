@@ -1292,6 +1292,15 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get historyStatDeliveries => 'Livraisons';
+
+  @override
+  String get historyStatEarnings => 'Gains';
+
+  @override
+  String get historyStatDistance => 'Distance';
+
+  @override
   String get historyNone => 'Aucune livraison pour ces filtres';
 
   @override

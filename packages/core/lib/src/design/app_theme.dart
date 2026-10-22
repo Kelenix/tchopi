@@ -162,19 +162,21 @@ abstract final class AppTheme {
       ),
       chipTheme: ChipThemeData(
         backgroundColor: t.surface,
-        selectedColor: t.ink,
+        // Puce choisie : fond orange doux, texte encre — lisible en clair comme en sombre.
+        selectedColor: t.primarySoft,
         disabledColor: t.surfaceAlt,
         showCheckmark: false,
         side: BorderSide(color: t.border),
         shape: const StadiumBorder(),
         padding: const EdgeInsets.symmetric(horizontal: Space.md, vertical: 10),
         labelStyle: text.labelLarge!.copyWith(color: t.ink),
-        secondaryLabelStyle: text.labelLarge!.copyWith(color: t.onInk),
+        secondaryLabelStyle: text.labelLarge!.copyWith(color: t.ink),
       ),
       cardTheme: CardThemeData(
         color: t.surface,
         elevation: 0,
-        margin: EdgeInsets.zero,
+        // Cartes empilées dans une liste : toujours séparées.
+        margin: const EdgeInsets.symmetric(vertical: Space.xs),
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(Radii.card),
@@ -288,12 +290,21 @@ abstract final class AppTheme {
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: t.surface,
         surfaceTintColor: Colors.transparent,
-        shadowColor: t.ink,
+        shadowColor: Colors.black,
         indicatorColor: t.primarySoft,
         elevation: 8,
         height: 72,
-        labelTextStyle: WidgetStatePropertyAll(
-          text.bodySmall!.copyWith(fontWeight: FontWeight.w600),
+        // Onglet actif en orange, les autres en gris lisible (thème clair et sombre).
+        iconTheme: WidgetStateProperty.resolveWith(
+          (states) => IconThemeData(
+            color: states.contains(WidgetState.selected) ? t.primary : t.muted,
+          ),
+        ),
+        labelTextStyle: WidgetStateProperty.resolveWith(
+          (states) => text.bodySmall!.copyWith(
+            fontWeight: FontWeight.w600,
+            color: states.contains(WidgetState.selected) ? t.primary : t.muted,
+          ),
         ),
       ),
       navigationDrawerTheme: NavigationDrawerThemeData(

@@ -295,8 +295,9 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(missions.calls, ['deliveries 1 null']);
-    expect(find.text('Chez Tantie Rose → Cocody'), findsOneWidget);
-    expect(find.textContaining('1 livraison(s)'), findsOneWidget);
+    expect(find.textContaining('Chez Tantie Rose'), findsOneWidget);
+    expect(find.text('Livraisons'), findsOneWidget);
+    expect(find.text('Livrée'), findsOneWidget);
     await tester.tap(find.text('Livrées (1)'));
     await tester.pumpAndSettle();
     expect(missions.calls.last, 'deliveries 1 delivered');

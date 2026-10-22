@@ -2428,6 +2428,24 @@ abstract class AppLocalizations {
   /// **'{count} livraison(s) · {earnings} · {km} km'**
   String historySummary(int count, String earnings, String km);
 
+  /// No description provided for @historyStatDeliveries.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraisons'**
+  String get historyStatDeliveries;
+
+  /// No description provided for @historyStatEarnings.
+  ///
+  /// In fr, this message translates to:
+  /// **'Gains'**
+  String get historyStatEarnings;
+
+  /// No description provided for @historyStatDistance.
+  ///
+  /// In fr, this message translates to:
+  /// **'Distance'**
+  String get historyStatDistance;
+
   /// No description provided for @historyNone.
   ///
   /// In fr, this message translates to:

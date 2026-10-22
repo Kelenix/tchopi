@@ -207,23 +207,73 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
             ),
             if (summary != null) ...[
               const SizedBox(height: Space.lg),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(Space.lg),
-                  child: Text(
-                    l10n.historySummary(
-                      summary['delivered']!.toInt(),
-                      formatMoney(summary['earnings']!.toInt()),
-                      formatDecimal(summary['distance_m']! / 1000),
+              Row(
+                children: [
+                  for (final (label, value, color) in [
+                    (
+                      l10n.historyStatDeliveries,
+                      '${summary['delivered']!.toInt()}',
+                      tokens.ink,
                     ),
-                    style: text.titleMedium!.copyWith(color: tokens.success),
+                    (
+                      l10n.historyStatEarnings,
+                      formatMoney(summary['earnings']!.toInt()),
+                      tokens.success,
+                    ),
+                    (
+                      l10n.historyStatDistance,
+                      '${formatDecimal(summary['distance_m']! / 1000)} km',
+                      tokens.ink,
+                    ),
+                  ])
+                    Expanded(
+                      child: Card(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: Space.xs,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: Space.md,
+                            vertical: Space.md,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                label,
+                                style: text.bodySmall!.copyWith(
+                                  color: tokens.muted,
+                                ),
+                              ),
+                              const SizedBox(height: Space.xs),
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  value,
+                                  style: text.titleMedium!.copyWith(
+                                    color: color,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              if ((summary['declined'] ?? 0) > 0)
+                Padding(
+                  padding: const EdgeInsets.only(top: Space.sm),
+                  child: Text(
+                    l10n.historyDeclinedCount(
+                      (summary['declined'] ?? 0).toInt(),
+                    ),
+                    style: text.bodySmall!.copyWith(color: tokens.muted),
                   ),
                 ),
-              ),
-              Text(
-                l10n.historyDeclinedCount((summary['declined'] ?? 0).toInt()),
-                style: text.bodySmall!.copyWith(color: tokens.muted),
-              ),
             ],
             const SizedBox(height: Space.md),
             if (_error != null)
@@ -236,47 +286,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                 padding: const EdgeInsets.only(top: Space.xl),
                 child: EmptyState(icon: Icons.history, title: l10n.historyNone),
               ),
-            for (final r in _rows)
-              Card(
-                child: ListTile(
-                  leading: Icon(
-                    Icons.shopping_bag_outlined,
-                    color: tokens.primary,
-                  ),
-                  title: Text(
-                    '${r['pickup_name'] ?? r['pickup_district']} → ${r['dropoff_district']}',
-                  ),
-                  subtitle: Text(
-                    [
-                      '${r['number']} · ${formatDecimal((r['distance_m'] as int) / 1000)} km',
-                      '${r['pickup_district']}, ${r['pickup_landmark']}',
-                      '→ ${r['dropoff_district']}, ${r['dropoff_landmark']}',
-                      ?at(r['picked_up_at'] ?? r['assigned_at']),
-                      if (r['delivered_at'] != null)
-                        '✓ ${at(r['delivered_at'])}',
-                    ].join('\n'),
-                  ),
-                  isThreeLine: true,
-                  trailing: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        formatMoney(r['courier_earning'] as int),
-                        style: text.titleMedium!.copyWith(
-                          color: r['status'] == 'delivered'
-                              ? tokens.success
-                              : tokens.muted,
-                        ),
-                      ),
-                      Text(
-                        statuses[r['group']] ?? '',
-                        style: text.bodySmall!.copyWith(color: tokens.muted),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+            for (final r in _rows) _DeliveryCard(row: r, at: at),
             if (_loading)
               const Padding(
                 padding: EdgeInsets.all(Space.lg),
@@ -287,6 +297,144 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                 onPressed: () => _load(reset: false),
                 child: Text(l10n.historyLoadMore),
               ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Une livraison de l'historique : numéro et statut, trajet, heures, gain.
+class _DeliveryCard extends StatelessWidget {
+  const _DeliveryCard({required this.row, required this.at});
+
+  final Map<String, dynamic> row;
+  final String? Function(Object?) at;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final tokens = context.tokens;
+    final text = Theme.of(context).textTheme;
+    final r = row;
+    final delivered = r['status'] == 'delivered';
+    final (status, color, soft) = switch (r['group']) {
+      'delivered' => (
+        l10n.orderStatusDelivered,
+        tokens.success,
+        tokens.successSoft,
+      ),
+      'cancelled' => (
+        l10n.orderStatusCancelled,
+        tokens.danger,
+        tokens.dangerSoft,
+      ),
+      'in_progress' => (
+        l10n.historyInProgress,
+        tokens.primary,
+        tokens.primarySoft,
+      ),
+      _ => (l10n.historyPending, tokens.warning, tokens.warningSoft),
+    };
+    Widget place(IconData icon, Color iconColor, String title, String detail) =>
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon, size: 18, color: iconColor),
+            const SizedBox(width: Space.sm),
+            Expanded(
+              child: Text.rich(
+                TextSpan(
+                  text: title,
+                  style: text.bodyMedium!.copyWith(fontWeight: FontWeight.w700),
+                  children: [
+                    TextSpan(
+                      text: '  $detail',
+                      style: text.bodySmall!.copyWith(color: tokens.muted),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(Space.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text(
+                  '${r['number']}',
+                  style: text.titleSmall!.copyWith(fontWeight: FontWeight.w800),
+                ),
+                const SizedBox(width: Space.sm),
+                Text(
+                  '${formatDecimal((r['distance_m'] as int) / 1000)} km',
+                  style: text.bodySmall!.copyWith(color: tokens.muted),
+                ),
+                const Spacer(),
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: soft,
+                    borderRadius: BorderRadius.circular(Radii.chip),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: Space.sm,
+                      vertical: 2,
+                    ),
+                    child: Text(
+                      status,
+                      style: text.labelMedium!.copyWith(color: color),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: Space.md),
+            place(
+              Icons.storefront_outlined,
+              tokens.primary,
+              '${r['pickup_name'] ?? r['pickup_district']}',
+              '${r['pickup_district']}, ${r['pickup_landmark']}',
+            ),
+            const SizedBox(height: Space.sm),
+            place(
+              Icons.location_on_outlined,
+              tokens.ink,
+              '${r['dropoff_district']}',
+              '${r['dropoff_landmark']}',
+            ),
+            const SizedBox(height: Space.md),
+            Divider(height: 1, color: tokens.border),
+            const SizedBox(height: Space.md),
+            Row(
+              children: [
+                Icon(Icons.schedule_rounded, size: 16, color: tokens.muted),
+                const SizedBox(width: Space.xs),
+                Expanded(
+                  child: Text(
+                    [
+                      ?at(r['picked_up_at'] ?? r['assigned_at']),
+                      if (r['delivered_at'] != null)
+                        '✓ ${at(r['delivered_at'])}',
+                    ].join('  ·  '),
+                    style: text.bodySmall!.copyWith(color: tokens.muted),
+                  ),
+                ),
+                Text(
+                  formatMoney(r['courier_earning'] as int),
+                  style: text.titleMedium!.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: delivered ? tokens.success : tokens.muted,
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
