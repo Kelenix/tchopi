@@ -249,14 +249,7 @@ class _CourierHomeScreenState extends ConsumerState<CourierHomeScreen> {
             ),
           ),
           const SizedBox(height: Space.xl),
-          if (mission != null) _MissionCard(order: mission),
-          if (mission == null && offers.isNotEmpty) ...[
-            SectionHeader(title: l10n.courierAvailableTitle),
-            for (final offer in offers)
-              _OfferTile(offer: offer, onTap: () => _showOffer(offer)),
-          ],
           if (summary != null) ...[
-            const SizedBox(height: Space.xl),
             SectionHeader(title: l10n.courierTodayTitle),
             Row(
               children: [
@@ -280,6 +273,13 @@ class _CourierHomeScreenState extends ConsumerState<CourierHomeScreen> {
                 ),
               ],
             ),
+            const SizedBox(height: Space.xl),
+          ],
+          if (mission != null) _MissionCard(order: mission),
+          if (mission == null && offers.isNotEmpty) ...[
+            SectionHeader(title: l10n.courierAvailableTitle),
+            for (final offer in offers)
+              _OfferTile(offer: offer, onTap: () => _showOffer(offer)),
           ],
           if (mission == null && offers.isEmpty) ...[
             const SizedBox(height: Space.xl),

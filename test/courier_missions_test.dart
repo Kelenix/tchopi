@@ -155,8 +155,18 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 600));
       expect(find.byType(OfferScreen), findsNothing);
-      expect(find.text('Commandes à récupérer'), findsOneWidget);
-      await tester.tap(find.textContaining('Retrait · Chez Tantie Rose'));
+      expect(
+        find.text('Commandes à récupérer', skipOffstage: false),
+        findsOneWidget,
+      );
+      // Le rappel « Nouvelle commande » disparaît seul, puis la carte est amenée au centre de l'écran.
+      await tester.pump(const Duration(seconds: 5));
+      await tester.pumpAndSettle();
+      final tile = find.textContaining('Retrait · Chez Tantie Rose');
+      await tester.ensureVisible(tile);
+      await tester.drag(find.byType(Scrollable).first, const Offset(0, -150));
+      await tester.pumpAndSettle();
+      await tester.tap(tile);
       await tester.pumpAndSettle();
       expect(find.byType(OfferScreen), findsOneWidget);
       expect(find.text('Nouvelle mission · Repas'), findsOneWidget);
