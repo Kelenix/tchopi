@@ -8,6 +8,7 @@ import 'package:tchopi/features/client/home/client_home_screen.dart';
 import 'package:tchopi/features/client/home/featured_dishes.dart';
 import 'package:tchopi/features/client/home/product_options.dart';
 import 'package:tchopi/features/client/home/restaurant_detail_screen.dart';
+import 'package:tchopi/features/orders/cart.dart';
 import 'package:tchopi/features/restaurant/restaurant_providers.dart';
 
 import 'small_screen.dart';
@@ -42,6 +43,17 @@ class _FakeAddresses extends Addresses {
       isDefault: true,
     ),
   ];
+}
+
+class _FakeCart extends CartController {
+  @override
+  Future<Cart?> build() async => const Cart(
+    restaurantId: 'r1',
+    restaurantName: 'Maquis Chez Tante',
+    lines: [
+      CartLine(productId: 'p1', name: 'Garba', unitPrice: 1500, quantity: 2),
+    ],
+  );
 }
 
 Widget app(
@@ -203,19 +215,34 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('bouton + : panier vide, la recherche est ouverte', (
+  testWidgets('bouton + : passer une commande, reprendre le panier', (
     tester,
   ) async {
     tester.view
       ..physicalSize = const Size(800, 2400)
       ..devicePixelRatio = 2;
     addTearDown(tester.view.reset);
-    await tester.pumpWidget(app(const ClientHomeScreen()));
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [cartControllerProvider.overrideWith(_FakeCart.new)],
+        child: app(const ClientHomeScreen()),
+      ),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.byIcon(Icons.add_rounded));
     await tester.pumpAndSettle();
-    final field = tester.widget<TextField>(find.byType(TextField));
-    expect(field.focusNode!.hasFocus, isTrue);
+
+    expect(
+      find.text('Choisissez un restaurant, puis vos plats.'),
+      findsOneWidget,
+    );
+    expect(find.text('Reprendre mon panier'), findsOneWidget);
+    expect(
+      find.textContaining('Maquis Chez Tante · 2 articles'),
+      findsOneWidget,
+    );
+    expect(find.text('Ivoirien · 20–35 min'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('fiche restaurant : menu par catégorie, produit indisponible', (

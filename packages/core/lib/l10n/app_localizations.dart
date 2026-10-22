@@ -3034,6 +3034,18 @@ abstract class AppLocalizations {
   /// **'Étape {step} sur {total}'**
   String orderStep(int step, int total);
 
+  /// No description provided for @newOrderBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisissez un restaurant, puis vos plats.'**
+  String get newOrderBody;
+
+  /// No description provided for @newOrderResume.
+  ///
+  /// In fr, this message translates to:
+  /// **'Reprendre mon panier'**
+  String get newOrderResume;
+
   /// No description provided for @newOrderFood.
   ///
   /// In fr, this message translates to:

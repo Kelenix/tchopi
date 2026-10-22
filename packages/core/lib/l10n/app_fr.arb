@@ -648,6 +648,8 @@
       }
     }
   },
+  "newOrderBody": "Choisissez un restaurant, puis vos plats.",
+  "newOrderResume": "Reprendre mon panier",
   "newOrderFood": "Commander un repas",
   "paymentsTitle": "Paiements",
   "paymentsMethods": "Moyens de paiement",

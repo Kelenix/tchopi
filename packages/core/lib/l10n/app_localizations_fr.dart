@@ -1618,6 +1618,12 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get newOrderBody => 'Choisissez un restaurant, puis vos plats.';
+
+  @override
+  String get newOrderResume => 'Reprendre mon panier';
+
+  @override
   String get newOrderFood => 'Commander un repas';
 
   @override

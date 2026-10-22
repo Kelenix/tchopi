@@ -4,10 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tchopi/features/client/client_nav_bar.dart';
+import 'package:tchopi/features/client/home/catalog_providers.dart';
 import 'package:tchopi/features/orders/orders_providers.dart';
 
 void main() {
-  testWidgets('le bouton central ouvre directement les restaurants', (
+  testWidgets('le bouton central propose de commander dans un restaurant', (
     tester,
   ) async {
     Widget page(String title, int current) => Scaffold(
@@ -38,6 +39,21 @@ void main() {
       ProviderScope(
         overrides: [
           myOrdersProvider.overrideWith((ref) async => const <Order>[]),
+          catalogRestaurantsProvider.overrideWith(
+            (ref) async => const [
+              Restaurant(
+                id: 'r1',
+                zoneId: 'z',
+                name: 'Maquis Chez Tante',
+                phone: '+2250701020304',
+                latitude: 5.35,
+                longitude: -4,
+                district: 'Cocody',
+                landmark: 'Carrefour',
+                isOpen: true,
+              ),
+            ],
+          ),
         ],
         child: MaterialApp.router(
           theme: AppTheme.light,
@@ -54,7 +70,11 @@ void main() {
     await tester.tap(find.byIcon(Icons.add_rounded));
     await tester.pumpAndSettle();
 
-    expect(find.text('Restaurants'), findsOneWidget);
+    expect(
+      find.text('Choisissez un restaurant, puis vos plats.'),
+      findsOneWidget,
+    );
+    expect(find.text('Maquis Chez Tante'), findsOneWidget);
     expect(find.text('Envoyer un colis'), findsNothing);
     expect(tester.takeException(), isNull);
   });
