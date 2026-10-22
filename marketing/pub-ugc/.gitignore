@@ -1,0 +1,7 @@
+# Fichiers de travail HyperFrames (régénérés)
+.hyperframes/
+.media/
+.thumbnails/
+.waveform-cache/
+snaps*/
+node_modules/

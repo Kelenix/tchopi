@@ -1,0 +1,107 @@
+<!doctype html>
+<html
+  lang="fr"
+  data-resolution="portrait"
+  data-composition-variables='[
+    {"id":"pov","type":"string","label":"Accroche POV","default":"POV : il est 20 h et t&apos;as faim"},
+    {"id":"claim","type":"string","label":"Promesse","default":"Vos plats et vos colis, livrés partout dans votre ville."},
+    {"id":"cta","type":"string","label":"Appel à l&apos;action","default":"Bientôt sur Google Play"},
+    {"id":"brand","type":"color","label":"Vert Tchopi","default":"#0B5D3B"},
+    {"id":"accent","type":"color","label":"Vert accent","default":"#16A34A"}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #0b5d3b;
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-deez"
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="25"
+      data-width="1080"
+      data-height="1920"
+    >
+      <!-- Scènes : une par fichier de compositions/ -->
+      <div data-hf-id="hf-yodb" id="hook" class="clip" data-composition-id="hook" data-composition-src="compositions/hook.html"
+        data-start="0" data-duration="4" data-track-index="1" data-track-kind="graphics"
+        data-width="1080" data-height="1920"></div>
+      <div data-hf-id="hf-9ntu" id="open" class="clip" data-composition-id="open" data-composition-src="compositions/open.html"
+        data-start="4" data-duration="2" data-track-index="1" data-track-kind="graphics"
+        data-width="1080" data-height="1920"></div>
+      <div data-hf-id="hf-2vgp" id="order" class="clip" data-composition-id="order" data-composition-src="compositions/order.html"
+        data-start="6" data-duration="3.6" data-track-index="1" data-track-kind="graphics"
+        data-width="1080" data-height="1920"></div>
+      <div data-hf-id="hf-ncna" id="pay" class="clip" data-composition-id="pay" data-composition-src="compositions/pay.html"
+        data-start="9.6" data-duration="3" data-track-index="1" data-track-kind="graphics"
+        data-width="1080" data-height="1920"></div>
+      <div data-hf-id="hf-rcr8" id="track" class="clip" data-composition-id="track" data-composition-src="compositions/track.html"
+        data-start="12.6" data-duration="4.8" data-track-index="1" data-track-kind="graphics"
+        data-width="1080" data-height="1920"></div>
+      <div data-hf-id="hf-vrdp" id="done" class="clip" data-composition-id="done" data-composition-src="compositions/done.html"
+        data-start="17.4" data-duration="3" data-track-index="1" data-track-kind="graphics"
+        data-width="1080" data-height="1920"></div>
+      <div data-hf-id="hf-uzuh" id="endcard" class="clip" data-composition-id="endcard" data-composition-src="compositions/endcard.html"
+        data-start="20.4" data-duration="4.6" data-track-index="1" data-track-kind="graphics"
+        data-width="1080" data-height="1920"></div>
+
+      <!-- Sous-titres : un seul hôte pour tous les groupes -->
+      <div data-hf-id="hf-4goj" id="captions" class="clip" data-composition-id="captions" data-composition-src="compositions/captions.html"
+        data-start="0" data-duration="25" data-track-index="2" data-track-kind="captions"
+        data-width="1080" data-height="1920" style="z-index: 50"></div>
+
+      <!-- Voix (une prise HeyGen, découpée en 7 segments calés sur les scènes) -->
+      <audio data-hf-id="hf-noc6" id="vo1" class="clip" src="assets/audio/vo.wav" data-start="0.25" data-media-start="0.2" data-duration="3.3" data-track-index="3" data-volume="1"></audio>
+      <audio data-hf-id="hf-7idi" id="vo2" class="clip" src="assets/audio/vo.wav" data-start="4.1" data-media-start="3.5" data-duration="1.08" data-track-index="3" data-volume="1"></audio>
+      <audio data-hf-id="hf-b1nv" id="vo3" class="clip" src="assets/audio/vo.wav" data-start="6.2" data-media-start="4.58" data-duration="3.02" data-track-index="3" data-volume="1"></audio>
+      <audio data-hf-id="hf-hdix" id="vo4" class="clip" src="assets/audio/vo.wav" data-start="9.8" data-media-start="7.62" data-duration="1.73" data-track-index="3" data-volume="1"></audio>
+      <audio data-hf-id="hf-ktcq" id="vo5" class="clip" src="assets/audio/vo.wav" data-start="12.8" data-media-start="9.35" data-duration="3.4" data-track-index="3" data-volume="1"></audio>
+      <audio data-hf-id="hf-exvb" id="vo6" class="clip" src="assets/audio/vo.wav" data-start="17.6" data-media-start="12.75" data-duration="1.87" data-track-index="3" data-volume="1"></audio>
+      <audio data-hf-id="hf-2huy" id="vo7" class="clip" src="assets/audio/vo.wav" data-start="21.2" data-media-start="14.62" data-duration="0.58" data-track-index="3" data-volume="1"></audio>
+
+      <!-- Musique : afrobeat 108 BPM -->
+      <audio data-hf-id="hf-u23o" id="music" class="clip" src="assets/audio/music.wav" data-start="0" data-media-start="0" data-duration="25" data-track-index="4" data-volume="0.32" data-fade-out="1.6"></audio>
+
+      <!-- Bruitages, chacun sur une action visible -->
+      <audio data-hf-id="hf-qf21" id="sfx-whoosh-1" class="clip" src="assets/sfx/whoosh.mp3" data-start="3.62" data-duration="0.57" data-track-index="5" data-volume="0.7"></audio>
+      <audio data-hf-id="hf-ucvm" id="sfx-zoom" class="clip" src="assets/sfx/whoosh-cinematic.mp3" data-start="5.6" data-duration="0.6" data-track-index="5" data-volume="0.5"></audio>
+      <audio data-hf-id="hf-k0u6" id="sfx-tap-0" class="clip" src="assets/sfx/click.mp3" data-start="5.38" data-duration="0.36" data-track-index="6" data-volume="0.7"></audio>
+      <audio data-hf-id="hf-6ajt" id="sfx-tap-1" class="clip" src="assets/sfx/click-soft.mp3" data-start="7.85" data-duration="0.36" data-track-index="6" data-volume="0.8"></audio>
+      <audio data-hf-id="hf-jovx" id="sfx-pop-1" class="clip" src="assets/sfx/pop.mp3" data-start="7.93" data-duration="0.72" data-track-index="5" data-volume="0.6"></audio>
+      <audio data-hf-id="hf-ok1z" id="sfx-tap-cart" class="clip" src="assets/sfx/click.mp3" data-start="9" data-duration="0.36" data-track-index="6" data-volume="0.7"></audio>
+      <audio data-hf-id="hf-jbb2" id="sfx-whoosh-2" class="clip" src="assets/sfx/whoosh-short.mp3" data-start="9.28" data-duration="0.57" data-track-index="5" data-volume="0.6"></audio>
+      <audio data-hf-id="hf-uzmq" id="sfx-tap-2" class="clip" src="assets/sfx/click.mp3" data-start="10.38" data-duration="0.36" data-track-index="6" data-volume="0.7"></audio>
+      <audio data-hf-id="hf-yvh4" id="sfx-tap-3" class="clip" src="assets/sfx/click-soft.mp3" data-start="12.08" data-duration="0.36" data-track-index="6" data-volume="0.8"></audio>
+      <audio data-hf-id="hf-rttf" id="sfx-whoosh-3" class="clip" src="assets/sfx/whoosh.mp3" data-start="12.58" data-duration="0.57" data-track-index="5" data-volume="0.6"></audio>
+      <audio data-hf-id="hf-exas" id="sfx-key" class="clip" src="assets/sfx/key-press.mp3" data-start="17.75" data-duration="0.4" data-track-index="6" data-volume="0.6"></audio>
+      <audio data-hf-id="hf-sbxs" id="sfx-pop-2" class="clip" src="assets/sfx/pop.mp3" data-start="18.72" data-duration="0.72" data-track-index="5" data-volume="0.7"></audio>
+      <audio data-hf-id="hf-1hv5" id="sfx-whoosh-4" class="clip" src="assets/sfx/whoosh-short.mp3" data-start="20.06" data-duration="0.57" data-track-index="5" data-volume="0.6"></audio>
+      <audio data-hf-id="hf-six3" id="sfx-impact" class="clip" src="assets/sfx/impact-bass-1.mp3" data-start="21.8" data-duration="2.1" data-track-index="5" data-volume="0.55"></audio>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = gsap.timeline({ paused: true });
+    </script>
+  </body>
+</html>

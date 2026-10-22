@@ -1,0 +1,139 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "Plus Jakarta Sans";
+      font-weight: 800;
+      src: url("assets/fonts/PlusJakartaSans-ExtraBold.ttf");
+    }
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: var(--brand, #0b5d3b);
+      font-family: "Plus Jakarta Sans", sans-serif;
+    }
+    #track-stage {
+      position: absolute;
+      inset: 0;
+    }
+    #track-world {
+      position: absolute;
+      inset: 0;
+      background: #eef1ec;
+    }
+    /* Découpes des captures réelles : la carte (×1,67), la carte livreur et l'estimation (×0,95). */
+    .track-crop {
+      position: absolute;
+      overflow: hidden;
+    }
+    .track-crop img {
+      position: absolute;
+      display: block;
+    }
+    #track-map {
+      left: 0;
+      top: 560px;
+      width: 1080px;
+      height: 1040px;
+    }
+    #track-map img {
+      width: 1954px;
+      height: 4228px;
+      left: -463px;
+      top: -1561px;
+    }
+    #track-map-2,
+    #track-map-3 {
+      opacity: 0;
+    }
+    #track-courier {
+      left: 42px;
+      top: 180px;
+      width: 996px;
+      height: 200px;
+      border-radius: 40px;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+    }
+    #track-courier img {
+      width: 1112px;
+      height: 2405px;
+      left: -60px;
+      top: -660px;
+    }
+    #track-eta {
+      left: 42px;
+      top: 400px;
+      width: 996px;
+      height: 133px;
+      border-radius: 32px;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.14);
+      background: #ffffff;
+    }
+    #track-eta img {
+      width: 1112px;
+      height: 2405px;
+      left: -60px;
+      top: -1514px;
+    }
+    #track-live {
+      position: absolute;
+      left: 60px;
+      top: 600px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: #0f1412;
+      color: #ffffff;
+      border-radius: 18px;
+      padding: 12px 22px;
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+    #track-live-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #ef4444;
+    }
+  </style>
+  <div data-hf-id="hf-3x7y" id="root" data-composition-id="track" data-width="1080" data-height="1920">
+    <div data-hf-id="hf-074u" id="track-stage" class="clip" data-start="0" data-duration="4.8">
+      <div data-hf-id="hf-74th" id="track-world">
+        <div data-hf-id="hf-dyuu" id="track-map" class="track-crop">
+          <img data-hf-id="hf-rm9i" id="track-map-1" src="assets/screens/08-track-1.png" alt="Carte : Yao quitte le maquis" />
+          <img data-hf-id="hf-alqi" id="track-map-2" src="assets/screens/08-track-2.png" alt="Carte : Yao à mi-chemin" />
+          <img data-hf-id="hf-okmh" id="track-map-3" src="assets/screens/08-track-3.png" alt="Carte : Yao presque arrivé" />
+        </div>
+        <div data-hf-id="hf-0dup" id="track-live">
+          <div data-hf-id="hf-fc57" id="track-live-dot"></div>
+          <span data-hf-id="hf-htir">EN DIRECT</span>
+        </div>
+        <div data-hf-id="hf-45yd" id="track-courier" class="track-crop">
+          <img data-hf-id="hf-0x5y" src="assets/screens/08-track-2.png" alt="Yao, votre livreur, moto AB-1234-CI" />
+        </div>
+        <div data-hf-id="hf-n4jw" id="track-eta" class="track-crop">
+          <img data-hf-id="hf-v8tx" src="assets/screens/08-track-2.png" alt="Arrivée estimée : environ 6 min" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    // Iris depuis le bouton « Commander » de la scène précédente.
+    tl.fromTo("#track-world", { clipPath: "circle(0px at 540px 1190px)" },
+      { clipPath: "circle(2300px at 540px 1190px)", duration: 0.42, ease: "power2.inOut" }, 0);
+    // Le livreur et l'estimation arrivent du haut.
+    tl.fromTo("#track-courier", { y: -260, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "expo.out" }, 0.3);
+    tl.fromTo("#track-eta", { y: -200, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "expo.out" }, 0.45);
+    tl.fromTo("#track-live", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.15, ease: "power2.out" }, 1.9);
+    // La moto avance : trois positions réelles, échangées en fondu flou.
+    tl.to("#track-map-1", { opacity: 0, filter: "blur(8px)", duration: 0.2, ease: "power2.in" }, 1.6);
+    tl.fromTo("#track-map-2", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power2.out" }, 1.62);
+    tl.to("#track-map-2", { opacity: 0, filter: "blur(8px)", duration: 0.2, ease: "power2.in" }, 3.1);
+    tl.fromTo("#track-map-3", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power2.out" }, 3.12);
+    // Sortie : la carte s'approche de la maison et s'efface.
+    tl.to("#track-world", { scale: 1.12, filter: "blur(14px)", opacity: 0, transformOrigin: "540px 900px", duration: 0.3, ease: "power3.in" }, 4.48);
+    window.__timelines["track"] = tl;
+  </script>
+</template>

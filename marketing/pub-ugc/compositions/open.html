@@ -1,0 +1,64 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: var(--brand, #0b5d3b);
+    }
+    #open-stage {
+      position: absolute;
+      inset: 0;
+    }
+    #open-phone {
+      position: absolute;
+      left: 224px;
+      top: 260px;
+      width: 632px;
+      height: 1330px;
+      border: 16px solid #0f1412;
+      border-radius: 72px;
+      overflow: hidden;
+      background: #f5f6f3;
+      box-shadow: 0 40px 90px rgba(0, 0, 0, 0.4);
+    }
+    #open-screen {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 600px;
+      height: 1298px;
+    }
+    #open-touch {
+      position: absolute;
+      left: 144px;
+      top: 513px;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.55);
+      box-shadow: 0 0 0 2px rgba(15, 20, 18, 0.25);
+      opacity: 0;
+    }
+  </style>
+  <div data-hf-id="hf-lovv" id="root" data-composition-id="open" data-width="1080" data-height="1920">
+    <div data-hf-id="hf-xw0r" id="open-stage" class="clip" data-start="0" data-duration="2">
+      <div data-hf-id="hf-y90e" id="open-phone">
+      <img data-hf-id="hf-4t8z" id="open-screen" src="assets/screens/01-home.png" alt="Accueil de l'app Tchopi" />
+      <div data-hf-id="hf-sxjz" id="open-touch"></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    // Le téléphone monte du bas, tenu en main (légère rotation qui se pose).
+    tl.fromTo("#open-phone", { y: 1400, rotation: -5, scale: 1, filter: "blur(10px)" },
+      { y: 0, rotation: 0, filter: "blur(0px)", duration: 0.6, ease: "expo.out" }, 0);
+    // Appui sur « Repas ».
+    tl.fromTo("#open-touch", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.12, ease: "power2.out" }, 1.38);
+    tl.to("#open-touch", { opacity: 0, duration: 0.18, ease: "power2.in" }, 1.6);
+    // L'écran devient le monde : le téléphone grandit au-delà du cadre depuis le point touché.
+    tl.to("#open-phone", { scale: 2.8, transformOrigin: "176px 545px", filter: "blur(14px)", duration: 0.36, ease: "power3.in" }, 1.64);
+    window.__timelines["open"] = tl;
+  </script>
+</template>

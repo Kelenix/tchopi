@@ -1,0 +1,82 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: var(--brand, #0b5d3b);
+    }
+    #order-stage {
+      position: absolute;
+      inset: 0;
+    }
+    #order-cam {
+      position: absolute;
+      inset: 0;
+    }
+    /* Enregistrement d'écran : capture 1170 px réduite à 1000 px (×0,8547). */
+    #order-screen {
+      position: absolute;
+      left: 40px;
+      top: 120px;
+      width: 1000px;
+      height: 2164px;
+      border-radius: 48px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+      background: #ffffff;
+    }
+    #order-screen img {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1000px;
+      height: 2164px;
+    }
+    #order-after {
+      opacity: 0;
+    }
+    .order-touch {
+      position: absolute;
+      width: 64px;
+      height: 64px;
+      margin: -32px 0 0 -32px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.6);
+      box-shadow: 0 0 0 2px rgba(15, 20, 18, 0.25);
+      opacity: 0;
+    }
+  </style>
+  <div data-hf-id="hf-9n21" id="root" data-composition-id="order" data-width="1080" data-height="1920">
+    <div data-hf-id="hf-32cy" id="order-stage" class="clip" data-start="0" data-duration="3.6">
+      <div data-hf-id="hf-m8tt" id="order-cam">
+        <div data-hf-id="hf-wldc" id="order-screen">
+          <img data-hf-id="hf-irnp" id="order-before" src="assets/screens/02-restaurant.png" alt="Fiche du Maquis Chez Tante" />
+          <img data-hf-id="hf-jjo1" id="order-after" src="assets/screens/03-added.png" alt="Alloco ajouté, panier à 4 000 F" />
+          <!-- Points de toucher, en coordonnées de l'écran (capture × 0,8547) -->
+          <div data-hf-id="hf-cc9o" id="order-touch-alloco" class="order-touch" style="left: 909px; top: 1614px"></div>
+          <div data-hf-id="hf-44g6" id="order-touch-cart" class="order-touch" style="left: 500px; top: 2081px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    // Arrivée depuis le zoom de la scène précédente.
+    tl.fromTo("#order-cam", { scale: 1.08, filter: "blur(14px)" }, { scale: 1, filter: "blur(0px)", duration: 0.32, ease: "expo.out" }, 0);
+    // Défilement vers les plats (le haut de la fiche sort, les plats montent dans le cadre).
+    tl.fromTo("#order-screen", { y: 0 }, { y: -1120, duration: 0.6, ease: "power2.inOut" }, 0.34);
+    // « garba » : punch-in sur la ligne Garba.
+    tl.to("#order-cam", { scale: 1.14, transformOrigin: "540px 860px", duration: 0.4, ease: "power2.inOut" }, 0.72);
+    tl.to("#order-cam", { scale: 1, duration: 0.45, ease: "power2.inOut" }, 1.4);
+    // « alloco » : appui sur + → le panier apparaît.
+    tl.fromTo("#order-touch-alloco", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.12, ease: "power2.out" }, 1.86);
+    tl.to("#order-touch-alloco", { opacity: 0, duration: 0.18, ease: "power2.in" }, 2.06);
+    tl.fromTo("#order-after", { opacity: 0 }, { opacity: 1, duration: 0.08, ease: "none" }, 1.92);
+    // « Voir le panier » : appui, puis l'écran part vers la gauche (navigation).
+    tl.fromTo("#order-touch-cart", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.12, ease: "power2.out" }, 3.0);
+    tl.to("#order-touch-cart", { opacity: 0, duration: 0.15, ease: "power2.in" }, 3.18);
+    tl.to("#order-cam", { x: -1100, filter: "blur(12px)", duration: 0.3, ease: "power3.in" }, 3.28);
+    window.__timelines["order"] = tl;
+  </script>
+</template>

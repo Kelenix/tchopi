@@ -1,0 +1,106 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "Plus Jakarta Sans";
+      font-weight: 800;
+      src: url("assets/fonts/PlusJakartaSans-ExtraBold.ttf");
+    }
+    @font-face {
+      font-family: "Plus Jakarta Sans";
+      font-weight: 700;
+      src: url("assets/fonts/PlusJakartaSans-Bold.ttf");
+    }
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: var(--brand, #0b5d3b);
+      font-family: "Plus Jakarta Sans", sans-serif;
+    }
+    #end-stage {
+      position: absolute;
+      inset: 0;
+    }
+    #end-ground {
+      position: absolute;
+      inset: 0;
+      background: #f5f6f3;
+    }
+    #end-mark {
+      position: absolute;
+      left: 0;
+      top: 560px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      font-size: 230px;
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1;
+      color: #0f1412;
+    }
+    .end-letter {
+      display: inline-block;
+    }
+    #end-dot {
+      display: inline-block;
+      color: var(--accent, #16a34a);
+    }
+    #end-claim {
+      position: absolute;
+      left: 110px;
+      top: 880px;
+      width: 860px;
+      text-align: center;
+      font-size: 54px;
+      font-weight: 700;
+      line-height: 1.22;
+      color: #0f1412;
+    }
+    #end-cta {
+      position: absolute;
+      left: 0;
+      top: 1120px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+    #end-cta-box {
+      background: var(--brand, #0b5d3b);
+      color: #ffffff;
+      border-radius: 28px;
+      padding: 22px 44px 26px;
+      font-size: 46px;
+      font-weight: 800;
+    }
+  </style>
+  <div data-hf-id="hf-00mi" id="root" data-composition-id="endcard" data-width="1080" data-height="1920">
+    <div data-hf-id="hf-ov06" id="end-stage" class="clip" data-start="0" data-duration="4.6">
+      <div data-hf-id="hf-fwzw" id="end-ground"></div>
+      <div data-hf-id="hf-bv0y" id="end-mark" aria-label="tchopi.">
+        <span data-hf-id="hf-qchu" class="end-letter" id="end-l1">t</span><span data-hf-id="hf-st12" class="end-letter" id="end-l2">c</span><span data-hf-id="hf-evmo"
+          class="end-letter" id="end-l3">h</span><span data-hf-id="hf-25m0" class="end-letter" id="end-l4">o</span><span data-hf-id="hf-pejm"
+          class="end-letter" id="end-l5">p</span><span data-hf-id="hf-ju1g" class="end-letter" id="end-l6">i</span><span data-hf-id="hf-349f" id="end-dot">.</span>
+      </div>
+      <div data-hf-id="hf-fidx" id="end-claim" data-var-text="claim">Vos plats et vos colis, livrés partout dans votre ville.</div>
+      <div data-hf-id="hf-cng5" id="end-cta">
+        <div data-hf-id="hf-ltvl" id="end-cta-box" data-var-text="cta">Bientôt sur Google Play</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    // Le fond vert devient clair (couleur qui monte depuis le bas).
+    tl.fromTo("#end-ground", { clipPath: "inset(100% 0 0 0)" }, { clipPath: "inset(0% 0 0 0)", duration: 0.45, ease: "power2.inOut" }, 0);
+    // « tchopi » tapé lettre à lettre, sur le mot dit par la voix.
+    ["#end-l1", "#end-l2", "#end-l3", "#end-l4", "#end-l5", "#end-l6"].forEach((id, i) => {
+      tl.fromTo(id, { opacity: 0, y: 40, filter: "blur(6px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.2, ease: "expo.out" }, 0.82 + i * 0.07);
+    });
+    // Le point vert tombe et rebondit.
+    tl.fromTo("#end-dot", { y: -420, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "bounce.out" }, 1.25);
+    // La promesse de l'app, puis l'appel à l'action ; tenus jusqu'à la fin.
+    tl.fromTo("#end-claim", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power2.out" }, 1.62);
+    tl.fromTo("#end-cta-box", { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.6)" }, 1.92);
+    window.__timelines["endcard"] = tl;
+  </script>
+</template>

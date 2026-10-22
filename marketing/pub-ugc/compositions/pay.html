@@ -1,0 +1,84 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: var(--brand, #0b5d3b);
+    }
+    #pay-stage {
+      position: absolute;
+      inset: 0;
+    }
+    #pay-cam {
+      position: absolute;
+      inset: 0;
+    }
+    /* Panier réel (capture 1170 px réduite à 1000 px), cadré sur le choix du paiement. */
+    #pay-screen {
+      position: absolute;
+      left: 40px;
+      top: -558px;
+      width: 1000px;
+      height: 2164px;
+      border-radius: 48px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+      background: #f5f6f3;
+    }
+    #pay-screen img {
+      position: absolute;
+      left: 0;
+      width: 1000px;
+      height: 2164px;
+    }
+    /* La capture « espèces » est défilée de 116 px de plus : recalée pour que les lignes coïncident. */
+    #pay-cash {
+      top: -99px;
+    }
+    #pay-momo {
+      top: 0;
+      opacity: 0;
+    }
+    .pay-touch {
+      position: absolute;
+      width: 64px;
+      height: 64px;
+      margin: -32px 0 0 -32px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.6);
+      box-shadow: 0 0 0 2px rgba(15, 20, 18, 0.25);
+      opacity: 0;
+    }
+  </style>
+  <div data-hf-id="hf-2wrf" id="root" data-composition-id="pay" data-width="1080" data-height="1920">
+    <div data-hf-id="hf-i0as" id="pay-stage" class="clip" data-start="0" data-duration="3">
+      <div data-hf-id="hf-gdi7" id="pay-cam">
+        <div data-hf-id="hf-lx9q" id="pay-screen">
+          <img data-hf-id="hf-6epq" id="pay-cash" src="assets/screens/05-cart-cash.png" alt="Panier : espèces sélectionnées" />
+          <img data-hf-id="hf-fkif" id="pay-momo" src="assets/screens/06-momo.png" alt="Panier : Mobile Money sélectionné" />
+          <div data-hf-id="hf-83z8" id="pay-touch-momo" class="pay-touch" style="left: 860px; top: 1258px"></div>
+          <div data-hf-id="hf-3uoh" id="pay-touch-order" class="pay-touch" style="left: 500px; top: 2068px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    // L'écran du panier arrive de la droite (suite de la navigation).
+    tl.fromTo("#pay-cam", { x: 1100, filter: "blur(12px)" }, { x: 0, filter: "blur(0px)", duration: 0.42, ease: "expo.out" }, 0);
+    // « Mobile Money » : appui sur la ligne, la sélection change.
+    tl.fromTo("#pay-touch-momo", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.12, ease: "power2.out" }, 0.78);
+    tl.to("#pay-touch-momo", { opacity: 0, duration: 0.18, ease: "power2.in" }, 0.98);
+    tl.fromTo("#pay-momo", { opacity: 0 }, { opacity: 1, duration: 0.08, ease: "none" }, 0.84);
+    // Punch-in sur les opérateurs (Orange Money, MTN MoMo, Wave, Moov Money).
+    tl.to("#pay-cam", { scale: 1.3, transformOrigin: "460px 700px", duration: 0.45, ease: "power2.inOut" }, 1.0);
+    // Retour, puis la caméra descend vers « Commander ».
+    tl.to("#pay-cam", { scale: 1, y: -320, duration: 0.5, ease: "power2.inOut" }, 1.85);
+    tl.fromTo("#pay-touch-order", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.12, ease: "power2.out" }, 2.46);
+    tl.to("#pay-touch-order", { opacity: 0, duration: 0.15, ease: "power2.in" }, 2.64);
+    // La commande part : l'écran recule et s'efface, l'iris de la scène suivante s'ouvre au même point.
+    tl.to("#pay-cam", { scale: 0.92, opacity: 0, transformOrigin: "540px 1190px", duration: 0.26, ease: "power3.in" }, 2.72);
+    window.__timelines["pay"] = tl;
+  </script>
+</template>

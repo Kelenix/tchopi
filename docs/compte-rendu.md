@@ -4,6 +4,29 @@
 
 ---
 
+## 2026-10-23 — Vidéo publicitaire UGC (motion design)
+
+### Résultat
+- Vidéo verticale 9:16 de 25 s en français : `marketing/pub-ugc/renders/tchopi-ugc-9x16.mp4` (1080×1920, 30 i/s, 12 Mo, son −14,8 LUFS).
+- Faite avec HyperFrames (pas Higgsfield), à partir des **vrais écrans de l'app** capturés en local.
+- Histoire : « POV : il est 20 h et t'as faim » → j'ouvre Tchopi → garba + alloco au Maquis Chez Tante → paiement
+  Mobile Money → Yao suivi en direct sur la carte → code de livraison → « Livrée » → « tchopi. ».
+- Voix féminine française (HeyGen), musique afrobeat 108 BPM, sous-titres mot à mot façon TikTok, bruitages sur les
+  actions (appui, ajout au panier, transitions).
+
+### Limites
+- Quota gratuit de voix HeyGen presque épuisé (19 s restantes ce mois-ci) : texte de voix court (15 s).
+- Le son a été mesuré, pas écouté : à vérifier à l'oreille.
+- Pas d'avatar (personne filmée) : option payante HeyGen, non utilisée.
+- L'icône de l'app est encore celle de Flutter : la marque est montrée par le mot « tchopi. ».
+- Appel à l'action « Bientôt sur Google Play » (app pas encore publiée).
+
+### Modifier la vidéo
+- Projet : `marketing/pub-ugc/` (textes modifiables : accroche, promesse, appel à l'action, couleurs).
+- Détails des choix : `marketing/pub-ugc/STORYLINES.md`, `SPEC.md`, `REVIEW.md`.
+
+---
+
 ## 2026-10-20 — Paiements, cartographie, trajets
 
 ### Résumé
