@@ -47,11 +47,11 @@ class NewOrderSheet extends ConsumerWidget {
       ),
       child: ListView(
         shrinkWrap: true,
-        padding: const EdgeInsets.fromLTRB(
+        padding: EdgeInsets.fromLTRB(
           Space.screen,
           0,
           Space.screen,
-          Space.xl,
+          Space.xl + MediaQuery.viewPaddingOf(context).bottom,
         ),
         children: [
           Text(l10n.newOrderFood, style: text.titleLarge),

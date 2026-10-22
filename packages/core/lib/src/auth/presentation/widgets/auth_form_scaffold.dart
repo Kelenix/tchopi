@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../../l10n/app_localizations.dart';
+import '../../../design/app_theme.dart';
 import '../../../design/tokens.dart';
 import '../../../design/widgets.dart';
 import '../../domain/app_failure.dart';
@@ -128,7 +129,13 @@ class AuthFormScaffold extends StatelessWidget {
 
     if (branded) {
       return AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
+        // Icônes claires sur la photo en haut ; barre de gestes sur la feuille, dans la couleur du thème.
+        value: systemBars(darkIcons: false).copyWith(
+          systemNavigationBarIconBrightness:
+              Theme.of(context).brightness == Brightness.light
+              ? Brightness.dark
+              : Brightness.light,
+        ),
         child: Scaffold(
           backgroundColor: tokens.surface,
           body: ListView(

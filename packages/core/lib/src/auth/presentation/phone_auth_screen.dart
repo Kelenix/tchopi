@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../../design/app_theme.dart';
 import '../../design/tokens.dart';
 import '../../design/widgets.dart';
 import '../../supabase/supabase_setup.dart';
@@ -172,7 +173,7 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
     // Voile sur la photo dans la couleur du fond : clair en thème clair, sombre en thème sombre.
     final veil = tokens.surface;
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: dark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
+      value: systemBars(darkIcons: !dark),
       child: Scaffold(
         backgroundColor: tokens.surface,
         // Photo et logo sur ~45 % de l'écran, puis la feuille de connexion qui la chevauche et descend jusqu'en bas.

@@ -3,6 +3,21 @@ import 'package:flutter/services.dart';
 
 import 'tokens.dart';
 
+/// Barres système transparentes, sans voile de contraste : l'app occupe tout l'écran, y compris sous la barre
+/// de gestes d'Android. [darkIcons] : icônes sombres (fond clair).
+SystemUiOverlayStyle systemBars({required bool darkIcons}) =>
+    (darkIcons ? SystemUiOverlayStyle.dark : SystemUiOverlayStyle.light)
+        .copyWith(
+          statusBarColor: Colors.transparent,
+          systemNavigationBarColor: Colors.transparent,
+          systemNavigationBarDividerColor: Colors.transparent,
+          systemNavigationBarIconBrightness: darkIcons
+              ? Brightness.dark
+              : Brightness.light,
+          systemNavigationBarContrastEnforced: false,
+          systemStatusBarContrastEnforced: false,
+        );
+
 /// Thème Material 3 construit à partir des jetons, en clair et en sombre (ADR-038) ; police embarquée dans `core`.
 abstract final class AppTheme {
   static const fontFamily = 'packages/core/PlusJakartaSans';
@@ -84,11 +99,9 @@ abstract final class AppTheme {
         centerTitle: false,
         toolbarHeight: 64,
         titleSpacing: Space.lg,
-        systemOverlayStyle:
-            (brightness == Brightness.light
-                    ? SystemUiOverlayStyle.dark
-                    : SystemUiOverlayStyle.light)
-                .copyWith(statusBarColor: Colors.transparent),
+        systemOverlayStyle: systemBars(
+          darkIcons: brightness == Brightness.light,
+        ),
         titleTextStyle: text.titleLarge!.copyWith(fontWeight: FontWeight.w800),
       ),
       actionIconTheme: ActionIconThemeData(
