@@ -1164,3 +1164,7 @@
 ## ADR-064 — Catalogue de démonstration élargi
 - **Décision** : `supabase/demo-catalog.sql` ajoute 20 établissements (7 villes, dont 4 magasins de jus/desserts et 1 fermé temporairement) et 100 produits, avec horaires (plages simples ou midi/soir), catégories de carte, 83 groupes d'options (portion, accompagnement, viande, poisson, format, suppléments) et photos réelles (`seed-media/media/demo`). Identifiants fixes : le fichier est rejouable sans doublon. Chargé en local par `db reset`, en ligne par `.\vps.ps1 demo`.
 - **Limite** : ces établissements n'ont pas de gérant ; une commande passée chez eux attend une acceptation qu'aucun compte ne peut donner (comme les 3 restaurants de démonstration d'origine).
+
+## ADR-065 — Masquer des commandes de son historique
+- **Décision** : le client et le livreur masquent leurs commandes terminées (livrée, refusée, annulée, échouée), une par une en glissant la carte, ou tout l'historique (bouton « Effacer l'historique »). Colonnes `orders.customer_hidden_at` / `courier_hidden_at`, fonction `hide_orders` ; les commandes en cours ne se masquent pas.
+- **Pourquoi pas une suppression** : la commande porte les paiements, reçus, gains du livreur, espèces et litiges ; elle reste en base et visible de l'admin, du restaurant et de l'autre partie. Le résumé de gains du livreur reste complet.

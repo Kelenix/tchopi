@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../shared/hide_history.dart';
 import '../../../shared/more_pages.dart';
 import '../../client/client_nav_bar.dart';
 import '../orders_providers.dart';
@@ -27,10 +30,32 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
         ref.read(orderRepositoryProvider).mine(offset: offset, limit: limit),
   );
 
+  // Masquées pendant cette visite : retirées tout de suite de la liste, avant le rechargement.
+  final _hidden = <String>{};
+
   @override
   void dispose() {
     _more.dispose();
     super.dispose();
+  }
+
+  Future<void> _hide(List<String>? ids) async {
+    final l10n = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      await ref.read(orderRepositoryProvider).hide(ids);
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(ids == null ? l10n.historyCleared : l10n.historyHidden),
+        ),
+      );
+    } on AppFailure catch (failure) {
+      messenger.showSnackBar(
+        SnackBar(content: Text(failureMessage(l10n, failure))),
+      );
+    }
+    _more.reset();
+    ref.invalidate(myOrdersProvider);
   }
 
   @override
@@ -40,7 +65,26 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
     final orders = ref.watch(myOrdersProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.ordersTitle)),
+      appBar: AppBar(
+        title: Text(l10n.ordersTitle),
+        actions: [
+          if (orders.value?.any((o) => o.status.isClosed) ?? false)
+            IconButton(
+              tooltip: l10n.historyClear,
+              icon: const Icon(Icons.delete_sweep_outlined),
+              onPressed: () async {
+                if (!await confirmHide(context, all: true)) return;
+                setState(
+                  () => _hidden.addAll([
+                    for (final o in [...?orders.value, ..._more.items])
+                      if (o.status.isClosed) o.id,
+                  ]),
+                );
+                await _hide(null);
+              },
+            ),
+        ],
+      ),
       bottomNavigationBar: const ClientNavBar(current: 1),
       body: switch (orders) {
         AsyncData(:final value) when value.isEmpty => EmptyState(
@@ -56,7 +100,10 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
           child: ListenableBuilder(
             listenable: _more,
             builder: (context, _) {
-              final value = [...first, ..._more.items];
+              final value = [
+                for (final o in [...first, ..._more.items])
+                  if (!_hidden.contains(o.id)) o,
+              ];
               return ListView(
                 padding: const EdgeInsets.fromLTRB(
                   Space.screen,
@@ -78,7 +125,20 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
                         child: Text(title, style: text.titleMedium),
                       ),
                       for (final order in group) ...[
-                        OrderTile(order: order),
+                        if (order.status.isClosed)
+                          Dismissible(
+                            key: ValueKey(order.id),
+                            direction: DismissDirection.endToStart,
+                            background: const HideBackground(),
+                            confirmDismiss: (_) => confirmHide(context),
+                            onDismissed: (_) {
+                              setState(() => _hidden.add(order.id));
+                              unawaited(_hide([order.id]));
+                            },
+                            child: OrderTile(order: order),
+                          )
+                        else
+                          OrderTile(order: order),
                         const SizedBox(height: Space.md),
                       ],
                     ],

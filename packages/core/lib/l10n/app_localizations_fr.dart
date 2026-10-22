@@ -1301,6 +1301,32 @@ class AppLocalizationsFr extends AppLocalizations {
   String get historyStatDistance => 'Distance';
 
   @override
+  String get historyHide => 'Masquer';
+
+  @override
+  String get historyHideTitle => 'Masquer cette commande ?';
+
+  @override
+  String get historyHideBody =>
+      'Elle disparaît de votre historique. Elle reste conservée pour les reçus, les paiements et le support.';
+
+  @override
+  String get historyClear => 'Effacer l\'historique';
+
+  @override
+  String get historyClearTitle => 'Effacer tout l\'historique ?';
+
+  @override
+  String get historyClearBody =>
+      'Les commandes terminées disparaissent de votre liste ; les commandes en cours restent affichées. Elles restent conservées pour les reçus, les paiements et le support.';
+
+  @override
+  String get historyHidden => 'Commande masquée';
+
+  @override
+  String get historyCleared => 'Historique effacé';
+
+  @override
   String get historyNone => 'Aucune livraison pour ces filtres';
 
   @override

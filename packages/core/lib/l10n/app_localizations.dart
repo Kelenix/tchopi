@@ -2446,6 +2446,54 @@ abstract class AppLocalizations {
   /// **'Distance'**
   String get historyStatDistance;
 
+  /// No description provided for @historyHide.
+  ///
+  /// In fr, this message translates to:
+  /// **'Masquer'**
+  String get historyHide;
+
+  /// No description provided for @historyHideTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Masquer cette commande ?'**
+  String get historyHideTitle;
+
+  /// No description provided for @historyHideBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Elle disparaît de votre historique. Elle reste conservée pour les reçus, les paiements et le support.'**
+  String get historyHideBody;
+
+  /// No description provided for @historyClear.
+  ///
+  /// In fr, this message translates to:
+  /// **'Effacer l\'historique'**
+  String get historyClear;
+
+  /// No description provided for @historyClearTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Effacer tout l\'historique ?'**
+  String get historyClearTitle;
+
+  /// No description provided for @historyClearBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les commandes terminées disparaissent de votre liste ; les commandes en cours restent affichées. Elles restent conservées pour les reçus, les paiements et le support.'**
+  String get historyClearBody;
+
+  /// No description provided for @historyHidden.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande masquée'**
+  String get historyHidden;
+
+  /// No description provided for @historyCleared.
+  ///
+  /// In fr, this message translates to:
+  /// **'Historique effacé'**
+  String get historyCleared;
+
   /// No description provided for @historyNone.
   ///
   /// In fr, this message translates to:

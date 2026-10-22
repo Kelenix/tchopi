@@ -12,6 +12,7 @@ import 'package:tchopi/features/orders/data/order_repository.dart';
 import 'package:tchopi/features/orders/orders_providers.dart';
 import 'package:tchopi/features/orders/presentation/checkout_screen.dart';
 import 'package:tchopi/features/orders/presentation/order_detail_screen.dart';
+import 'package:tchopi/features/orders/presentation/orders_screen.dart';
 import 'package:tchopi/features/restaurant/presentation/restaurant_orders_screen.dart';
 import 'package:tchopi/features/restaurant/restaurant_providers.dart';
 
@@ -110,7 +111,54 @@ void tall(WidgetTester tester) {
   addTearDown(tester.view.reset);
 }
 
+class _HidingOrders extends Fake implements OrderRepository {
+  final hidden = <List<String>?>[];
+
+  @override
+  Future<int> hide([List<String>? ids]) async {
+    hidden.add(ids);
+    return ids?.length ?? 1;
+  }
+}
+
 void main() {
+  testWidgets(
+    'mes commandes : une commande terminée se masque en la glissant',
+    (tester) async {
+      tall(tester);
+      final repository = _HidingOrders();
+      await tester.pumpWidget(
+        app(const OrdersScreen(), [
+          myOrdersProvider.overrideWith(
+            (ref) async => [
+              order('o1', OrderStatus.preparing),
+              order('o2', OrderStatus.delivered),
+            ],
+          ),
+          orderRepositoryProvider.overrideWithValue(repository),
+        ]),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byIcon(Icons.delete_sweep_outlined), findsOneWidget);
+      expect(
+        find.byType(Dismissible),
+        findsOneWidget,
+        reason: 'la commande en cours ne se masque pas',
+      );
+
+      await tester.drag(find.byType(Dismissible), const Offset(-600, 0));
+      await tester.pumpAndSettle();
+      expect(find.text('Masquer cette commande ?'), findsOneWidget);
+      await tester.tap(find.text('Masquer').last);
+      await tester.pumpAndSettle();
+      expect(repository.hidden, [
+        ['o2'],
+      ]);
+      expect(find.byKey(const ValueKey('o2')), findsNothing);
+      expect(find.text('Commande masquée'), findsOneWidget);
+    },
+  );
+
   final base = [
     cartControllerProvider.overrideWith(_FakeCart.new),
     addressesProvider.overrideWith(_FakeAddresses.new),

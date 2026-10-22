@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../shared/hide_history.dart';
+import '../../../orders/orders_providers.dart';
 import '../../courier_nav_bar.dart';
 import '../data/mission_repository.dart';
 import '../missions_providers.dart';
@@ -98,6 +102,28 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
     }
   }
 
+  static bool _closed(Map<String, dynamic> r) =>
+      r['group'] == 'delivered' || r['group'] == 'cancelled';
+
+  /// Masque des missions terminées de l'historique ([ids] null : toutes) ; les gains restent comptés.
+  Future<void> _hide(List<String>? ids) async {
+    final l10n = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      await ref.read(orderRepositoryProvider).hide(ids);
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(ids == null ? l10n.historyCleared : l10n.historyHidden),
+        ),
+      );
+    } on AppFailure catch (failure) {
+      messenger.showSnackBar(
+        SnackBar(content: Text(failureMessage(l10n, failure))),
+      );
+    }
+    if (ids == null && mounted) await _load(reset: true);
+  }
+
   Future<void> _choose(_Period period) async {
     if (period == _Period.custom) {
       final now = DateTime.now();
@@ -147,6 +173,17 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(l10n.historyTitle),
+        actions: [
+          if (_rows.any(_closed))
+            IconButton(
+              tooltip: l10n.historyClear,
+              icon: const Icon(Icons.delete_sweep_outlined),
+              onPressed: () async {
+                if (!await confirmHide(context, all: true)) return;
+                await _hide(null);
+              },
+            ),
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: () => _load(reset: true),
@@ -286,7 +323,21 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                 padding: const EdgeInsets.only(top: Space.xl),
                 child: EmptyState(icon: Icons.history, title: l10n.historyNone),
               ),
-            for (final r in _rows) _DeliveryCard(row: r, at: at),
+            for (final r in _rows)
+              if (_closed(r))
+                Dismissible(
+                  key: ValueKey(r['id']),
+                  direction: DismissDirection.endToStart,
+                  background: const HideBackground(),
+                  confirmDismiss: (_) => confirmHide(context),
+                  onDismissed: (_) {
+                    setState(() => _rows.remove(r));
+                    unawaited(_hide([r['id'] as String]));
+                  },
+                  child: _DeliveryCard(row: r, at: at),
+                )
+              else
+                _DeliveryCard(row: r, at: at),
             if (_loading)
               const Padding(
                 padding: EdgeInsets.all(Space.lg),

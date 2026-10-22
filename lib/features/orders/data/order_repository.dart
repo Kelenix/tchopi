@@ -65,6 +65,11 @@ class OrderRepository {
     return Order.fromJson(row);
   });
 
+  /// Masque des commandes terminées de mon historique ([ids] null : toutes) ; rien n'est supprimé (ADR-065).
+  Future<int> hide([List<String>? ids]) => guardCall(
+    () => _client.rpc<int>('hide_orders', params: {'p_order_ids': ids}),
+  );
+
   /// Mes commandes, les plus récentes d'abord (un gérant voit aussi celles de son restaurant : filtre explicite).
   Future<List<Order>> mine({int offset = 0, int limit = pageSize}) =>
       guardCall(() async {
@@ -72,6 +77,7 @@ class OrderRepository {
             .from('orders')
             .select(_withItems)
             .eq('customer_id', _client.auth.currentUser!.id)
+            .isFilter('customer_hidden_at', null)
             .order('created_at', ascending: false)
             .range(offset, offset + limit - 1);
         return rows.map(Order.fromJson).toList();
