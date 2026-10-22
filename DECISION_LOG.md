@@ -1160,3 +1160,7 @@
 - **Alternatives écartées** : Ajouter de nouveaux éléments de catalogue ou estimations qui ne proviennent pas déjà du serveur ; retirer les historiques et fonctions de refus existants.
 - **Conséquences** : Les actions principales apparaissent plus tôt et les données restent issues des sources actuelles. L’historique restaurant suit le flux existant, limité à ses 100 commandes les plus récentes.
 - **Impact** : ergonomie / accessibilité / comportement produit.
+
+## ADR-064 — Catalogue de démonstration élargi
+- **Décision** : `supabase/demo-catalog.sql` ajoute 20 établissements (7 villes, dont 4 magasins de jus/desserts et 1 fermé temporairement) et 100 produits, avec horaires (plages simples ou midi/soir), catégories de carte, 83 groupes d'options (portion, accompagnement, viande, poisson, format, suppléments) et photos réelles (`seed-media/media/demo`). Identifiants fixes : le fichier est rejouable sans doublon. Chargé en local par `db reset`, en ligne par `.\vps.ps1 demo`.
+- **Limite** : ces établissements n'ont pas de gérant ; une commande passée chez eux attend une acceptation qu'aucun compte ne peut donner (comme les 3 restaurants de démonstration d'origine).

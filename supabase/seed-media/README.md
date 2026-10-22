@@ -5,6 +5,8 @@
 restent dans `originaux/` (non versionné). Pour remplacer une image : même nom dans `media/demo/`, puis
 `supabase seed buckets`.
 
+- Catalogue élargi (`demo-catalog.sql`) : photos fournies par le porteur du projet, recadrées en carré (produits) et en 16:9
+  (`cover-*.jpg`, couvertures).
 - Format : JPG, moins de 500 Ko chacune.
 - Couvertures : **paysage 16:9** (1600 × 900). Produits : **carré** (800 × 800). Bienvenue : **portrait** (1080 × 1600).
 - Aucun texte, logo, filigrane ni visage reconnaissable dans les images.

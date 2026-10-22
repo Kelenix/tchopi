@@ -117,6 +117,6 @@ jobs:
       - name: Envoi et déploiement (migrations, fonctions)
         if: env.CONFIGURED == 'true'
         run: |
-          git archive -o /tmp/tchopi-src.tar HEAD infra supabase/migrations supabase/functions supabase/templates supabase/demo.sql supabase/seed-media/media
+          git archive -o /tmp/tchopi-src.tar HEAD infra supabase/migrations supabase/functions supabase/templates supabase/demo.sql supabase/demo-catalog.sql supabase/seed-media/media
           scp -q /tmp/tchopi-src.tar tchopi:/tmp/tchopi-src.tar
           ssh tchopi 'rm -rf /opt/tchopi/src && mkdir -p /opt/tchopi/src && tar -xf /tmp/tchopi-src.tar -C /opt/tchopi/src && rm /tmp/tchopi-src.tar && sh /opt/tchopi/src/infra/server.sh deploy'

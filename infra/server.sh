@@ -171,11 +171,12 @@ studio() {
   if [ "$1" = start ]; then docker compose --profile studio up -d --wait studio meta; else docker compose stop studio meta; fi
 }
 
-# Restaurants de démonstration (s'ils sont absents) et leurs photos dans le bucket « media ».
+# Restaurants de démonstration (s'ils sont absents), catalogue élargi (rejouable) et photos dans le bucket « media ».
 demo() {
   if [ -z "$(sql -tA -c "select 1 from public.restaurants where id = '22222222-0000-0000-0000-000000000001'")" ]; then
     sql -1 -f - < "$SRC/supabase/demo.sql"
   fi
+  sql -1 -f - < "$SRC/supabase/demo-catalog.sql"
   key=$(grep '^SERVICE_ROLE_KEY=' "$APP/.env" | cut -d= -f2-)
   for f in "$SRC"/supabase/seed-media/media/demo/*.jpg; do
     curl -fsS -o /dev/null -X POST "http://127.0.0.1:8010/storage/v1/object/media/demo/$(basename "$f")" \

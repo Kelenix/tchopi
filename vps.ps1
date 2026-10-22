@@ -42,7 +42,7 @@ function Send-Source {
     Write-Host 'Attention : modifications non commitées dans infra/ ou supabase/ ; seule la version commitée est envoyée.' -ForegroundColor Yellow
   }
   $tar = Join-Path $env:TEMP 'tchopi-src.tar'
-  git -C $PSScriptRoot archive -o $tar HEAD infra supabase/migrations supabase/functions supabase/templates supabase/demo.sql supabase/seed-media/media
+  git -C $PSScriptRoot archive -o $tar HEAD infra supabase/migrations supabase/functions supabase/templates supabase/demo.sql supabase/demo-catalog.sql supabase/seed-media/media
   scp -q $tar tchopi:/tmp/tchopi-src.tar
   if ($LASTEXITCODE -ne 0) { Fail 'envoi vers le VPS : clé de ce PC enregistrée sur le VPS ? (docs/deployer-sur-vps.md § 1)' }
   Remove-Item $tar
