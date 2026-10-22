@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:core/core.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -87,16 +90,12 @@ class _CourierHomeScreenState extends ConsumerState<CourierHomeScreen> {
     );
   }
 
-  /// [auto] : ouverture à l'arrivée d'une commande, une seule fois par commande.
-  Future<void> _showOffer(DeliveryOffer offer, {bool auto = false}) async {
-    if (auto && !_shownOffers.add(offer.id)) return;
+  /// Détail d'une commande disponible ; le livreur peut revenir à la liste sans répondre.
+  Future<void> _showOffer(DeliveryOffer offer) async {
     ScaffoldMessenger.of(context).clearSnackBars();
-    final accepted = await Navigator.of(context).push<bool>(
-      MaterialPageRoute(
-        fullscreenDialog: true,
-        builder: (_) => OfferScreen(offer: offer),
-      ),
-    );
+    final accepted = await Navigator.of(
+      context,
+    ).push<bool>(MaterialPageRoute(builder: (_) => OfferScreen(offer: offer)));
     if ((accepted ?? false) && mounted) {
       await context.push(MissionScreen.location(offer.orderId));
     }
@@ -104,12 +103,23 @@ class _CourierHomeScreenState extends ConsumerState<CourierHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Nouvelles commandes : elles s'ajoutent à la liste ; un rappel discret, une fois par commande.
     ref.listen(pendingOffersProvider, (_, next) {
-      final fresh = (next.value ?? const <DeliveryOffer>[]).where(
-        (offer) => !_shownOffers.contains(offer.id),
-      );
+      final fresh = [
+        for (final offer in next.value ?? const <DeliveryOffer>[])
+          if (_shownOffers.add(offer.id)) offer,
+      ];
       if (fresh.isNotEmpty && ref.read(currentMissionProvider).value == null) {
-        _showOffer(fresh.first, auto: true);
+        unawaited(HapticFeedback.mediumImpact());
+        ScaffoldMessenger.of(context)
+          ..clearSnackBars()
+          ..showSnackBar(
+            SnackBar(
+              content: Text(
+                AppLocalizations.of(context).courierNewOffers(fresh.length),
+              ),
+            ),
+          );
       }
     });
     final l10n = AppLocalizations.of(context);
@@ -453,36 +463,111 @@ class _OfferTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final tokens = context.tokens;
+    final text = Theme.of(context).textTheme;
     final s = offer.summary;
-    return Card(
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: Space.lg,
-          vertical: Space.sm,
+    Widget stop(Color color, String label, String place) => Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 5),
+          child: Icon(Icons.circle, size: 10, color: color),
         ),
-        leading: Icon(
-          s.type == 'parcel'
-              ? Icons.inventory_2_outlined
-              : Icons.shopping_bag_outlined,
-          color: tokens.primary,
-        ),
-        title: Text(
-          '${s.number} · ${s.pickupName ?? s.pickupDistrict}',
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        subtitle: Text(
-          l10n.courierOfferLine(
-            formatDecimal(s.toPickupM / 1000),
-            s.dropoffDistrict,
+        const SizedBox(width: Space.sm),
+        Expanded(
+          child: Text.rich(
+            TextSpan(
+              text: '$label\n',
+              style: text.bodySmall!.copyWith(color: tokens.muted),
+              children: [
+                TextSpan(
+                  text: place,
+                  style: text.bodyMedium!.copyWith(
+                    color: tokens.ink,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-        trailing: Text(
-          '+${formatMoney(s.earning, currency: s.currency)}',
-          style: Theme.of(
-            context,
-          ).textTheme.titleMedium!.copyWith(color: tokens.success),
-        ),
+      ],
+    );
+    return Card(
+      child: InkWell(
         onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(Space.lg),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    s.type == 'parcel'
+                        ? Icons.inventory_2_outlined
+                        : Icons.shopping_bag_outlined,
+                    size: 20,
+                    color: tokens.primary,
+                  ),
+                  const SizedBox(width: Space.sm),
+                  Text(
+                    s.number,
+                    style: text.titleSmall!.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(width: Space.sm),
+                  Expanded(
+                    child: Text(
+                      l10n.offerTotalDistance(
+                        formatDecimal((s.toPickupM + s.tripM) / 1000),
+                      ),
+                      style: text.bodySmall!.copyWith(color: tokens.muted),
+                    ),
+                  ),
+                  Text(
+                    '+${formatMoney(s.earning, currency: s.currency)}',
+                    style: text.titleMedium!.copyWith(
+                      color: tokens.success,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: Space.md),
+              stop(
+                tokens.ink,
+                l10n.offerPickup(s.pickupName ?? l10n.orderPickupTitle),
+                '${s.pickupDistrict}, ${s.pickupLandmark}',
+              ),
+              const SizedBox(height: Space.sm),
+              stop(
+                tokens.primary,
+                l10n.offerDropoff(s.recipientName),
+                '${s.dropoffDistrict}, ${s.dropoffLandmark}',
+              ),
+              if (s.cashAmount > 0) ...[
+                const SizedBox(height: Space.md),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.payments_outlined,
+                      size: 18,
+                      color: tokens.warning,
+                    ),
+                    const SizedBox(width: Space.sm),
+                    Text(
+                      l10n.offerCash(
+                        formatMoney(s.cashAmount, currency: s.currency),
+                      ),
+                      style: text.bodySmall!.copyWith(color: tokens.warning),
+                    ),
+                  ],
+                ),
+              ],
+            ],
+          ),
+        ),
       ),
     );
   }

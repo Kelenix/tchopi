@@ -1946,6 +1946,17 @@ class AppLocalizationsFr extends AppLocalizations {
   String get offerAccept => 'Accepter';
 
   @override
+  String courierNewOffers(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nouvelles commandes à récupérer',
+      one: 'Nouvelle commande à récupérer',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get courierAvailableTitle => 'Commandes à récupérer';
 
   @override

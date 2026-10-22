@@ -818,6 +818,8 @@
     }
   },
   "offerAccept": "Accepter",
+  "courierNewOffers": "{count, plural, =1{Nouvelle commande à récupérer} other{{count} nouvelles commandes à récupérer}}",
+  "@courierNewOffers": {"placeholders": {"count": {"type": "int"}}},
   "courierAvailableTitle": "Commandes à récupérer",
   "courierOfferLine": "À {km} km · vers {district}",
   "@courierOfferLine": { "placeholders": { "km": { "type": "String" }, "district": { "type": "String" } } },

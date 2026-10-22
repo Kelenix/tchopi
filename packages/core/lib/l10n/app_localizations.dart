@@ -3585,6 +3585,12 @@ abstract class AppLocalizations {
   /// **'Accepter'**
   String get offerAccept;
 
+  /// No description provided for @courierNewOffers.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{Nouvelle commande à récupérer} other{{count} nouvelles commandes à récupérer}}'**
+  String courierNewOffers(int count);
+
   /// No description provided for @courierAvailableTitle.
   ///
   /// In fr, this message translates to:

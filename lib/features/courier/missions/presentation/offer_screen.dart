@@ -71,8 +71,9 @@ class _OfferScreenState extends ConsumerState<OfferScreen> {
     });
     final deciding =
         _outcome == _Outcome.deciding || _outcome == _Outcome.sending;
+    // Retour possible tant que la réponse n'est pas en cours d'envoi : l'offre reste dans la liste.
     return PopScope(
-      canPop: !deciding,
+      canPop: _outcome != _Outcome.sending,
       child: Scaffold(
         body: SafeArea(
           child: Padding(
@@ -96,6 +97,14 @@ class _OfferScreenState extends ConsumerState<OfferScreen> {
       children: [
         Row(
           children: [
+            IconButton(
+              tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+              onPressed: sending
+                  ? null
+                  : () => Navigator.of(context).maybePop(),
+              icon: const Icon(Icons.arrow_back_rounded),
+            ),
+            const SizedBox(width: Space.xs),
             Chip(
               avatar: Icon(
                 parcel

@@ -143,31 +143,36 @@ void main() {
     expect(find.text('Espèces à reverser'), findsOneWidget);
   });
 
-  testWidgets('une commande prête s\'ouvre en plein écran et reste listée', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      app(
-        const CourierHomeScreen(),
-        courier(online: true, pending: const [offer]),
-      ),
-    );
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 600));
-    expect(find.byType(OfferScreen), findsOneWidget);
-    expect(find.text('Nouvelle mission · Repas'), findsOneWidget);
-    expect(find.text('4,2 km au total'), findsOneWidget);
-    expect(find.text('Votre gain'), findsOneWidget);
-    expect(find.text('Retrait · Chez Tantie Rose'), findsOneWidget);
-    expect(find.text('Livraison · Aïcha'), findsOneWidget);
-    expect(find.textContaining('Espèces à encaisser'), findsOneWidget);
-    expect(find.text('Accepter'), findsOneWidget);
-    expect(
-      find.text('Commandes à récupérer', skipOffstage: false),
-      findsOneWidget,
-    );
-    await tester.pumpWidget(const SizedBox());
-  });
+  testWidgets(
+    'une commande prête est listée, son détail s\'ouvre et se referme',
+    (tester) async {
+      await tester.pumpWidget(
+        app(
+          const CourierHomeScreen(),
+          courier(online: true, pending: const [offer]),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 600));
+      expect(find.byType(OfferScreen), findsNothing);
+      expect(find.text('Commandes à récupérer'), findsOneWidget);
+      await tester.tap(find.textContaining('Retrait · Chez Tantie Rose'));
+      await tester.pumpAndSettle();
+      expect(find.byType(OfferScreen), findsOneWidget);
+      expect(find.text('Nouvelle mission · Repas'), findsOneWidget);
+      expect(find.text('4,2 km au total'), findsOneWidget);
+      expect(find.text('Votre gain'), findsOneWidget);
+      expect(find.text('Retrait · Chez Tantie Rose'), findsOneWidget);
+      expect(find.text('Livraison · Aïcha'), findsOneWidget);
+      expect(find.textContaining('Espèces à encaisser'), findsOneWidget);
+      expect(find.text('Accepter'), findsOneWidget);
+      await tester.tap(find.byIcon(Icons.arrow_back_rounded));
+      await tester.pumpAndSettle();
+      expect(find.byType(OfferScreen), findsNothing);
+      expect(find.text('Commandes à récupérer'), findsOneWidget);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
 
   testWidgets('refus : la commande reste aux autres livreurs', (tester) async {
     final missions = _Missions();
